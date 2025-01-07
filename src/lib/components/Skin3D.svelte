@@ -11,17 +11,11 @@
   let minecraftAvatar: HTMLCanvasElement;
   let canvasIsLoading = $state<boolean>(true);
 
-  /*
   function onResize() {
-    if (minecraftAvatar && viewer) {
-      if (minecraftAvatar.offsetWidth / minecraftAvatar.offsetHeight < 0.6) {
-        viewer.setSize(minecraftAvatar.offsetWidth, minecraftAvatar.offsetWidth * 2);
-      } else {
-        viewer.setSize(minecraftAvatar.offsetHeight / 2, minecraftAvatar.offsetHeight);
-      }
+    if (minecraftAvatar && minecraftAvatar.parentElement && viewer) {
+      viewer.setSize(minecraftAvatar.parentElement.clientWidth, window.innerHeight);
     }
   }
-  */
 
   onMount(() => {
     const createSkinviewer = async () => {
@@ -49,12 +43,12 @@
 
     createSkinviewer();
 
-    // window.addEventListener("resize", onResize);
+    window.addEventListener("resize", onResize);
 
     return () => {
       canvasIsLoading = true;
       viewer.dispose();
-      // window.removeEventListener("resize", onResize);
+      window.removeEventListener("resize", onResize);
     };
   });
 </script>
