@@ -1046,6 +1046,7 @@ class AnomalousDesire extends Node {
     this.max_level = 1;
     this.upgrade_type = null;
     this.requires = ["blockhead"];
+    this.nodeType = "pickaxe_ability";
     this.positionType = "right_ability";
   }
 

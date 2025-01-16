@@ -22,7 +22,7 @@ import type { Item, ProcessedItem, getTextureParams } from "$types/processed/pro
 import { format } from "numerable";
 
 const NORMALIZED_SIZE = 128;
-const RESOURCE_CACHING = !dev;
+const RESOURCE_CACHING = dev;
 
 const FOLDER_PATH = getFolderPath();
 const RESOURCE_PACK_FOLDER = path.resolve(getFolderPath(), "static", "resourcepacks");
@@ -346,6 +346,10 @@ async function loadResourcePacks() {
 
       if (!textureFile.endsWith(".png")) {
         textureFile += ".png";
+      }
+
+      if (file.includes("heart_of_the_mountain")) {
+        textureFile = `${pack.base_path}/assets/minecraft/${properties.texture}.png`;
       }
 
       try {
