@@ -105,11 +105,31 @@
     easing: cubicInOut
   });
 
+  const renderedItems = writable<number>(54);
+  async function loadItemsInChunks(totalItems: number) {
+    const CHUNK_SIZE = $openTab === "museum" ? 54 : 45;
+    const delay = 50;
+
+    for (let i = CHUNK_SIZE; i < totalItems; i += CHUNK_SIZE) {
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      renderedItems.set(i + CHUNK_SIZE);
+    }
+  }
+
   $effect(() => {
     if ($openTab === "storage") {
       openStorageTab.set("0");
     } else if ($openTab === "museum") {
       openStorageTab.set("19");
+    }
+
+    if ($openTab) {
+      const currentTab = tabs.find((tab) => tab.id === $openTab);
+      if (currentTab) {
+        renderedItems.set($openTab === "museum" ? 54 : 45);
+        const totalItems = currentTab.items.length;
+        loadItemsInChunks(totalItems);
+      }
     }
   });
 </script>
@@ -153,15 +173,15 @@
               <div use:builder.action {...builder}>
                 <Tabs.Root bind:value={$openStorageTab}>
                   <Tabs.List class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
-                    {#each tab.items as item, index}
+                    {#each tab.items.slice(0, $renderedItems) as item, index}
                       <Tabs.Trigger let:builder asChild value={item.texture_path ? index.toString() : "undefined"}>
                         <div use:builder.action {...builder} class="group">
                           {#if item.texture_path}
-                            <div class="flex aspect-square items-center justify-center rounded group-data-[state=active]:bg-text/10 group-data-[state=inactive]:bg-text/[0.04]" in:fade|global={{ duration: 300, delay: 5 * (index + 1) }}>
+                            <div class="flex aspect-square items-center justify-center rounded group-data-[state=active]:bg-text/10 group-data-[state=inactive]:bg-text/[0.04]" in:fade={{ duration: 300, delay: 5 * (index + 1) }}>
                               <Item piece={item} isInventory={true} showRecombobulated={false} />
                             </div>
                           {:else}
-                            <div class="aspect-square rounded bg-text/[0.04]" in:fade|global={{ duration: 300, delay: 5 * (index + 1) }}></div>
+                            <div class="aspect-square rounded bg-text/[0.04]" in:fade={{ duration: 300, delay: 5 * (index + 1) }}></div>
                           {/if}
                         </div>
                       </Tabs.Trigger>
@@ -170,7 +190,7 @@
                   {#if tab.items[Number($openStorageTab)]?.containsItems}
                     {@const containedItems = (tab.items[Number($openStorageTab)].containsItems as ProcessedSkyBlockItem[]) || []}
                     <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-8 @md:gap-1.5 @xl:gap-2">
-                      {#each containedItems as containedItem, index}
+                      {#each containedItems.slice(0, $renderedItems) as containedItem, index}
                         {#if index > 0}
                           {#if index % 54 === 0}
                             <hr class="col-span-full h-4 border-0" />
@@ -194,7 +214,7 @@
               </div>
             {:else}
               <div use:builder.action {...builder} class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
-                {#each tab.items as item, index}
+                {#each tab.items.slice(0, $renderedItems) as item, index}
                   {#if index > 0}
                     {#if index % tab.gap === 0}
                       <hr class="col-start-1 col-end-10 h-4 border-0" />
