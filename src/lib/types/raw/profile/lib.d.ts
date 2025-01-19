@@ -185,7 +185,7 @@ export type Rift = {
     inv_armor: DecodedInventory;
     ender_chest_contents: DecodedInventory;
     equipment_contents: DecodedInventory;
-  }
+  };
 };
 
 export type NetherIslandPlayerData = {
