@@ -1,7 +1,7 @@
 // CREDITS: https://github.com/MattTheCuber (Modified)
 import { ITEMS } from "$lib/shared/constants/items";
 import type { SpecialAccessory, SpecialAccessoryConstant, allAccessories } from "$types/stats";
-import { updateItems } from "./update-items";
+import { updateItemsConstants } from "./update-items";
 
 let ACCESSORIES = [] as allAccessories[];
 function getAccessories() {
@@ -15,8 +15,9 @@ function getAccessories() {
   ACCESSORIES = output;
 }
 
-if (ITEMS.size === 0) {
-  await updateItems();
+if (ITEMS.size === 0 || ACCESSORIES.length === 0) {
+  await updateItemsConstants();
+  getAccessories();
 }
 
 setTimeout(getAccessories, 60 * 60 * 1000); // 1 hour

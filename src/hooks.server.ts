@@ -1,5 +1,3 @@
-import { updateCollections } from "$constants/update-collections";
-import { updateItems } from "$constants/update-items";
 import { init as resourcesInit } from "$lib/server/custom_resources";
 import { indexCollectons } from "$lib/server/db/mongo/index-collections";
 import { intializeNEURepository, parseNEURepository } from "$lib/server/helper/NotEnoughUpdates/parseNEURepository";
@@ -19,9 +17,6 @@ export const init: ServerInit = async () => {
 
   await startMongo()?.then(() => {
     console.log("[MONGO] MongoDB successfully connected");
-
-    updateItems();
-    updateCollections();
 
     indexCollectons();
   });
