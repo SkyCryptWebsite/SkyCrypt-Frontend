@@ -13,7 +13,7 @@
 {#snippet info()}
   <p class="my-4">SkyCrypt is a free, open-source stats viewer for Hypixel SkyBlock.</p>
   <p class="my-4">
-    You can report bugs, suggest features on <Button.Root class="text-link font-semibold" href={PUBLIC_DISCORD_INVITE} target="_blank" rel="noreferrer">Discord</Button.Root>, and/or contribute to the code on <Button.Root class="text-link font-semibold" href="https://github.com/SkyCryptWebsite/SkyCrypt" target="_blank" rel="noreferrer">GitHub</Button.Root>. It would be much appreciated!
+    You can report bugs, suggest features on <Button.Root class="text-link font-semibold" href={PUBLIC_DISCORD_INVITE} target="_blank" rel="noreferrer">Discord</Button.Root>, and/or contribute to the code on <Button.Root class="text-link font-semibold" href="https://github.com/SkyCryptWebsite/SkyCryptv2" target="_blank" rel="noreferrer">GitHub</Button.Root>. It would be much appreciated!
   </p>
   <p class="my-4">
     Join our community on <Button.Root class="text-link font-semibold" href={PUBLIC_DISCORD_INVITE} target="_blank" rel="noreferrer">Discord</Button.Root>!
