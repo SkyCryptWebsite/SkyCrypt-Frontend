@@ -14,6 +14,15 @@ export type CrimsonIsle = {
       kills: number;
     }[];
   };
+  kuudraFollower: {
+    weirdSailor: boolean;
+    fishedWetNapkin: boolean;
+    foundKuudraHelmet: boolean;
+    foundKuudraChestplate: boolean;
+    foundKuudraLeggings: boolean;
+    foundKuudraBoots: boolean;
+    cavityRarity: string?;
+  };
   dojo: {
     totalPoints: number;
     challenges: {

@@ -48,6 +48,17 @@
           </Chip>
         {/each}
       </ScrollItems>
+
+      <SectionSubtitle class="my-0">Kuudra Follower Hunt</SectionSubtitle>
+      <div class="space-y-0.5">
+        <AdditionStat text="Talked to Weird Sailor" data={isle.kuudraFollower.weirdSailor ? "Yes" : "No"} maxed={isle.kuudraFollower.weirdSailor} />
+        <AdditionStat text="Fished Wet Napkin" data={isle.kuudraFollower.fishedWetNapkin ? "Yes" : "No"} maxed={isle.kuudraFollower.fishedWetNapkin} />
+        <AdditionStat text="Obtained Helmet" data={isle.kuudraFollower.foundKuudraHelmet ? "Yes" : "No"} maxed={isle.kuudraFollower.foundKuudraHelmet} />
+        <AdditionStat text="Obtained Chestplate" data={isle.kuudraFollower.foundKuudraChestplate ? "Yes" : "No"} maxed={isle.kuudraFollower.foundKuudraChestplate} />
+        <AdditionStat text="Obtained Leggings" data={isle.kuudraFollower.foundKuudraLeggings ? "Yes" : "No"} maxed={isle.kuudraFollower.foundKuudraLeggings} />
+        <AdditionStat text="Obtained Boots" data={isle.kuudraFollower.foundKuudraBoots ? "Yes" : "No"} maxed={isle.kuudraFollower.foundKuudraBoots} />
+        <AdditionStat text="Plaque Rarity" data={isle.kuudraFollower.cavityRarity ?? "None"} maxed={isle.kuudraFollower.cavityRarity === "SPECIAL"} />
+      </div>
     {/if}
 
     {#if isle.dojo.totalPoints}

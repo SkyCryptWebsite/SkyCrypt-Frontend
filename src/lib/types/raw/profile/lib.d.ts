@@ -204,6 +204,15 @@ export type NetherIslandPlayerData = {
   selected_faction: string;
   mages_reputation: number;
   barbarians_reputation: number;
+  quests?: {
+    weird_sailor?: boolean;
+    fished_wet_napkin?: boolean;
+    found_kuudra_helmet?: boolean;
+    found_kuudra_chestplate?: boolean;
+    found_kuudra_leggings?: boolean;
+    found_kuudra_boots?: boolean;
+    cavity_rarity?: string;
+  };
 };
 
 export type ProfilePets = {

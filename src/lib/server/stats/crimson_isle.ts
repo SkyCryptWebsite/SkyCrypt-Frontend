@@ -83,6 +83,15 @@ export function getCrimsonIsle(userProfile: Member) {
       magesReputation: userProfile.nether_island_player_data?.mages_reputation ?? 0
     },
     kuudra: getKuudra(userProfile),
+    kuudraFollower: {
+      weirdSailor: userProfile.nether_island_player_data?.quests?.weird_sailor ?? false,
+      fishedWetNapkin: userProfile.nether_island_player_data?.quests?.fished_wet_napkin ?? false,
+      foundKuudraHelmet: userProfile.nether_island_player_data?.quests?.found_kuudra_helmet ?? false,
+      foundKuudraChestplate: userProfile.nether_island_player_data?.quests?.found_kuudra_chestplate ?? false,
+      foundKuudraLeggings: userProfile.nether_island_player_data?.quests?.found_kuudra_leggings ?? false,
+      foundKuudraBoots: userProfile.nether_island_player_data?.quests?.found_kuudra_boots ?? false,
+      cavityRarity: userProfile.nether_island_player_data?.quests?.cavity_rarity?.toUpperCase()
+    },
     dojo: getDojo(userProfile)
   };
 }
