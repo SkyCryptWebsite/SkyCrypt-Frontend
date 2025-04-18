@@ -148,8 +148,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       skyhelper-networth:
-        specifier: ^1.27.3
-        version: 1.27.3
+        specifier: github:Altpapier/SkyHelper-Networth#pull/78/head
+        version: https://codeload.github.com/Altpapier/SkyHelper-Networth/tar.gz/affe957f595e755fca05d620f85cc2765d96f838
       svelte:
         specifier: 5.25.3
         version: 5.25.3
@@ -2928,8 +2928,9 @@ packages:
   skinview3d@3.1.0:
     resolution: {integrity: sha512-L+HXXAP4qYjLcY3YHasXKie9KXQpv/mPTMxgLOEd+hVQRdQkPs5xdWaKuOmlZY8UnyZzecQM7yrWRzgT/e7HZw==}
 
-  skyhelper-networth@1.27.3:
-    resolution: {integrity: sha512-UYs2Jc1swM0ClggVzeCH/i44r9y+eKts88jv5feNn84ZUn9SewhXrrngdbAbJI/4/0t6S4yrq4MGNadDvKjg9A==}
+  skyhelper-networth@https://codeload.github.com/Altpapier/SkyHelper-Networth/tar.gz/affe957f595e755fca05d620f85cc2765d96f838:
+    resolution: {tarball: https://codeload.github.com/Altpapier/SkyHelper-Networth/tar.gz/affe957f595e755fca05d620f85cc2765d96f838}
+    version: 2.2.0
 
   sorcery@1.0.0:
     resolution: {integrity: sha512-5ay9oJE+7sNmhzl3YNG18jEEEf4AOQCM/FAqR5wMmzqd1FtRorFbJXn3w3SKOhbiQaVgHM+Q1lszZspjri7bpA==}
@@ -5990,7 +5991,7 @@ snapshots:
       skinview-utils: 0.7.1
       three: 0.156.1
 
-  skyhelper-networth@1.27.3:
+  skyhelper-networth@https://codeload.github.com/Altpapier/SkyHelper-Networth/tar.gz/affe957f595e755fca05d620f85cc2765d96f838:
     dependencies:
       axios: 1.8.4
       prismarine-nbt: 2.7.0

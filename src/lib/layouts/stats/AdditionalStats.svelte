@@ -100,4 +100,36 @@
       </p>
     </div>
   </AdditionStat>
+
+  <AdditionStat text="Non-Cosmetic Networth" data={formatNumber(profile.stats.nonCosmeticNetworth.networth)} asterisk={true}>
+    <div class="max-w-xs space-y-2 font-bold">
+      <div>
+        <h3 class="text-text/85">Non-Cosmetic Networth</h3>
+        <p class="text-text/80 font-medium italic">Networth calculations by SkyHelper.</p>
+      </div>
+      <div>
+        <ul class="[&_li]:text-text/85 [&_li_span]:text-text font-bold [&_li]:capitalize [&_li_span]:normal-case">
+          {#each Object.entries(profile.stats.nonCosmeticNetworth.types) as [key, value], index (index)}
+            <li>
+              {key.replace(/_/g, " ")}:
+              <span>
+                {formatNumber(value.total)}
+              </span>
+            </li>
+          {/each}
+        </ul>
+      </div>
+      <p class="text-text/85">
+        Unsoulbound Networth:
+        <span class="text-text">
+          {formatNumber(profile.stats.nonCosmeticNetworth.unsoulboundNetworth)}
+        </span>
+        <br />
+        Total Networth:
+        <span class="text-text">
+          {numberFormat(profile.stats.nonCosmeticNetworth.networth, defaultPattern)} ({formatNumber(profile.stats.nonCosmeticNetworth.networth)})
+        </span>
+      </p>
+    </div>
+  </AdditionStat>
 </div>

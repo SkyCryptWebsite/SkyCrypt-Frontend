@@ -31,7 +31,7 @@
   const backpack = $derived(profile.items.backpack);
   const enderchest = $derived(profile.items.enderchest);
   const vault = $derived(profile.items.personal_vault);
-  const accs = $derived(profile.items.talisman_bag);
+  const accs = $derived(profile.items.accessories);
   const pots = $derived(profile.items.potion_bag);
   const fish = $derived(profile.items.fishing_bag);
   const quiver = $derived(profile.items.quiver);

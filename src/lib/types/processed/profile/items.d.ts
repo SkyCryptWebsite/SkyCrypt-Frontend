@@ -1,3 +1,4 @@
+import type { Pet } from "$types/global";
 import type { ItemStats } from "./stats";
 
 export type Item = {
@@ -27,6 +28,7 @@ export type Item = {
   material?: string;
   itemId?: string;
   glowing?: boolean;
+  price?: number;
 };
 
 export type DatabaseItem = {
@@ -143,6 +145,7 @@ export type ProcessedItem = {
   glowing?: boolean;
   position?: number;
   item_index: number;
+  price: number;
 };
 
 export type ProcessedSkyBlockItem = {
@@ -195,7 +198,7 @@ export type GetItemsItems = {
     set_name?: string;
     set_rarity?: string;
   };
-  talisman_bag: ProcessedItem[];
+  accessories: ProcessedItem[];
   personal_vault: ProcessedItem[];
   inventory: ProcessedItem[];
   enderchest: ProcessedItem[];
@@ -237,7 +240,7 @@ export type Items = {
     set_name?: string;
     set_rarity?: string;
   };
-  talisman_bag: ProcessedSkyBlockItem[];
+  accessories: ProcessedSkyBlockItem[];
   personal_vault: ProcessedSkyBlockItem[];
   inventory: ProcessedSkyBlockItem[];
   enderchest: ProcessedSkyBlockItem[];
@@ -368,4 +371,80 @@ export type SpecialAccessoryConstant = {
   allowsEnrichment?: boolean;
   rarities?: string[];
   customPrice?: boolean;
+};
+/*
+  'armor',
+  'equipment',
+  'wardrobe',
+  'inventory',
+  'enderchest',
+  'accessories',
+  'personal_vault',
+  'fishing_bag',
+  'potion_bag',
+  'sacks_bag',
+  'carnival_mask_inventory',
+  'storage_0',
+  'storage_1',
+  'storage_2',
+  'storage_3',
+  'storage_7',
+  'storage_8',
+  'storage_9',
+  'storage_10',
+  'storage_14',
+  'storage_15',
+  'storage_16',
+  'storage_17',
+  'storage_icon_0',
+  'storage_icon_1',
+  'storage_icon_2',
+  'storage_icon_3',
+  'storage_icon_4',
+  'storage_icon_5',
+  'storage_icon_6',
+  'storage_icon_7',
+  'storage_icon_8',
+  'storage_icon_9',
+  'storage_icon_10',
+  'storage_icon_11',
+  'storage_icon_12',
+  'storage_icon_13',
+  'storage_icon_14',
+  'storage_icon_15',
+  'storage_icon_16',
+  'storage_icon_17',
+  'museum',
+  'sacks',
+  'essence',
+  'pets',
+  'candy_inventory',
+  'quiver',
+  'storage_4',
+  'storage_5',
+  'storage_6',
+  'storage_11',
+  'storage_12',
+  'storage_13',
+  'rift_inventory',
+  'rift_enderchest',
+  'rift_armor',
+  'rift_equipment',
+  'museumItems'
+  */
+
+export type RawInventoryType = "armor" | "equipment" | "wardrobe" | "inventory" | "enderchest" | "accessories" | "personal_vault" | "fishing_bag" | "potion_bag" | "sacks_bag" | "carnival_mask_inventory" | "storage_0" | "storage_1" | "storage_2" | "storage_3" | "storage_7" | "storage_8" | "storage_9" | "storage_10" | "storage_14" | "storage_15" | "storage_16" | "storage_17" | "storage_icon_0" | "storage_icon_1" | "storage_icon_2" | "storage_icon_3" | "storage_icon_4" | "storage_icon_5" | "storage_icon_6" | "storage_icon_7" | "storage_icon_8" | "storage_icon_9" | "storage_icon_10" | "storage_icon_11" | "storage_icon_12" | "storage_icon_13" | "storage_icon_14" | "storage_icon_15" | "storage_icon_16" | "storage_icon_17" | "museum" | "sacks" | "essence" | "pets" | "candy_inventory" | "quiver" | "storage_4" | "storage_5" | "storage_6" | "storage_11" | "storage_12" | "storage_13" | "rift_inventory" | "rift_enderchest" | "rift_armor" | "rift_equipment" | "museumItems";
+
+export type RawItems = Record<Exclude<RawInventoryType, "museumItems">, Item[] | Pet[]> & {
+  museumItems: {
+    items: {
+      donated_timed: NumerableFormatNumberOptions;
+      borrowing?: boolean;
+      items: Item[];
+    };
+    special: {
+      donated_timed: number;
+      items: Item[];
+    };
+  };
 };

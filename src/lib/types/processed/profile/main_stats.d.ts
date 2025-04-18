@@ -1,4 +1,11 @@
-import type { NetworthResult } from "skyhelper-networth";
+import type { RawInventory } from "$types/global";
+
+export type NetworthResultStripped = {
+  noInventory: boolean;
+  networth: number;
+  unsoulboundNetworth: number;
+  types: Record<string, { total: number; unsoulboundTotal?: number }>;
+};
 
 export type MainStats = {
   joined: number;
@@ -10,5 +17,10 @@ export type MainStats = {
     found: number;
     total: number;
   };
-  networth: NetworthResult;
+  networth: NetworthResultStripped;
+  nonCosmeticNetworth: NetworthResultStripped;
+  extra: {
+    networthCategories: Record<string, number>;
+    rawItems: RawInventory;
+  };
 };

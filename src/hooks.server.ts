@@ -6,7 +6,7 @@ import { intializeNEURepository, parseNEURepository } from "$lib/server/helper/N
 import { contextLinesIntegration, extraErrorDataIntegration, handleErrorWithSentry, sentryHandle, init as sentryInit } from "@sentry/sveltekit";
 import type { ServerInit } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
-import { getPrices } from "skyhelper-networth";
+import { getPrices, NetworthManager } from "skyhelper-networth";
 import { startMongo } from "./lib/server/db/mongo";
 import { startRedis } from "./lib/server/db/redis";
 
@@ -62,6 +62,16 @@ export const init: ServerInit = async () => {
   await getPrices(true).then(() => {
     console.log("[NETWORTH] Prices successfully fetched!");
   });
+
+  await NetworthManager.updateItems().then(() => {
+    console.log("[NETWORTH] Items successfully updated!");
+  });
+
+  NetworthManager.setStackItems(false);
+  NetworthManager.setSortItems(false);
+  NetworthManager.setIncludeItemData(true);
+  NetworthManager.setOnlyNetworth(false);
+  NetworthManager.setRemoveEmptyItems(false);
 
   console.log(`[SkyCrypt] Started in ${(performance.now() - timeNow).toFixed(2)}ms`);
 };

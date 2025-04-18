@@ -55,7 +55,7 @@
     "runed": "^0.25.0",
     "simple-git": "^3.27.0",
     "skinview3d": "^3.1.0",
-    "skyhelper-networth": "^1.27.3",
+    "skyhelper-networth": "github:Altpapier/SkyHelper-Networth#pull/78/head",
     "svelte": "5.25.3",
     "svelte-check": "^4.1.5",
     "svelte-dnd-action": "^0.9.60",

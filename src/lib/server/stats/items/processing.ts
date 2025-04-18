@@ -4,7 +4,6 @@ import * as helper from "$lib/server/helper";
 import type { Item, ProcessedItem } from "$types/stats";
 
 import { NEU_ITEMS } from "$lib/server/helper/NotEnoughUpdates/parseNEURepository";
-import { getItemNetworth } from "skyhelper-networth";
 import { addLevelableEnchantmentsToLore, parseItemGems } from "./helper";
 
 export function itemSorter(a: ProcessedItem, b: ProcessedItem) {
@@ -71,7 +70,7 @@ function getCategories(type: string, item: Item) {
 }
 
 // Process items returned by API
-export async function processItems(items: ProcessedItem[], source: string, packs: string[]): Promise<ProcessedItem[]> {
+export function processItems(items: ProcessedItem[], source: string, packs: string[]): ProcessedItem[] {
   for (const item of items) {
     if (!item.tag?.ExtraAttributes?.id && item.exp === undefined) {
       continue;
@@ -147,12 +146,9 @@ export async function processItems(items: ProcessedItem[], source: string, packs
       }
     }
 
-    if (item.tag || item.exp !== undefined) {
+    if (item.price) {
       try {
-        const ITEM_PRICE = await getItemNetworth(item, { cache: true });
-        if (ITEM_PRICE?.price > 0) {
-          itemLore.push("", `§7Item Value: §6${Math.round(ITEM_PRICE.price).toLocaleString()} Coins §7(§6${helper.formatNumber(ITEM_PRICE.price)}§7)`);
-        }
+        itemLore.push("", `§7Item Value: §6${Math.round(item.price).toLocaleString()} Coins §7(§6${helper.formatNumber(item.price)}§7)`);
       } catch (error) {
         console.log(error);
         itemLore.push("", `§7Item Value: §cAn error occurred while calculating the value of this item.`);

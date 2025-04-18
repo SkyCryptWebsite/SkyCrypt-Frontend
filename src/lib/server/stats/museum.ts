@@ -219,8 +219,5 @@ export function getMuseumItems(decodedMuseumItems: DecodedMuseumItems) {
     output[item.position] = itemSlot;
   }
 
-  return {
-    museumItems: museumData,
-    inventory: output
-  };
+  return output;
 }

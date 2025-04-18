@@ -10,7 +10,7 @@ export async function getAccessories(userProfile: Member, items: GetItemsItems, 
     return null;
   }
 
-  const { talisman_bag: accessoryBag, inventory, enderchest } = items;
+  const { accessories: accessoryBag, inventory, enderchest } = items;
   const storage = items.backpack.map((i) => i.containsItems ?? []).flat();
   const armor = items.armor.armor;
 
