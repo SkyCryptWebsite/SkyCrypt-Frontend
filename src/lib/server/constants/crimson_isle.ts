@@ -1,31 +1,31 @@
 export const DOJO = {
-  sword_swap: {
-    name: "Discipline",
-    texture: "/api/item/DIAMOND_SWORD"
-  },
-  fireball: {
-    name: "Tenacity",
-    texture: "/api/item/FIRE_CHARGE"
-  },
-  archer: {
-    name: "Mastery",
-    texture: "/api/item/BOW"
-  },
-  lock_head: {
-    name: "Control",
-    texture: "/api/item/ENDER_EYE"
-  },
-  snake: {
-    name: "Swiftness",
-    texture: "/api/item/LEAD"
+  mob_kb: {
+    name: "Force",
+    texture: "/api/item/STICK"
   },
   wall_jump: {
     name: "Stamina",
     texture: "/api/item/RABBIT_FOOT"
   },
-  mob_kb: {
-    name: "Force",
-    texture: "/api/item/STICK"
+  archer: {
+    name: "Mastery",
+    texture: "/api/item/BOW"
+  },
+  sword_swap: {
+    name: "Discipline",
+    texture: "/api/item/DIAMOND_SWORD"
+  },
+  snake: {
+    name: "Swiftness",
+    texture: "/api/item/LEAD"
+  },
+  lock_head: {
+    name: "Control",
+    texture: "/api/item/ENDER_EYE"
+  },
+  fireball: {
+    name: "Tenacity",
+    texture: "/api/item/FIRE_CHARGE"
   }
 } as Record<string, { name: string; texture: string }>;
 

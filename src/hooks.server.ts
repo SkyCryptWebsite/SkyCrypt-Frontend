@@ -12,7 +12,7 @@ import { startRedis } from "./lib/server/db/redis";
 
 sentryInit({
   dsn: PUBLIC_SENTRY_DSN,
-  tracesSampleRate: 1,
+  tracesSampleRate: 0,
 
   integrations: [contextLinesIntegration(), extraErrorDataIntegration()],
 
@@ -25,7 +25,7 @@ sentryInit({
     const status = (hint.originalException as { status?: number })?.status;
 
     if (error && typeof error === "object") {
-      if (error.value?.includes("HttpError")) {
+      if (error.value?.includes("HttpError") || error.type === "SkyCryptError") {
         return null; // Return null to prevent the event from being sent to Sentry
       }
     }

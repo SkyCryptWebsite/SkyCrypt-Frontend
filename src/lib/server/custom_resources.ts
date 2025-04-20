@@ -20,7 +20,7 @@ import type { Item, ProcessedItem, getTextureParams } from "$types/processed/pro
 import { format } from "numerable";
 
 const NORMALIZED_SIZE = 128;
-const RESOURCE_CACHING = dev;
+const RESOURCE_CACHING = !dev;
 
 const FOLDER_PATH = getFolderPath();
 const RESOURCE_PACK_FOLDER = path.resolve(getFolderPath(), "static", "resourcepacks");
@@ -354,18 +354,32 @@ async function loadResourcePacks() {
 
       texture.path = textureFile;
 
-      const textureImage = sharp(textureFile);
-      const textureMetadata = await textureImage.metadata();
+      let textureMetadata;
+      try {
+        const textureImage = sharp(textureFile);
 
-      if (textureMetadata.width != NORMALIZED_SIZE && textureMetadata.height && textureMetadata.width) {
-        await fs.writeFile(
-          textureFile,
-          await textureImage
-            .resize(NORMALIZED_SIZE, Math.floor(textureMetadata.height * (NORMALIZED_SIZE / textureMetadata.width)), {
-              kernel: sharp.kernel.nearest
-            })
-            .toBuffer()
-        );
+        try {
+          textureMetadata = await textureImage.metadata();
+
+          if (textureMetadata.width != NORMALIZED_SIZE && textureMetadata.height && textureMetadata.width) {
+            try {
+              await fs.writeFile(
+                textureFile,
+                await textureImage
+                  .resize(NORMALIZED_SIZE, Math.floor(textureMetadata.height * (NORMALIZED_SIZE / textureMetadata.width)), {
+                    kernel: sharp.kernel.nearest
+                  })
+                  .toBuffer()
+              );
+            } catch (resizeError) {
+              console.log(`Error resizing file ${textureFile}:`, (resizeError as Error).message);
+            }
+          }
+        } catch (metadataError) {
+          console.log(`Error reading metadata for ${textureFile}:`, (metadataError as Error).message);
+        }
+      } catch (sharpError) {
+        console.log(`Error processing image ${textureFile}:`, (sharpError as Error).message);
       }
 
       try {
@@ -470,7 +484,7 @@ async function loadResourcePacks() {
         }
       }
 
-      if ("animation" in metaProperties && textureMetadata.width != textureMetadata.height) {
+      if ("animation" in metaProperties && textureMetadata && textureMetadata.width != textureMetadata.height) {
         const animation = metaProperties.animation as TextureAnimation;
         if (animation.frames === undefined) {
           if (animation.frametime && textureMetadata.height) {

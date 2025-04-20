@@ -20,7 +20,13 @@ export default defineConfig({
       allow: [".."]
     }
   },
+  optimizeDeps: {
+    exclude: ["@napi-rs/canvas"]
+  },
   build: {
-    sourcemap: true
+    sourcemap: true,
+    commonjsOptions: {
+      ignore: ["@napi-rs/canvas-*", "@napi-rs/canvas-darwin-arm64", "@napi-rs/canvas-darwin-x64", "@napi-rs/canvas-linux-arm64-gnu", "@napi-rs/canvas-linux-arm64-musl", "@napi-rs/canvas-linux-x64-gnu", "@napi-rs/canvas-linux-x64-musl", "@napi-rs/canvas-win32-x64-msvc"]
+    }
   }
 });

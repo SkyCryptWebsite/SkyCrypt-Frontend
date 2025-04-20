@@ -50,9 +50,9 @@ export const packConfigs: PackConfig = [
   },
   {
     id: "WORLDS_AND_BEYOND",
-    link: "https://hypixel.net/threads/3597207",
+    link: "https://hypixel.net/threads/worlds-and-beyond-16x-crimson-isles-update-version-1-6.3597207/",
     name: "Worlds and Beyond",
-    version: "v1.4.1",
+    version: "v1.6",
     author: "Skeletony_",
     folder: "Worlds_and_Beyond_1_4_1"
   }

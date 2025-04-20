@@ -114,7 +114,13 @@
     ].filter((tab) => tab.id === "search" || tab.items.length > 0)
   );
 
-  const allItemNames = $derived([...inventory, ...rift_inventory, ...rift_enderchest, ...backpack, ...enderchest, ...vault, ...accs, ...pots, ...fish, ...quiver, ...museum].filter((item) => item && item.display_name).map((item) => item.display_name));
+  const allItemNames = $derived(
+    [...inventory, ...rift_inventory, ...rift_enderchest, ...backpack, ...enderchest, ...vault, ...accs, ...pots, ...fish, ...quiver, ...museum, ...backpack.map((item) => (item.containsItems ? item.containsItems : []))]
+      .flat()
+      .filter((item) => item && item.display_name)
+      .map((item) => item.display_name)
+  );
+
   type SearchedItem = { item: ProcessedSkyBlockItem; sourceTab: { name: string; icon: string } };
   const searchedItems = $derived.by<SearchedItem[] | []>(() => {
     const search = debouncedSearchValue.current?.trim();
@@ -125,7 +131,7 @@
     const items: SearchedItem[] = [];
 
     for (const tab of tabs) {
-      for (const item of tab.items) {
+      for (const item of tab.items.concat(tab.items.map((item) => (item.containsItems ? item.containsItems : [])).flat())) {
         if (searchedItemName.includes(item.display_name)) {
           items.push({ item, sourceTab: { name: tab.id, icon: tab.icon } });
         }
