@@ -1,5 +1,4 @@
 import type { Item, ProcessedItem } from "$types/stats";
-import { format } from "date-fns";
 import { getPrices } from "skyhelper-networth";
 import * as constants from "./constants/constants";
 import { getTexture } from "./custom_resources";
@@ -189,18 +188,6 @@ export function getHeadTextureUUID(value: string) {
   const uuid = url.split("/").pop();
 
   return uuid;
-}
-
-export function formatTimestamp(timestamp: number, formatType: string = "MMM d, yyyy, h:mm a") {
-  if (new Date(Number(timestamp)).toString() == "Invalid Date") {
-    timestamp = new Date(timestamp).getTime();
-  }
-
-  if (new Date(Number(timestamp)).toString() == "Invalid Date") {
-    return "Invalid Date";
-  }
-
-  return format(new Date(Number(timestamp)), formatType);
 }
 
 export function sortByRarity(object: Record<string, unknown>) {

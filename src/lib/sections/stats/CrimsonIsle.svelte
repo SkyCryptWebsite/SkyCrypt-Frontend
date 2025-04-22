@@ -6,7 +6,7 @@
   import ScrollItems from "$lib/components/scroll-items.svelte";
   import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
   import Items from "$lib/layouts/stats/Items.svelte";
-  import { formatTime } from "$lib/shared/helper";
+  import { formatTime, formatTimestamp } from "$lib/shared/helper";
   import { cn } from "$lib/shared/utils";
   import { format } from "numerable";
 
@@ -51,8 +51,11 @@
 
       <SectionSubtitle class="my-0">Kuudra Follower Hunt</SectionSubtitle>
       <div class="space-y-0.5">
+        <AdditionStat text="Last Believer Blessing" data={formatTimestamp(isle.kuudraFollower.lastBelieverBlessing)} />
         <AdditionStat text="Talked to Weird Sailor" data={isle.kuudraFollower.weirdSailor ? "Yes" : "No"} maxed={isle.kuudraFollower.weirdSailor} />
         <AdditionStat text="Fished Wet Napkin" data={isle.kuudraFollower.fishedWetNapkin ? "Yes" : "No"} maxed={isle.kuudraFollower.fishedWetNapkin} />
+        <AdditionStat text="Clicked Bookshelf" data={isle.kuudraFollower.foundKuudraBook ? "Yes" : "No"} maxed={isle.kuudraFollower.foundKuudraBook} />
+        <AdditionStat text="Talked to Loremaster" data={isle.kuudraFollower.kuudraLoremaster ? "Yes" : "No"} maxed={isle.kuudraFollower.kuudraLoremaster} />
         <AdditionStat text="Obtained Helmet" data={isle.kuudraFollower.foundKuudraHelmet ? "Yes" : "No"} maxed={isle.kuudraFollower.foundKuudraHelmet} />
         <AdditionStat text="Obtained Chestplate" data={isle.kuudraFollower.foundKuudraChestplate ? "Yes" : "No"} maxed={isle.kuudraFollower.foundKuudraChestplate} />
         <AdditionStat text="Obtained Leggings" data={isle.kuudraFollower.foundKuudraLeggings ? "Yes" : "No"} maxed={isle.kuudraFollower.foundKuudraLeggings} />

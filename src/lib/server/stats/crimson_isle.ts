@@ -84,8 +84,11 @@ export function getCrimsonIsle(userProfile: Member) {
     },
     kuudra: getKuudra(userProfile),
     kuudraFollower: {
+      lastBelieverBlessing: userProfile.nether_island_player_data?.quests?.last_believer_blessing,
       weirdSailor: userProfile.nether_island_player_data?.quests?.weird_sailor ?? false,
       fishedWetNapkin: userProfile.nether_island_player_data?.quests?.fished_wet_napkin ?? false,
+      foundKuudraBook: userProfile.nether_island_player_data?.quests?.found_kuudra_book ?? false,
+      kuudraLoremaster: userProfile.nether_island_player_data?.quests?.kuudra_loremaster ?? false,
       foundKuudraHelmet: userProfile.nether_island_player_data?.quests?.found_kuudra_helmet ?? false,
       foundKuudraChestplate: userProfile.nether_island_player_data?.quests?.found_kuudra_chestplate ?? false,
       foundKuudraLeggings: userProfile.nether_island_player_data?.quests?.found_kuudra_leggings ?? false,

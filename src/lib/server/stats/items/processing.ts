@@ -6,6 +6,7 @@ import type { Item, ProcessedItem } from "$types/stats";
 import { NEU_ITEMS } from "$lib/server/helper/NotEnoughUpdates/parseNEURepository";
 import { getItemNetworth } from "skyhelper-networth";
 import { addLevelableEnchantmentsToLore, parseItemGems } from "./helper";
+import { formatTimestamp } from "$lib/shared/helper";
 
 export function itemSorter(a: ProcessedItem, b: ProcessedItem) {
   if (a.rarity && b.rarity && a.rarity !== b.rarity) {
@@ -123,7 +124,7 @@ export async function processItems(items: ProcessedItem[], source: string, packs
       }
 
       if (item.tag.ExtraAttributes.timestamp) {
-        itemLore.push("", `§7Obtained: §c${helper.formatTimestamp(item.tag.ExtraAttributes.timestamp)}`);
+        itemLore.push("", `§7Obtained: §c${formatTimestamp(item.tag.ExtraAttributes.timestamp)}`);
       }
 
       if (item.tag?.display?.color) {

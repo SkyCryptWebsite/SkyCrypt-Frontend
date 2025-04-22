@@ -1,4 +1,4 @@
-import * as helper from "$lib/server/helper";
+import { formatTimestamp } from "$lib/shared/helper";
 import type { DecodedMuseumItems } from "$types/global";
 import type { MuseumRaw } from "$types/raw/museum/lib";
 import { decodeItems, decodeItemsObject } from "./decoding";
@@ -23,7 +23,7 @@ export async function decodeMusemItems(museum: MuseumRaw, packs: string[]): Prom
           .map((i) => {
             const itemLore = i.tag.display.Lore;
             if (donatedTime) {
-              itemLore.push("", `§7Donated: §c${helper.formatTimestamp(donatedTime)}`);
+              itemLore.push("", `§7Donated: §c${formatTimestamp(donatedTime)}`);
             }
             if (isBorrowing) {
               itemLore.push("", `§7Status: §cBorrowing`);
@@ -51,7 +51,7 @@ export async function decodeMusemItems(museum: MuseumRaw, packs: string[]): Prom
           .map((i) => {
             const itemLore = i.tag.display.Lore;
             if (donatedTime) {
-              itemLore.push("", `§7Donated: §c${helper.formatTimestamp(donatedTime)}`);
+              itemLore.push("", `§7Donated: §c${formatTimestamp(donatedTime)}`);
             }
             return i;
           });

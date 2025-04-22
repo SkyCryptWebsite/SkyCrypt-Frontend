@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { MAX_ENCHANTS } from "$lib/shared/constants/enchantments";
 import { RARITY_COLORS } from "$lib/shared/constants/items";
 import type { ProcessedItem } from "$types/global";
@@ -20,6 +21,19 @@ export function formatNumber(n: number, digits = 2) {
     .format(n)
     .replace(/\.0+([A-Za-z])?$/, "$1");
 }
+
+export function formatTimestamp(timestamp: number, formatType: string = "MMM d, yyyy, h:mm a") {
+  if (new Date(Number(timestamp)).toString() == "Invalid Date") {
+    timestamp = new Date(timestamp).getTime();
+  }
+
+  if (new Date(Number(timestamp)).toString() == "Invalid Date") {
+    return "Invalid Date";
+  }
+
+  return format(new Date(Number(timestamp)), formatType);
+}
+
 
 /**
  * Converts a string to title case

@@ -205,8 +205,11 @@ export type NetherIslandPlayerData = {
   mages_reputation: number;
   barbarians_reputation: number;
   quests?: {
+    last_believer_blessing?: number;
     weird_sailor?: boolean;
     fished_wet_napkin?: boolean;
+    found_kuudra_book?: boolean;
+    kuudra_loremaster?: boolean;
     found_kuudra_helmet?: boolean;
     found_kuudra_chestplate?: boolean;
     found_kuudra_leggings?: boolean;

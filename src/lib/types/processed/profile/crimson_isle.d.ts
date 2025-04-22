@@ -15,8 +15,11 @@ export type CrimsonIsle = {
     }[];
   };
   kuudraFollower: {
+    lastBelieverBlessing: number?;
     weirdSailor: boolean;
     fishedWetNapkin: boolean;
+    clickedBookshelf: boolean;
+    kuudraLoremaster: boolean;
     foundKuudraHelmet: boolean;
     foundKuudraChestplate: boolean;
     foundKuudraLeggings: boolean;
