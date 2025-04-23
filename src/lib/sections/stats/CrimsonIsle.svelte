@@ -51,7 +51,7 @@
 
       <SectionSubtitle class="my-0">Kuudra Follower Hunt</SectionSubtitle>
       <div class="space-y-0.5">
-        <AdditionStat text="Last Believer Blessing" data={formatTimestamp(isle.kuudraFollower.lastBelieverBlessing)} />
+        <AdditionStat text="Last Believer Blessing" data={isle.kuudraFollower.lastBelieverBlessing ? formatTimestamp(isle.kuudraFollower.lastBelieverBlessing) : "Never"} />
         <AdditionStat text="Talked to Weird Sailor" data={isle.kuudraFollower.weirdSailor ? "Yes" : "No"} maxed={isle.kuudraFollower.weirdSailor} />
         <AdditionStat text="Fished Wet Napkin" data={isle.kuudraFollower.fishedWetNapkin ? "Yes" : "No"} maxed={isle.kuudraFollower.fishedWetNapkin} />
         <AdditionStat text="Clicked Bookshelf" data={isle.kuudraFollower.foundKuudraBook ? "Yes" : "No"} maxed={isle.kuudraFollower.foundKuudraBook} />
