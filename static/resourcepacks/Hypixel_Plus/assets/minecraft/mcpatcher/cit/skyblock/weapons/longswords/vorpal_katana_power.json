@@ -1,7 +1,0 @@
-{
-	"parent": "item/hplus_handheld_longsword",
-	"textures": {
-		"hand": "./vorpal_katana_power_hand",
-		"icon": "./vorpal_katana_power"
-	}
-}

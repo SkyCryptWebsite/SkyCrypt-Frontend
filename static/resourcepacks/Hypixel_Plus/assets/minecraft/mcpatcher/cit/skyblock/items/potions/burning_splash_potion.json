@@ -1,8 +1,0 @@
-{
-    "parent": "item/hplus_generated",
-    "textures": {
-        "layer0": "mcpatcher/cit/ui/achoo.png",
-        "layer1": "./burning_potion",
-        "layer2": "items/potion_bottle_splash"
-    }
-}

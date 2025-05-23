@@ -1,7 +1,0 @@
-{
-    "parent": "item/hplus_generated",
-    "textures": {
-        "layer0": "items/pumpkin_pie",
-        "layer1": "./diamond_pip"
-    }
-}

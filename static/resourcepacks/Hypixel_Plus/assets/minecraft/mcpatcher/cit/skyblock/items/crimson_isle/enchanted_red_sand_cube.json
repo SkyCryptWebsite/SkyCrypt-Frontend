@@ -1,6 +1,0 @@
-{
-	"parent": "item/hplus_skull_item",
-	"textures": {
-		"0": "./enchanted_red_sand_cube"
-	}
-}

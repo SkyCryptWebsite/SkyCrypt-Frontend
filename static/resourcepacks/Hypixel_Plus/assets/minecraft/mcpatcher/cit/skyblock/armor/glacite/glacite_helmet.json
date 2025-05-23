@@ -1,7 +1,0 @@
-{
-	"parent": "item/hplus_helmet",
-	"textures": {
-		"0": "./glacite_helmet_armor",
-		"1": "./glacite_helmet"
-	}
-}

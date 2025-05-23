@@ -1,7 +1,0 @@
-{
-    "parent": "item/hplus_generated",
-    "textures": {
-        "layer0": "mcpatcher/cit/skyblock/items/reforge_stones/anvil_hammer",
-        "layer1": "./medium_ban"
-    }
-}

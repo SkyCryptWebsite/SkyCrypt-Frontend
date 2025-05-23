@@ -1,7 +1,0 @@
-{
-	"parent": "item/hplus_handheld_abiphone",
-	"textures": {
-		"0": "./abiphone_x_plus",
-		"1": "./abiphone_x_plus_back"
-	}
-}

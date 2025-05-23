@@ -1,7 +1,0 @@
-{
-    "parent": "item/hplus_generated",
-    "textures": {
-        "layer0": "items/nether_wart",
-        "layer1": "./platinum_pip"
-    }
-}

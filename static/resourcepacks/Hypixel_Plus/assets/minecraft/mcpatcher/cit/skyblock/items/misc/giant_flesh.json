@@ -1,7 +1,0 @@
-{
-	"parent": "item/hplus_giant_generated",
-	"textures": {
-		"hand": "./giant_flesh_hand",
-		"icon": "items/rotten_flesh"
-	}
-}

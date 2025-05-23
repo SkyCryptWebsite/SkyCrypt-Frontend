@@ -1,7 +1,0 @@
-{
-    "parent": "item/hplus_generated",
-    "textures": {
-        "layer0": "./health_regen",
-        "layer1": "./health_regen"
-    }
-}

@@ -1,7 +1,0 @@
-{
-    "parent": "item/hplus_generated",
-    "textures": {
-        "layer0": "mcpatcher/cit/ui/skills/social_skill",
-        "layer1": "./wisdom"
-    }
-}

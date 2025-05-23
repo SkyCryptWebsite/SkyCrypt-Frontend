@@ -1,7 +1,0 @@
-{
-	"parent": "item/hplus_handheld_scythe",
-	"textures": {
-		"hand": "./frozen_scythe_hand",
-		"icon": "./frozen_scythe"
-	}
-}

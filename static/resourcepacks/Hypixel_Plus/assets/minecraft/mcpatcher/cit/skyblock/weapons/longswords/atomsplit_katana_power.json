@@ -1,7 +1,0 @@
-{
-	"parent": "item/hplus_handheld_longsword",
-	"textures": {
-		"hand": "./atomsplit_katana_power_hand",
-		"icon": "./atomsplit_katana_power"
-	}
-}
