@@ -1,7 +1,0 @@
-{
-	"parent": "item/hplus_handheld_staff",
-	"textures": {
-		"hand": "./bat_wand_hand",
-		"icon": "./bat_wand"
-	}
-}

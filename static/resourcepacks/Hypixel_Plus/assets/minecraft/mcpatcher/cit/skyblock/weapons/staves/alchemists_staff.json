@@ -1,7 +1,0 @@
-{
-	"parent": "item/hplus_handheld_staff",
-	"textures": {
-		"hand": "./alchemists_staff_hand",
-		"icon": "./alchemists_staff"
-	}
-}

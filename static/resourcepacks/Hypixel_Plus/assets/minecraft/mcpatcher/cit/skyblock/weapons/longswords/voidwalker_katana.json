@@ -1,7 +1,0 @@
-{
-	"parent": "item/hplus_handheld_longsword",
-	"textures": {
-		"hand": "./voidwalker_katana_hand",
-		"icon": "./voidwalker_katana"
-	}
-}

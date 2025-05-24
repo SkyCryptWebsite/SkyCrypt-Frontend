@@ -1,7 +1,0 @@
-{
-    "parent": "item/hplus_generated",
-    "textures": {
-        "layer0": "items/dye_powder_green",
-        "layer1": "./fortune"
-    }
-}

@@ -1,6 +1,0 @@
-{
-	"parent": "item/hplus_block_all_same",
-	"textures": {
-		"0": "./dctr_space_helm"
-	}
-}

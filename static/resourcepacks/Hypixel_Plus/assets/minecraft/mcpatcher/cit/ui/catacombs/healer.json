@@ -1,7 +1,0 @@
-{
-    "parent": "item/hplus_generated",
-    "textures": {
-        "layer0": "./healer",
-        "layer1": "./healer"
-    }
-}

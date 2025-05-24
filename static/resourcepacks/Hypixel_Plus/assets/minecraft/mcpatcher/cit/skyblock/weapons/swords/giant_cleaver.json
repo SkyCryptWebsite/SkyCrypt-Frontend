@@ -1,7 +1,0 @@
-{
-	"parent": "item/hplus_giant_handheld",
-	"textures": {
-		"hand": "./giant_cleaver_hand",
-		"icon": "./giant_cleaver"
-	}
-}

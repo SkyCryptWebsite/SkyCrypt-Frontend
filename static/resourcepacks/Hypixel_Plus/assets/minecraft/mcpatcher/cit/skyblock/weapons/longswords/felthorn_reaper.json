@@ -1,7 +1,0 @@
-{
-	"parent": "item/hplus_handheld_longsword",
-	"textures": {
-		"hand": "./felthorn_reaper_hand",
-		"icon": "./felthorn_reaper"
-	}
-}

@@ -1,7 +1,0 @@
-{
-	"parent": "item/hplus_generated",
-	"textures": {
-		"layer0": "./clipped_wings",
-		"layer1": "./clipped_wings2"
-	}
-}

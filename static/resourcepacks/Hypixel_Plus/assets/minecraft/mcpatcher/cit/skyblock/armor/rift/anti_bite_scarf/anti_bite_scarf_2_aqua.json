@@ -1,7 +1,0 @@
-{
-    "parent": "item/hplus_scarf",
-    "textures": {
-        "0": "./anti_bite_scarf_2_armor_aqua",
-        "1": "./anti_bite_scarf_2_aqua"
-    }
-}

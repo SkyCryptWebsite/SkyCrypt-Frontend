@@ -1,7 +1,0 @@
-{
-	"parent": "item/hplus_handheld_staff",
-	"textures": {
-		"hand": "./great_spook_staff_1st_hand",
-		"icon": "./great_spook_staff_1st"
-	}
-}

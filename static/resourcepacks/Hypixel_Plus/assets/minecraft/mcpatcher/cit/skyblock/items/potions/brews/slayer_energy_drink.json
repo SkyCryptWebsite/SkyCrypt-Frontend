@@ -1,6 +1,0 @@
-{
-    "parent": "item/hplus_generated",
-    "textures": {
-        "layer0": "./slayer_energy_drink"
-    }
-}

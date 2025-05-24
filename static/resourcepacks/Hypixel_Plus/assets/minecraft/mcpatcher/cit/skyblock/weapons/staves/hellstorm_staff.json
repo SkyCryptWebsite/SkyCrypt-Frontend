@@ -1,7 +1,0 @@
-{
-	"parent": "item/hplus_handheld_staff",
-	"textures": {
-		"hand": "./hellstorm_staff_hand",
-		"icon": "./hellstorm_staff"
-	}
-}

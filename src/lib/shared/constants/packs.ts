@@ -20,7 +20,7 @@ export const packConfigs: PackConfig = [
     id: "HYPIXELPLUS",
     link: "https://hypixel.net/threads/4174260/",
     name: "Hypixel Plus",
-    version: "v0.20.7",
+    version: "v0.22.1",
     author: "ic22487",
     folder: "Hypixel_Plus"
   },

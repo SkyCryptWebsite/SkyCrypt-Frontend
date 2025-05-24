@@ -1,6 +1,0 @@
-{
-    "parent": "item/hplus_tint_bypass",
-    "textures": {
-        "layer0": "./lush_berberis"
-    }
-}

@@ -1,7 +1,0 @@
-{
-	"parent": "item/hplus_handheld_staff",
-	"textures": {
-		"hand": "./starred_bonzo_staff_hand",
-		"icon": "./starred_bonzo_staff"
-	}
-}
