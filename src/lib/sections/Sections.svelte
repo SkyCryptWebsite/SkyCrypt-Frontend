@@ -138,13 +138,13 @@
     };
   }
 
-  // async function loadRemainingComponents() {
-  //   const remainingComponents = Object.keys(COMPONENTS)
-  //     .filter((id) => findIndex(id as SectionName) !== 0)
-  //     .map((id) => loadComponent(id));
+  async function loadRemainingComponents() {
+    const remainingComponents = Object.keys(COMPONENTS)
+      .filter((id) => findIndex(id as SectionName) !== 0)
+      .map((id) => loadComponent(id));
 
-  //   await Promise.all(remainingComponents);
-  // }
+    await Promise.all(remainingComponents);
+  }
 
   async function scrollToSection(hash: string) {
     const sectionId = hash.replace("#", "");
@@ -173,7 +173,7 @@
     ).then(async () => {
       preloadComplete = true;
 
-      // await loadRemainingComponents();
+      await loadRemainingComponents();
 
       if (window.location.hash) {
         await scrollToSection(window.location.hash);

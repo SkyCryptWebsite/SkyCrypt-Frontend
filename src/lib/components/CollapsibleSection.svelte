@@ -56,17 +56,17 @@
         {/if}
         <ChevronDown class={cn("text-text/60 h-6 w-6 transition-all duration-300", { "rotate-180": $collapsePreferences[transormedID.toLowerCase()] ?? true })} />
       </Collapsible.Trigger>
-      {#if hasBeenInViewport}
-        <Collapsible.Content forceMount>
-          {#snippet child({ props, open })}
-            {#if open}
-              <div {...props} transition:slide>
-                {@render children?.()}
-              </div>
-            {/if}
-          {/snippet}
-        </Collapsible.Content>
-      {/if}
+      <!-- {#if hasBeenInViewport} -->
+      <Collapsible.Content forceMount>
+        {#snippet child({ props, open })}
+          {#if open}
+            <div {...props} transition:slide>
+              {@render children?.()}
+            </div>
+          {/if}
+        {/snippet}
+      </Collapsible.Content>
+      <!-- {/if} -->
     </section>
   {/snippet}
 </Collapsible.Root>
