@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { replaceState } from "$app/navigation";
+  import { afterNavigate, replaceState } from "$app/navigation";
   import { page } from "$app/state";
   import { setProfileCtx } from "$ctx/profile.svelte";
   import Error from "$lib/components/Error.svelte";
@@ -68,6 +68,18 @@
     return () => {
       abortController.abort();
     };
+  });
+
+  afterNavigate(async ({ from, to, willUnload }) => {
+    if (!from || !to) return;
+    const { params: fromParams } = from;
+    const { params: toParams } = to;
+    if (!fromParams || !toParams) return;
+    if (fromParams.ign !== toParams.ign && !willUnload) {
+      console.warn("IGN changed, reloading page to reflect new profile.");
+      // Hard reload the page if the IGN changes, this ensures the profile context is updated correctly as TanStack Query does not work with Svelte 5 runes/states yet.
+      window.location.reload();
+    }
   });
 </script>
 
