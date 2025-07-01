@@ -31,6 +31,7 @@
 
   /* Animations */
   --animate-shine: shine 4s infinite;
+  --animate-spin-slow: spin 3s linear infinite;
 
   @keyframes shine {
     0% {
