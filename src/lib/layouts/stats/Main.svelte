@@ -99,7 +99,7 @@
   </Drawer.Root>
 {/if}
 
-<svg xmlns="http://www.w3.org/2000/svg" height="0" width="0" style="position: fixed;">
+<svg xmlns="http://www.w3.org/2000/svg" height="0" width="0" class="fixed">
   <filter id="enchanted-glint">
     <feImage href="/img/enchanted-glint.png" />
     <feComposite in2="SourceGraphic" operator="in" />
