@@ -1,4 +1,4 @@
-import { dev } from "$app/environment";
+import { building, dev } from "$app/environment";
 import { PUBLIC_SENTRY_DSN } from "$env/static/public";
 import { init as resourcesInit } from "$lib/server/custom_resources";
 import { indexCollectons } from "$lib/server/db/mongo/index-collections";
@@ -40,6 +40,7 @@ sentryInit({
 });
 
 export const init: ServerInit = async () => {
+  if (building) return; // Skip initialization during build time
   console.info("[SkyCrypt] Starting...");
   const timeNow = performance.now();
 
