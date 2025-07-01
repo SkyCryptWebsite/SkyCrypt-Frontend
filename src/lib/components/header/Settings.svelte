@@ -4,7 +4,7 @@
   import { packConfigs } from "$lib/shared/constants/packs";
   import type { Theme } from "$lib/shared/constants/themes";
   import themes from "$lib/shared/constants/themes";
-  import { flyAndScale } from "$lib/shared/utils";
+  import { cn, flyAndScale } from "$lib/shared/utils";
   import { disabledPacks } from "$lib/stores/packs";
   import { performanceMode, sectionOrderPreferences } from "$lib/stores/preferences";
   import { theme as themeStore } from "$lib/stores/themes";
@@ -12,12 +12,13 @@
   import BookOpenText from "@lucide/svelte/icons/book-open-text";
   import Check from "@lucide/svelte/icons/check";
   import Cog from "@lucide/svelte/icons/cog";
-  import Flame from "@lucide/svelte/icons/flame";
+  import Fan from "@lucide/svelte/icons/fan";
   import GripVertical from "@lucide/svelte/icons/grip-vertical";
   import ListOrdered from "@lucide/svelte/icons/list-ordered";
   import PackageOpen from "@lucide/svelte/icons/package-open";
   import PaintBucket from "@lucide/svelte/icons/paint-bucket";
   import Settings from "@lucide/svelte/icons/settings";
+  import Settings2 from "@lucide/svelte/icons/settings-2";
   import { Avatar, Button, Label, Popover, RadioGroup, Separator, Switch, Tabs } from "bits-ui";
   import { getContext, onMount } from "svelte";
   import { dndzone, SHADOW_ITEM_MARKER_PROPERTY_NAME } from "svelte-dnd-action";
@@ -75,20 +76,20 @@
 
 {#snippet settings()}
   <Tabs.Root value="packs">
-    <Tabs.List class="bg-text/30 text-text mb-4 flex justify-between rounded-lg p-2 font-semibold">
-      <Tabs.Trigger value="packs" class="data-[state=active]:bg-icon flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
+    <Tabs.List class={cn("text-text mb-4 flex justify-between rounded-lg p-2 font-semibold", $performanceMode ? "bg-text/30" : "backdrop-blur-lg backdrop-brightness-10")}>
+      <Tabs.Trigger value="packs" class="data-[state=active]:bg-icon/80 flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
         <PackageOpen class="size-5" />
         Packs
       </Tabs.Trigger>
-      <Tabs.Trigger value="themes" class="data-[state=active]:bg-icon flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
+      <Tabs.Trigger value="themes" class="data-[state=active]:bg-icon/80 flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
         <PaintBucket class="size-5" />
         Themes
       </Tabs.Trigger>
-      <Tabs.Trigger value="order" class="data-[state=active]:bg-icon flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
+      <Tabs.Trigger value="order" class="data-[state=active]:bg-icon/80 flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
         <ListOrdered class="size-5" />
         Order
       </Tabs.Trigger>
-      <Tabs.Trigger value="misc" class="data-[state=active]:bg-icon flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
+      <Tabs.Trigger value="misc" class="data-[state=active]:bg-icon/80 flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
         <Settings class="size-5" />
         Misc
       </Tabs.Trigger>
@@ -186,12 +187,14 @@
     </Tabs.Content>
     <Tabs.Content value="misc" class="space-y-6">
       <div class="flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto">
-        <div class="space-y-4">
-          <h4 class="bg-text/[0.05] rounded-lg p-2 font-semibold">Misc Settings</h4>
-
+        <div class="bg-text/[0.05] space-y-4 rounded-lg p-4">
+          <h4 class="flex items-center gap-2 rounded-lg p-2 font-semibold">
+            <Settings2 class="size-5" />
+            Misc Settings
+          </h4>
           <Label.Root for="performance" class="bg-text/[0.05] flex items-center justify-between gap-4 rounded-lg p-2">
             <div class="flex items-center gap-2">
-              <Flame class="size-6" />
+              <Fan class="data-[performance=false]:animate-spin-slow size-6 will-change-transform data-[performance=true]:animate-spin" data-performance={$performanceMode} />
               <div class="flex flex-col">
                 <h4 class="text-text/90 font-semibold">Performance Mode</h4>
               </div>
@@ -201,9 +204,9 @@
             </Switch.Root>
           </Label.Root>
         </div>
-        <Separator.Root class="bg-icon shrink-0 data-[orientation=horizontal]:h-0.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-0.5" />
-        <div class="space-y-4">
-          <h4 class="bg-text/[0.05] flex items-center gap-2 rounded-lg p-2 font-semibold">
+        <Separator.Root class="bg-icon/30 shrink-0 data-[orientation=horizontal]:h-0.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-0.5" />
+        <div class="bg-text/[0.05] space-y-4 rounded-lg p-4">
+          <h4 class="flex items-center gap-2 rounded-lg p-2 font-semibold">
             <BookOpenText class="size-5" />
             Wiki Order
           </h4>
@@ -259,7 +262,7 @@
       {/snippet}
     </Popover.Trigger>
     <Popover.Portal>
-      <Popover.Content forceMount side="bottom" sideOffset={8} align="center" collisionPadding={8} class="bg-background-grey/95 z-10 min-w-[32rem] rounded-lg px-8 py-4">
+      <Popover.Content forceMount side="bottom" sideOffset={8} align="center" collisionPadding={8} class={cn("z-30 min-w-[32rem] rounded-lg px-8 py-4", $performanceMode ? "bg-background-grey/95" : "bg-background-grey/30 backdrop-blur-lg backdrop-brightness-50")}>
         {#snippet child({ wrapperProps, props, open })}
           {#if open}
             <div {...wrapperProps}>
