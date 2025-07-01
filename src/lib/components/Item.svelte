@@ -1,13 +1,15 @@
 <script lang="ts">
+  import ItemContent from "$lib/components/item/item-content.svelte";
+  import type { IsHover } from "$lib/hooks/is-hover.svelte";
   import { RARITIES, RARITY_COLORS } from "$lib/shared/constants/items";
   import { getRarityClass } from "$lib/shared/helper";
-  import { cn } from "$lib/shared/utils";
-  import { itemContent, showItem, showItemTooltip, tooltipAnchor } from "$lib/stores/internal";
+  import { cn, flyAndScale } from "$lib/shared/utils";
+  import { itemContent, showItem } from "$lib/stores/internal";
   import type { ProcessedSkyBlockItem } from "$types/stats";
   import type { PetProcessedSkyBlockItem } from "$types/statsv2";
-  import Image from "@lucide/svelte/icons/image";
   import { Avatar, Tooltip, type AvatarImageLoadingStatus } from "bits-ui";
   import { IsInViewport } from "runed";
+  import { getContext } from "svelte";
 
   type Props = {
     piece: ProcessedSkyBlockItem | PetProcessedSkyBlockItem;
@@ -16,7 +18,7 @@
     showRecombobulated?: boolean;
   };
 
-  let { piece, isInventory, showCount, showRecombobulated }: Props = $props();
+  let { piece, isInventory, showCount, showRecombobulated = true }: Props = $props();
   let targetNode = $state<HTMLButtonElement | null>(null);
   let hasBeenInViewport = $state(false);
   let open = $state(false);
@@ -30,24 +32,7 @@
   const shine = $derived(enchanted || skyblockItem.shiny);
   const showNumbers = $derived(showCount && (skyblockItem.Count ?? 0) > 1);
 
-  async function loadItemData(openValue: boolean, modal: boolean = false) {
-    if (openValue) {
-      itemContent.set(piece as ProcessedSkyBlockItem);
-      if (modal) {
-        if (skyblockItem.containsItems) return;
-        showItem.set(true);
-      } else {
-        if (targetNode) {
-          tooltipAnchor.set(targetNode);
-          showItemTooltip.set(true);
-        }
-      }
-    } else {
-      //showItemTooltip.set(false);
-      //tooltipAnchor.set(null!);
-      //itemContent.set(undefined!);
-    }
-  }
+  const isHover = getContext<IsHover>("isHover");
 
   $effect(() => {
     if (inViewport.current && !hasBeenInViewport) {
@@ -57,13 +42,20 @@
   });
 </script>
 
-<Tooltip.Root bind:open disableHoverableContent={true} ignoreNonKeyboardFocus={true} disabled={!inViewport.current} delayDuration={100} onOpenChange={async (open) => await loadItemData(open)}>
-  <Tooltip.Trigger class={cn(`nice-colors-dark relative flex aspect-square items-center justify-center overflow-clip`, isInventory ? "p-0" : `rounded-lg p-2 ${bgColor}`)} bind:ref={targetNode} onpointerdown={async () => await loadItemData(true, true)}>
+<Tooltip.Root bind:open disableHoverableContent={true} ignoreNonKeyboardFocus={true} disabled={!inViewport.current} delayDuration={100}>
+  <Tooltip.Trigger
+    class={cn(`nice-colors-dark relative flex aspect-square items-center justify-center overflow-clip `, isInventory ? "p-0" : `rounded-lg p-2 ${bgColor}`, { shine: shine && !isInventory })}
+    bind:ref={targetNode}
+    onclick={() => {
+      if (skyblockItem.containsItems) return;
+      itemContent.set(piece);
+      showItem.set(true);
+    }}>
     {#snippet child({ props })}
       <div {...props}>
-        {#if shine}
+        <!-- {#if shine && isInventory}
           <div class="shine absolute inset-0 rounded-lg"></div>
-        {/if}
+        {/if} -->
         {#if hasBeenInViewport || loadingStatus === "loading" || loadingStatus === "error"}
           <Avatar.Root bind:loadingStatus>
             {#snippet child({ props })}
@@ -71,10 +63,10 @@
             {/snippet}
           </Avatar.Root>
         {:else}
-          <Image class={cn(isInventory ? "size-8 sm:size-14" : "size-14")} />
+          <div class={cn("animate-pulse rounded-lg bg-white/30", isInventory ? "size-8 sm:size-14" : "size-14")}></div>
         {/if}
 
-        {#if recombobulated}
+        {#if recombobulated && !isInventory}
           <div class="absolute -top-3 -right-3 z-10 size-6 rotate-45 bg-(--color)" style="--color: var(--§{RARITY_COLORS[RARITIES[RARITIES.indexOf(piece.rarity ?? 'common') - 1]]})"></div>
         {/if}
 
@@ -86,4 +78,19 @@
       </div>
     {/snippet}
   </Tooltip.Trigger>
+  {#if isHover.current && inViewport.current}
+    <Tooltip.Portal>
+      <Tooltip.Content forceMount={inViewport.current} class="bg-background-lore font-icomoon z-50 flex max-h-[calc(96vh-3rem)] max-w-lg flex-col overflow-clip rounded-lg select-text" sideOffset={8} side="right" align="center">
+        {#snippet child({ wrapperProps, props, open })}
+          {#if open}
+            <div {...wrapperProps}>
+              <div {...props} transition:flyAndScale={{ y: 8, duration: 150 }}>
+                <ItemContent {piece} />
+              </div>
+            </div>
+          {/if}
+        {/snippet}
+      </Tooltip.Content>
+    </Tooltip.Portal>
+  {/if}
 </Tooltip.Root>
