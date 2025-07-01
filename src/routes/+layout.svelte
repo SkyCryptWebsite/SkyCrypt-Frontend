@@ -3,12 +3,12 @@
   import { page } from "$app/state";
   import Header from "$lib/components/header/Header.svelte";
   import PerformanceMode from "$lib/components/PerformanceMode.svelte";
-  import V2Toast from "$lib/components/temp/V2Toast.svelte";
   import { IsHover } from "$lib/hooks/is-hover.svelte";
   import { IsMobile } from "$lib/hooks/is-mobile.svelte";
   import themes from "$lib/shared/constants/themes";
+  import { cn } from "$lib/shared/utils";
   import { content } from "$lib/stores/internal";
-  import { internalPreferences, performanceMode } from "$lib/stores/preferences";
+  import { performanceMode } from "$lib/stores/preferences";
   import { theme as themeStore } from "$lib/stores/themes";
   import Wifi from "@lucide/svelte/icons/wifi";
   import WifiOff from "@lucide/svelte/icons/wifi-off";
@@ -37,21 +37,6 @@
   themeStore.subscribe((newTheme) => theme.set(themes.find((theme) => theme.id === newTheme)?.light ? "light" : "dark"));
 
   onMount(() => {
-    // if (browser && navigator && "serviceWorker" in navigator) {
-    //   navigator.serviceWorker.register("/service-worker.js", {
-    //     type: dev ? "module" : "classic"
-    //   });
-    // }
-
-    if (!$internalPreferences.hasSeenv2Toast) {
-      toast.custom(V2Toast, {
-        duration: Number.POSITIVE_INFINITY,
-        onDismiss: () => {
-          internalPreferences.update((state) => ({ ...state, hasSeenv2Toast: true }));
-        }
-      });
-    }
-
     if (window.innerWidth <= 600) {
       position.set("bottom-center");
     }
@@ -124,11 +109,11 @@
   position={$position}
   class="sm:mr-8"
   toastOptions={{
-    class: "bg-background-grey gap-2 font-semibold group rounded-lg text-text/80 border-none",
+    class: cn("gap-2! font-semibold! group rounded-lg! text-text/80! border-none!", $performanceMode ? "bg-background-grey!" : "backdrop-blur-lg! backdrop-brightness-50! bg-transparent!"),
     classes: {
-      closeButton: "bg-background-grey text-text/80 border-none hover:bg-background-grey! hover:opacity-60",
-      description: "text-pretty font-medium",
-      title: "text-pretty font-semibold"
+      closeButton: "text-text/80! border-none! hover:opacity-60! bg-background-grey! hover:bg-background-grey!",
+      description: "text-pretty! font-medium!",
+      title: "text-pretty! font-semibold!"
     }
   }} />
 
