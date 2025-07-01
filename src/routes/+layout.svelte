@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { browser } from "$app/environment";
+  import { browser, dev } from "$app/environment";
   import { page } from "$app/state";
   import Header from "$lib/components/header/Header.svelte";
   import PerformanceMode from "$lib/components/PerformanceMode.svelte";
@@ -129,7 +129,9 @@
   <Tooltip.Provider delayDuration={0}>
     {@render children()}
   </Tooltip.Provider>
-  <SvelteQueryDevtools />
+  {#if dev}
+    <SvelteQueryDevtools />
+  {/if}
 </QueryClientProvider>
 
 {#if !isHover.current}
