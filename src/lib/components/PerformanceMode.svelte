@@ -59,12 +59,6 @@
           performanceMode.set(true);
         }
       },
-      cancel: {
-        label: "Dismiss",
-        onClick: () => {
-          shownToast = true;
-        }
-      },
       duration: Number.POSITIVE_INFINITY
     });
     shownToast = true;
