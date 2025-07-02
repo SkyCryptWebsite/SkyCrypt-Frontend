@@ -72,7 +72,7 @@
         {#snippet child({ wrapperProps, props, open })}
           {#if open}
             <div {...wrapperProps}>
-              <div {...props} transition:flyAndScale={{ y: -21, duration: 300 }}>
+              <div {...props} transition:flyAndScale>
                 {#each profile.members as member (member.uuid)}
                   {#if member.username !== profile.username}
                     <DropdownMenu.Item class="group flex min-w-(--bits-dropdown-menu-anchor-width) items-center p-2" data-sveltekit-preload-code="viewport">
@@ -112,7 +112,7 @@
           {#snippet child({ wrapperProps, props, open })}
             {#if open}
               <div {...wrapperProps}>
-                <div {...props} transition:flyAndScale={{ y: -21, duration: 300 }}>
+                <div {...props} transition:flyAndScale>
                   {#each profile.profiles ?? [] as otherProfile (otherProfile.profile_id)}
                     {#if otherProfile.profile_id !== profile.profile_id}
                       <DropdownMenu.Item class="group flex items-center p-2" data-sveltekit-preload-code="viewport">
@@ -152,7 +152,7 @@
             {#snippet child({ wrapperProps, props, open })}
               {#if open}
                 <div {...wrapperProps}>
-                  <div {...props} transition:flyAndScale={{ y: 8, duration: 300 }}>
+                  <div {...props} transition:flyAndScale>
                     <ApiNotice />
                     <Popover.Arrow class="!text-icon [&>svg[data-arrow]]:text-icon" />
                   </div>
@@ -197,7 +197,7 @@
         {#snippet child({ wrapperProps, props, open })}
           {#if open}
             <div {...wrapperProps}>
-              <div {...props} transition:flyAndScale={{ y: 8, duration: 300 }}>
+              <div {...props} transition:flyAndScale>
                 <Tooltip.Arrow />
                 {#if $favorites.includes(profile.uuid)}
                   <p>Remove from favorites</p>
