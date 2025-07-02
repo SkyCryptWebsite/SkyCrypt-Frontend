@@ -1,7 +1,7 @@
 import type { Member, Profile, Skills, SkillsData } from "$types/global";
 import type { Player } from "$types/raw/player/lib";
 import * as constants from "../constants/constants";
-import { getLevelByXp, getSkillLevelCaps, getSocialSkillExperience } from "./leveling/leveling";
+import { getLevelByXp, getSkillLevelCaps, getSocialSkillExperience, getXpByLevel } from "./leveling/leveling";
 
 export function getSkills(userProfile: Member, profile: Profile, player: Player | null): Skills {
   const output = { skills: {} } as Skills;
@@ -29,15 +29,15 @@ export function getSkills(userProfile: Member, profile: Profile, player: Player 
       social: getLevelByXp(socialExperience, { type: "social" })
     });
   } else {
-    /*const achievementSkills = {
-      taming: player.achievements?.skyblock_domesticator || 0,
-      farming: player.achievements?.skyblock_harvester || 0,
-      mining: player.achievements?.skyblock_excavator || 0,
-      combat: player.achievements?.skyblock_combat || 0,
-      foraging: player.achievements?.skyblock_gatherer || 0,
-      fishing: player.achievements?.skyblock_angler || 0,
-      enchanting: player.achievements?.skyblock_augmentation || 0,
-      alchemy: player.achievements?.skyblock_concoctor || 0,
+    const achievementSkills = {
+      taming: 0, // player.achievements?.skyblock_domesticator || 0,
+      farming: 0, // player.achievements?.skyblock_harvester || 0,
+      mining: 0, // player.achievements?.skyblock_excavator || 0,
+      combat: 0, // player.achievements?.skyblock_combat || 0,
+      foraging: 0, // player.achievements?.skyblock_gatherer || 0,
+      fishing: 0, // player.achievements?.skyblock_angler || 0,
+      enchanting: 0, // player.achievements?.skyblock_augmentation || 0,
+      alchemy: 0, // player.achievements?.skyblock_concoctor || 0,
       carpentry: 0,
       runecrafting: 0,
       social: 0
@@ -45,7 +45,7 @@ export function getSkills(userProfile: Member, profile: Profile, player: Player 
 
     for (const [skill, level] of Object.entries(achievementSkills)) {
       output.skills[skill as keyof SkillsData] = getXpByLevel(level, { type: skill });
-    }*/
+    }
 
     output.disabled = true;
   }

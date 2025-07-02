@@ -49,8 +49,7 @@ export async function GET({ params, cookies }) {
     // @ts-expect-error
     equipment: userProfile.equipment?.stats,
     skills: userProfile.skills?.skills,
-    // @ts-expect-error
-    pets: userProfile.pets.pets?.find((pet) => pet.active)?.stats,
+    pets: userProfile.pets?.pets?.find((pet) => pet.active)?.stats,
     petScore: userProfile.pets?.petScore?.stats,
     // @ts-expect-error
     slayers: userProfile.slayer?.stats,

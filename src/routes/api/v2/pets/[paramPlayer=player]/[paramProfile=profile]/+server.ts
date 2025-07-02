@@ -8,7 +8,7 @@ export async function GET({ params }) {
 
   const pets = await getPets(profile.members[paramPlayer], profile);
   if (!pets) {
-    return json({ error: "No pets found for this profile." }, { status: 404 });
+    return json({});
   }
 
   return json(pets);
