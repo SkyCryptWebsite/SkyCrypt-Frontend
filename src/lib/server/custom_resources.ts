@@ -20,7 +20,7 @@ import type { Item, ProcessedItem, getTextureParams } from "$types/processed/pro
 import { format } from "numerable";
 
 const NORMALIZED_SIZE = 128;
-const RESOURCE_CACHING = dev;
+const RESOURCE_CACHING = !dev;
 
 const FOLDER_PATH = getFolderPath();
 const RESOURCE_PACK_FOLDER = path.resolve(getFolderPath(), "static", "resourcepacks");
