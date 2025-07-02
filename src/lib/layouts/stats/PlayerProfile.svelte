@@ -4,6 +4,7 @@
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { favorites } from "$lib/stores/favorites";
   import { performanceMode } from "$lib/stores/preferences";
+  import Ban from "@lucide/svelte/icons/ban";
   import ChevronLeft from "@lucide/svelte/icons/chevron-left";
   import ChevronRight from "@lucide/svelte/icons/chevron-right";
   import ExternalLink from "@lucide/svelte/icons/external-link";
@@ -78,10 +79,10 @@
                     <DropdownMenu.Item class="group flex min-w-(--bits-dropdown-menu-anchor-width) items-center p-2" data-sveltekit-preload-code="viewport">
                       {#snippet child({ props })}
                         <a {...props} href={`/stats/${member.username}/${profile.profile_cute_name}`}>
-                          <span class="group-hover:bg-text/20 w-full rounded-lg bg-[oklch(59.65%_0_0)]/20 p-2 transition-colors duration-300">
+                          <span class="group-hover:bg-text/20 flex w-full items-center justify-between gap-2 rounded-lg bg-[oklch(59.65%_0_0)]/20 p-2 transition-colors duration-300">
                             {member.username}
                             {#if member.removed}
-                              🚪
+                              <Ban class="size-6" />
                             {/if}
                           </span>
                         </a>
