@@ -11,7 +11,6 @@ import { getPets } from "$lib/server/stats/pets.js";
 import { getSlayer } from "$lib/server/stats/slayer.js";
 import { getPlayerStats } from "$lib/shared/player_stats.js";
 import type { ProcessedItem } from "$types/processed/profile/items";
-import * as simdjson from "@nozbe/simdjson";
 import { json } from "@sveltejs/kit";
 
 export async function GET({ params, cookies }) {
@@ -21,7 +20,7 @@ export async function GET({ params, cookies }) {
 
   const [profile, player] = await Promise.all([getProfile(paramPlayer, paramProfile as string, { cache: true }), fetchPlayer(paramPlayer, { cache: true })]);
   const allItemsRaw = await REDIS.get(`profile:${paramProfile}:items`);
-  const items = simdjson.parse(allItemsRaw as string);
+  const items = JSON.parse(allItemsRaw as string);
   for (const inventory of ["talisman_bag", "inventory", "enderchest", "backpack"]) {
     items[inventory] = processItems(items[inventory], inventory, packs, { pack: false, category: false });
   }

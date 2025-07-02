@@ -6,7 +6,6 @@ import { getFishing } from "$lib/server/stats/fishing.js";
 import { getSkillTools } from "$lib/server/stats/items/category.js";
 import { processItems } from "$lib/server/stats/items/processing";
 import { getMining } from "$lib/server/stats/mining.js";
-import * as simdjson from "@nozbe/simdjson";
 import { json } from "@sveltejs/kit";
 
 export async function GET({ params, cookies }) {
@@ -14,7 +13,7 @@ export async function GET({ params, cookies }) {
 
   const packs = JSON.parse(cookies.get("disabledPacks") || "[]");
   const [profile, player, allItemsRaw] = await Promise.all([getProfile(paramPlayer, paramProfile as string, { cache: true }), fetchPlayer(paramPlayer, { cache: true }), REDIS.get(`profile:${paramProfile}:items`)]);
-  const items = simdjson.parse(allItemsRaw as string);
+  const items = JSON.parse(allItemsRaw as string);
 
   const allItems = [];
   const validInventories = ["backpack", "inventory", "enderchest"];

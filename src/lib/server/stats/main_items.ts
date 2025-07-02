@@ -1,4 +1,3 @@
-import * as simdjson from "@nozbe/simdjson";
 import { error } from "console";
 import { REDIS } from "../db/redis";
 import { getArmor } from "./items/armor";
@@ -8,7 +7,7 @@ import { getWardrobe } from "./items/wardrobe";
 
 export async function getMainItems(profileId: string) {
   const rawItems = await REDIS.get(`profile:${profileId}:main_items`);
-  const items = rawItems ? simdjson.parse(rawItems) : null;
+  const items = rawItems ? JSON.parse(rawItems) : null;
   if (!items) {
     return error(404, `No items found for profile ${profileId}. Please try again later.`);
   }

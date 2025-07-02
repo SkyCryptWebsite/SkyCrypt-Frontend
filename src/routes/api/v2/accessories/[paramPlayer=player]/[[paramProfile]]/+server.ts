@@ -4,7 +4,6 @@ import { getAccessories } from "$lib/server/stats/accessories.js";
 import { processItems } from "$lib/server/stats/items/processing.js";
 import { stripItems } from "$lib/server/stats/items/stripping.js";
 import type { ProcessedItem } from "$types/stats.js";
-import * as simdjson from "@nozbe/simdjson";
 import { json } from "@sveltejs/kit";
 
 export async function GET({ params, cookies }) {
@@ -12,7 +11,7 @@ export async function GET({ params, cookies }) {
   const packs = JSON.parse(cookies.get("disabledPacks") || "[]");
 
   const allItemsRaw = await REDIS.get(`profile:${paramProfile}:items`);
-  const items = simdjson.parse(allItemsRaw as string);
+  const items = JSON.parse(allItemsRaw as string);
   for (const inventory of ["talisman_bag", "inventory", "enderchest", "backpack"]) {
     items[inventory] = processItems(items[inventory], inventory, packs, { pack: false, category: false });
   }

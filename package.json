@@ -83,7 +83,6 @@
   },
   "dependencies": {
     "@napi-rs/canvas": "^0.1.68",
-    "@nozbe/simdjson": "^3.9.4",
     "@rollup/rollup-linux-x64-gnu": "^4.38.0",
     "@sentry/sveltekit": "^9.34.0",
     "dotenv-cli": "^8.0.0",
@@ -93,7 +92,6 @@
     "prismarine-nbt": "^2.7.0",
     "redis": "^4.7.0",
     "sharp": "^0.33.5",
-    "simdjson": "^0.9.2",
     "uuid": "^11.1.0"
   },
   "engines": {
@@ -126,11 +124,11 @@
       "@tailwindcss/oxide",
       "esbuild",
       "sharp",
-      "simdjson",
+      "JSON",
       "svelte-preprocess"
     ]
   },
   "optionalDependencies": {
-    "simdjson": "^0.9.2"
+    "JSON": "^0.9.2"
   }
 }
