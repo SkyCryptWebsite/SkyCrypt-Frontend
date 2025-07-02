@@ -1,8 +1,9 @@
 <script lang="ts">
   import { getProfileCtx } from "$ctx/profile.svelte";
   import ApiNotice from "$lib/components/APINotice.svelte";
-  import { flyAndScale } from "$lib/shared/utils";
+  import { cn, flyAndScale } from "$lib/shared/utils";
   import { favorites } from "$lib/stores/favorites";
+  import { performanceMode } from "$lib/stores/preferences";
   import ChevronLeft from "@lucide/svelte/icons/chevron-left";
   import ChevronRight from "@lucide/svelte/icons/chevron-right";
   import ExternalLink from "@lucide/svelte/icons/external-link";
@@ -91,26 +92,28 @@
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>
-        <DropdownMenu.Content forceMount class="bg-background-grey/95 z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold" align="start" side="bottom">
+        <DropdownMenu.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", $performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={noticeRef}>
           {#snippet child({ wrapperProps, props, open })}
             {#if open}
               <div {...wrapperProps}>
                 <div {...props} transition:flyAndScale={{ y: 8, duration: 150 }}>
                   {#each profile.profiles ?? [] as otherProfile (otherProfile.profile_id)}
                     {#if otherProfile.profile_id !== profile.profile_id}
-                      <DropdownMenu.Item class="hover:bg-text/20 flex items-center p-4" data-sveltekit-preload-code="viewport">
+                      <DropdownMenu.Item class="group flex items-center p-2" data-sveltekit-preload-code="viewport">
                         {#snippet child({ props })}
                           <a {...props} href={`/stats/${profile.username}/${otherProfile.cute_name}`}>
-                            {otherProfile.cute_name}
-                            {#if otherProfile.game_mode === "bingo"}
-                              🎲
-                            {/if}
-                            {#if otherProfile.game_mode === "ironman"}
-                              ♻️
-                            {/if}
-                            {#if otherProfile.game_mode === "island"}
-                              🌴
-                            {/if}
+                            <div class="group-hover:bg-text/20 w-full rounded-lg bg-[oklch(59.65%_0_0)]/20 p-2 transition-colors duration-300">
+                              {otherProfile.cute_name}
+                              {#if otherProfile.game_mode === "bingo"}
+                                🎲
+                              {/if}
+                              {#if otherProfile.game_mode === "ironman"}
+                                ♻️
+                              {/if}
+                              {#if otherProfile.game_mode === "island"}
+                                🌴
+                              {/if}
+                            </div>
                           </a>
                         {/snippet}
                       </DropdownMenu.Item>
