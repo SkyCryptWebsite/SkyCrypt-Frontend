@@ -146,7 +146,6 @@ export async function getItems(userProfile: Member, userMuseum: MuseumRaw | null
 
     REDIS.set(`profile:${profileId}:${packs.join("")}:main_items`, JSON.stringify(mainItems), { EX: 60 * 5 });
 
-
     // NOTE: Timestamps are stringified to prevent issues with Redis or JSON serialization, as they may not handle large numbers (e.g., BigInt) correctly.
     for (const inventory of Object.values(output)) {
       for (const item of inventory) {
@@ -155,7 +154,7 @@ export async function getItems(userProfile: Member, userMuseum: MuseumRaw | null
         }
       }
     }
-    
+
     // ? Museum
     output.museum = userMuseum ? await decodeMusemItems(userMuseum, packs) : null;
     REDIS.set(`profile:${profileId}:${packs.join("")}:items`, JSON.stringify(output), { EX: 60 * 5 });
