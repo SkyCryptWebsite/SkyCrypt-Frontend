@@ -17,7 +17,7 @@
   let open = $state(false);
   let noticeOpen = $state(false);
 
-  let noticeRef = $state<HTMLElement | null>(null);
+  let noticeRef = $state<HTMLElement>(null!);
 
   const ctx = getProfileCtx();
   const profile = $derived(ctx.profile);
@@ -84,16 +84,51 @@
     </DropdownMenu.Portal>
   </DropdownMenu.Root>
   on
-  <DropdownMenu.Root>
-    <div class="inline-flex items-center gap-2 rounded-full bg-[oklch(59.65%_0_0)]/20 px-4 py-2 align-middle text-3xl font-semibold" bind:this={noticeRef}>
+  <div class="relative inline-flex items-center gap-2 rounded-full bg-[oklch(59.65%_0_0)]/20 px-4 py-2 align-middle text-3xl font-semibold data-[warning=true]:border-2 data-[warning=true]:border-yellow-500/20" data-warning={!!apiSettings.length} bind:this={noticeRef}>
+    <DropdownMenu.Root>
       <DropdownMenu.Trigger>
         {profile.profile_cute_name}
       </DropdownMenu.Trigger>
-      {#if apiSettings.length}
-        <Popover.Root bind:open={noticeOpen}>
-          <Popover.Trigger onpointerenter={() => (noticeOpen = true)}>
-            <TriangleAlert class="size-6 text-yellow-500" />
-          </Popover.Trigger>
+
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content forceMount class="bg-background-grey/95 z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold" align="start" side="bottom">
+          {#snippet child({ wrapperProps, props, open })}
+            {#if open}
+              <div {...wrapperProps}>
+                <div {...props} transition:flyAndScale={{ y: 8, duration: 150 }}>
+                  {#each profile.profiles ?? [] as otherProfile (otherProfile.profile_id)}
+                    {#if otherProfile.profile_id !== profile.profile_id}
+                      <DropdownMenu.Item class="hover:bg-text/20 flex items-center p-4" data-sveltekit-preload-code="viewport">
+                        {#snippet child({ props })}
+                          <a {...props} href={`/stats/${profile.username}/${otherProfile.cute_name}`}>
+                            {otherProfile.cute_name}
+                            {#if otherProfile.game_mode === "bingo"}
+                              🎲
+                            {/if}
+                            {#if otherProfile.game_mode === "ironman"}
+                              ♻️
+                            {/if}
+                            {#if otherProfile.game_mode === "island"}
+                              🌴
+                            {/if}
+                          </a>
+                        {/snippet}
+                      </DropdownMenu.Item>
+                    {/if}
+                  {/each}
+                </div>
+              </div>
+            {/if}
+          {/snippet}
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
+    {#if apiSettings.length}
+      <Popover.Root bind:open={noticeOpen}>
+        <Popover.Trigger class="rounded-full bg-yellow-500/20 px-4 py-2" onpointerenter={() => (noticeOpen = true)}>
+          <TriangleAlert class="size-6 text-yellow-500" />
+        </Popover.Trigger>
+        <Popover.Portal>
           <Popover.Content forceMount class="bg-background-grey z-50 max-w-sm rounded-lg" sideOffset={0} side="bottom" align="center" customAnchor={noticeRef} collisionPadding={6}>
             {#snippet child({ wrapperProps, props, open })}
               {#if open}
@@ -106,42 +141,10 @@
               {/if}
             {/snippet}
           </Popover.Content>
-        </Popover.Root>
-      {/if}
-    </div>
-    <DropdownMenu.Portal>
-      <DropdownMenu.Content forceMount class="bg-background-grey/95 z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold" align="start" side="bottom">
-        {#snippet child({ wrapperProps, props, open })}
-          {#if open}
-            <div {...wrapperProps}>
-              <div {...props} transition:flyAndScale={{ y: 8, duration: 150 }}>
-                {#each profile.profiles ?? [] as otherProfile (otherProfile.profile_id)}
-                  {#if otherProfile.profile_id !== profile.profile_id}
-                    <DropdownMenu.Item class="hover:bg-text/20 flex items-center p-4" data-sveltekit-preload-code="viewport">
-                      {#snippet child({ props })}
-                        <a {...props} href={`/stats/${profile.username}/${otherProfile.cute_name}`}>
-                          {otherProfile.cute_name}
-                          {#if otherProfile.game_mode === "bingo"}
-                            🎲
-                          {/if}
-                          {#if otherProfile.game_mode === "ironman"}
-                            ♻️
-                          {/if}
-                          {#if otherProfile.game_mode === "island"}
-                            🌴
-                          {/if}
-                        </a>
-                      {/snippet}
-                    </DropdownMenu.Item>
-                  {/if}
-                {/each}
-              </div>
-            </div>
-          {/if}
-        {/snippet}
-      </DropdownMenu.Content>
-    </DropdownMenu.Portal>
-  </DropdownMenu.Root>
+        </Popover.Portal>
+      </Popover.Root>
+    {/if}
+  </div>
 </div>
 
 <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
