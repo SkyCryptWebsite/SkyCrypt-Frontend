@@ -146,6 +146,16 @@ export async function getItems(userProfile: Member, userMuseum: MuseumRaw | null
 
     REDIS.set(`profile:${profileId}:${packs.join("")}:main_items`, JSON.stringify(mainItems), { EX: 60 * 5 });
 
+
+    // ? NOTE: I have no fucking idea what's going on here but for some reason without this Dates break, probably REDIS breaks with big numbers or smth?
+    for (const inventory of Object.values(output)) {
+      for (const item of inventory) {
+        if (item.tag?.ExtraAttributes?.timestamp) {
+          item.tag.ExtraAttributes.timestamp = item.tag.ExtraAttributes.timestamp.toString();
+        }
+      }
+    }
+    
     // ? Museum
     output.museum = userMuseum ? await decodeMusemItems(userMuseum, packs) : null;
     REDIS.set(`profile:${profileId}:${packs.join("")}:items`, JSON.stringify(output), { EX: 60 * 5 });
