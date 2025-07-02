@@ -6,8 +6,8 @@ import { getFishing } from "$lib/server/stats/fishing.js";
 import { getSkillTools } from "$lib/server/stats/items/category.js";
 import { processItems } from "$lib/server/stats/items/processing";
 import { getMining } from "$lib/server/stats/mining.js";
+import * as simdjson from "@nozbe/simdjson";
 import { json } from "@sveltejs/kit";
-import simdjson from "simdjson";
 
 export async function GET({ params, cookies }) {
   const { paramPlayer, paramProfile } = params;

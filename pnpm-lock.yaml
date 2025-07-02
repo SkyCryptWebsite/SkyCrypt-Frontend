@@ -11,6 +11,9 @@ importers:
       '@napi-rs/canvas':
         specifier: ^0.1.68
         version: 0.1.68
+      '@nozbe/simdjson':
+        specifier: ^3.9.4
+        version: 3.9.4
       '@rollup/rollup-linux-x64-gnu':
         specifier: ^4.38.0
         version: 4.38.0
@@ -797,6 +800,9 @@ packages:
   '@nodelib/fs.walk@1.2.8':
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
+
+  '@nozbe/simdjson@3.9.4':
+    resolution: {integrity: sha512-/3oCP8GBpdyeiBMEnuI6S0yl0yekD6Qxfed67hZqU1GIVn3o/vZgE8qANm69THfw7JgHLS9zjx56F/dO3q+koA==}
 
   '@opentelemetry/api-logs@0.57.2':
     resolution: {integrity: sha512-uIX52NnTM0iBh84MShlpouI7UKqkZ7MrUszTmaypHBu4r7NofznSnQRfJ+uUeDtQDj6w8eFGg5KBLDAwAPz1+A==}
@@ -4016,6 +4022,8 @@ snapshots:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
+
+  '@nozbe/simdjson@3.9.4': {}
 
   '@opentelemetry/api-logs@0.57.2':
     dependencies:

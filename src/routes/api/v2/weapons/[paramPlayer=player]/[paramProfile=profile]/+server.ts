@@ -1,8 +1,8 @@
 import { REDIS } from "$lib/server/db/redis.js";
 import { getWeapons } from "$lib/server/stats/items/category.js";
 import { processItems } from "$lib/server/stats/items/processing.js";
+import * as simdjson from "@nozbe/simdjson";
 import { json } from "@sveltejs/kit";
-import simdjson from "simdjson";
 
 export async function GET({ params, cookies }) {
   const { paramProfile } = params;

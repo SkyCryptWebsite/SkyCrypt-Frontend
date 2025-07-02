@@ -1,8 +1,8 @@
 import { REDIS } from "$lib/server/db/redis";
 import { getProfile } from "$lib/server/lib";
 import type { ProcessedSkyBlockItem } from "$types/stats.js";
+import * as simdjson from "@nozbe/simdjson";
 import { json } from "@sveltejs/kit";
-import simdjson from "simdjson";
 import { getPreDecodedNetworth } from "skyhelper-networth";
 
 export async function GET({ params }) {

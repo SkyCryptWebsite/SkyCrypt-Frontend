@@ -11,8 +11,8 @@ import { getPets } from "$lib/server/stats/pets.js";
 import { getSlayer } from "$lib/server/stats/slayer.js";
 import { getPlayerStats } from "$lib/shared/player_stats.js";
 import type { ProcessedItem } from "$types/processed/profile/items";
+import * as simdjson from "@nozbe/simdjson";
 import { json } from "@sveltejs/kit";
-import simdjson from "simdjson";
 
 export async function GET({ params, cookies }) {
   const { paramPlayer, paramProfile } = params;

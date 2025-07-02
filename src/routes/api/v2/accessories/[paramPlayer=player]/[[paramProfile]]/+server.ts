@@ -4,8 +4,8 @@ import { getAccessories } from "$lib/server/stats/accessories.js";
 import { processItems } from "$lib/server/stats/items/processing.js";
 import { stripItems } from "$lib/server/stats/items/stripping.js";
 import type { ProcessedItem } from "$types/stats.js";
+import * as simdjson from "@nozbe/simdjson";
 import { json } from "@sveltejs/kit";
-import simdjson from "simdjson";
 
 export async function GET({ params, cookies }) {
   const { paramPlayer, paramProfile } = params;

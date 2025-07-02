@@ -5,8 +5,8 @@ import { getEquipment } from "$lib/server/stats/items/equipment";
 import { processItems } from "$lib/server/stats/items/processing";
 import { stripItems } from "$lib/server/stats/items/stripping.js";
 import { getRift } from "$lib/server/stats/rift.js";
+import * as simdjson from "@nozbe/simdjson";
 import { json } from "@sveltejs/kit";
-import simdjson from "simdjson";
 
 export async function GET({ params, cookies }) {
   const { paramPlayer, paramProfile } = params;

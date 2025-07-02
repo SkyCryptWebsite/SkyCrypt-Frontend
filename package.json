@@ -83,6 +83,7 @@
   },
   "dependencies": {
     "@napi-rs/canvas": "^0.1.68",
+    "@nozbe/simdjson": "^3.9.4",
     "@rollup/rollup-linux-x64-gnu": "^4.38.0",
     "@sentry/sveltekit": "^9.34.0",
     "dotenv-cli": "^8.0.0",

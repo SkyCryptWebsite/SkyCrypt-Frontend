@@ -1,5 +1,5 @@
+import * as simdjson from "@nozbe/simdjson";
 import { error } from "console";
-import simdjson from "simdjson";
 import { REDIS } from "../db/redis";
 import { getArmor } from "./items/armor";
 import { getEquipment } from "./items/equipment";
