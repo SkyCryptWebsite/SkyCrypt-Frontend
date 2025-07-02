@@ -39,7 +39,7 @@ async function getItems() {
     items[id] = obj;
   }
 
-  console.log(items);
+  console.info(items);
 }
 
 getItems();

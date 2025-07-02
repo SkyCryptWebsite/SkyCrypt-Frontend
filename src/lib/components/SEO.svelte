@@ -30,7 +30,7 @@
     tank: "🛡️"
   } as Record<string, string>;
 
-  const slayerEmojis = {
+  const _slayerEmojis = {
     zombie: "🧟",
     spider: "🕸️",
     wolf: "🐺",
@@ -46,16 +46,16 @@
       output += `🌟 Skyblock Level: ${formatNumber(profile.skyblock_level.levelWithProgress)}\n`;
     }
 
-    if (profile.stats.networth.noInventory === false) {
-      output += `💸 Networth: ${formatNumber(profile.stats.networth.networth)}\n`;
+    // if (profile.networth.noInventory === false) {
+    //   output += `💸 Networth: ${formatNumber(profile.stats.networth.networth)}\n`;
+    // }
+
+    if (profile.purse !== undefined) {
+      output += `💰 Purse: ${formatNumber(profile.purse)}\n`;
     }
 
-    if (profile.stats.purse !== undefined) {
-      output += `💰 Purse: ${formatNumber(profile.stats.purse)}\n`;
-    }
-
-    if (profile.stats.bank !== undefined) {
-      output += `🏦 Bank: ${formatNumber(profile.stats.bank)}\n`;
+    if (profile.bank !== undefined) {
+      output += `🏦 Bank: ${formatNumber(profile.bank)}\n`;
     }
 
     output += "\n";
@@ -65,7 +65,7 @@
       ["runecrafting", "social", "fishing", "enchanting", "alchemy"]
     ];
     const skills = profile.skills?.skills as Record<string, Skill>;
-    if (skills !== undefined) {
+    if (skills !== undefined && Object.keys(skills).length > 0) {
       output += `📚 Skills: ${profile.skills.averageSkillLevelWithProgress.toFixed(2)}\n`;
 
       for (const skillGroup of sortedSkills) {
@@ -84,45 +84,45 @@
       output += "\n";
     }
 
-    if (profile.dungeons !== undefined) {
-      const dungeonsLevel = profile.dungeons.level?.levelWithProgress;
-      const classAverage = profile.dungeons.classes?.classAverageWithProgress;
-      if (dungeonsLevel > 0 && classAverage > 0) {
-        output += `🪦 Dungeons: ${dungeonsLevel.toFixed(2)} (${classAverage.toFixed(2)})\n`;
-      }
+    // if (profile.dungeons !== undefined) {
+    //   const dungeonsLevel = profile.dungeons.level?.levelWithProgress;
+    //   const classAverage = profile.dungeons.classes?.classAverageWithProgress;
+    //   if (dungeonsLevel > 0 && classAverage > 0) {
+    //     output += `🪦 Dungeons: ${dungeonsLevel.toFixed(2)} (${classAverage.toFixed(2)})\n`;
+    //   }
 
-      output += `${skillEmojis["dungeons"]} ${profile.dungeons.level?.level ?? 0} `;
-      const classes = profile.dungeons?.classes?.classes;
-      if (classes !== undefined) {
-        for (const [dclass, data] of Object.entries(classes)) {
-          output += `${skillEmojis[dclass]} ${data.level ?? 0} `;
-        }
-      }
+    //   output += `${skillEmojis["dungeons"]} ${profile.dungeons.level?.level ?? 0} `;
+    //   const classes = profile.dungeons?.classes?.classes;
+    //   if (classes !== undefined) {
+    //     for (const [dclass, data] of Object.entries(classes)) {
+    //       output += `${skillEmojis[dclass]} ${data.level ?? 0} `;
+    //     }
+    //   }
 
-      output += "\n";
-    }
+    //   output += "\n";
+    // }
 
     output += "\n";
 
-    if (profile.slayer?.totalSlayerExp > 0) {
-      output += `🤺 Slayer: ${formatNumber(profile.slayer.totalSlayerExp)}\n`;
+    // if (profile.slayer?.totalSlayerExp > 0) {
+    //   output += `🤺 Slayer: ${formatNumber(profile.slayer.totalSlayerExp)}\n`;
 
-      const slayerOrder = ["zombie", "spider", "wolf", "enderman", "vampire", "blaze"];
-      for (const slayer of slayerOrder) {
-        if (profile.slayer.data[slayer] === undefined) {
-          continue;
-        }
+    //   const slayerOrder = ["zombie", "spider", "wolf", "enderman", "vampire", "blaze"];
+    //   for (const slayer of slayerOrder) {
+    //     if (profile.slayer.data[slayer] === undefined) {
+    //       continue;
+    //     }
 
-        const slayerInfo = profile.slayer.data[slayer];
-        if (slayerInfo.level.level === 0) {
-          continue;
-        }
+    //     const slayerInfo = profile.slayer.data[slayer];
+    //     if (slayerInfo.level.level === 0) {
+    //       continue;
+    //     }
 
-        output += `${slayerEmojis[slayer]} ${slayerInfo.level.level} `;
-      }
+    //     output += `${slayerEmojis[slayer]} ${slayerInfo.level.level} `;
+    //   }
 
-      output += "\n";
-    }
+    //   output += "\n";
+    // }
 
     return output;
   }
@@ -155,20 +155,20 @@
     let description = "";
 
     // Base
-    if (profile.stats?.joined !== undefined) {
-      description += `${profile.displayName} has been playing SkyBlock for ${formatDistanceToNowStrict(profile.stats.joined)}`;
+    if (profile.joined !== undefined) {
+      description += `${profile.displayName} has been playing SkyBlock for ${formatDistanceToNowStrict(profile.joined)}`;
     }
 
-    const highestRaritySword = profile.items?.weapons?.highest_priority_weapon?.display_name;
+    // const highestRaritySword = profile.items?.weapons?.highest_priority_weapon?.display_name;
 
-    // Armor set
-    if (profile.items?.armor?.set_name !== undefined) {
-      if (highestRaritySword !== undefined) {
-        description += `, is wearing ${profile.items.armor.set_name}`;
-      } else {
-        description += `and is wearing ${profile.items.armor.set_name}`;
-      }
-    }
+    // // Armor set
+    // if (profile.items?.armor?.set_name !== undefined) {
+    //   if (highestRaritySword !== undefined) {
+    //     description += `, is wearing ${profile.items.armor.set_name}`;
+    //   } else {
+    //     description += `and is wearing ${profile.items.armor.set_name}`;
+    //   }
+    // }
 
     return description;
   }

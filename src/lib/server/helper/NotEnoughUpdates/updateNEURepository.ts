@@ -12,18 +12,18 @@ export async function updateNotEnoughUpdatesRepository() {
   if (building) return;
 
   try {
-    console.log(`[NOT-ENOUGH-UPDATES] Checking for updates...`);
+    console.info(`[NOT-ENOUGH-UPDATES] Checking for updates...`);
 
     const diffSummary = await gitSubmodule.diffSummary(["origin/master"]);
 
     if (diffSummary.files.length > 0) {
-      console.log(`[NOT-ENOUGH-UPDATES] Updating submodule...`);
+      console.info(`[NOT-ENOUGH-UPDATES] Updating submodule...`);
 
       await gitSubmodule.pull();
 
-      console.log(`[NOT-ENOUGH-UPDATES] Updated submodule!`);
+      console.info(`[NOT-ENOUGH-UPDATES] Updated submodule!`);
     } else {
-      console.log(`[NOT-ENOUGH-UPDATES] No updates found.`);
+      console.info(`[NOT-ENOUGH-UPDATES] No updates found.`);
     }
   } catch (error) {
     console.error("Error updating repository:", error);

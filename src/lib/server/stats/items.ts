@@ -1,19 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { getArmor } from "$lib/server/stats/items/armor";
-import { getEquipment } from "$lib/server/stats/items/equipment";
-import { processItems } from "$lib/server/stats/items/processing";
-import { getWardrobe } from "$lib/server/stats/items/wardrobe";
 import type { GetItemsItems, Member, MuseumRaw } from "$types/global";
-import { getItemNetworth } from "skyhelper-networth";
-import { addToItemLore, formatNumber } from "../helper";
+import { REDIS } from "../db/redis";
 import { sendWebhookMessage } from "../lib";
-import { getPets, getSkilllTools, getWeapons } from "./items/category";
 import { decodeItems } from "./items/decoding";
 import { decodeMusemItems } from "./items/museum";
-import { getMuseumItems } from "./museum";
+import { processItems } from "./items/processing";
 
-export async function getItems(userProfile: Member, userMuseum: MuseumRaw | null, packs: string[]): GetItemsItems {
+export async function getItems(userProfile: Member, userMuseum: MuseumRaw | null, packs: string[], profileId: string): Promise<GetItemsItems> {
   try {
     const INVENTORY = userProfile.inventory;
     const RIFT_INVENTORY = userProfile.rift?.inventory;
@@ -50,19 +44,11 @@ export async function getItems(userProfile: Member, userMuseum: MuseumRaw | null
       }, {})
     };
 
+    const allItems = [];
     const entries = Object.entries(outputPromises);
     const values = entries.map(([_, value]) => value);
     const decodedItems = await decodeItems(values);
-    const newItems = await Promise.all(
-      entries.map(async ([key, _], idx) => {
-        if (!decodedItems[idx]) {
-          return [key, []];
-        }
-
-        const processed = await processItems(decodedItems[idx], key, packs);
-        return [key, processed];
-      })
-    );
+    const newItems = entries.map(([key, _], idx) => [key, decodedItems[idx]]);
 
     const output = { backpack: [] };
     const backpackIconMap = new Map(newItems.filter(([key]) => key.startsWith("backpack_icon_")));
@@ -77,24 +63,29 @@ export async function getItems(userProfile: Member, userMuseum: MuseumRaw | null
         const iconKey = `backpack_icon_${backpackIndex}`;
         const backpackIcon = backpackIconMap.get(iconKey)[0];
 
+        backpackIcon.extra = { source: `backpack_icon_${backpackIndex}` };
+        allItems.push(backpackIcon);
+
         if (backpackIcon) {
           output.backpack.push({
             ...backpackIcon,
-            containsItems: value
+            containsItems: processItems(value, "backpack", packs)
           });
 
-          const filteredItems = value.filter((item) => item.tag || item.exp);
+          /*const filteredItems = value.filter((item) => item.tag || item.exp);
           const itemNetworthPromises = filteredItems.map((item) => getItemNetworth(item, { cache: true })).concat(getItemNetworth(backpackIcon));
           const itemNetworth = await Promise.all(itemNetworthPromises);
           const totalValue = itemNetworth.reduce((acc, cur) => acc + (cur?.price ?? 0), 0);
 
           addToItemLore(output.backpack.at(-1), ["", `§7Total Value: §6${Math.round(totalValue).toLocaleString()} Coins §7(§6${formatNumber(totalValue)}§7)`]);
+          */
         }
       }
     }
 
-    output.museumItems = userMuseum ? await decodeMusemItems(userMuseum, packs) : null;
+    // output.museumItems = userMuseum ? await decodeMusemItems(userMuseum, packs) : null;
 
+    /*
     output.armor = getArmor(output.armor);
     output.equipment = getEquipment(output.equipment);
     output.wardrobe = getWardrobe(output.wardrobe);
@@ -103,9 +94,9 @@ export async function getItems(userProfile: Member, userMuseum: MuseumRaw | null
 
     const allItems = Object.values(output).flat();
     output.weapons = getWeapons(allItems);
-    output.farming_tools = getSkilllTools("farming", allItems);
-    output.mining_tools = getSkilllTools("mining", allItems);
-    output.fishing_tools = getSkilllTools("fishing", allItems);
+    output.farming_tools = getSkillTools("farming", allItems);
+    output.mining_tools = getSkillTools("mining", allItems);
+    output.fishing_tools = getSkillTools("fishing", allItems);
     output.pets = getPets(allItems);
 
     const museum = output.museumItems ? getMuseumItems(output.museumItems) : null;
@@ -114,6 +105,50 @@ export async function getItems(userProfile: Member, userMuseum: MuseumRaw | null
       .map((item) => item.items)
       .flat();
     output.museum = museum?.inventory ?? [];
+
+    */
+
+    /*
+
+    const museumItems = userMuseum ? await decodeMusemItems(userMuseum, packs) : null;
+    const allMuseumItems = [...Object.values(museumItems?.items ?? {}), ...(museumItems?.specialItems ?? [])]
+      .filter((item) => item && item.borrowing === false)
+      .map((item) => item.items)
+      .flat();
+
+    const museum = museumItems ? getMuseumItems(museumItems) : null;
+    output.museum = museum?.inventory;
+
+    const museumInventory = museum?.inventory ?? [];
+    for (const item of museumInventory.concat(museumInventory.map((i) => i.containsItems)).flat()) {
+      if (!item) {
+        continue;
+      }
+
+      item.uuid = v4();
+      // allItems.push(item);
+    }
+      
+    
+
+    
+    REDIS.set(`profile:${profileId}:allMuseum`, JSON.stringify(allMuseumItems), "EX", 60 * 5); // 5 minutes cache
+    */
+
+    // REDIS.set(`items:${profileId}:all`, JSON.stringify(allItems), "EX", 60 * 5); // 5 minutes cache
+    // REDIS.set(`items:${profileId}:all:object`, JSON.stringify(output), "EX", 60 * 5);
+
+    // ? NOTE: Cache /api/v2/armor data in the background
+    const mainItems = { armor: output.armor, equipment: output.equipment, wardrobe: output.wardrobe };
+    for (const key in mainItems) {
+      mainItems[key] = processItems(mainItems[key], key, packs, { category: false, pack: false });
+    }
+
+    REDIS.set(`profile:${profileId}:${packs.join("")}:main_items`, JSON.stringify(mainItems), { EX: 60 * 5 });
+
+    // ? Museum
+    output.museum = userMuseum ? await decodeMusemItems(userMuseum, packs) : null;
+    REDIS.set(`profile:${profileId}:${packs.join("")}:items`, JSON.stringify(output), { EX: 60 * 5 });
 
     return output;
   } catch (error) {

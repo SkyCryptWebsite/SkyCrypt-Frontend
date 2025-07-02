@@ -12,7 +12,6 @@ export async function getAccessories(userProfile: Member, items: GetItemsItems, 
 
   const { talisman_bag: accessoryBag, inventory, enderchest } = items;
   const storage = items.backpack.map((i) => i.containsItems ?? []).flat();
-  const armor = items.armor.armor;
 
   const output = { accessories: [], accessory_ids: [], accessory_rarities: {} } as Accessories;
   const accessories = [];
@@ -30,7 +29,7 @@ export async function getAccessories(userProfile: Member, items: GetItemsItems, 
   };
 
   // Add accessories from accessory bag and armor (Active accessories)
-  for (const accessory of accessoryBag.concat(armor.filter((a) => a.categories && a.categories.includes("accessory")))) {
+  for (const accessory of accessoryBag) {
     const id = helper.getId(accessory);
     if (id === "") {
       continue;

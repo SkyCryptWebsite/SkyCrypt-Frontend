@@ -5,6 +5,7 @@
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { favorites } from "$lib/stores/favorites";
   import { content } from "$lib/stores/internal";
+  import { performanceMode } from "$lib/stores/preferences";
   import CodeXml from "@lucide/svelte/icons/code-xml";
   import GitPullRequestArrow from "@lucide/svelte/icons/git-pull-request-arrow";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
@@ -78,7 +79,7 @@
 </script>
 
 <main class="@container mx-auto mt-[48px] flex min-h-screen max-w-[68rem] flex-col justify-center gap-6 pt-5 pr-[max(1.25rem+env(safe-area-inset-right))] pb-[max(1.25rem+env(safe-area-inset-bottom))] pl-[max(1.25rem+env(safe-area-inset-left))]">
-  <form method="POST" action="/search" use:enhance class="flex w-full flex-col justify-center gap-6 rounded-lg py-6 text-3xl backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-[60%] dark:backdrop-brightness-50 dark:backdrop-contrast-100">
+  <form method="POST" action="/search" use:enhance class={cn("flex w-full flex-col justify-center gap-6 rounded-lg py-6 text-3xl", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-[60%] dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
     <div class="flex flex-col justify-center gap-2">
       <Field {form} name="query">
         <Control>
@@ -150,7 +151,7 @@
   {/snippet}
 
   <div class={cn("relative rounded-lg", { "transition-all duration-300 hover:scale-105": !options?.tip })}>
-    <Button.Root href={options?.tip ? "#" : `/stats/${user.id}`} class="relative flex h-full min-w-0 items-center gap-4 rounded-lg p-5 backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-[60%] dark:backdrop-brightness-50 dark:backdrop-contrast-100">
+    <Button.Root href={options?.tip ? "#" : `/stats/${user.id}`} class={cn("relative flex h-full min-w-0 items-center gap-4 rounded-lg p-5", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-[60%] dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
       <Avatar.Root class="bg-text/10 size-16 shrink-0 rounded-lg">
         <Avatar.Image loading="lazy" src={options?.tip ? "https://mc-heads.net/avatar/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40/64" : `https://crafatar.com/avatars/${user.id}?size=64&overlay`} alt={user.name} class="aspect-square size-16 rounded-lg " />
         <Avatar.Fallback class="text-text/60 flex h-full items-center justify-center text-lg font-semibold uppercase">
@@ -210,7 +211,7 @@
 {/snippet}
 
 {#snippet profileSkeleton()}
-  <div class="relative flex min-w-0 items-center gap-2 rounded-lg p-5 backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-[60%] dark:backdrop-brightness-50 dark:backdrop-contrast-100">
+  <div class={cn("relative flex min-w-0 items-center gap-2 rounded-lg p-5", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-[60%] dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
     <div class="bg-text/10 size-16 animate-pulse rounded-lg"></div>
     <div class="flex flex-col gap-1">
       <div class="bg-text/10 h-6 w-24 animate-pulse rounded-lg"></div>
@@ -221,7 +222,7 @@
 {/snippet}
 
 {#snippet ctalink(href: string, text: { title: string; description: string }, img: { src: string; alt: string })}
-  <Button.Root {href} target="_blank" rel="noreferrer" class="flex w-full items-center gap-4 rounded-lg p-4 backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-[60%] transition-all duration-300 hover:scale-[1.05] dark:backdrop-brightness-50 dark:backdrop-contrast-100">
+  <Button.Root {href} target="_blank" rel="noreferrer" class={cn("flex w-full items-center gap-4 rounded-lg p-4 transition-all duration-300 hover:scale-[1.05]", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-[60%] dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
     <Avatar.Root class="size-12 shrink-0 rounded-lg select-none">
       <Avatar.Image loading="lazy" src={img.src} alt={img.alt} class="pointer-events-none size-12 rounded-lg" />
       <Avatar.Fallback class="text-text/60 flex h-full items-center justify-center text-lg font-semibold uppercase">{img.alt.slice(0, 2)}</Avatar.Fallback>

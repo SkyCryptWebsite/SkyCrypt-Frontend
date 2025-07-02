@@ -65,6 +65,7 @@ export type ProcessedItem = {
   id: number;
   Damage: number;
   Count: number;
+  uuid: string;
   tag: {
     display: {
       Lore: string[];
@@ -154,8 +155,10 @@ export type ProcessedSkyBlockItem = {
   texture_path: string;
   containsItems?: ProcessedSkyBlockItem[];
   shiny?: boolean;
-  texture_pack?: string;
+  texture_pack: string;
   wiki?: { fandom?: string; official?: string } | null;
+  source?: string;
+  sourceTab?: { name: string; icon: string } | null;
   [key: string]: string | boolean;
 };
 
@@ -169,6 +172,8 @@ export type ProcessedSkyblockPet = {
   active: boolean;
   stats?: ItemStats;
   wiki?: { fandom?: string; official?: string } | null;
+  uuid: string;
+  texture_pack: string;
 };
 
 export type getTextureParams = {

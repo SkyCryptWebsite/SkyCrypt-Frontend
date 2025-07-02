@@ -1,5 +1,5 @@
 export const FAIRY_SOULS = {
-  normal: 253,
+  normal: 266,
   stranded: 4
 } as Record<string, number>;
 

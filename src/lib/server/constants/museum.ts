@@ -31,7 +31,6 @@ async function retrieveMuseumItems() {
 
     const category = item.museum_data.type.toLowerCase() as keyof MuseumConstants;
     if (!MUSEUM[category]) {
-      console.log(`[MUSEUM] Unknown museum category: ${category}`);
       continue;
     }
 
@@ -47,7 +46,6 @@ async function retrieveMuseumItems() {
     if (item.museum_data.armor_set_donation_xp) {
       const armorSetId = Object.keys(item.museum_data.armor_set_donation_xp)[0];
       if (!armorSetId) {
-        console.log(`[MUSEUM] Invalid armor set donation XP for ${item.id}`);
         continue;
       }
 

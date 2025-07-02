@@ -20,13 +20,16 @@
     <span>{title}</span>
     {#each statsData as [key, value], index (index)}
       {@const displayKey = STAT_ALIASES[key] !== undefined ? STAT_ALIASES[key] : key}
-
-      <span class={STATS_DATA[displayKey].color}>
-        {format(value)}{STATS_DATA[displayKey].suffix}
-        {STATS_DATA[displayKey].nameTiny}
-      </span>
-      {#if statsData.length - 1 !== index}
-        // {" "}
+      {#if STATS_DATA[displayKey]}
+        <span class={STATS_DATA[displayKey].color}>
+          {format(value)}{STATS_DATA[displayKey].suffix}
+          {STATS_DATA[displayKey].nameTiny}
+        </span>
+        {#if statsData.length - 1 !== index}
+          // {" "}
+        {/if}
+      {:else}
+        {console.warn(`Unknown stat: ${displayKey}`)}
       {/if}
     {/each}
   </p>

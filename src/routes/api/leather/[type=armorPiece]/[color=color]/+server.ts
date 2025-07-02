@@ -13,8 +13,7 @@ export const GET: RequestHandler = async ({ params }) => {
         "Content-Type": "image/png"
       }
     });
-  } catch (errorMsg) {
-    console.log("ERROR:", errorMsg);
+  } catch {
     throw error(500, "Internal server error");
   }
 };

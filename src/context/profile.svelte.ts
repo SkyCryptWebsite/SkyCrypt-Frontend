@@ -1,27 +1,23 @@
-import type { ValidStats } from "$types/stats";
+import type { StatsV2 } from "$types/statsv2";
 import { getContext, setContext } from "svelte";
 
 class ProfileContext {
-  #data = $state<ValidStats>()!;
+  #data = $state<StatsV2>()!;
 
   get profile() {
     return this.#data;
   }
 
-  set profile(value: ValidStats) {
+  set profile(value: StatsV2) {
     this.#data = value;
   }
 
-  get misc() {
-    return this.#data.misc;
-  }
-
-  constructor(profile: ValidStats) {
+  constructor(profile: StatsV2) {
     this.#data = profile;
   }
 }
 
-export function setProfileCtx(profile: ValidStats) {
+export function setProfileCtx(profile: StatsV2) {
   const existing = getProfileCtx();
   if (existing) {
     existing.profile = profile;

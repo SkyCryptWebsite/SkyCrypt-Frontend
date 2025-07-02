@@ -4,33 +4,30 @@
   import { getRarityClass, removeFormatting, renderLore } from "$lib/shared/helper";
   import { cn } from "$lib/shared/utils";
   import { wikiOrderPreferences } from "$lib/stores/wiki";
-  import type { ProcessedSkyBlockItem, ProcessedSkyblockPet } from "$lib/types/global";
+  import type { ProcessedSkyBlockItem } from "$types/stats";
+  import type { PetProcessedSkyBlockItem } from "$types/statsv2";
   import Image from "@lucide/svelte/icons/image";
   import Info from "@lucide/svelte/icons/info";
   import { Avatar, Button } from "bits-ui";
   import { derived as derivedStore } from "svelte/store";
 
   type Props = {
-    piece: ProcessedSkyBlockItem | ProcessedSkyblockPet;
+    piece: ProcessedSkyBlockItem | PetProcessedSkyBlockItem;
     isDrawer?: boolean;
-    tab?: {
-      name: string;
-      icon: string;
-    };
   };
-  let { piece, isDrawer, tab }: Props = $props();
+  let { piece, isDrawer }: Props = $props();
 
-  const skyblockItem = $derived(piece as ProcessedSkyBlockItem);
-  const itemName = $derived(skyblockItem.display_name ?? "???");
+  const skyblockItem = $derived(piece);
+  const itemName = $derived(piece?.display_name);
   const itemNameHtml = $derived(renderLore(itemName));
-  const isMulticolor = $derived((itemNameHtml.match(/<\/span>/g) || []).length > 1);
-  const bgColor = $derived(getRarityClass(piece.rarity ?? ("common".toLowerCase() as string), "bg"));
-  const enchanted = $derived(skyblockItem.texture_path.includes("/api/leather/") ? false : skyblockItem.shiny);
-  const packData = $derived(packConfigs.find((pack) => pack.id === skyblockItem.texture_pack));
+  const isMulticolor = $derived((itemNameHtml?.match(/<\/span>/g) || [])?.length > 1);
+  const bgColor = $derived(getRarityClass(piece?.rarity ?? ("common".toLowerCase() as string), "bg"));
+  const enchanted = $derived(skyblockItem?.texture_path.includes("/api/leather/") ? false : skyblockItem && "shiny" in skyblockItem ? skyblockItem.shiny : false);
+  const packData = $derived(packConfigs.find((pack) => pack.id === skyblockItem?.texture_pack));
 
-  // Get the wiki link for the item
+  // Get the wiki link for the itemf
   export const wikiInfo = derivedStore<typeof wikiOrderPreferences, { url: string; name: string } | undefined>(wikiOrderPreferences, ($wikiOrderPreferences) => {
-    const wiki = skyblockItem.wiki as unknown as ProcessedSkyBlockItem["wiki"];
+    const wiki = skyblockItem?.wiki as unknown as ProcessedSkyBlockItem["wiki"];
     if (!wiki) return undefined;
 
     // Try to get the preferred wiki link first, then fall back to any available link
@@ -56,7 +53,7 @@
 
 <div class={cn(`nice-colors-dark flex flex-nowrap items-center justify-center gap-4 p-5`, { "rounded-t-[10px]": isDrawer }, bgColor)}>
   <Avatar.Root class="shrink-0 px-2">
-    <Avatar.Image loading="lazy" src={piece.texture_path} alt={piece.display_name} class="data-[enchanted=true]:enchanted h-auto w-8 flex-none shrink-0 overflow-hidden [image-rendering:pixelated]" data-enchanted={enchanted} />
+    <Avatar.Image loading="lazy" src={piece?.texture_path} alt={piece?.display_name} class="data-[enchanted=true]:enchanted h-auto w-8 flex-none shrink-0 overflow-hidden [image-rendering:pixelated]" data-enchanted={enchanted} />
     <Avatar.Fallback>
       <Image class="size-8" />
     </Avatar.Fallback>
@@ -69,14 +66,16 @@
 
 <div class="w-full overflow-auto">
   <div class="w-full p-6 leading-snug font-semibold">
-    {#each skyblockItem.lore as lore, index (index)}
-      {@html renderLore(lore)}
-    {/each}
+    {#if skyblockItem?.lore}
+      {#each skyblockItem?.lore as lore, index (index)}
+        {@html renderLore(lore)}
+      {/each}
+    {/if}
 
-    {#if Array.isArray(skyblockItem.containsItems) && !skyblockItem.containsItems.every((item) => Object.keys(item).length === 0)}
+    {#if skyblockItem && "containsItems" in skyblockItem && Array.isArray(skyblockItem?.containsItems) && !skyblockItem?.containsItems.every((item) => Object.keys(item).length === 0)}
       <div class="border-text/10 mt-4 border-t pt-4">
         <div class="grid grid-cols-9 gap-1">
-          {#each skyblockItem.containsItems.slice(0, Math.min(skyblockItem.containsItems.length, 54)) as containedItem, index (index)}
+          {#each skyblockItem?.containsItems.slice(0, Math.min(skyblockItem?.containsItems.length, 54)) as containedItem, index (index)}
             {#if containedItem.texture_path}
               <div class="bg-text/[0.04] flex aspect-square items-center justify-center rounded-sm">
                 <ContainedItem piece={containedItem} isInventory={true} />
@@ -89,18 +88,18 @@
       </div>
     {/if}
 
-    {#if typeof tab === "object" && tab.icon}
+    {#if piece && "sourceTab" in piece && piece.sourceTab}
       <div class="mt-4">
         <div class="bg-text/[0.05] hover:bg-text/[0.08] flex items-center justify-between gap-4 rounded-[0.625rem] p-2 transition-colors">
           <div class="flex items-center gap-2">
             <Avatar.Root class="shrink-0 select-none">
-              <Avatar.Image loading="lazy" src={tab.icon} alt={tab.name} class="pointer-events-none aspect-square size-10 h-full rounded-lg select-none" />
+              <Avatar.Image loading="lazy" src={piece.sourceTab.icon} alt={piece.sourceTab.name} class="pointer-events-none aspect-square size-10 h-full rounded-lg select-none" />
               <Avatar.Fallback class="bg-icon/90 flex size-10 items-center justify-center rounded-lg text-center font-semibold uppercase">
-                {tab.name.slice(0, 2)}
+                {piece.sourceTab.name.slice(0, 2)}
               </Avatar.Fallback>
             </Avatar.Root>
             <div class="text-link font-semibold">
-              You can find this item in the <span class="capitalize">{tab.name}</span> tab
+              You can find this item in the <span class="capitalize">{piece.sourceTab.name}</span> tab
             </div>
           </div>
         </div>

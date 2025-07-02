@@ -1,5 +1,6 @@
 <script lang="ts">
   import { getProfileCtx } from "$ctx/profile.svelte";
+  import ApiNotice from "$lib/components/APINotice.svelte";
   import { flyAndScale } from "$lib/shared/utils";
   import { favorites } from "$lib/stores/favorites";
   import ChevronLeft from "@lucide/svelte/icons/chevron-left";
@@ -7,15 +8,21 @@
   import ExternalLink from "@lucide/svelte/icons/external-link";
   import Link from "@lucide/svelte/icons/link";
   import Star from "@lucide/svelte/icons/star";
-  import { Avatar, Button, DropdownMenu, Tooltip } from "bits-ui";
+  import TriangleAlert from "@lucide/svelte/icons/triangle-alert";
+  import { Avatar, Button, DropdownMenu, Popover, Tooltip } from "bits-ui";
   import { toast } from "svelte-sonner";
 
   let toastId: string | number = $state(0);
   let showMore = $state(false);
   let open = $state(false);
+  let noticeOpen = $state(false);
+
+  let noticeRef = $state<HTMLElement | null>(null);
 
   const ctx = getProfileCtx();
   const profile = $derived(ctx.profile);
+
+  const apiSettings = $derived(Object.entries(profile.apiSettings).filter(([_, value]) => !value));
 
   const iconMapper: Record<string, string> = {
     TWITTER: "x-twitter.svg",
@@ -78,9 +85,30 @@
   </DropdownMenu.Root>
   on
   <DropdownMenu.Root>
-    <DropdownMenu.Trigger class="inline-flex items-center rounded-full bg-[oklch(59.65%_0_0)]/20 px-4 py-2 align-middle text-3xl font-semibold">
-      {profile.profile_cute_name}
-    </DropdownMenu.Trigger>
+    <div class="inline-flex items-center gap-2 rounded-full bg-[oklch(59.65%_0_0)]/20 px-4 py-2 align-middle text-3xl font-semibold" bind:this={noticeRef}>
+      <DropdownMenu.Trigger>
+        {profile.profile_cute_name}
+      </DropdownMenu.Trigger>
+      {#if apiSettings.length}
+        <Popover.Root bind:open={noticeOpen}>
+          <Popover.Trigger onpointerenter={() => (noticeOpen = true)}>
+            <TriangleAlert class="size-6 text-yellow-500" />
+          </Popover.Trigger>
+          <Popover.Content forceMount class="bg-background-grey z-50 max-w-sm rounded-lg" sideOffset={0} side="bottom" align="center" customAnchor={noticeRef} collisionPadding={6}>
+            {#snippet child({ wrapperProps, props, open })}
+              {#if open}
+                <div {...wrapperProps}>
+                  <div {...props} transition:flyAndScale={{ y: 8, duration: 150 }}>
+                    <ApiNotice />
+                    <Popover.Arrow class="!text-icon [&>svg[data-arrow]]:text-icon" />
+                  </div>
+                </div>
+              {/if}
+            {/snippet}
+          </Popover.Content>
+        </Popover.Root>
+      {/if}
+    </div>
     <DropdownMenu.Portal>
       <DropdownMenu.Content forceMount class="bg-background-grey/95 z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold" align="start" side="bottom">
         {#snippet child({ wrapperProps, props, open })}

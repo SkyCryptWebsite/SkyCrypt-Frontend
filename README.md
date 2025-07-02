@@ -35,11 +35,14 @@ You are free to report bugs or contribute to this project. Just open <a href="..
    - If missing `pnpm`, you can install it with `npm i -g pnpm`
 2. Copy the `.env.example` file to a new `.env` file.
    1. Fill in your Hypixel API Key
+
    ```sh
    HYPIXEL_API_KEY="KEY"
    ```
+
    2. If you are using the easier Docker setup for MongoDB and Redis, you can leave the default values. Otherwise adjust the connection values to match your setup.
    3. The Discord Webhook URL is optional and can be left alone
+
 3. Start the MongoDB and Redis servers
    - To do this, run `docker compose up -d` in the project directory
    - If you are using your own servers, just make sure they are running

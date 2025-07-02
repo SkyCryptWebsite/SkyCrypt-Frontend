@@ -2,9 +2,11 @@
   import { getProfileCtx } from "$ctx/profile.svelte";
   import AdditionStat from "$lib/components/AdditionStat.svelte";
   import Chip from "$lib/components/Chip.svelte";
+  import Error from "$lib/components/Error.svelte";
   import ScrollItems from "$lib/components/scroll-items.svelte";
   import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
   import type { IsHover } from "$lib/hooks/is-hover.svelte";
+  import { api } from "$lib/shared/api";
   import { calculatePercentage, formatNumber, getRarityClass, renderLore } from "$lib/shared/helper";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { content } from "$lib/stores/internal";
@@ -12,93 +14,118 @@
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
   import Image from "@lucide/svelte/icons/image";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
+  import { createQuery } from "@tanstack/svelte-query";
   import { Avatar, Collapsible, Progress, Tooltip } from "bits-ui";
   import { format } from "numerable";
   import { getContext } from "svelte";
 
   const ctx = getProfileCtx();
   const profile = $derived(ctx.profile);
-  const gardenPromise = $derived<Promise<Garden>>(fetch(`/api/garden/${profile.profile_id.replaceAll("-", "")}`).then((res) => res.json()));
+  const profileUUID = $derived(profile.uuid);
+  const profileId = $derived(profile.profile_id);
+  const gardenLocked = $derived(profile.skyblock_level.level <= 5);
+
+  let sectionOpen: boolean = $state(false);
+  const queryEnabled = $derived(!gardenLocked && sectionOpen);
+
+  const query = createQuery<Garden>({
+    queryKey: ["garden", profileUUID, profileId],
+    queryFn: () => api(fetch).getGarden(profileUUID),
+    enabled: queryEnabled
+  });
+
+  const garden = $derived.by(() => {
+    if ($query.isPending || $query.error || !$query.data) return;
+    return $query.data;
+  });
+
   const isHover = getContext<IsHover>("isHover");
 </script>
 
-<Collapsible.Root>
+<Collapsible.Root
+  bind:open={sectionOpen}
+  onOpenChange={(open) => {
+    if (open) {
+      if ($query.isSuccess) return;
+      if (queryEnabled) $query.refetch();
+    }
+  }}>
   <Collapsible.Trigger class="group flex items-center gap-0.5">
     <ChevronDown class="size-5 transition-all duration-300 group-data-[state=open]:-rotate-180" />
     <SectionSubtitle class="my-0">Garden</SectionSubtitle>
   </Collapsible.Trigger>
   <Collapsible.Content>
-    {#if profile.skyblock_level.level <= 5}
-      <p>This player does not have Garden unlocked.</p>
+    {#if gardenLocked}
+      <p>This player does not have the Garden unlocked.</p>
     {:else}
-      {#await gardenPromise}
-        <LoaderCircle class="size-10 animate-spin" />
-      {:then garden}
-        {#if garden}
-          {@const hasMaxed = garden.level.maxed}
-          <div class="mt-2">
-            <AdditionStat text="Level" data="{garden.level.level} / {garden.level.maxLevel}" maxed={hasMaxed} asterisk={true}>
+      {#if $query.isPending}
+        <LoaderCircle class="text-icon animate-spin" />
+      {/if}
+      {#if $query.error}
+        <Error />
+      {/if}
+      {#if $query.isSuccess && $query.data && garden}
+        {@const hasMaxed = garden.level.maxed}
+        <div class="mt-2">
+          <AdditionStat text="Level" data="{garden.level.level} / {garden.level.maxLevel}" maxed={hasMaxed} asterisk={true}>
+            <h3 class="text-text/85 font-bold">
+              XP:
+              <span class="text-text">
+                {format(garden.level.xp)}
+              </span>
+            </h3>
+            <h3 class="text-text/85 font-bold">Progress to next level:</h3>
+            <Progress.Root value={garden.level.xpCurrent} max={hasMaxed ? garden.level.xpCurrent : garden.level.xpForNext} class="bg-text/30 relative h-4 w-full overflow-hidden rounded-full">
+              <div class="absolute z-10 flex h-full w-full justify-center">
+                <div class="shadow-background/50 txt-shadow text-xs font-semibold">
+                  {formatNumber(garden.level.xpCurrent)} / {formatNumber(garden.level.xpForNext)}
+                  XP
+                </div>
+              </div>
+              <div class="bg-skillbar data-[maxed=true]:bg-maxedbar h-full w-full flex-1 rounded-full transition-all duration-1000 ease-in-out" style={`transform: translateX(-${100 - parseFloat(calculatePercentage(garden.level.xpCurrent, hasMaxed ? garden.level.xpCurrent : garden.level.xpForNext))}%)`} data-maxed={hasMaxed}></div>
+            </Progress.Root>
+          </AdditionStat>
+          <AdditionStat text="Composter" data={Object.values(garden.composter).join(" / ")} asterisk={true} maxed={Object.values(garden.composter).every((value) => value === 25)}>
+            {#each Object.entries(garden.composter) as [key, value], index (index)}
               <h3 class="text-text/85 font-bold">
-                XP:
+                <span class="capitalize">{key.replaceAll("_", " ")}</span>:
                 <span class="text-text">
-                  {format(garden.level.xp)}
+                  {value}
                 </span>
               </h3>
-              <h3 class="text-text/85 font-bold">Progress to next level:</h3>
-              <Progress.Root value={garden.level.xpCurrent} max={hasMaxed ? garden.level.xpCurrent : garden.level.xpForNext} class="bg-text/30 relative h-4 w-full overflow-hidden rounded-full">
-                <div class="absolute z-10 flex h-full w-full justify-center">
-                  <div class="shadow-background/50 txt-shadow text-xs font-semibold">
-                    {formatNumber(garden.level.xpCurrent)} / {formatNumber(garden.level.xpForNext)}
-                    XP
-                  </div>
-                </div>
-                <div class="bg-skillbar data-[maxed=true]:bg-maxedbar h-full w-full flex-1 rounded-full transition-all duration-1000 ease-in-out" style={`transform: translateX(-${100 - parseFloat(calculatePercentage(garden.level.xpCurrent, hasMaxed ? garden.level.xpCurrent : garden.level.xpForNext))}%)`} data-maxed={hasMaxed}></div>
-              </Progress.Root>
-            </AdditionStat>
-            <AdditionStat text="Composter" data={Object.values(garden.composter).join(" / ")} asterisk={true} maxed={Object.values(garden.composter).every((value) => value === 25)}>
-              {#each Object.entries(garden.composter) as [key, value], index (index)}
-                <h3 class="text-text/85 font-bold">
-                  <span class="capitalize">{key.replaceAll("_", " ")}</span>:
-                  <span class="text-text">
-                    {value}
-                  </span>
-                </h3>
-              {/each}
-            </AdditionStat>
-            <AdditionStat text="Visitors" data={format(garden.visitors.completed)} asterisk={true}>
-              {#each Object.entries(garden.visitors.visitors) as [key, value], index (index)}
-                <h3 class="text-text/85 font-bold">
-                  <span class={cn("capitalize", getRarityClass(key, "text"))}>{key}</span>:
-                  <span class="text-text">
-                    {format(value.completed)}
-                  </span>
-                </h3>
-              {/each}
-            </AdditionStat>
-            <AdditionStat text="Unique Visitors" data={garden.visitors.uniqueVisitors} asterisk={true}>
-              {#each Object.entries(garden.visitors.visitors) as [key, value], index (index)}
-                <h3 class="text-text/85 font-bold">
-                  <span class={cn("capitalize", getRarityClass(key, "text"))}>{key}</span>:
-                  <span class="text-text">
-                    {format(value.unique)}
-                  </span>
-                </h3>
-              {/each}
-            </AdditionStat>
-          </div>
-          <div class="mt-5">
-            {@render milestones(garden)}
-          </div>
-          <div class="mt-5">
-            {@render upgrades(garden)}
-          </div>
-          <div class="mt-5">
-            {@render plots(garden)}
-          </div>
-        {/if}
-      {:catch}
-        <p>Something went wrong while fetching the garden data. Please try again later.</p>
-      {/await}
+            {/each}
+          </AdditionStat>
+          <AdditionStat text="Visitors" data={format(garden.visitors.completed)} asterisk={true}>
+            {#each Object.entries(garden.visitors.visitors) as [key, value], index (index)}
+              <h3 class="text-text/85 font-bold">
+                <span class={cn("capitalize", getRarityClass(key, "text"))}>{key}</span>:
+                <span class="text-text">
+                  {format(value.completed)}
+                </span>
+              </h3>
+            {/each}
+          </AdditionStat>
+          <AdditionStat text="Unique Visitors" data={garden.visitors.uniqueVisitors} asterisk={true}>
+            {#each Object.entries(garden.visitors.visitors) as [key, value], index (index)}
+              <h3 class="text-text/85 font-bold">
+                <span class={cn("capitalize", getRarityClass(key, "text"))}>{key}</span>:
+                <span class="text-text">
+                  {format(value.unique)}
+                </span>
+              </h3>
+            {/each}
+          </AdditionStat>
+        </div>
+        <div class="mt-5">
+          {@render milestones(garden)}
+        </div>
+        <div class="mt-5">
+          {@render upgrades(garden)}
+        </div>
+        <div class="mt-5">
+          {@render plots(garden)}
+        </div>
+      {/if}
     {/if}
   </Collapsible.Content>
 </Collapsible.Root>

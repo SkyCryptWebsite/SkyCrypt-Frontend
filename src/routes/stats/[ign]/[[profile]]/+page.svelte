@@ -1,26 +1,48 @@
 <script lang="ts">
-  import { replaceState } from "$app/navigation";
+  import { afterNavigate, replaceState } from "$app/navigation";
   import { page } from "$app/state";
   import { setProfileCtx } from "$ctx/profile.svelte";
+  import Error from "$lib/components/Error.svelte";
   import Main from "$lib/layouts/stats/Main.svelte";
-  import type { ValidStats } from "$types/stats";
+  import type { SectionName } from "$lib/sections/types";
+  import { api } from "$lib/shared/api";
+  import { cn } from "$lib/shared/utils";
+  import { tabValue } from "$lib/stores/internal";
+  import { performanceMode, sectionOrderPreferences } from "$lib/stores/preferences";
+  import type { StatsV2 } from "$types/statsv2";
+  import LoaderCircle from "@lucide/svelte/icons/loader-circle";
+  import { createQuery } from "@tanstack/svelte-query";
   import { tick, untrack } from "svelte";
-  import type { PageData } from "./$types";
+  let { ign, profile } = page.params;
 
-  let { data }: { data: PageData } = $props();
+  const query = createQuery<StatsV2>({
+    queryKey: ["profile", ign, profile],
+    queryFn: () => api(fetch).getProfile(ign, profile)
+  });
 
   // Initialize the profile context
-  setProfileCtx(data.user as unknown as ValidStats);
+  setProfileCtx($query.data!);
+
+  $effect.pre(() => {
+    const hash = page.url.hash;
+    if (hash) {
+      const sectionName = hash.substring(1) as SectionName;
+      const validSectionNames = $sectionOrderPreferences.map((section) => section.name);
+      if (validSectionNames.includes(sectionName)) {
+        tabValue.set(sectionName);
+      }
+    }
+  });
 
   // Update the profile context when the data changes
   $effect(() => {
     const abortController = new AbortController();
-    setProfileCtx(data.user as unknown as ValidStats);
+    setProfileCtx($query.data!);
 
     untrack(() => {
-      if (!data.user) return;
+      if (!$query.data) return;
 
-      const { username, profile_cute_name } = data.user;
+      const { username, profile_cute_name } = $query.data;
       if (!username) return;
 
       const current = page.url.pathname;
@@ -47,8 +69,37 @@
       abortController.abort();
     };
   });
+
+  afterNavigate(async ({ from, to, willUnload }) => {
+    if (!from || !to) return;
+    const { params: fromParams } = from;
+    const { params: toParams } = to;
+    if (!fromParams || !toParams) return;
+    if (fromParams.ign !== toParams.ign && !willUnload) {
+      console.warn("IGN changed, reloading page to reflect new profile.");
+      // Hard reload the page if the IGN changes, this ensures the profile context is updated correctly as TanStack Query does not work with Svelte 5 runes/states yet.
+      window.location.reload();
+    }
+  });
 </script>
 
-{#if data.user && data.user.profiles}
-  <Main />
+{#if $query.isPending || $query.error}
+  <div class="flex h-screen items-center justify-center">
+    {#if $query.isPending}
+      <div class={cn("bg-text/[0.05] rounded-lg p-6", $performanceMode ? "bg-background-grey" : "backdrop-blur-sm")}>
+        <div class="flex items-center gap-2">
+          <LoaderCircle class="text-text/60 size-5 animate-spin" />
+          <span class="text-text/80 font-semibold">Loading profile...</span>
+        </div>
+      </div>
+    {/if}
+    {#if $query.error}
+      <Error />
+    {/if}
+  </div>
+{/if}
+{#if $query.isSuccess}
+  {#if $query.data}
+    <Main />
+  {/if}
 {/if}

@@ -11,7 +11,7 @@ async function sendPostRequest() {
     });
 
     const responseData = await response.json();
-    console.log("Response:", responseData);
+    console.info("Response:", responseData);
   } catch (error) {
     console.error("Error:", error);
   }

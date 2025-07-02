@@ -32,7 +32,7 @@ export async function updateCollections() {
     const cache = await MONGO.collection("collections").findOne({});
 
     if (cache && cache.lastUpdated > Date.now() - cacheInternal) {
-      console.log(`[COLLECTIONS] Fetched collections in ${(Date.now() - timeNow).toLocaleString()}ms (cached)`);
+      console.info(`[COLLECTIONS] Fetched collections in ${(Date.now() - timeNow).toLocaleString()}ms (cached)`);
       await updateCollectionConstants();
       return;
     }
@@ -62,7 +62,7 @@ export async function updateCollections() {
 
     await MONGO.collection("collections").updateOne({}, { $set: output }, { upsert: true });
 
-    console.log(`[COLLECTIONS] Fetched collections in ${(Date.now() - timeNow).toLocaleString()}ms`);
+    console.info(`[COLLECTIONS] Fetched collections in ${(Date.now() - timeNow).toLocaleString()}ms`);
 
     await updateCollectionConstants();
   } catch (e) {

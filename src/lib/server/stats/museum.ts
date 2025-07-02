@@ -29,7 +29,7 @@ function formatProgressBar(amount: number, total: number, completedColor = "a", 
 function processMuseumItems(decodedMuseum: DecodedMuseumItems) {
   const output = {} as MuseumItems;
   for (const item of MUSEUM.getAllItems()) {
-    const itemData = decodedMuseum.items?.[item];
+    const itemData = decodedMuseum?.items?.[item];
     if (itemData === undefined && output[item] === undefined) {
       output[item] = {
         missing: true,
@@ -60,7 +60,7 @@ function processMuseumItems(decodedMuseum: DecodedMuseumItems) {
   const rarities = getCategoryItems("rarities");
 
   return {
-    value: decodedMuseum.value ?? 0,
+    value: decodedMuseum?.value ?? 0,
     appraisal: false,
     total: {
       amount: Object.keys(output).filter((i) => !output[i].missing).length,
@@ -79,10 +79,10 @@ function processMuseumItems(decodedMuseum: DecodedMuseumItems) {
       total: rarities.length
     },
     special: {
-      amount: decodedMuseum.special?.length ?? 0
+      amount: decodedMuseum?.special?.length ?? 0
     },
     items: output,
-    specialItems: decodedMuseum.special ?? [],
+    specialItems: decodedMuseum?.special ?? [],
     missing: {
       main: ["weapons", "armor", "rarities"].map((c) => getMissingItems(c as keyof typeof MUSEUM)).flat(),
       max: ["weapons", "armor", "rarities"].map((c) => getMaxMissingItems(c as keyof typeof MUSEUM)).flat()

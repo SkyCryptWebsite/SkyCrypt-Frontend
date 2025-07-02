@@ -18,7 +18,7 @@ export async function intializeNEURepository() {
   }
 
   if (dev && !fs.existsSync("NotEnoughUpdates-REPO/.git")) {
-    console.log(`[NOT-ENOUGH-UPDATES] Initializing NEU repository.`);
+    console.info(`[NOT-ENOUGH-UPDATES] Initializing NEU repository.`);
     try {
       await simpleGit().submoduleUpdate(["--init", "--recursive"]);
     } catch (error) {
@@ -27,12 +27,12 @@ export async function intializeNEURepository() {
   }
 
   if (!dev || !fs.existsSync("NotEnoughUpdates-REPO/.git")) {
-    console.log(`[NOT-ENOUGH-UPDATES] Cloning NEU repository.`);
+    console.info(`[NOT-ENOUGH-UPDATES] Cloning NEU repository.`);
     try {
       await simpleGit().clone("https://github.com/NotEnoughUpdates/NotEnoughUpdates-REPO", "NotEnoughUpdates-REPO");
     } catch (error) {
       if (error instanceof GitError && error.message.includes("already exists")) {
-        console.log("[NOT-ENOUGH-UPDATES] Repository already exists.");
+        console.info("[NOT-ENOUGH-UPDATES] Repository already exists.");
       } else {
         console.error("[NOT-ENOUGH-UPDATES] Error cloning repository:", error);
       }
@@ -93,5 +93,5 @@ export async function parseNEURepository() {
     }
   }
 
-  console.log(`[NOT-ENOUGH-UPDATES] Parsed ${items.length.toLocaleString()} items in ${(performance.now() - timeNow).toLocaleString()}ms`);
+  console.info(`[NOT-ENOUGH-UPDATES] Parsed ${items.length.toLocaleString()} items in ${(performance.now() - timeNow).toLocaleString()}ms`);
 }

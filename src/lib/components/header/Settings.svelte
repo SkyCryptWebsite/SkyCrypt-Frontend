@@ -4,19 +4,22 @@
   import { packConfigs } from "$lib/shared/constants/packs";
   import type { Theme } from "$lib/shared/constants/themes";
   import themes from "$lib/shared/constants/themes";
-  import { flyAndScale } from "$lib/shared/utils";
+  import { cn, flyAndScale } from "$lib/shared/utils";
   import { disabledPacks } from "$lib/stores/packs";
-  import { sectionOrderPreferences } from "$lib/stores/preferences";
+  import { performanceMode, sectionOrderPreferences } from "$lib/stores/preferences";
   import { theme as themeStore } from "$lib/stores/themes";
   import { wikiOrderPreferences } from "$lib/stores/wiki";
   import BookOpenText from "@lucide/svelte/icons/book-open-text";
   import Check from "@lucide/svelte/icons/check";
   import Cog from "@lucide/svelte/icons/cog";
+  import Fan from "@lucide/svelte/icons/fan";
   import GripVertical from "@lucide/svelte/icons/grip-vertical";
   import ListOrdered from "@lucide/svelte/icons/list-ordered";
   import PackageOpen from "@lucide/svelte/icons/package-open";
   import PaintBucket from "@lucide/svelte/icons/paint-bucket";
-  import { Avatar, Button, Label, Popover, RadioGroup, Switch, Tabs } from "bits-ui";
+  import Settings from "@lucide/svelte/icons/settings";
+  import Settings2 from "@lucide/svelte/icons/settings-2";
+  import { Avatar, Button, Label, Popover, RadioGroup, Separator, Switch, Tabs } from "bits-ui";
   import { getContext, onMount } from "svelte";
   import { dndzone, SHADOW_ITEM_MARKER_PROPERTY_NAME } from "svelte-dnd-action";
   import { flip } from "svelte/animate";
@@ -73,22 +76,22 @@
 
 {#snippet settings()}
   <Tabs.Root value="packs">
-    <Tabs.List class="bg-text/30 text-text mb-4 flex justify-between rounded-lg p-2 font-semibold">
-      <Tabs.Trigger value="packs" class="data-[state=active]:bg-icon flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
+    <Tabs.List class={cn("text-text mb-4 flex justify-between rounded-lg p-2 font-semibold", $performanceMode ? "bg-text/30" : "backdrop-blur-lg backdrop-brightness-10")}>
+      <Tabs.Trigger value="packs" class="data-[state=active]:bg-icon/80 flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
         <PackageOpen class="size-5" />
         Packs
       </Tabs.Trigger>
-      <Tabs.Trigger value="themes" class="data-[state=active]:bg-icon flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
+      <Tabs.Trigger value="themes" class="data-[state=active]:bg-icon/80 flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
         <PaintBucket class="size-5" />
         Themes
       </Tabs.Trigger>
-      <Tabs.Trigger value="order" class="data-[state=active]:bg-icon flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
+      <Tabs.Trigger value="order" class="data-[state=active]:bg-icon/80 flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
         <ListOrdered class="size-5" />
         Order
       </Tabs.Trigger>
-      <Tabs.Trigger value="wiki" class="data-[state=active]:bg-icon flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
-        <BookOpenText class="size-5" />
-        Wiki
+      <Tabs.Trigger value="misc" class="data-[state=active]:bg-icon/80 flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
+        <Settings class="size-5" />
+        Misc
       </Tabs.Trigger>
     </Tabs.List>
     <Tabs.Content value="packs">
@@ -182,38 +185,64 @@
         </Button.Root>
       {/if}
     </Tabs.Content>
-    <Tabs.Content value="wiki">
-      <div
-        class="flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto"
-        use:dndzone={{ items: wikiOrder, flipDurationMs: 300, dropTargetStyle: {} }}
-        onconsider={(e) => (wikiOrder = e.detail.items)}
-        onfinalize={(e) => {
-          wikiOrderPreferences.set(e.detail.items);
-          wikiOrder = e.detail.items;
-        }}>
-        {#each wikiOrder as wiki (wiki.id)}
-          {@const normalizedName = wiki.name.replaceAll("_", " ")}
-          <div animate:flip={{ duration: 300 }} class="bg-text/[0.05] relative flex items-center gap-2 rounded-lg p-2 font-semibold">
-            <GripVertical class="text-text/60 size-5" />
-            {normalizedName}
-            {#if SHADOW_ITEM_MARKER_PROPERTY_NAME in wiki && wiki[SHADOW_ITEM_MARKER_PROPERTY_NAME]}
-              <div in:fade={{ duration: 300, easing: cubicIn }} class="bg-text/[0.05] visible absolute inset-0 flex animate-pulse items-center gap-2 rounded-lg p-2 font-semibold opacity-30">
+    <Tabs.Content value="misc" class="space-y-6">
+      <div class="flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto">
+        <div class="bg-text/[0.05] space-y-4 rounded-lg p-4">
+          <h4 class="flex items-center gap-2 rounded-lg p-2 font-semibold">
+            <Settings2 class="size-5" />
+            Misc Settings
+          </h4>
+          <Label.Root for="performance" class="bg-text/[0.05] flex items-center justify-between gap-4 rounded-lg p-2">
+            <div class="flex items-center gap-2">
+              <Fan class="data-[performance=false]:animate-spin-slow size-6 will-change-transform data-[performance=true]:animate-spin" data-performance={$performanceMode} />
+              <div class="flex flex-col">
+                <h4 class="text-text/90 font-semibold">Performance Mode</h4>
+              </div>
+            </div>
+            <Switch.Root id="performance" checked={$performanceMode} class="data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30 peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors" onCheckedChange={() => performanceMode.update((value) => !value)}>
+              <Switch.Thumb class="bg-text pointer-events-none block size-4 shrink-0 rounded-full transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
+            </Switch.Root>
+          </Label.Root>
+        </div>
+        <Separator.Root class="bg-icon/30 shrink-0 data-[orientation=horizontal]:h-0.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-0.5" />
+        <div class="bg-text/[0.05] space-y-4 rounded-lg p-4">
+          <h4 class="flex items-center gap-2 rounded-lg p-2 font-semibold">
+            <BookOpenText class="size-5" />
+            Wiki Order
+          </h4>
+          <div
+            class="flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto"
+            use:dndzone={{ items: wikiOrder, flipDurationMs: 300, dropTargetStyle: {} }}
+            onconsider={(e) => (wikiOrder = e.detail.items)}
+            onfinalize={(e) => {
+              wikiOrderPreferences.set(e.detail.items);
+              wikiOrder = e.detail.items;
+            }}>
+            {#each wikiOrder as wiki (wiki.id)}
+              {@const normalizedName = wiki.name.replaceAll("_", " ")}
+              <div animate:flip={{ duration: 300 }} class="bg-text/[0.05] relative flex items-center gap-2 rounded-lg p-2 font-semibold">
                 <GripVertical class="text-text/60 size-5" />
                 {normalizedName}
+                {#if SHADOW_ITEM_MARKER_PROPERTY_NAME in wiki && wiki[SHADOW_ITEM_MARKER_PROPERTY_NAME]}
+                  <div in:fade={{ duration: 300, easing: cubicIn }} class="bg-text/[0.05] visible absolute inset-0 flex animate-pulse items-center gap-2 rounded-lg p-2 font-semibold opacity-30">
+                    <GripVertical class="text-text/60 size-5" />
+                    {normalizedName}
+                  </div>
+                {/if}
               </div>
-            {/if}
+            {/each}
           </div>
-        {/each}
+          {#if $differsFromDefault}
+            <Button.Root
+              class="bg-text/65 text-background/80 hover:bg-text/80 mt-4 w-full rounded-lg p-1.5 text-sm font-semibold uppercase transition-colors"
+              onclick={() => {
+                sectionOrderPreferences.set(defaultSectionOrder);
+              }}>
+              Reset to default
+            </Button.Root>
+          {/if}
+        </div>
       </div>
-      {#if $differsFromDefault}
-        <Button.Root
-          class="bg-text/65 text-background/80 hover:bg-text/80 mt-4 w-full rounded-lg p-1.5 text-sm font-semibold uppercase transition-colors"
-          onclick={() => {
-            sectionOrderPreferences.set(defaultSectionOrder);
-          }}>
-          Reset to default
-        </Button.Root>
-      {/if}
     </Tabs.Content>
   </Tabs.Root>
 {/snippet}
@@ -233,7 +262,7 @@
       {/snippet}
     </Popover.Trigger>
     <Popover.Portal>
-      <Popover.Content forceMount side="bottom" sideOffset={8} align="center" collisionPadding={8} class="bg-background-grey/95 z-10 min-w-[32rem] rounded-lg px-8 py-4">
+      <Popover.Content forceMount side="bottom" sideOffset={8} align="center" collisionPadding={8} class={cn("z-30 min-w-[32rem] rounded-lg px-8 py-4", $performanceMode ? "bg-background-grey/95" : "bg-background-grey/30 backdrop-blur-lg backdrop-brightness-50")}>
         {#snippet child({ wrapperProps, props, open })}
           {#if open}
             <div {...wrapperProps}>

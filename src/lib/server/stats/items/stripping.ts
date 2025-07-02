@@ -7,7 +7,7 @@ const getNestedValue = (obj: any, path: string) => {
   return path.split(".").reduce((acc, part) => acc?.[part], obj);
 };
 
-export function stripItem(item: ProcessedItem | ProcessedPet, keys?: string[]): ProcessedSkyBlockItem {
+export function stripItem(item: ProcessedItem | ProcessedPet | null, keys?: string[]): ProcessedSkyBlockItem {
   if (!item || (!item.display_name && !(item as ProcessedItem).tag?.display?.Name)) {
     return {} as ProcessedSkyBlockItem;
   }
@@ -61,7 +61,8 @@ export function stripItem(item: ProcessedItem | ProcessedPet, keys?: string[]): 
 
   if (keys?.length) {
     for (const key of keys) {
-      output[key] = getNestedValue(itemData, key);
+      const keyName = key.split(".").at(-1) ?? key;
+      output[keyName] = getNestedValue(itemData, key);
     }
   }
 
@@ -75,7 +76,7 @@ function stripPetData(pet: ProcessedPet): ProcessedSkyblockPet {
     type: pet.type,
     rarity: pet.rarity,
     texture_path: pet.texture_path,
-    level: pet.level.level,
+    level: pet.level?.level,
     active: pet.active
   } as ProcessedSkyblockPet;
 
@@ -101,8 +102,8 @@ function stripPetData(pet: ProcessedPet): ProcessedSkyblockPet {
   return output;
 }
 
-export function stripItems(items: Array<ProcessedItem | ProcessedPet>, keys?: string[]): ProcessedSkyBlockItem[] {
-  if (items.length === 0) {
+export function stripItems(items: ProcessedItem[] | ProcessedPet[] | null, keys?: string[]): ProcessedSkyBlockItem[] {
+  if (!items || items.length === 0) {
     return [];
   }
 
@@ -156,4 +157,85 @@ export function stripAllItems(items: GetItemsItems) {
     pets: null,
     museumItems: null
   };
+}
+
+export function stripItemsV3(items: Array<ProcessedItem | ProcessedPet>, keys?: string[]): ProcessedSkyBlockItem[] {
+  if (items.length === 0) {
+    return [];
+  }
+
+  return items.map((item) => stripItemV3(item, keys ?? []));
+}
+
+export function stripItemV3(item: ProcessedItem | ProcessedPet, keys?: string[]): ProcessedSkyBlockItem {
+  if (!item || (!item.display_name && !(item as ProcessedItem).tag?.display?.Name)) {
+    return {} as ProcessedSkyBlockItem;
+  }
+
+  if ((item as ProcessedPet).level !== undefined) {
+    return stripPetDataV3(item as ProcessedPet) as unknown as ProcessedSkyBlockItem;
+  }
+
+  const itemData = item as ProcessedItem;
+  const output = {
+    texture_path: itemData.texture_path,
+    containsItems: itemData.containsItems?.map((item) => stripItemV3(item, keys))
+  } as ProcessedSkyBlockItem;
+
+  if (itemData.Count > 1) {
+    output.Count = itemData.Count;
+  }
+
+  if (itemData.recombobulated) {
+    output.recombobulated = itemData.recombobulated;
+  }
+
+  if (itemData.rarity && itemData.rarity !== "common") {
+    output.rarity = itemData.rarity;
+  }
+
+  if (itemData.shiny || itemData.glowing || isEnchanted(itemData) || helper.getId(itemData) === "POTION") {
+    output.shiny = true;
+  }
+
+  if (itemData.uuid) {
+    output.uuid = itemData.uuid;
+  }
+
+  if (itemData.isInactive) {
+    output.isInactive = itemData.isInactive;
+  }
+
+  if (itemData.isUnique) {
+    output.isUnique = itemData.isUnique;
+  }
+
+  if (keys?.length) {
+    for (const key of keys) {
+      const keyName = key.split(".").at(-1) ?? key;
+      output[keyName] = getNestedValue(itemData, key);
+    }
+  }
+
+  return output;
+}
+
+function stripPetDataV3(pet: ProcessedPet): ProcessedSkyblockPet {
+  const output = {
+    display_name: pet.display_name,
+    // lore: pet.lore,
+    //type: pet.type,
+    rarity: pet.rarity,
+    texture_path: pet.texture_path,
+    level: pet.level?.level,
+    active: pet.active,
+    uuid: pet.uuid
+  } as ProcessedSkyblockPet;
+
+  if (pet.active) {
+    output.stats = pet.stats;
+    output.active = true;
+  }
+
+  return output;
 }

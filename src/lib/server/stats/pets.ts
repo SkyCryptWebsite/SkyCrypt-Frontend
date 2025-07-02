@@ -2,8 +2,7 @@ import * as constants from "$lib/server/constants/constants";
 import * as helper from "$lib/server/helper";
 import { NEU_CONSTANTS, NEU_ITEMS } from "$lib/server/helper/NotEnoughUpdates/parseNEURepository";
 import { formatNumber, uniqBy } from "$lib/shared/helper";
-import type { GetItemsItems, Member, Pet, Pets, ProcessedPet, ProcessedSkyblockPet, Profile } from "$types/global";
-import { getItemNetworth } from "skyhelper-networth";
+import type { Member, Pet, Pets, ProcessedPet, ProcessedSkyblockPet, Profile } from "$types/global";
 import { stripItems } from "./items/stripping";
 
 let getMaxPetIdsCache = {} as { lastUpdated: number; data: Record<string, number> };
@@ -399,14 +398,10 @@ function getPetScore(pets: ProcessedPet[]) {
   };
 }
 
-export async function getPets(userProfile: Member, items: GetItemsItems, profile: Profile) {
+export async function getPets(userProfile: Member, profile: Profile) {
   const output = {} as Pets;
 
   const allPets = JSON.parse(JSON.stringify(userProfile.pets_data?.pets ?? [])) as Pet[];
-  if (items?.pets !== undefined) {
-    allPets.push(...(items.pets as unknown as Pet[]));
-  }
-
   if (userProfile.rift?.dead_cats?.montezuma !== undefined) {
     const montezumaPet = userProfile.rift.dead_cats.montezuma;
     montezumaPet.active = false;
@@ -416,11 +411,7 @@ export async function getPets(userProfile: Member, items: GetItemsItems, profile
 
   const pets = allPets.filter((pet) => pet.exp !== undefined);
   if (pets.length === 0) {
-    return {};
-  }
-
-  for (const pet of pets) {
-    await getItemNetworth(pet, { cache: true, returnItemData: false });
+    return null;
   }
 
   output.pets = getProfilePets(userProfile, pets) as unknown as ProcessedSkyblockPet[];

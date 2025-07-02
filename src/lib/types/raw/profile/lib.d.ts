@@ -208,6 +208,10 @@ export type NetherIslandPlayerData = {
 
 export type ProfilePets = {
   pets: Pet[];
+  pet_care: {
+    coins_spent: number;
+    pet_types_sacrificed: string[];
+  };
 };
 
 export type Mining = {

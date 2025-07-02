@@ -1,4 +1,8 @@
 export const RANKS = {
+  STAFF: {
+    color: "#c43c3c",
+    tag: "ዞ"
+  },
   OWNER: {
     color: "#c43c3c",
     tag: "OWNER"

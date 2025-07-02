@@ -1209,4 +1209,4 @@ for (const skin of PET_SKINS) {
   };
 }
 
-console.log(output);
+console.info(output);

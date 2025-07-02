@@ -2,13 +2,14 @@
   import { replaceState } from "$app/navigation";
   import { page } from "$app/state";
   import type { SectionName } from "$lib/sections/types";
-  import { inviewportSections } from "$lib/stores/internal";
+  import { tabValue } from "$lib/stores/internal";
   import { sectionOrderPreferences } from "$lib/stores/preferences";
   import { Button, ScrollArea } from "bits-ui";
-  import { onDestroy, onMount } from "svelte";
+  import { onDestroy, onMount, tick } from "svelte";
 
   let pinned = $state(false);
   let navbarElement = $state<HTMLDivElement | null>(null);
+  let observer: IntersectionObserver;
 
   let allLinks = $state<Record<string, HTMLAnchorElement | null>>(
     $sectionOrderPreferences.reduce(
@@ -20,28 +21,8 @@
     )
   );
 
-  let observer: IntersectionObserver;
-  let lowestActive = $derived(
-    Object.entries($inviewportSections)
-      .filter(([, v]) => v === true)
-      .reduce((lowest, [section]) => {
-        if (!lowest) return section;
-        const lowestElement = document.getElementById(lowest);
-        const currentElement = document.getElementById(section);
-        if (!lowestElement || !currentElement) return lowest;
-
-        const lowestBottom = lowestElement.getBoundingClientRect().bottom;
-        const currentBottom = currentElement.getBoundingClientRect().bottom;
-        return currentBottom >= lowestBottom ? section : lowest;
-      }, "")
-  );
-
-  function handleSectionClick(sectionName: string) {
-    Object.keys($inviewportSections).forEach((key) => {
-      $inviewportSections[key as SectionName] = false;
-    });
-
-    $inviewportSections[sectionName as SectionName] = true;
+  function handleSectionClick(sectionName: SectionName) {
+    tabValue.set(sectionName);
   }
 
   function scrollToTab(smooth = true, element?: HTMLElement | null) {
@@ -86,10 +67,13 @@
     observerCleanup();
   });
 
+  // Effect to handle tab value changes and update URL
   $effect(() => {
-    if (lowestActive && page.state === "loaded") {
-      scrollToTab(true, allLinks[lowestActive]);
-      replaceState("#" + lowestActive, page.state);
+    if (navbarElement && $tabValue) {
+      tick().then(() => {
+        scrollToTab(true, allLinks[$tabValue]);
+        replaceState("#" + $tabValue, page.state);
+      });
     }
   });
 </script>
@@ -100,7 +84,7 @@
       <div class="bg-icon absolute bottom-[0.4375rem] z-1 h-[2px] w-[calc(100%+0.5rem)]"></div>
       <div class="absolute inset-0 bottom-2 group-data-[pinned=true]:group-data-[mode=dark]/html:bg-[oklch(19.13%_0_0)]/90 group-data-[pinned=true]:group-data-[mode=light]/html:bg-[oklch(95.51%_0_0)]/92"></div>
       {#each $sectionOrderPreferences as section, index (index)}
-        <Button.Root href="#{section.name}" class="after:bg-icon data-[active=true]:text-text relative px-2 py-3 after:absolute after:top-full after:left-0 after:h-0 after:w-full after:origin-top after:rounded-full after:transition-all after:duration-100 hover:after:top-[calc(100%-4px)] hover:after:h-2 data-[active=true]:after:top-[calc(100%-4px)] data-[active=true]:after:h-2" data-active={lowestActive === section.name} bind:ref={allLinks[section.name]} onclick={() => handleSectionClick(section.name)}>
+        <Button.Root class="after:bg-icon data-[active=true]:text-text relative px-2 py-3 after:absolute after:top-full after:left-0 after:h-0 after:w-full after:origin-top after:rounded-full after:transition-all after:duration-100 hover:after:top-[calc(100%-4px)] hover:after:h-2 data-[active=true]:after:top-[calc(100%-4px)] data-[active=true]:after:h-2" data-active={$tabValue === section.name} bind:ref={allLinks[section.name]} onclick={() => handleSectionClick(section.name)}>
           {section.name?.replaceAll("_", " ")}
         </Button.Root>
       {/each}

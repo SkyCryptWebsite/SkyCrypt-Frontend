@@ -1,6 +1,8 @@
 <script lang="ts">
   import { dev } from "$app/environment";
   import { goto } from "$app/navigation";
+  import { cn } from "$lib/shared/utils";
+  import { performanceMode } from "$lib/stores/preferences";
   import RefreshCw from "@lucide/svelte/icons/refresh-cw";
   import { Button } from "bits-ui";
 
@@ -10,7 +12,7 @@
 </script>
 
 <main class="flex h-screen flex-col items-center justify-center">
-  <div class="flex max-w-md flex-col items-center justify-center gap-3 rounded-lg p-6 text-center backdrop-blur-lg backdrop-brightness-50">
+  <div class={cn("flex max-w-md flex-col items-center justify-center gap-3 rounded-lg p-6 text-center", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}>
     <h1 class="text-text/80 text-3xl font-semibold">Connection Error!</h1>
     <p class="text-text/80 text-lg">
       {#if navigator.onLine}

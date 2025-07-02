@@ -3,7 +3,7 @@ import type { Player } from "$types/raw/player/lib";
 import * as constants from "../constants/constants";
 import { getLevelByXp, getSkillLevelCaps, getSocialSkillExperience, getXpByLevel } from "./leveling/leveling";
 
-export function getSkills(userProfile: Member, profile: Profile, player: Player): Skills {
+export function getSkills(userProfile: Member, profile: Profile, player: Player | null): Skills {
   const output = { skills: {} } as Skills;
 
   const skillLevelCaps = getSkillLevelCaps(userProfile, player);
@@ -30,14 +30,14 @@ export function getSkills(userProfile: Member, profile: Profile, player: Player)
     });
   } else {
     const achievementSkills = {
-      taming: player.achievements?.skyblock_domesticator || 0,
-      farming: player.achievements?.skyblock_harvester || 0,
-      mining: player.achievements?.skyblock_excavator || 0,
-      combat: player.achievements?.skyblock_combat || 0,
-      foraging: player.achievements?.skyblock_gatherer || 0,
-      fishing: player.achievements?.skyblock_angler || 0,
-      enchanting: player.achievements?.skyblock_augmentation || 0,
-      alchemy: player.achievements?.skyblock_concoctor || 0,
+      taming: 0, // player.achievements?.skyblock_domesticator || 0,
+      farming: 0, // player.achievements?.skyblock_harvester || 0,
+      mining: 0, // player.achievements?.skyblock_excavator || 0,
+      combat: 0, // player.achievements?.skyblock_combat || 0,
+      foraging: 0, // player.achievements?.skyblock_gatherer || 0,
+      fishing: 0, // player.achievements?.skyblock_angler || 0,
+      enchanting: 0, // player.achievements?.skyblock_augmentation || 0,
+      alchemy: 0, // player.achievements?.skyblock_concoctor || 0,
       carpentry: 0,
       runecrafting: 0,
       social: 0
@@ -49,19 +49,25 @@ export function getSkills(userProfile: Member, profile: Profile, player: Player)
 
     output.disabled = true;
   }
-  output.totalSkillXp = Object.keys(output.skills)
-    .filter((skill) => constants.COSMETIC_SKILLS.includes(skill) === false)
-    .reduce((total, skill) => total + output.skills[skill as keyof SkillsData].xp, 0);
+  let totalSkillXp = 0;
+  let totalSkillLevel = 0;
+  let totalSkillLevelWithProgress = 0;
+  let skillCount = 0;
+  for (const skill of Object.keys(output.skills)) {
+    if (constants.COSMETIC_SKILLS.includes(skill)) {
+      continue;
+    }
 
-  output.averageSkillLevel =
-    Object.keys(output.skills)
-      .filter((skill) => constants.COSMETIC_SKILLS.includes(skill) === false)
-      .reduce((total, skill) => total + output.skills[skill as keyof SkillsData].level, 0) / 9;
+    const skillData = output.skills[skill as keyof SkillsData];
+    totalSkillLevelWithProgress += skillData.levelWithProgress;
+    totalSkillLevel += skillData.level;
+    totalSkillXp += skillData.xp;
+    skillCount++;
+  }
 
-  output.averageSkillLevelWithProgress =
-    Object.keys(output.skills)
-      .filter((skill) => constants.COSMETIC_SKILLS.includes(skill) === false)
-      .reduce((total, skill) => total + output.skills[skill as keyof SkillsData].levelWithProgress, 0) / 9;
+  output.totalSkillXp = totalSkillXp;
+  output.averageSkillLevel = totalSkillLevel / skillCount;
+  output.averageSkillLevelWithProgress = totalSkillLevelWithProgress / skillCount;
 
   return output;
 }

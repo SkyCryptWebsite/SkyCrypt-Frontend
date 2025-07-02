@@ -5,16 +5,15 @@ import { isUUID } from "$params/uuid";
 import type { Profile, ProfilesResponse } from "$types/global";
 import { SkyCryptError } from "./constants/error";
 import { REDIS } from "./db/redis";
-
 const headers = { Accept: "application/json", "User-Agent": "SkyCrypt", "API-KEY": HYPIXEL_API_KEY };
 
 export async function getProfiles(paramPlayer: string) {
-  const uuid = await getUUID(paramPlayer);
+  const uuid = await getUUID(paramPlayer, { cache: true });
   if (!uuid) {
     throw new SkyCryptError("Player not found");
   }
 
-  const profiles = await fetchProfiles(uuid);
+  const profiles = await fetchProfiles(uuid, { cache: true });
   const output = [];
   for (const profile of profiles) {
     output.push({
@@ -59,10 +58,6 @@ export async function fetchProfiles(uuid: string, options = { cache: false }): P
 }
 
 export async function getUUID(paramPlayer: string, options = { cache: false }) {
-  if (isUUID(paramPlayer)) {
-    return paramPlayer;
-  }
-
   const uuid = await REDIS.get(`UUID:${paramPlayer}`);
   if (uuid && options.cache) {
     return uuid;
@@ -123,13 +118,12 @@ async function resolveUsernameOrUUID(paramPlayer: string, options = { cache: fal
 
 export async function getProfile(uuid: string, profileId: string | null, options = { cache: false }) {
   const profiles = await fetchProfiles(uuid, options);
-
   const profile = (profileId && profiles.find((p) => p.cute_name.toUpperCase() === profileId.toUpperCase() || p.profile_id === profileId)) ?? profiles.find((p) => p.selected);
   if (!profile) {
     throw new SkyCryptError("Profile not found");
   }
 
-  profile.uuid = await getUUID(uuid, options);
+  profile.uuid = uuid;
 
   return profile;
 }

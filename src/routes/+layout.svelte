@@ -1,28 +1,32 @@
 <script lang="ts">
+  import { browser, dev } from "$app/environment";
   import { page } from "$app/state";
   import Header from "$lib/components/header/Header.svelte";
-  import V2Toast from "$lib/components/temp/V2Toast.svelte";
+  import PerformanceMode from "$lib/components/PerformanceMode.svelte";
   import { IsHover } from "$lib/hooks/is-hover.svelte";
   import { IsMobile } from "$lib/hooks/is-mobile.svelte";
   import themes from "$lib/shared/constants/themes";
+  import { cn } from "$lib/shared/utils";
   import { content } from "$lib/stores/internal";
-  import { internalPreferences } from "$lib/stores/preferences";
+  import { performanceMode } from "$lib/stores/preferences";
   import { theme as themeStore } from "$lib/stores/themes";
   import Wifi from "@lucide/svelte/icons/wifi";
   import WifiOff from "@lucide/svelte/icons/wifi-off";
+  import { QueryClientProvider } from "@tanstack/svelte-query";
+  import { SvelteQueryDevtools } from "@tanstack/svelte-query-devtools";
   import { Tooltip } from "bits-ui";
-  import { onMount, setContext } from "svelte";
+  import { onMount, setContext, type Snippet } from "svelte";
   import SvelteSeo from "svelte-seo";
-  import type { ToasterProps } from "svelte-sonner";
-  import { Toaster, toast } from "svelte-sonner";
+  import { Toaster, toast, type ToasterProps } from "svelte-sonner";
   import { writable } from "svelte/store";
   import { Drawer } from "vaul-svelte";
   import "../app.css";
+  import type { PageData } from "./$types";
 
   const position = writable<ToasterProps["position"]>("bottom-right");
   const theme = writable<ToasterProps["theme"]>("dark");
 
-  let { children } = $props();
+  let { data, children }: { data: PageData; children: Snippet } = $props();
   let isMobile = $state(new IsMobile());
   let isHover = $state(new IsHover());
   let toastId: string | number = $state(0);
@@ -33,22 +37,6 @@
   themeStore.subscribe((newTheme) => theme.set(themes.find((theme) => theme.id === newTheme)?.light ? "light" : "dark"));
 
   onMount(() => {
-    // if (browser && navigator && "serviceWorker" in navigator) {
-    //   navigator.serviceWorker.register("/service-worker.js", {
-    //     type: dev ? "module" : "classic"
-    //   });
-    // }
-
-    if (!$internalPreferences.hasSeenv2Toast) {
-      // @ts-expect-error - Not updated for Svelte 5 yet
-      toast.custom(V2Toast, {
-        duration: Number.POSITIVE_INFINITY,
-        onDismiss: () => {
-          internalPreferences.update((state) => ({ ...state, hasSeenv2Toast: true }));
-        }
-      });
-    }
-
     if (window.innerWidth <= 600) {
       position.set("bottom-center");
     }
@@ -60,8 +48,6 @@
         if (navigator.onLine) {
           toast.dismiss(toastId);
           toastId = toast.success("You are now online!", {
-            // @ts-expect-error - Not updated for Svelte 5 yet
-            // * https://github.com/wobsoriano/svelte-sonner/pull/126
             icon: Wifi,
             description: "Connection has been restored!",
             duration: 5000
@@ -69,8 +55,6 @@
         } else {
           toast.dismiss(toastId);
           toastId = toast.error("You are now offline!", {
-            // @ts-expect-error - Not updated for Svelte 5 yet
-            // * https://github.com/wobsoriano/svelte-sonner/pull/126
             icon: WifiOff,
             description: "Please check your connection and try again.",
             duration: 5000
@@ -125,21 +109,30 @@
   position={$position}
   class="sm:mr-8"
   toastOptions={{
-    class: "bg-background-grey gap-2 font-semibold group rounded-lg text-text/80 border-none",
+    class: cn("gap-2! font-semibold! group rounded-lg! text-text/80! border-none!", $performanceMode ? "bg-background-grey!" : "backdrop-blur-lg! backdrop-brightness-50! bg-transparent!"),
     classes: {
-      closeButton: "bg-background-grey text-text/80 border-none hover:bg-background-grey! hover:opacity-60",
-      description: "text-pretty font-medium",
-      title: "text-pretty font-semibold"
+      closeButton: "text-text/80! border-none! hover:opacity-60! bg-background-grey! hover:bg-background-grey!",
+      description: "text-pretty! font-medium!",
+      title: "text-pretty! font-semibold!"
     }
   }} />
 
 <Header />
 
+{#if browser && !$performanceMode}
+  <PerformanceMode />
+{/if}
+
 <div class="pointer-events-none fixed inset-0 z-[-1] h-dvh w-screen [background-image:var(--bg-url)] bg-cover bg-scroll bg-center bg-no-repeat"></div>
 
-<Tooltip.Provider delayDuration={0}>
-  {@render children()}
-</Tooltip.Provider>
+<QueryClientProvider client={data.queryClient}>
+  <Tooltip.Provider delayDuration={0}>
+    {@render children()}
+  </Tooltip.Provider>
+  {#if dev}
+    <SvelteQueryDevtools />
+  {/if}
+</QueryClientProvider>
 
 {#if !isHover.current}
   <Drawer.Root

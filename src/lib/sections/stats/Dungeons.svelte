@@ -1,14 +1,19 @@
 <script lang="ts">
   import { getProfileCtx } from "$ctx/profile.svelte";
   import AdditionStat from "$lib/components/AdditionStat.svelte";
-  import CollapsibleSection from "$lib/components/CollapsibleSection.svelte";
+  import Error from "$lib/components/Error.svelte";
   import ScrollItems from "$lib/components/scroll-items.svelte";
+  import Section from "$lib/components/Section.svelte";
   import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
   import Skillbar from "$lib/components/Skillbar.svelte";
+  import { api, SectionName } from "$lib/shared/api";
   import { formatNumber } from "$lib/shared/helper";
   import type { CatacombsData } from "$types/stats";
+  import type { DungeonsV2 } from "$types/statsv2";
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
   import Image from "@lucide/svelte/icons/image";
+  import LoaderCircle from "@lucide/svelte/icons/loader-circle";
+  import { createQuery } from "@tanstack/svelte-query";
   import { Avatar, Collapsible } from "bits-ui";
   import { formatDate, formatDistanceToNowStrict, formatDuration as formatDurationDateFns, intervalToDuration } from "date-fns";
   import { format } from "numerable";
@@ -17,7 +22,18 @@
 
   const ctx = getProfileCtx();
   const profile = $derived(ctx.profile);
-  const dungeons = $derived(profile.dungeons);
+  const profileUUID = $derived(profile.uuid);
+  const profileId = $derived(profile.profile_id);
+
+  const query = createQuery<DungeonsV2>({
+    queryKey: [SectionName.DUNGEONS, profileUUID, profileId],
+    queryFn: () => api(fetch).getSection(SectionName.DUNGEONS, profileUUID, profileId)
+  });
+
+  const dungeons = $derived.by(() => {
+    if ($query.isPending || $query.error || !$query.data) return;
+    return $query.data;
+  });
 
   function formatDuration(end: number) {
     const duration = formatDurationDateFns(intervalToDuration({ start: 0, end }), {
@@ -33,55 +49,63 @@
   }
 </script>
 
-<CollapsibleSection id="Dungeons" {order}>
-  <div class="space-y-4">
-    {#if dungeons.unlocked === false}
-      <p class="space-x-0.5 leading-6">{profile.username} hasn't unlocked Dungeons yet.</p>
-    {:else if dungeons}
-      <div class="flex flex-col flex-wrap justify-start gap-x-4 gap-y-2 pt-4 sm:flex-row">
-        <Skillbar class="" skill="Catacombs" skillData={dungeons.level} />
-        {#each Object.entries(dungeons.classes.classes) as [className, classData], index (index)}
-          <Skillbar class="sm:last:grow sm:last:basis-1/3" skill={className} skillData={classData} />
-        {/each}
-      </div>
-      <div class="pt-2 pb-1">
-        <AdditionStat text="Selected Class" data={dungeons.classes.selectedClass} />
-        <AdditionStat text="Class Average" data={format(dungeons.classes.classAverage)} asterisk={true} maxed={dungeons.classes.classAverage >= 50}>
-          <div class="max-w-xs space-y-2 font-bold">
-            <div>
-              <h3 class="text-text/85">Total Class XP: {format(dungeons.classes.totalClassExp.toFixed(2))}</h3>
-              <p class="text-text/80 font-medium italic">Total Class XP gained in Catacombs.</p>
+<Section id="Dungeons" {order}>
+  {#if $query.isPending}
+    <LoaderCircle class="text-icon animate-spin" />
+  {/if}
+  {#if $query.error}
+    <Error />
+  {/if}
+  {#if $query.isSuccess && $query.data && dungeons}
+    <div class="space-y-4">
+      {#if dungeons.unlocked === false}
+        <p class="space-x-0.5 leading-6">{profile.username} hasn't unlocked Dungeons yet.</p>
+      {:else if dungeons}
+        <div class="flex flex-col flex-wrap justify-start gap-x-4 gap-y-2 pt-4 sm:flex-row">
+          <Skillbar class="" skill="Catacombs" skillData={dungeons.level} />
+          {#each Object.entries(dungeons.classes.classes) as [className, classData], index (index)}
+            <Skillbar class="sm:last:grow sm:last:basis-1/3" skill={className} skillData={classData} />
+          {/each}
+        </div>
+        <div class="pt-2 pb-1">
+          <AdditionStat text="Selected Class" data={dungeons.classes.selectedClass} />
+          <AdditionStat text="Class Average" data={format(dungeons.classes.classAverage)} asterisk={true} maxed={dungeons.classes.classAverage >= 50}>
+            <div class="max-w-xs space-y-2 font-bold">
+              <div>
+                <h3 class="text-text/85">Total Class XP: {format(dungeons.classes.totalClassExp.toFixed(2))}</h3>
+                <p class="text-text/80 font-medium italic">Total Class XP gained in Catacombs.</p>
+              </div>
+              <div>
+                <h3 class="text-text/85">Average Level: {format(dungeons.classes.classAverageWithProgress.toFixed(2))}</h3>
+                <p class="text-text/80 font-medium italic">Average class level, includes progress to next level.</p>
+              </div>
+              <div>
+                <h3 class="text-text/85">Average Level without progress: {format(dungeons.classes.classAverage.toFixed(2))}</h3>
+                <p class="text-text/80 font-medium italic">Average class level without including partial level progress.</p>
+              </div>
             </div>
-            <div>
-              <h3 class="text-text/85">Average Level: {format(dungeons.classes.classAverageWithProgress.toFixed(2))}</h3>
-              <p class="text-text/80 font-medium italic">Average class level, includes progress to next level.</p>
-            </div>
-            <div>
-              <h3 class="text-text/85">Average Level without progress: {format(dungeons.classes.classAverage.toFixed(2))}</h3>
-              <p class="text-text/80 font-medium italic">Average class level without including partial level progress.</p>
-            </div>
-          </div>
-        </AdditionStat>
-        <AdditionStat text="Highest Floor Beaten (Normal)" data={format(dungeons.stats.highestFloorBeatenNormal)} maxed={dungeons.stats.highestFloorBeatenNormal === 7} />
-        <AdditionStat text="Highest Floor Beaten (Master)" data={format(dungeons.stats.highestFloorBeatenMaster)} maxed={dungeons.stats.highestFloorBeatenMaster === 7} />
-        <AdditionStat text="Secrets Found" data={format(dungeons.stats?.secrets?.found ?? 0)} subData="({format((dungeons.stats?.secrets?.secretsPerRun ?? 0).toFixed(2))} S/R)" />
-      </div>
-      <CollapsibleSection id="Catacombs">
-        {#snippet subtitle()}
-          <h4 class="text-text/90 my-5 text-xl font-semibold capitalize">Catacombs</h4>
-        {/snippet}
-        {@render cataCard(dungeons.catacombs)}
-      </CollapsibleSection>
+          </AdditionStat>
+          <AdditionStat text="Highest Floor Beaten (Normal)" data={format(dungeons.stats.highestFloorBeatenNormal)} maxed={dungeons.stats.highestFloorBeatenNormal === 7} />
+          <AdditionStat text="Highest Floor Beaten (Master)" data={format(dungeons.stats.highestFloorBeatenMaster)} maxed={dungeons.stats.highestFloorBeatenMaster === 7} />
+          <AdditionStat text="Secrets Found" data={format(dungeons.stats?.secrets?.found ?? 0)} subData="({format((dungeons.stats?.secrets?.secretsPerRun ?? 0).toFixed(2))} S/R)" />
+        </div>
+        <Section id="Catacombs">
+          {#snippet subtitle()}
+            <h4 class="text-text/90 my-5 text-xl font-semibold capitalize">Catacombs</h4>
+          {/snippet}
+          {@render cataCard(dungeons.catacombs)}
+        </Section>
 
-      <CollapsibleSection id="Master Catacombs">
-        {#snippet subtitle()}
-          <h4 class="text-text/90 my-5 text-xl font-semibold capitalize">Master Catacombs</h4>
-        {/snippet}
-        {@render cataCard(dungeons.master_catacombs, true)}
-      </CollapsibleSection>
-    {/if}
-  </div>
-</CollapsibleSection>
+        <Section id="Master_Catacombs">
+          {#snippet subtitle()}
+            <h4 class="text-text/90 my-5 text-xl font-semibold capitalize">Master Catacombs</h4>
+          {/snippet}
+          {@render cataCard(dungeons.master_catacombs, true)}
+        </Section>
+      {/if}
+    </div>
+  {/if}
+</Section>
 
 {#snippet cataCard(catacombs: CatacombsData[] | null, master: boolean = false)}
   {#if catacombs}
