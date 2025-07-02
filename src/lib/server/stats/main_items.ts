@@ -5,8 +5,8 @@ import { getEquipment } from "./items/equipment";
 import { stripItems } from "./items/stripping";
 import { getWardrobe } from "./items/wardrobe";
 
-export async function getMainItems(profileId: string) {
-  const rawItems = await REDIS.get(`profile:${profileId}:main_items`);
+export async function getMainItems(profileId: string, packs: string[]) {
+  const rawItems = await REDIS.get(`profile:${profileId}:${packs.join("")}:main_items`);
   const items = rawItems ? JSON.parse(rawItems) : null;
   if (!items) {
     return error(404, `No items found for profile ${profileId}. Please try again later.`);

@@ -4,9 +4,12 @@ import type { ProcessedSkyBlockItem } from "$types/stats.js";
 import { json } from "@sveltejs/kit";
 import { getPreDecodedNetworth } from "skyhelper-networth";
 
-export async function GET({ params }) {
+export async function GET({ params, cookies }) {
   const { paramPlayer, paramProfile } = params;
-  const [profile, allItemsRaw] = await Promise.all([getProfile(paramPlayer, paramProfile as string, { cache: true }), REDIS.get(`profile:${paramProfile}:items`)]);
+
+  const packs = JSON.parse(cookies.get("disabledPacks") || "[]");
+
+  const [profile, allItemsRaw] = await Promise.all([getProfile(paramPlayer, paramProfile as string, { cache: true }), REDIS.get(`profile:${paramProfile}:${packs.join("")}:items`)]);
   const allItems = JSON.parse(allItemsRaw as string);
 
   const museumItems = [...Object.values(allItems?.museum?.items ?? {}), ...(allItems?.museum?.specialItems ?? [])]

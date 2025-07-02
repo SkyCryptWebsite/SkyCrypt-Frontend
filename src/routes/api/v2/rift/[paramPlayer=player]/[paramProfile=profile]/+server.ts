@@ -12,8 +12,8 @@ export async function GET({ params, cookies }) {
 
   const profile = await getProfile(paramPlayer, paramProfile as string, { cache: true });
 
-  const allItemsRaw = await REDIS.get(`profile:${paramProfile}:items`);
   const packs = JSON.parse(cookies.get("disabledPacks") || "[]");
+  const allItemsRaw = await REDIS.get(`profile:${paramProfile}:${packs.join("")}:items`);
   const items = JSON.parse(allItemsRaw as string);
 
   const riftArmor = processItems(items["rift_armor"], "rift_armor", packs, { category: false, pack: false });

@@ -32,10 +32,11 @@ const getIcon = (inventory: string | undefined, uuid: string) => {
   return ICONS[inventory] || `https://crafatar.com/renders/head/${uuid}?overlay`;
 };
 
-export async function GET({ params }) {
+export async function GET({ params, cookies }) {
   const { paramPlayer, paramProfile, paramInventory, paramSearch } = params;
 
-  const rawItems = await REDIS.get(`profile:${paramProfile}:items`);
+  const packs = JSON.parse(cookies.get("disabledPacks") || "[]");
+  const rawItems = await REDIS.get(`profile:${paramProfile}:${packs.join("")}:items`);
   const items = JSON.parse(rawItems as string);
 
   if (paramInventory === "search" && paramSearch) {
@@ -43,7 +44,7 @@ export async function GET({ params }) {
 
     delete items.museum;
     for (const key in items) {
-      const item = processItems(items[key], key, [], { pack: false, category: false });
+      const item = processItems(items[key], key, packs, { pack: false, category: false });
       const containsItems = item.map((i) => i.containsItems || []).flat();
       const allItems = item.concat(containsItems);
 
@@ -71,7 +72,7 @@ export async function GET({ params }) {
     return json(strippedMuseumInventory);
   }
 
-  const processedItems = processItems(items[paramInventory], paramInventory, [], { pack: false, category: false });
+  const processedItems = processItems(items[paramInventory], paramInventory, packs, { pack: false, category: false });
   const strippedItems = stripItems(processedItems);
   return json(strippedItems);
 }

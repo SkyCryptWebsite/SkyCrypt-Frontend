@@ -1,7 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import type { GetItemsItems, Member, MuseumRaw } from "$types/global";
-import { v4 } from "uuid";
 import { REDIS } from "../db/redis";
 import { sendWebhookMessage } from "../lib";
 import { decodeItems } from "./items/decoding";
@@ -55,15 +54,7 @@ export async function getItems(userProfile: Member, userMuseum: MuseumRaw | null
     const backpackIconMap = new Map(newItems.filter(([key]) => key.startsWith("backpack_icon_")));
     for (const [key, value] of newItems) {
       if (!key.includes("backpack")) {
-        const itemsWithUUID = [];
-        for (const item of value) {
-          item.uuid = v4();
-          item.extra = { source: key };
-          itemsWithUUID.push(item);
-          allItems.push(item);
-        }
-
-        output[key] = itemsWithUUID;
+        output[key] = value;
         continue;
       }
 
@@ -72,24 +63,13 @@ export async function getItems(userProfile: Member, userMuseum: MuseumRaw | null
         const iconKey = `backpack_icon_${backpackIndex}`;
         const backpackIcon = backpackIconMap.get(iconKey)[0];
 
-        const itemsWithUUID = [];
-        for (const item of value) {
-          item.uuid = v4();
-          item.extra = { source: `backpack_${backpackIndex}` };
-
-          itemsWithUUID.push(item);
-          allItems.push(item);
-        }
-
-        const uuid = v4();
-        backpackIcon.uuid = uuid;
         backpackIcon.extra = { source: `backpack_icon_${backpackIndex}` };
         allItems.push(backpackIcon);
 
         if (backpackIcon) {
           output.backpack.push({
             ...backpackIcon,
-            containsItems: processItems(itemsWithUUID, "backpack", packs)
+            containsItems: processItems(value, "backpack", packs)
           });
 
           /*const filteredItems = value.filter((item) => item.tag || item.exp);
@@ -164,11 +144,11 @@ export async function getItems(userProfile: Member, userMuseum: MuseumRaw | null
       mainItems[key] = processItems(mainItems[key], key, packs, { category: false, pack: false });
     }
 
-    REDIS.set(`profile:${profileId}:main_items`, JSON.stringify(mainItems), { EX: 60 * 5 });
+    REDIS.set(`profile:${profileId}:${packs.join("")}:main_items`, JSON.stringify(mainItems), { EX: 60 * 5 });
 
     // ? Museum
     output.museum = userMuseum ? await decodeMusemItems(userMuseum, packs) : null;
-    REDIS.set(`profile:${profileId}:items`, JSON.stringify(output), { EX: 60 * 5 });
+    REDIS.set(`profile:${profileId}:${packs.join("")}:items`, JSON.stringify(output), { EX: 60 * 5 });
 
     return output;
   } catch (error) {

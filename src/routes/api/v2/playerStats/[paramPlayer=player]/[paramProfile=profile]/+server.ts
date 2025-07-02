@@ -19,7 +19,7 @@ export async function GET({ params, cookies }) {
   const packs = JSON.parse(cookies.get("disabledPacks") || "[]");
 
   const [profile, player] = await Promise.all([getProfile(paramPlayer, paramProfile as string, { cache: true }), fetchPlayer(paramPlayer, { cache: true })]);
-  const allItemsRaw = await REDIS.get(`profile:${paramProfile}:items`);
+  const allItemsRaw = await REDIS.get(`profile:${paramProfile}:${packs.join("")}:items`);
   const items = JSON.parse(allItemsRaw as string);
   for (const inventory of ["talisman_bag", "inventory", "enderchest", "backpack"]) {
     items[inventory] = processItems(items[inventory], inventory, packs, { pack: false, category: false });
@@ -30,7 +30,7 @@ export async function GET({ params, cookies }) {
     .concat(items.backpack)
     .flat();
 
-  const [stats, mainItes, pets, accessories] = await Promise.all([getMainStats(profile.members[paramPlayer], profile, player, packs), getMainItems(paramProfile), getPets(profile.members[paramPlayer], profile), getAccessories(profile.members[paramPlayer], items, packs)]);
+  const [stats, mainItes, pets, accessories] = await Promise.all([getMainStats(profile.members[paramPlayer], profile, player, packs), getMainItems(paramProfile, packs), getPets(profile.members[paramPlayer], profile), getAccessories(profile.members[paramPlayer], items, packs)]);
 
   const userProfile = {
     ...stats,

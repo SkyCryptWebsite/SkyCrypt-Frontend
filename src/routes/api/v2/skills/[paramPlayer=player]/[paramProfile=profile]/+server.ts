@@ -12,7 +12,7 @@ export async function GET({ params, cookies }) {
   const { paramPlayer, paramProfile } = params;
 
   const packs = JSON.parse(cookies.get("disabledPacks") || "[]");
-  const [profile, player, allItemsRaw] = await Promise.all([getProfile(paramPlayer, paramProfile as string, { cache: true }), fetchPlayer(paramPlayer, { cache: true }), REDIS.get(`profile:${paramProfile}:items`)]);
+  const [profile, player, allItemsRaw] = await Promise.all([getProfile(paramPlayer, paramProfile as string, { cache: true }), fetchPlayer(paramPlayer, { cache: true }), REDIS.get(`profile:${paramProfile}:${packs.join("")}:items`)]);
   const items = JSON.parse(allItemsRaw as string);
 
   const allItems = [];

@@ -6,8 +6,8 @@ import { json } from "@sveltejs/kit";
 export async function GET({ params, cookies }) {
   const { paramProfile } = params;
 
-  const allItemsRaw = await REDIS.get(`profile:${paramProfile}:items`);
   const packs = JSON.parse(cookies.get("disabledPacks") || "[]");
+  const allItemsRaw = await REDIS.get(`profile:${paramProfile}:${packs.join("")}:items`);
   const items = JSON.parse(allItemsRaw as string);
 
   const allItems = [];
