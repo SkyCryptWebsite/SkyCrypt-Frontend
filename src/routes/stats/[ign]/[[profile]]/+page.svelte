@@ -75,8 +75,8 @@
     const { params: fromParams } = from;
     const { params: toParams } = to;
     if (!fromParams || !toParams) return;
-    if (fromParams.ign !== toParams.ign && !willUnload) {
-      console.warn("IGN changed, reloading page to reflect new profile.");
+    if ((fromParams.ign !== toParams.ign || fromParams.profile !== toParams.profile) && !willUnload) {
+      console.warn("IGN or Profile changed, reloading page to reflect new profile.");
       // Hard reload the page if the IGN changes, this ensures the profile context is updated correctly as TanStack Query does not work with Svelte 5 runes/states yet.
       window.location.reload();
     }
