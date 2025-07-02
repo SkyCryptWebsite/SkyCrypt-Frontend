@@ -39,20 +39,32 @@
 
   function handleSectionClick(sectionName: SectionName) {
     tabValue.set(sectionName);
+    scrollToTab({ element: allLinks[sectionName], smooth: true });
   }
 
-  function scrollToTab(smooth = true, element?: HTMLElement | null) {
-    const link = element ?? document.querySelector<HTMLAnchorElement>(`[href="${location.hash}"]`);
-    const scrollableParent = link?.parentElement?.parentElement as HTMLElement;
+  function scrollToTab({
+    element,
+    smooth = true,
+    options
+  }: {
+    element?: HTMLElement | null;
+    smooth?: boolean;
+    options?: ScrollIntoViewOptions;
+  } = {}) {
+    const scrollOptions = options ?? {
+      behavior: smooth ? "smooth" : "auto",
+      block: "center",
+      inline: "center"
+    };
+
+    const link = element ?? document.querySelector<HTMLAnchorElement>(`button[data-id="${$tabValue}"]`);
 
     if (link == null) {
       console.warn(`could not scroll to ${location.hash} tab because it does not exist`, link);
       return;
     }
 
-    const behavior = smooth ? "smooth" : "auto";
-    const left = link.offsetLeft + link.getBoundingClientRect().width / 2 - scrollableParent.getBoundingClientRect().width / 2;
-    scrollableParent.scrollTo({ left, behavior });
+    link.scrollIntoView(scrollOptions);
   }
 
   function observerInit() {
@@ -87,26 +99,26 @@
   $effect(() => {
     if (navbarElement && $tabValue) {
       tick().then(() => {
-        scrollToTab(true, allLinks[$tabValue]);
+        scrollToTab({ element: allLinks[$tabValue], smooth: true });
         replaceState("#" + $tabValue, page.state);
       });
     }
   });
 </script>
 
-<ScrollArea.Root type="scroll" class="navbar group !sticky top-[calc(3rem+env(safe-area-inset-top,0))] z-20 overflow-clip" data-pinned={pinned} bind:ref={navbarElement}>
+<ScrollArea.Root type="always" class="navbar group !sticky top-[calc(3rem+env(safe-area-inset-top,0))] z-20 overflow-clip" data-pinned={pinned} bind:ref={navbarElement}>
   <ScrollArea.Viewport>
     <div class="text-text/80 flex! flex-nowrap items-center gap-2 pb-2 font-semibold whitespace-nowrap">
       <div class="bg-icon absolute bottom-[0.4375rem] z-1 h-[2px] w-[calc(100%+0.5rem)]"></div>
       <div class="absolute inset-0 bottom-2 group-data-[pinned=true]:group-data-[mode=dark]/html:bg-[oklch(19.13%_0_0)]/90 group-data-[pinned=true]:group-data-[mode=light]/html:bg-[oklch(95.51%_0_0)]/92"></div>
       {#each filteredSectionOrderPreferences as section, index (index)}
-        <Button.Root class="after:bg-icon data-[active=true]:text-text relative px-2 py-3 after:absolute after:top-full after:left-0 after:h-0 after:w-full after:origin-top after:rounded-full after:transition-all after:duration-100 hover:after:top-[calc(100%-4px)] hover:after:h-2 data-[active=true]:after:top-[calc(100%-4px)] data-[active=true]:after:h-2" data-active={$tabValue === section.name} bind:ref={allLinks[section.name]} onclick={() => handleSectionClick(section.name)}>
+        <Button.Root class="after:bg-icon data-[active=true]:text-text relative px-2 py-3 after:absolute after:top-full after:left-0 after:h-0 after:w-full after:origin-top after:rounded-full after:transition-all after:duration-100 hover:after:top-[calc(100%-4px)] hover:after:h-2 data-[active=true]:after:top-[calc(100%-4px)] data-[active=true]:after:h-2" data-id={section.name} data-active={$tabValue === section.name} bind:ref={allLinks[section.name]} onclick={() => handleSectionClick(section.name)}>
           {section.name?.replaceAll("_", " ")}
         </Button.Root>
       {/each}
     </div>
   </ScrollArea.Viewport>
-  <ScrollArea.Scrollbar orientation="horizontal">
-    <ScrollArea.Thumb />
+  <ScrollArea.Scrollbar orientation="horizontal" class="z-10 flex h-0.5 w-full origin-center -translate-y-[0.44rem] touch-none transition-all duration-300 select-none group-hover:h-2 group-hover:-translate-y-1">
+    <ScrollArea.Thumb class="bg-icon rounded-full" />
   </ScrollArea.Scrollbar>
 </ScrollArea.Root>

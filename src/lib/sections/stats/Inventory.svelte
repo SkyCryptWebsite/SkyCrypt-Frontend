@@ -131,14 +131,11 @@
 
   const searchQuery = createQuery({
     queryKey: ["inventory", uuid, profileId, "search"],
-    queryFn: () => api(fetch).getInventory(uuid, profileId, "search"),
+    queryFn: () => api(fetch).getInventory(uuid, profileId, "search", debouncedSearchValue.current),
     enabled: false
   });
 
-  const debouncedSearchValue = new Debounced(() => searchValue, 300);
-
-  // Refactor this or remove it if not needed
-  // const inventory = $derived(inventoryData?.inventory.slice(9).concat(inventoryData?.inventory.slice(0, 9)));
+  const debouncedSearchValue = $state(new Debounced(() => searchValue, 300));
 
   const tabs = $derived<Tabs[]>([
     {
@@ -322,18 +319,21 @@
         $museumQuery.refetch();
         break;
       case "search":
-        if ($searchQuery.isSuccess) return;
-        $searchQuery.refetch();
-        break;
+        break; // Search is handled separately
       default:
         console.warn(`Unknown tab: ${openTab}`);
         break;
     }
   });
+
+  $effect(() => {
+    if (debouncedSearchValue.current && debouncedSearchValue.current !== "" && openTab === "search") {
+      $searchQuery.refetch();
+    }
+  });
 </script>
 
 <Section id="Inventory" {order} class="min-h-[600px]">
-  <!-- {#if !hasEmptyInventory} -->
   <Tabs.Root bind:value={openTab} class="bg-background/30 @container relative mb-0 rounded-lg p-5 pt-4">
     <Tabs.List>
       <ScrollArea.Root>
@@ -365,17 +365,24 @@
 
     <Tabs.Content value={openTab}>
       {#if openTab === "backpack" || openTab === "museum"}
-        {@render multipleInventorySection()}
+        {#if tabs.find((tab) => tab.id === openTab)?.items?.length ?? 0 > 0}
+          {@render multipleInventorySection()}
+        {:else}
+          <p class="mt-2 space-x-0.5 text-center leading-6">
+            No items found in the {openTab.replaceAll("_", " ")}.
+          </p>
+        {/if}
       {:else if openTab == "search"}
         {@render searchSection()}
-      {:else}
+      {:else if tabs.find((tab) => tab.id === openTab)?.items?.length ?? 0 > 0}
         {@render inventorySection()}
+      {:else}
+        <p class="mt-2 space-x-0.5 text-center leading-6">
+          No items found in the {openTab.replaceAll("_", " ")}.
+        </p>
       {/if}
     </Tabs.Content>
   </Tabs.Root>
-  <!-- {:else}
-    <p class="space-x-0.5 leading-6">{profile.username} doesn't have any items.</p>
-  {/if} -->
 </Section>
 
 {#snippet itemSnippet(item: ProcessedSkyBlockItem)}
@@ -392,9 +399,16 @@
 
 {#snippet searchSection()}
   <input type="search" placeholder="Search inventory" class="bg-text/10 text-text placeholder:text-text/80 mx-auto mt-4 block w-1/5 rounded-lg px-2 py-2 font-normal focus-visible:outline-none" bind:value={searchValue} />
-  {#if searchValue && searchValue !== "" && searchedItems.length === 0}
+  {#if debouncedSearchValue.pending || $searchQuery.isPending}
+    <LoaderCircle class="text-icon mx-auto mt-4 animate-spin" />
+  {/if}
+  {#if $searchQuery.isError}
+    <Error />
+  {/if}
+
+  {#if (!debouncedSearchValue.pending || !$searchQuery.isPending) && debouncedSearchValue.current && debouncedSearchValue.current !== "" && searchedItems.length === 0}
     <p class="mx-auto w-fit leading-6">No items found.</p>
-  {:else if searchValue !== ""}
+  {:else if debouncedSearchValue.current !== ""}
     <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
       {#each searchedItems as item, index (index)}
         {#if item}
