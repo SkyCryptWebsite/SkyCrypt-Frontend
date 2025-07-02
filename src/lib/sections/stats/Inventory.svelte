@@ -252,7 +252,7 @@
     search: $searchQuery.isError
   }));
 
-  $effect(() => {
+  $effect.pre(() => {
     switch (openTab) {
       case "backpack":
         if ($backpackQuery.isSuccess) return;
@@ -327,7 +327,7 @@
   });
 
   $effect(() => {
-    if (debouncedSearchValue.current && debouncedSearchValue.current !== "" && openTab === "search") {
+    if (debouncedSearchValue.current && debouncedSearchValue.current !== "" && openTab === "search" && !debouncedSearchValue.pending) {
       $searchQuery.refetch();
     }
   });
@@ -398,8 +398,8 @@
 {/snippet}
 
 {#snippet searchSection()}
-  <input type="search" placeholder="Search inventory" class="bg-text/10 text-text placeholder:text-text/80 mx-auto mt-4 block w-1/5 rounded-lg px-2 py-2 font-normal focus-visible:outline-none" bind:value={searchValue} />
-  {#if debouncedSearchValue.pending || $searchQuery.isPending}
+  <input type="search" placeholder="Search all inventories" class="bg-text/10 text-text placeholder:text-text/80 mx-auto mt-4 block w-full max-w-52 rounded-lg px-2 py-2 font-normal focus-visible:outline-none" bind:value={searchValue} />
+  {#if debouncedSearchValue.pending || $searchQuery.isLoading}
     <LoaderCircle class="text-icon mx-auto mt-4 animate-spin" />
   {/if}
   {#if $searchQuery.isError}

@@ -111,7 +111,7 @@
         {#snippet child({ wrapperProps, props, open })}
           {#if open}
             <div {...wrapperProps}>
-              <div {...props} transition:flyAndScale={{ y: 8, duration: 300 }}>
+              <div {...props} transition:flyAndScale>
                 {@render info()}
               </div>
             </div>

@@ -10,9 +10,9 @@
   import Stats from "$lib/layouts/stats/Stats.svelte";
   import Sections from "$lib/sections/Sections.svelte";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { itemContent, showItem, showItemTooltip, tooltipAnchor } from "$lib/stores/internal";
+  import { itemContent, showItem } from "$lib/stores/internal";
   import { performanceMode } from "$lib/stores/preferences";
-  import { Dialog, Tooltip } from "bits-ui";
+  import { Dialog } from "bits-ui";
   import { getContext } from "svelte";
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
@@ -49,24 +49,6 @@
   </main>
 </div>
 
-<Tooltip.Root bind:open={$showItemTooltip} disableHoverableContent={true} ignoreNonKeyboardFocus={true} delayDuration={100}>
-  <Tooltip.Portal>
-    {#if isHover.current}
-      <Tooltip.Content forceMount class="bg-background-lore font-icomoon z-50 flex max-h-[calc(96vh-3rem)] max-w-lg flex-col overflow-clip rounded-lg select-text" sideOffset={8} side="right" align="center" customAnchor={$tooltipAnchor}>
-        {#snippet child({ wrapperProps, props, open })}
-          {#if open}
-            <div {...wrapperProps}>
-              <div {...props} transition:flyAndScale={{ y: 8, duration: 150 }}>
-                <ItemContent piece={$itemContent!} />
-              </div>
-            </div>
-          {/if}
-        {/snippet}
-      </Tooltip.Content>
-    {/if}
-  </Tooltip.Portal>
-</Tooltip.Root>
-
 {#if isHover.current}
   <Dialog.Root bind:open={$showItem}>
     <Dialog.Portal>
@@ -80,7 +62,7 @@
       <Dialog.Content forceMount class="bg-background-lore font-icomoon fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] max-w-[calc(100vw-2.5rem)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg select-text">
         {#snippet child({ props, open })}
           {#if open}
-            <div {...props} transition:flyAndScale={{ y: 8, duration: 150 }}>
+            <div {...props} transition:flyAndScale>
               <ItemContent piece={$itemContent!} />
             </div>
           {/if}

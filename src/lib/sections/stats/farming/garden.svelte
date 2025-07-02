@@ -166,7 +166,7 @@
                 {#snippet child({ wrapperProps, props, open })}
                   {#if open}
                     <div {...wrapperProps}>
-                      <div {...props} transition:flyAndScale={{ y: 8, duration: 150 }}>
+                      <div {...props} transition:flyAndScale>
                         <Tooltip.Arrow />
                         {@render tooltipContent()}
                       </div>

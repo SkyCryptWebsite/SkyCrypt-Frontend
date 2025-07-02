@@ -8,7 +8,6 @@ import { get, writable } from "svelte/store";
 
 export const tabValue = writable<SectionName>(get(sectionOrderPreferences)[0].name || sections[0].name);
 export const showItem = writable<boolean>(false);
-export const showItemTooltip = writable<boolean>(false);
 export const tooltipAnchor = writable<HTMLElement>(null!);
 export const itemContent = writable<ProcessedSkyBlockItem | PetProcessedSkyBlockItem | undefined>();
 
