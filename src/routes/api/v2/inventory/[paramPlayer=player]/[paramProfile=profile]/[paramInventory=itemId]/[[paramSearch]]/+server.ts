@@ -75,7 +75,7 @@ export async function GET({ params, cookies }) {
   const processedItems = processItems(items[paramInventory], paramInventory, packs, { pack: false, category: false });
   const strippedItems = stripItems(processedItems);
 
-  if (paramInventory === "inventory" || paramInventory === "paramInventory") {
+  if (paramInventory === "inventory" || paramInventory === "rift_inventory") {
     const inventory = strippedItems.slice(9).concat(strippedItems.slice(0, 9));
     return json(inventory);
   }
