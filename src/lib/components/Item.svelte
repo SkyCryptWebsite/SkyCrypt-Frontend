@@ -45,7 +45,7 @@
 
 <Tooltip.Root bind:open disableHoverableContent={true} ignoreNonKeyboardFocus={true} disabled={!inViewport.current} delayDuration={100}>
   <Tooltip.Trigger
-    class={cn(`nice-colors-dark relative flex aspect-square items-center justify-center overflow-clip `, isInventory ? "p-0" : `rounded-lg p-2 ${bgColor}`, { shine: shine && !isInventory })}
+    class={cn(`nice-colors-dark relative flex aspect-square items-center justify-center overflow-clip `, isInventory ? "size-6 p-0 sm:size-16" : `size-18 rounded-lg p-2 ${bgColor}`, { shine: shine && !isInventory })}
     bind:ref={targetNode}
     onclick={() => {
       if (skyblockItem.containsItems) return;
@@ -60,12 +60,12 @@
         {#if hasBeenInViewport}
           <Avatar.Root bind:loadingStatus>
             {#snippet child({ props })}
-              <Avatar.Image loading="lazy" width="56" height="56" src={piece.texture_path} alt={piece.display_name} class="data-[enchanted=true]:enchanted size-14 select-none [image-rendering:pixelated]" data-enchanted={enchanted} {...props} />
+              <Avatar.Image loading="lazy" src={piece.texture_path} alt={piece.display_name} class={cn("data-[enchanted=true]:enchanted select-none [image-rendering:pixelated]", isInventory ? "size-6 sm:size-14" : "size-14")} data-enchanted={enchanted} {...props} />
               {#if loadingStatus === "loading"}
                 {@render loadingState()}
               {/if}
               {#if loadingStatus === "error"}
-                <div class={cn("rounded-lg", isInventory ? "size-8 sm:size-14" : "size-14")}>
+                <div class={cn("rounded-lg", isInventory ? "size-6 sm:size-14" : "size-14")}>
                   <ImageOff class="size-full" />
                 </div>
               {/if}
