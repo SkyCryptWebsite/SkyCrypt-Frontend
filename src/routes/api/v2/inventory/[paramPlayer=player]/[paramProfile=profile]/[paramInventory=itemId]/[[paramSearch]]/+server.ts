@@ -44,7 +44,7 @@ export async function GET({ params, cookies }) {
 
     delete items.museum;
     for (const key in items) {
-      const item = processItems(items[key], key, packs, { pack: false, category: false });
+      const item = await processItems(items[key], key, packs, { pack: false, category: false });
       const containsItems = item.map((i) => i.containsItems || []).flat();
       const allItems = item.concat(containsItems);
 
@@ -72,7 +72,7 @@ export async function GET({ params, cookies }) {
     return json(strippedMuseumInventory);
   }
 
-  const processedItems = processItems(items[paramInventory], paramInventory, packs, { pack: false, category: false });
+  const processedItems = await processItems(items[paramInventory], paramInventory, packs, { pack: false, category: false });
   const strippedItems = stripItems(processedItems);
 
   if (paramInventory === "inventory" || paramInventory === "rift_inventory") {

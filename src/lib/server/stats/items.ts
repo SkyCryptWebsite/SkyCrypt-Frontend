@@ -69,7 +69,7 @@ export async function getItems(userProfile: Member, userMuseum: MuseumRaw | null
         if (backpackIcon) {
           output.backpack.push({
             ...backpackIcon,
-            containsItems: processItems(value, "backpack", packs)
+            containsItems: await processItems(value, "backpack", packs)
           });
 
           /*const filteredItems = value.filter((item) => item.tag || item.exp);
@@ -141,7 +141,7 @@ export async function getItems(userProfile: Member, userMuseum: MuseumRaw | null
     // ? NOTE: Cache /api/v2/armor data in the background
     const mainItems = { armor: output.armor, equipment: output.equipment, wardrobe: output.wardrobe };
     for (const key in mainItems) {
-      mainItems[key] = processItems(mainItems[key], key, packs, { category: false, pack: false });
+      mainItems[key] = await processItems(mainItems[key], key, packs, { category: false, pack: false });
     }
 
     REDIS.set(`profile:${profileId}:${packs.join("")}:main_items`, JSON.stringify(mainItems), { EX: 60 * 5 });

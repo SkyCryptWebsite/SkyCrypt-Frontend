@@ -16,8 +16,8 @@ export async function GET({ params, cookies }) {
   const allItemsRaw = await REDIS.get(`profile:${paramProfile}:${packs.join("")}:items`);
   const items = JSON.parse(allItemsRaw as string);
 
-  const riftArmor = processItems(items["rift_armor"], "rift_armor", packs, { category: false, pack: false });
-  const riftEquipment = processItems(items["rift_equipment"], "rift_equipment", packs, { category: false, pack: false });
+  const riftArmor = await processItems(items["rift_armor"], "rift_armor", packs, { category: false, pack: false });
+  const riftEquipment = await processItems(items["rift_equipment"], "rift_equipment", packs, { category: false, pack: false });
 
   const armor = getArmor(riftArmor);
   const equipment = getEquipment(riftEquipment);
