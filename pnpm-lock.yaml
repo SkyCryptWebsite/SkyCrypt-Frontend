@@ -228,10 +228,6 @@ importers:
       zod:
         specifier: ^3.25.67
         version: 3.25.67
-    optionalDependencies:
-      JSON:
-        specifier: ^0.9.2
-        version: 0.9.2
 
 packages:
 
@@ -1738,9 +1734,6 @@ packages:
     resolution: {integrity: sha512-ZtvYkYpZOYdvbws3uaOAvTFuvFXoQGAtmzeiXu+XSMGxi5GVsODpoI9Xu9TplEMuD/5fmAtBbKb9cQHkWkLXDQ==}
     engines: {node: '>=18.16.0'}
 
-  JSON@0.9.2:
-    resolution: {integrity: sha512-CW97acb8ty4EcxJGsCTrgxh1iiqLKbcuaIAte4DjPdoytK2ps1cRN1HpBJjIzqaL5cn1m/Dqc4AqA6NlKPPKKA==}
-
   abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
     engines: {node: '>=6.5'}
@@ -2715,9 +2708,6 @@ packages:
 
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
-
-  node-addon-api@2.0.2:
-    resolution: {integrity: sha512-Ntyt4AIXyaLIuMHF6IOoTakB3K+RWxwtsHNRxllEoA6vPwP9o4866g6YWDLUdnucilZhmkxiHwHr11gAENw+QA==}
 
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
@@ -5038,11 +5028,6 @@ snapshots:
       validator: 13.15.15
     optional: true
 
-  JSON@0.9.2:
-    dependencies:
-      node-addon-api: 2.0.2
-    optional: true
-
   abort-controller@3.0.0:
     dependencies:
       event-target-shim: 5.0.1
@@ -5956,9 +5941,6 @@ snapshots:
   nanoid@3.3.11: {}
 
   natural-compare@1.4.0: {}
-
-  node-addon-api@2.0.2:
-    optional: true
 
   node-fetch@2.7.0:
     dependencies:

@@ -135,6 +135,10 @@ function getProfilePets(userProfile: Member, pets: Pet[]) {
       continue;
     }
 
+    if (pet.heldItem === "PET_ITEM_TIER_BOOST") {
+      pet.tier = constants.RARITIES[constants.RARITIES.indexOf(pet.tier.toLowerCase()) + 1].toUpperCase();
+    }
+
     const outputPet = {
       type: pet.type,
       display_name: helper.titleCase(pet.type),
