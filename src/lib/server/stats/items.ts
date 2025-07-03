@@ -145,12 +145,15 @@ export async function getItems(userProfile: Member, userMuseum: MuseumRaw | null
           item.tag.ExtraAttributes.timestamp = item.tag.ExtraAttributes.timestamp.toString();
         }
 
-        // ? NOTE: This is to troll exotic collectors, it will randomly color an item in the Rift if the user hasn't visited the Rift zone. Chance is 1 in 100.
-        if (Math.random() < 0.01 && !userProfile?.player_data?.visited_zones?.includes("rift")) {
-          const randomHex = Math.floor(Math.random() * 0xffffff)
-            .toString(16)
-            .padStart(6, "0");
-          item.tag.display.color = parseInt(randomHex, 16);
+        // ? NOTE: This is to troll exotic collectors, it will randomly color an item. This was an idea by Vinush (697136515461152768)
+        if (item.tag?.display?.color) {
+          const meetsRequirements = !userProfile?.player_data?.visited_zones?.includes("rift") && userProfile.profile?.first_join < new Date("2024-01-01").getTime();
+          if (Math.random() < 0.01 && meetsRequirements) {
+            const randomHex = Math.floor(Math.random() * 0xffffff)
+              .toString(16)
+              .padStart(6, "0");
+            item.tag.display.color = parseInt(randomHex, 16);
+          }
         }
       }
     }
