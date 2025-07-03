@@ -7,6 +7,7 @@
   import { itemContent, showItem } from "$lib/stores/internal";
   import type { ProcessedSkyBlockItem } from "$types/stats";
   import type { PetProcessedSkyBlockItem } from "$types/statsv2";
+  import ImageOff from "@lucide/svelte/icons/image-off";
   import { Avatar, Tooltip, type AvatarImageLoadingStatus } from "bits-ui";
   import { IsInViewport } from "runed";
   import { getContext } from "svelte";
@@ -56,14 +57,22 @@
         <!-- {#if shine && isInventory}
           <div class="shine absolute inset-0 rounded-lg"></div>
         {/if} -->
-        {#if hasBeenInViewport || loadingStatus === "loading" || loadingStatus === "error"}
+        {#if hasBeenInViewport}
           <Avatar.Root bind:loadingStatus>
             {#snippet child({ props })}
-              <Avatar.Image loading="lazy" src={piece.texture_path} alt={piece.display_name} class="lazy data-[enchanted=true]:enchanted h-auto w-14 select-none [image-rendering:pixelated]" data-enchanted={enchanted} {...props} />
+              <Avatar.Image loading="lazy" width="56" height="56" src={piece.texture_path} alt={piece.display_name} class="data-[enchanted=true]:enchanted size-14 select-none [image-rendering:pixelated]" data-enchanted={enchanted} {...props} />
+              {#if loadingStatus === "loading"}
+                {@render loadingState()}
+              {/if}
+              {#if loadingStatus === "error"}
+                <div class={cn("rounded-lg", isInventory ? "size-8 sm:size-14" : "size-14")}>
+                  <ImageOff class="size-full" />
+                </div>
+              {/if}
             {/snippet}
           </Avatar.Root>
         {:else}
-          <div class={cn("animate-pulse rounded-lg bg-white/30", isInventory ? "size-8 sm:size-14" : "size-14")}></div>
+          {@render loadingState()}
         {/if}
 
         {#if recombobulated && !isInventory}
@@ -94,3 +103,7 @@
     </Tooltip.Portal>
   {/if}
 </Tooltip.Root>
+
+{#snippet loadingState()}
+  <div class={cn("animate-pulse rounded-lg bg-white/30", isInventory ? "size-8 sm:size-14" : "size-14")}></div>
+{/snippet}
