@@ -8,7 +8,7 @@
   import themes from "$lib/shared/constants/themes";
   import { cn } from "$lib/shared/utils";
   import { content } from "$lib/stores/internal";
-  import { performanceMode } from "$lib/stores/preferences";
+  import { performanceMode, sectionOrderPreferences } from "$lib/stores/preferences";
   import { theme as themeStore } from "$lib/stores/themes";
   import Wifi from "@lucide/svelte/icons/wifi";
   import WifiOff from "@lucide/svelte/icons/wifi-off";
@@ -69,6 +69,15 @@
       window.removeEventListener("online", updateOnlineStatus);
       window.removeEventListener("offline", updateOnlineStatus);
     };
+  });
+
+  $effect(() => {
+    // @ts-expect-error Armor and Weapons do not exist in SectionName type, that's why we're checking for it and removing it
+    if ($sectionOrderPreferences.find((section) => section.name === "Armor" || section.name === "Weapons")) {
+      console.warn("Invalid section order detected! Resetting preferences.");
+      localStorage.removeItem("sectionOrderPreferences");
+      window.location.reload();
+    }
   });
 </script>
 
