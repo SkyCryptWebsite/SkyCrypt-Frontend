@@ -4,7 +4,7 @@
   import { RARITIES, RARITY_COLORS } from "$lib/shared/constants/items";
   import { getRarityClass } from "$lib/shared/helper";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { itemContent, showItem } from "$lib/stores/internal";
+  import { itemContent, itemContentSpecial, showItem } from "$lib/stores/internal";
   import type { ProcessedSkyBlockItem } from "$types/stats";
   import type { PetProcessedSkyBlockItem } from "$types/statsv2";
   import ImageOff from "@lucide/svelte/icons/image-off";
@@ -48,15 +48,15 @@
     class={cn(`nice-colors-dark relative flex aspect-square items-center justify-center overflow-clip `, isInventory ? "size-6 p-0 sm:size-16" : `size-18 rounded-lg p-2 ${bgColor}`, { shine: shine && !isInventory })}
     bind:ref={targetNode}
     onclick={() => {
-      if (skyblockItem.containsItems) return;
+      if (skyblockItem.containsItems) {
+        itemContentSpecial.set(skyblockItem);
+        return;
+      }
       itemContent.set(piece);
       showItem.set(true);
     }}>
     {#snippet child({ props })}
       <div {...props}>
-        <!-- {#if shine && isInventory}
-          <div class="shine absolute inset-0 rounded-lg"></div>
-        {/if} -->
         {#if hasBeenInViewport}
           <Avatar.Root bind:loadingStatus>
             {#snippet child({ props })}
