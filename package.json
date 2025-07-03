@@ -127,8 +127,5 @@
       "JSON",
       "svelte-preprocess"
     ]
-  },
-  "optionalDependencies": {
-    "JSON": "^0.9.2"
   }
 }
