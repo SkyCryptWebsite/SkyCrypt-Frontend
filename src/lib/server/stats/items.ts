@@ -138,6 +138,23 @@ export async function getItems(userProfile: Member, userMuseum: MuseumRaw | null
     // REDIS.set(`items:${profileId}:all`, JSON.stringify(allItems), "EX", 60 * 5); // 5 minutes cache
     // REDIS.set(`items:${profileId}:all:object`, JSON.stringify(output), "EX", 60 * 5);
 
+    // NOTE: Timestamps are stringified to prevent issues with Redis or JSON serialization, as they may not handle large numbers (e.g., BigInt) correctly.
+    for (const inventory of Object.values(output)) {
+      for (const item of inventory) {
+        if (item.tag?.ExtraAttributes?.timestamp) {
+          item.tag.ExtraAttributes.timestamp = item.tag.ExtraAttributes.timestamp.toString();
+        }
+
+        // ? NOTE: This is to troll exotic collectors, it will randomly color an item in the Rift if the user hasn't visited the Rift zone. Chance is 1 in 100.
+        if (Math.random() < 0.01 && !userProfile?.player_data?.visited_zones?.includes("rift")) {
+          const randomHex = Math.floor(Math.random() * 0xffffff)
+            .toString(16)
+            .padStart(6, "0");
+          item.tag.display.color = parseInt(randomHex, 16);
+        }
+      }
+    }
+
     // ? NOTE: Cache /api/v2/armor data in the background
     const mainItems = { armor: output.armor, equipment: output.equipment, wardrobe: output.wardrobe };
     for (const key in mainItems) {
@@ -145,15 +162,6 @@ export async function getItems(userProfile: Member, userMuseum: MuseumRaw | null
     }
 
     REDIS.set(`profile:${profileId}:${packs.join("")}:main_items`, JSON.stringify(mainItems), { EX: 60 * 5 });
-
-    // NOTE: Timestamps are stringified to prevent issues with Redis or JSON serialization, as they may not handle large numbers (e.g., BigInt) correctly.
-    for (const inventory of Object.values(output)) {
-      for (const item of inventory) {
-        if (item.tag?.ExtraAttributes?.timestamp) {
-          item.tag.ExtraAttributes.timestamp = item.tag.ExtraAttributes.timestamp.toString();
-        }
-      }
-    }
 
     // ? Museum
     output.museum = userMuseum ? await decodeMusemItems(userMuseum, packs) : null;

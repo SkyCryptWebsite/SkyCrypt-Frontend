@@ -147,6 +147,7 @@ export type PlayerData = {
   paused_effects: string[];
   disabled_potion_effects: string[];
   reaper_peppers_eaten: number;
+  visited_zones: string[];
 };
 
 export type Experience = {
