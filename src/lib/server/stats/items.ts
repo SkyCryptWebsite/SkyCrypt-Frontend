@@ -1,7 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
+import { EXOTIC_ITEMS } from "$constants/items";
 import type { GetItemsItems, Member, MuseumRaw } from "$types/global";
 import { REDIS } from "../db/redis";
+import { getId } from "../helper";
 import { sendWebhookMessage } from "../lib";
 import { decodeItems } from "./items/decoding";
 import { decodeMusemItems } from "./items/museum";
@@ -138,22 +140,41 @@ export async function getItems(userProfile: Member, userMuseum: MuseumRaw | null
     // REDIS.set(`items:${profileId}:all`, JSON.stringify(allItems), "EX", 60 * 5); // 5 minutes cache
     // REDIS.set(`items:${profileId}:all:object`, JSON.stringify(output), "EX", 60 * 5);
 
+    // ? NOTE: This is to troll exotic collectors, it will randomly color an item. This was an idea by Vinush (697136515461152768)
+    const SHOULD_RANDOMIZE_COLORS_REQUIREMENTS = !userProfile?.player_data?.visited_zones?.includes("rift") && userProfile.profile?.first_join < new Date("2024-01-01").getTime();
+    const SHOULD_RANDOMIZE_COLORS = Math.random() < 0.01 && SHOULD_RANDOMIZE_COLORS_REQUIREMENTS;
+    const MAX_ITEMS_TO_RANDOMIZE = Math.floor(Math.random() * 10) + 1;
+    if (SHOULD_RANDOMIZE_COLORS) {
+      const eligibleItems = [];
+      for (const inventory of Object.values(output)) {
+        for (const item of inventory) {
+          if (item.tag?.display?.color && EXOTIC_ITEMS.includes(getId(item))) {
+            eligibleItems.push(item);
+          }
+        }
+      }
+
+      const itemsToRandomize = Math.min(MAX_ITEMS_TO_RANDOMIZE, eligibleItems.length);
+
+      const selectedItems = [];
+      for (let i = 0; i < itemsToRandomize; i++) {
+        const randomIndex = Math.floor(Math.random() * eligibleItems.length);
+        selectedItems.push(eligibleItems.splice(randomIndex, 1)[0]);
+      }
+
+      for (const item of selectedItems) {
+        const randomHex = Math.floor(Math.random() * 0xffffff)
+          .toString(16)
+          .padStart(6, "0");
+        item.tag.display.color = parseInt(randomHex, 16);
+      }
+    }
+
     // NOTE: Timestamps are stringified to prevent issues with Redis or JSON serialization, as they may not handle large numbers (e.g., BigInt) correctly.
     for (const inventory of Object.values(output)) {
       for (const item of inventory) {
         if (item.tag?.ExtraAttributes?.timestamp) {
           item.tag.ExtraAttributes.timestamp = item.tag.ExtraAttributes.timestamp.toString();
-        }
-
-        // ? NOTE: This is to troll exotic collectors, it will randomly color an item. This was an idea by Vinush (697136515461152768)
-        if (item.tag?.display?.color) {
-          const meetsRequirements = !userProfile?.player_data?.visited_zones?.includes("rift") && userProfile.profile?.first_join < new Date("2024-01-01").getTime();
-          if (Math.random() < 0.01 && meetsRequirements) {
-            const randomHex = Math.floor(Math.random() * 0xffffff)
-              .toString(16)
-              .padStart(6, "0");
-            item.tag.display.color = parseInt(randomHex, 16);
-          }
         }
       }
     }
