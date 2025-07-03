@@ -4,6 +4,7 @@ import * as helper from "$lib/server/helper";
 import type { Item, ProcessedItem } from "$types/stats";
 
 import { NEU_ITEMS } from "$lib/server/helper/NotEnoughUpdates/parseNEURepository";
+import { decodeItem } from "./decoding";
 import { addLevelableEnchantmentsToLore, parseItemGems } from "./helper";
 
 export function itemSorter(a: ProcessedItem, b: ProcessedItem) {
@@ -70,7 +71,7 @@ function getCategories(type: string, item: Item) {
 }
 
 // options = ignore that part
-export function processItems(items: ProcessedItem[], source: string, packs: string[], options: { pack?: boolean; category?: boolean }): ProcessedItem[] {
+export async function processItems(items: ProcessedItem[], source: string, packs: string[], options: { pack?: boolean; category?: boolean }): Promise<ProcessedItem[]> {
   for (const item of items) {
     if (!item.tag?.ExtraAttributes?.id && item.exp === undefined) {
       continue;
@@ -171,6 +172,22 @@ export function processItems(items: ProcessedItem[], source: string, packs: stri
         fandom: (isFandom ? link1 : link2) ?? null,
         official: (isFandom ? link2 : link1) ?? null
       };
+    }
+
+    if (item.tag?.display?.Name.includes("Backpack") || ["NEW_YEAR_CAKE_BAG", "BUILDERS_WAND", "BASKET_OF_SEEDS"].includes(item.tag?.ExtraAttributes?.id ?? "")) {
+      let backpackData;
+      for (const key of Object.keys(item.tag.ExtraAttributes)) {
+        if (key.endsWith("_data")) {
+          backpackData = item.tag.ExtraAttributes[key as keyof typeof item.tag.ExtraAttributes];
+        }
+      }
+
+      if (Array.isArray(backpackData)) {
+        const decodedItems = await decodeItem(Buffer.from(backpackData) as unknown as string);
+        if (Object.keys(decodedItems).length > 0) {
+          item.containsItems = await processItems(decodedItems, source, packs, options);
+        }
+      }
     }
   }
 

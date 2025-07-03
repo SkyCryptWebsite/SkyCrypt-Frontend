@@ -18,7 +18,7 @@ export async function GET({ params, cookies }) {
   const allItems = [];
   const validInventories = ["backpack", "inventory", "enderchest"];
   for (const inventory of validInventories) {
-    const processedItems = processItems(items[inventory], inventory, packs, { pack: false, category: false });
+    const processedItems = await processItems(items[inventory], inventory, packs, { pack: false, category: false });
     allItems.push(...processedItems);
   }
 

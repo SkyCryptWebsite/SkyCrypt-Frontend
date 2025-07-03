@@ -22,7 +22,7 @@ export async function GET({ params, cookies }) {
   const allItemsRaw = await REDIS.get(`profile:${paramProfile}:${packs.join("")}:items`);
   const items = JSON.parse(allItemsRaw as string);
   for (const inventory of ["talisman_bag", "inventory", "enderchest", "backpack"]) {
-    items[inventory] = processItems(items[inventory], inventory, packs, { pack: false, category: false });
+    items[inventory] = await processItems(items[inventory], inventory, packs, { pack: false, category: false });
   }
 
   items["backpack"] = items.backpack
