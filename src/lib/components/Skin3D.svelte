@@ -26,9 +26,9 @@
     if (loadedUuid === uuid) return;
     canvasIsLoading = true;
 
-    // const cape = await fetch(`https://crafatar.com/capes/${uuid}`, {
-    //   method: "HEAD"
-    // }).catch(() => ({ ok: false }));
+    const cape = await fetch(`https://crafatar.com/capes/${uuid}`, {
+      method: "HEAD"
+    }).catch(() => ({ ok: false }));
 
     if (!viewer) {
       viewer = new skinview3d.SkinViewer({
@@ -41,11 +41,11 @@
     }
 
     await viewer.loadSkin(`https://crafatar.com/skins/${uuid}`);
-    // if (cape.ok) {
-    //   await viewer.loadCape(`https://crafatar.com/capes/${uuid}`);
-    // } else {
-    //   viewer.resetCape();
-    // }
+    if (cape.ok) {
+      await viewer.loadCape(`https://crafatar.com/capes/${uuid}`);
+    } else {
+      viewer.resetCape();
+    }
 
     viewer.camera.position.set(-18, -3, 78);
     viewer.controls.enableZoom = false;
@@ -56,9 +56,10 @@
     canvasIsLoading = false;
   };
 
-  $effect(() => {
+  $effect.pre(() => {
     updateSkinViewer(uuid);
     updateViewerSize();
+    return () => viewer?.dispose();
   });
 
   onDestroy(() => {
@@ -68,4 +69,4 @@
 
 <svelte:window onresize={updateViewerSize} />
 
-<canvas bind:this={minecraftAvatar} class={cn("size-full transform-gpu overflow-hidden transition-opacity duration-[3s]", className)} class:opacity-100={!canvasIsLoading} class:opacity-0={canvasIsLoading}></canvas>
+<canvas bind:this={minecraftAvatar} class={cn("size-full transform-gpu overflow-hidden opacity-0 transition-opacity duration-[3s] data-[loading=false]:opacity-100 data-[loading=true]:opacity-0", className)} data-loading={canvasIsLoading}></canvas>
