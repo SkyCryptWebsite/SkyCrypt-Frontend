@@ -42,11 +42,9 @@
       <AdditionalStats />
     </div>
 
-    <Navbar />
-
-    <div class="flex flex-col flex-nowrap gap-y-5 px-4 pb-4 @[75rem]/parent:px-8 @[75rem]/parent:pb-8">
+    <Navbar>
       <Sections />
-    </div>
+    </Navbar>
   </main>
 </div>
 
