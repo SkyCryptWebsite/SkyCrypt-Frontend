@@ -1,6 +1,7 @@
 <script lang="ts">
   import { getProfileCtx } from "$ctx/profile.svelte";
   import ApiNotice from "$lib/components/APINotice.svelte";
+  import { IsHover } from "$lib/hooks/is-hover.svelte";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { favorites } from "$lib/stores/favorites";
   import { performanceMode } from "$lib/stores/preferences";
@@ -12,6 +13,7 @@
   import Star from "@lucide/svelte/icons/star";
   import TriangleAlert from "@lucide/svelte/icons/triangle-alert";
   import { Avatar, Button, DropdownMenu, Popover, Tooltip } from "bits-ui";
+  import { getContext } from "svelte";
   import { toast } from "svelte-sonner";
 
   let toastId: string | number = $state(0);
@@ -26,6 +28,7 @@
 
   const ctx = getProfileCtx();
   const profile = $derived(ctx.profile);
+  const isHover = getContext<IsHover>("isHover");
 
   const apiSettings = $derived(Object.entries(profile.apiSettings).filter(([_, value]) => !value));
 
@@ -50,9 +53,12 @@
   Stats for
   <DropdownMenu.Root bind:open={ignOpen}>
     <DropdownMenu.Trigger
+      disabled={!profile.members.length}
       class="inline-flex items-center rounded-full bg-[oklch(59.65%_0_0)]/20 py-2 pr-4 pl-2 align-middle text-xl font-semibold whitespace-nowrap sm:text-3xl"
       bind:ref={ignRef}
       onpointerenter={() => {
+        if (!profile.members.length) return;
+        if (!isHover.current) return;
         profileOpen = false;
         ignOpen = true;
       }}>
@@ -101,7 +107,10 @@
   <div class="relative inline-flex items-center gap-2 rounded-full bg-[oklch(59.65%_0_0)]/20 px-4 py-2 align-middle text-xl font-semibold data-[warning=true]:border-2 data-[warning=true]:border-yellow-500/20 sm:text-3xl" data-warning={!!apiSettings.length} bind:this={noticeRef}>
     <DropdownMenu.Root bind:open={profileOpen}>
       <DropdownMenu.Trigger
+        disabled={!profile.profiles.length}
         onpointerenter={() => {
+          if (!profile.profiles.length) return;
+          if (!isHover.current) return;
           ignOpen = false;
           profileOpen = true;
         }}>
