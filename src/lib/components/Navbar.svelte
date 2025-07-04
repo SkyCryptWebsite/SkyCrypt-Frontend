@@ -5,8 +5,12 @@
   import type { SectionName } from "$lib/sections/types";
   import { tabValue } from "$lib/stores/internal";
   import { sectionOrderPreferences } from "$lib/stores/preferences";
+  import ChevronLeft from "@lucide/svelte/icons/chevron-left";
+  import ChevronRight from "@lucide/svelte/icons/chevron-right";
   import { Button, ScrollArea } from "bits-ui";
-  import { onDestroy, onMount, tick } from "svelte";
+  import { onDestroy, onMount, tick, type Snippet } from "svelte";
+
+  const { children }: { children?: Snippet } = $props();
 
   const ctx = getProfileCtx();
   const profile = $derived(ctx.profile);
@@ -20,6 +24,18 @@
         return false;
       }
       return true;
+    })
+  );
+
+  const previousSection = $derived(
+    filteredSectionOrderPreferences.find((_, index) => {
+      return index === filteredSectionOrderPreferences.findIndex((s) => s.name === $tabValue) - 1;
+    })
+  );
+
+  const nextSection = $derived(
+    filteredSectionOrderPreferences.find((_, index) => {
+      return index === filteredSectionOrderPreferences.findIndex((s) => s.name === $tabValue) + 1;
     })
   );
 
@@ -122,3 +138,24 @@
     <ScrollArea.Thumb class="bg-icon rounded-full" />
   </ScrollArea.Scrollbar>
 </ScrollArea.Root>
+
+<div class="flex flex-col flex-nowrap gap-y-5 px-4 pb-4 @[75rem]/parent:px-8 @[75rem]/parent:pb-8">
+  {@render children?.()}
+
+  <div class="flex items-center justify-between">
+    {#if previousSection}
+      <Button.Root class="bg-icon flex items-center justify-between rounded-lg px-4 py-2 text-lg" onclick={() => handleSectionClick(previousSection.name ?? filteredSectionOrderPreferences[0].name)}>
+        <ChevronLeft />
+        {previousSection.name}
+      </Button.Root>
+    {:else}
+      <div></div>
+    {/if}
+    {#if nextSection}
+      <Button.Root class="bg-icon flex items-center justify-between rounded-lg px-4 py-2 text-lg" onclick={() => handleSectionClick(nextSection.name ?? filteredSectionOrderPreferences[filteredSectionOrderPreferences.length - 1].name)}>
+        {nextSection.name}
+        <ChevronRight />
+      </Button.Root>
+    {/if}
+  </div>
+</div>

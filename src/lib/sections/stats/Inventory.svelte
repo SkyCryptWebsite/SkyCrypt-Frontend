@@ -4,6 +4,7 @@
   import Item from "$lib/components/Item.svelte";
   import Section from "$lib/components/Section.svelte";
   import { api } from "$lib/shared/api";
+  import { itemContentSpecial } from "$lib/stores/internal";
   import type { ProcessedSkyBlockItem } from "$types/stats";
   import type { InventoryV2 } from "$types/statsv2";
   import Image from "@lucide/svelte/icons/image";
@@ -251,6 +252,15 @@
     museum: $museumQuery.isError,
     search: $searchQuery.isError
   }));
+
+  itemContentSpecial.subscribe((item) => {
+    if (item) {
+      if (openTab === "search" || openTab === "backpack" || openTab === "museum") {
+        console.warn("Item content special should not be set for search, backpack, or museum tabs.");
+        itemContentSpecial.set(undefined);
+      }
+    }
+  });
 
   $effect.pre(() => {
     switch (openTab) {

@@ -10,5 +10,5 @@ export const tabValue = writable<SectionName>(get(sectionOrderPreferences)[0].na
 export const showItem = writable<boolean>(false);
 export const tooltipAnchor = writable<HTMLElement>(null!);
 export const itemContent = writable<ProcessedSkyBlockItem | PetProcessedSkyBlockItem | undefined>();
-
+export const itemContentSpecial = writable<ProcessedSkyBlockItem | undefined>();
 export const content = writable<Snippet | undefined>(undefined);
