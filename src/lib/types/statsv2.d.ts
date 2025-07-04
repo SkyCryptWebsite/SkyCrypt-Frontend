@@ -516,3 +516,48 @@ export type PlayerStatsInputv2 = {
 };
 
 export type PlayerStatsV2 = Record<string, { base: number; total: number; [string: string]: number }>;
+
+export type EmbedV2 = {
+  skyblock_level: string;
+  skills: {
+    skillAverage: string;
+    skills: {
+      taming: number;
+      farming: number;
+      mining: number;
+      combat: number;
+      foraging: number;
+      fishing: number;
+      enchanting: number;
+      alchemy: number;
+      carpentry: number;
+      runecrafting: number;
+      social: number;
+    };
+  };
+  networth: number;
+  purse: number;
+  bank: number;
+  dungeons: {
+    dungoneering: string;
+    classAverage: string;
+    classes: {
+      healer: number;
+      mage: number;
+      berserk: number;
+      archer: number;
+      tank: number;
+    };
+  };
+  slayers: {
+    xp: number;
+    slayers: {
+      zombie: number;
+      spider: number;
+      wolf: number;
+      enderman: number;
+      blaze: number;
+      vampire: number;
+    };
+  };
+};
