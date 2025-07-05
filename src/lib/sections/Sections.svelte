@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Error from "$lib/components/Error.svelte";
+  import Notice from "$lib/components/Notice.svelte";
   import type { SectionName } from "$lib/sections/types";
   import { titleCase } from "$lib/shared/helper";
   import { cn } from "$lib/shared/utils";
@@ -43,11 +43,15 @@
         {:then { default: Component }}
           <Component order={findIndex($tabValue)} />
         {:catch}
-          <Error title={`Failed to load section ${$tabValue}`} subtitle="This section may not be available or there was an error loading it." />
+          <Notice type="error" title={`Failed to load section ${$tabValue}`}>
+            <p class="text-text/80">This section may not be available or there was an error loading it.</p>
+          </Notice>
         {/await}
       </Tabs.Content>
     </Tabs.Root>
   {:else}
-    <Error title={`Invalid Section: ${$tabValue}`} subtitle="This section does not exist or is not implemented." />
+    <Notice type="error" title={`Invalid Section: ${$tabValue}`}>
+      <p class="text-text/80">This section does not exist or is not implemented.</p>
+    </Notice>
   {/if}
 {/key}

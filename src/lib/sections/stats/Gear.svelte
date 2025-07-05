@@ -1,8 +1,8 @@
 <script lang="ts">
   import { getProfileCtx } from "$ctx/profile.svelte";
   import Bonus from "$lib/components/Bonus.svelte";
-  import Error from "$lib/components/Error.svelte";
   import Item from "$lib/components/Item.svelte";
+  import Notice from "$lib/components/Notice.svelte";
   import Section from "$lib/components/Section.svelte";
   import Wardrobe from "$lib/components/Wardrobe.svelte";
   import Items from "$lib/layouts/stats/Items.svelte";
@@ -55,7 +55,7 @@
 
 <Section id="Gear" {order}>
   {#if $query.error}
-    <Error />
+    <Notice title="An unexpected error has occurred" type="error" />
   {/if}
   {#if $query.isSuccess && armor}
     <Items subtitle="Armor">
@@ -122,7 +122,7 @@
     <LoaderCircle class="text-icon animate-spin" />
   {/if}
   {#if $weaponsQuery.error}
-    <Error />
+    <Notice title="An unexpected error has occurred" type="error" />
   {/if}
   {#if $weaponsQuery.isSuccess && $weaponsQuery.data && weapons}
     {#if weapons.weapons.length}

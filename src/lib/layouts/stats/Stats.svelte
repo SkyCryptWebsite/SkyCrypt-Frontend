@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getProfileCtx } from "$ctx/profile.svelte";
-  import Error from "$lib/components/Error.svelte";
+  import Notice from "$lib/components/Notice.svelte";
   import Stat from "$lib/components/Stat.svelte";
   import { api, SectionName } from "$lib/shared/api";
   import type { PlayerStatsV2 } from "$types/statsv2";
@@ -40,7 +40,7 @@
       {#snippet child({ props, open })}
         {#if open}
           {#if $query.error}
-            <Error />
+            <Notice title="An unexpected error has occurred" type="error" />
           {/if}
           {#if $query.isSuccess && $query.data && stats}
             <div {...props} transition:slide={{ duration: 300, easing: quadInOut }}>

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { setDynamicCtx } from "$ctx/dynamic.svelte";
   import { getProfileCtx } from "$ctx/profile.svelte";
-  import Error from "$lib/components/Error.svelte";
+  import Notice from "$lib/components/Notice.svelte";
   import Section from "$lib/components/Section.svelte";
   import { api, SectionName } from "$lib/shared/api";
   import type { SkillsV2 } from "$types/statsv2";
@@ -37,7 +37,7 @@
     <LoaderCircle class="text-icon animate-spin" />
   {/if}
   {#if $query.error}
-    <Error />
+    <Notice title="An unexpected error has occurred" type="error" />
   {/if}
   {#if $query.isSuccess && $query.data && skills}
     {#if skills.mining}

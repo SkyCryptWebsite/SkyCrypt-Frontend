@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getProfileCtx } from "$ctx/profile.svelte";
-  import Error from "$lib/components/Error.svelte";
   import Item from "$lib/components/Item.svelte";
+  import Notice from "$lib/components/Notice.svelte";
   import Section from "$lib/components/Section.svelte";
   import { api } from "$lib/shared/api";
   import { itemContentSpecial } from "$lib/stores/internal";
@@ -413,7 +413,7 @@
     <LoaderCircle class="text-icon mx-auto mt-4 animate-spin" />
   {/if}
   {#if $searchQuery.isError}
-    <Error />
+    <Notice title="An unexpected error has occurred" type="error" />
   {/if}
 
   {#if (!debouncedSearchValue.pending || !$searchQuery.isPending) && debouncedSearchValue.current && debouncedSearchValue.current !== "" && searchedItems.length === 0}
@@ -488,7 +488,7 @@
     <LoaderCircle class="text-icon animate-spin" />
   {/if}
   {#if hasErrored[tab?.id as keyof typeof hasErrored]}
-    <Error />
+    <Notice title="An unexpected error has occurred" type="error" />
   {/if}
 
   {#if tab?.items?.length}

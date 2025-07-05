@@ -2,8 +2,8 @@
   import { getProfileCtx } from "$ctx/profile.svelte";
   import AdditionStat from "$lib/components/AdditionStat.svelte";
   import Bonus from "$lib/components/Bonus.svelte";
-  import Error from "$lib/components/Error.svelte";
   import Item from "$lib/components/Item.svelte";
+  import Notice from "$lib/components/Notice.svelte";
   import Section from "$lib/components/Section.svelte";
   import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
   import Items from "$lib/layouts/stats/Items.svelte";
@@ -43,7 +43,7 @@
     <LoaderCircle class="text-icon animate-spin" />
   {/if}
   {#if $query.error}
-    <Error />
+    <Notice title="An unexpected error has occurred" type="error" />
   {/if}
   {#if $query.isSuccess && $query.data && pets}
     {#if pets.pets?.length}
