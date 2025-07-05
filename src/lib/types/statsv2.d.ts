@@ -517,10 +517,10 @@ export type PlayerStatsInputv2 = {
 
 export type PlayerStatsV2 = Record<string, { base: number; total: number; [string: string]: number }>;
 
-export type EmbedV2 = {
-  skyblock_level: string;
+export type EmbedV2 = Pick<StatsV2, "displayName" | "username" | "uuid" | "profile_id" | "profile_cute_name" | "joined" | "game_mode"> & {
+  skyblock_level: number;
   skills: {
-    skillAverage: string;
+    skillAverage: number;
     skills: {
       taming: number;
       farming: number;
@@ -539,8 +539,8 @@ export type EmbedV2 = {
   purse: number;
   bank: number;
   dungeons: {
-    dungoneering: string;
-    classAverage: string;
+    dungoneering: number;
+    classAverage: number;
     classes: {
       healer: number;
       mage: number;

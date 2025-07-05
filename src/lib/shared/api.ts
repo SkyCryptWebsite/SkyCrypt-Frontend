@@ -1,6 +1,6 @@
 import type { Garden } from "$types/processed/profile/garden";
 import type { ProcessedSkyBlockItem } from "$types/stats";
-import type { AccessoriesV2, ArmorV2, BestiaryV2, CollectionsV2, CrimsonIsleV2, DungeonsV2, EnchantingV2, FarmingV2, FishingV2, InventoryV2, InventoryV2All, MiningV2, MinionsV2, MiscV2, NetworthV2, PetsV2, PlayerStatsV2, RiftV2, SkillsV2, SlayerV2, StatsV2, WeaponsV2 } from "$types/statsv2";
+import type { AccessoriesV2, ArmorV2, BestiaryV2, CollectionsV2, CrimsonIsleV2, DungeonsV2, EmbedV2, EnchantingV2, FarmingV2, FishingV2, InventoryV2, InventoryV2All, MiningV2, MinionsV2, MiscV2, NetworthV2, PetsV2, PlayerStatsV2, RiftV2, SkillsV2, SlayerV2, StatsV2, WeaponsV2 } from "$types/statsv2";
 
 // Enum for section names
 export enum SectionName {
@@ -23,7 +23,8 @@ export enum SectionName {
   PETS = "pets",
   WEAPONS = "weapons",
   INVENTORY = "inventory",
-  STATS = "playerStats"
+  STATS = "playerStats",
+  EMBED = "embed"
 }
 
 // Type mapping for section names to their corresponding types
@@ -48,6 +49,7 @@ type SectionTypeMap = {
   [SectionName.WEAPONS]: WeaponsV2;
   [SectionName.INVENTORY]: InventoryV2;
   [SectionName.STATS]: PlayerStatsV2;
+  [SectionName.EMBED]: EmbedV2;
 };
 
 export const api = (customFetch = fetch) => ({

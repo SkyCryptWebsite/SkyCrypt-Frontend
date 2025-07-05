@@ -1,14 +1,12 @@
 <script lang="ts">
-  import { getProfileCtx } from "$ctx/profile.svelte";
   import themes from "$lib/shared/constants/themes";
   import { formatNumber } from "$lib/shared/helper";
   import { theme as themeStore } from "$lib/stores/themes";
-  import type { Skill } from "$types/stats";
+  import type { EmbedV2 } from "$types/statsv2";
   import { formatDistanceToNowStrict } from "date-fns";
   import SvelteSeo from "svelte-seo";
 
-  const ctx = getProfileCtx();
-  const profile = $derived(ctx.profile);
+  const { embedData }: { embedData: EmbedV2 } = $props();
 
   const skillEmojis = {
     alchemy: "⚗️",
@@ -30,7 +28,7 @@
     tank: "🛡️"
   } as Record<string, string>;
 
-  const _slayerEmojis = {
+  const slayerEmojis = {
     zombie: "🧟",
     spider: "🕸️",
     wolf: "🐺",
@@ -42,20 +40,24 @@
   function getLongDescription() {
     let output = "";
 
-    if (profile.skyblock_level.xp !== 0 && profile.skyblock_level?.level !== 0) {
-      output += `🌟 Skyblock Level: ${formatNumber(profile.skyblock_level.levelWithProgress)}\n`;
+    if (embedData === undefined) {
+      return output;
     }
 
-    // if (profile.networth.noInventory === false) {
-    //   output += `💸 Networth: ${formatNumber(profile.stats.networth.networth)}\n`;
-    // }
-
-    if (profile.purse !== undefined) {
-      output += `💰 Purse: ${formatNumber(profile.purse)}\n`;
+    if (embedData.skyblock_level) {
+      output += `🌟 Skyblock Level: ${formatNumber(embedData.skyblock_level)}\n`;
     }
 
-    if (profile.bank !== undefined) {
-      output += `🏦 Bank: ${formatNumber(profile.bank)}\n`;
+    if (embedData.networth) {
+      output += `💸 Networth: ${formatNumber(embedData.networth)}\n`;
+    }
+
+    if (embedData.networth) {
+      output += `💰 Purse: ${formatNumber(embedData.networth)}\n`;
+    }
+
+    if (embedData.bank) {
+      output += `🏦 Bank: ${formatNumber(embedData.bank)}\n`;
     }
 
     output += "\n";
@@ -64,18 +66,18 @@
       ["farming", "mining", "combat", "foraging", "taming", "carpentry"],
       ["runecrafting", "social", "fishing", "enchanting", "alchemy"]
     ];
-    const skills = profile.skills?.skills as Record<string, Skill>;
-    if (skills !== undefined && Object.keys(skills).length > 0) {
-      output += `📚 Skills: ${profile.skills.averageSkillLevelWithProgress.toFixed(2)}\n`;
+    const skills = embedData.skills.skills;
+    if (skills && Object.keys(skills).length > 0) {
+      output += `📚 Skills: ${embedData.skills.skillAverage}\n`;
 
       for (const skillGroup of sortedSkills) {
         for (const skill of skillGroup) {
-          const data = skills[skill];
+          const data = skills[skill as keyof typeof skills];
           if (data === undefined) {
             continue;
           }
 
-          output += `${skillEmojis[skill]} ${data.level} `;
+          output += `${skillEmojis[skill]} ${data} `;
         }
 
         output += "\n";
@@ -84,67 +86,67 @@
       output += "\n";
     }
 
-    // if (profile.dungeons !== undefined) {
-    //   const dungeonsLevel = profile.dungeons.level?.levelWithProgress;
-    //   const classAverage = profile.dungeons.classes?.classAverageWithProgress;
-    //   if (dungeonsLevel > 0 && classAverage > 0) {
-    //     output += `🪦 Dungeons: ${dungeonsLevel.toFixed(2)} (${classAverage.toFixed(2)})\n`;
-    //   }
+    if (embedData.dungeons) {
+      const dungeonsLevel = embedData.dungeons.dungoneering;
+      const classAverage = embedData.dungeons.classAverage;
+      if (dungeonsLevel && classAverage) {
+        output += `🪦 Dungeons: ${dungeonsLevel} (${classAverage})\n`;
+      }
 
-    //   output += `${skillEmojis["dungeons"]} ${profile.dungeons.level?.level ?? 0} `;
-    //   const classes = profile.dungeons?.classes?.classes;
-    //   if (classes !== undefined) {
-    //     for (const [dclass, data] of Object.entries(classes)) {
-    //       output += `${skillEmojis[dclass]} ${data.level ?? 0} `;
-    //     }
-    //   }
+      output += `${skillEmojis["dungeons"]} ${embedData.dungeons.dungoneering ?? 0} `;
+      const classes = embedData.dungeons.classes;
+      if (classes !== undefined) {
+        for (const [dclass, data] of Object.entries(classes)) {
+          output += `${skillEmojis[dclass]} ${data ?? 0} `;
+        }
+      }
 
-    //   output += "\n";
-    // }
+      output += "\n";
+    }
 
     output += "\n";
 
-    // if (profile.slayer?.totalSlayerExp > 0) {
-    //   output += `🤺 Slayer: ${formatNumber(profile.slayer.totalSlayerExp)}\n`;
+    if (embedData.slayers && embedData.slayers.xp > 0) {
+      output += `🤺 Slayer: ${formatNumber(embedData.slayers.xp)}\n`;
 
-    //   const slayerOrder = ["zombie", "spider", "wolf", "enderman", "vampire", "blaze"];
-    //   for (const slayer of slayerOrder) {
-    //     if (profile.slayer.data[slayer] === undefined) {
-    //       continue;
-    //     }
+      const slayerOrder = ["zombie", "spider", "wolf", "enderman", "vampire", "blaze"] as const;
+      for (const slayer of slayerOrder) {
+        if (!embedData.slayers.slayers[slayer]) {
+          continue;
+        }
 
-    //     const slayerInfo = profile.slayer.data[slayer];
-    //     if (slayerInfo.level.level === 0) {
-    //       continue;
-    //     }
+        const slayerLevel = embedData.slayers.slayers[slayer];
+        if (!slayerLevel) {
+          continue;
+        }
 
-    //     output += `${slayerEmojis[slayer]} ${slayerInfo.level.level} `;
-    //   }
+        output += `${slayerEmojis[slayer]} ${slayerLevel} `;
+      }
 
-    //   output += "\n";
-    // }
+      output += "\n";
+    }
 
     return output;
   }
 
   function getMetaTitle() {
-    let metaTitle = profile.displayName;
+    let metaTitle = embedData.displayName;
 
-    switch (profile.game_mode) {
+    switch (embedData.game_mode) {
       case "ironman":
-        metaTitle += ` (${profile.profile_cute_name} ♻️)`;
+        metaTitle += ` (${embedData.profile_cute_name} ♻️)`;
         break;
 
       case "bingo":
-        metaTitle += ` (${profile.profile_cute_name} 🎲)`;
+        metaTitle += ` (${embedData.profile_cute_name} 🎲)`;
         break;
 
       case "island":
-        metaTitle += ` (${profile.profile_cute_name} 🌴)`;
+        metaTitle += ` (${embedData.profile_cute_name} 🌴)`;
         break;
 
       default:
-        metaTitle += ` (${profile.profile_cute_name})`;
+        metaTitle += ` (${embedData.profile_cute_name})`;
         break;
     }
 
@@ -155,8 +157,8 @@
     let description = "";
 
     // Base
-    if (profile.joined !== undefined) {
-      description += `${profile.displayName} has been playing SkyBlock for ${formatDistanceToNowStrict(profile.joined)}`;
+    if (embedData.joined) {
+      description += `${embedData.displayName} has been playing SkyBlock for ${formatDistanceToNowStrict(embedData.joined)}`;
     }
 
     // const highestRaritySword = profile.items?.weapons?.highest_priority_weapon?.display_name;
@@ -175,35 +177,37 @@
 </script>
 
 <svelte:head>
-  <link rel="icon" href={`https://crafatar.com/avatars/${profile.uuid}?size=32&overlay`} sizes="32x32" type="image/png" />
+  <link rel="icon" href={`https://crafatar.com/avatars/${embedData.uuid}?size=32&overlay`} sizes="32x32" type="image/png" />
 </svelte:head>
 
-<SvelteSeo
-  title="{profile.displayName} | SkyCrypt"
-  description={getShortDescription()}
-  canonical="https://sky.shiiyu.moe/stats/{profile.uuid}/{profile.profile_id}"
-  openGraph={{
-    title: getMetaTitle(),
-    description: getLongDescription(),
-    type: "profile",
-    profile: {
-      username: profile.username
-    },
-    images: [
-      {
-        url: `https://crafatar.com/avatars/${profile.uuid}?size=512&overlay`,
-        width: 512,
-        height: 512,
-        alt: profile.displayName
-      }
-    ],
-    site_name: "SkyCrypt"
-  }}
-  twitter={{
-    card: "summary",
-    image: `https://crafatar.com/avatars/${profile.uuid}?size=512&overlay`,
-    imageAlt: profile.displayName,
-    title: getMetaTitle()
-  }}
-  themeColor={themes.find((theme) => theme.id === $themeStore)?.light ? "#dbdbdb" : "#282828"}
-  manifest="/manifest.webmanifest" />
+{#key embedData}
+  <SvelteSeo
+    title="{embedData.displayName} | SkyCrypt"
+    description={getShortDescription()}
+    canonical="https://sky.shiiyu.moe/stats/{embedData.uuid}/{embedData.profile_id}"
+    openGraph={{
+      title: getMetaTitle(),
+      description: getLongDescription(),
+      type: "profile",
+      profile: {
+        username: embedData.username
+      },
+      images: [
+        {
+          url: `https://crafatar.com/avatars/${embedData.uuid}?size=512&overlay`,
+          width: 512,
+          height: 512,
+          alt: embedData.displayName
+        }
+      ],
+      site_name: "SkyCrypt"
+    }}
+    twitter={{
+      card: "summary",
+      image: `https://crafatar.com/avatars/${embedData.uuid}?size=512&overlay`,
+      imageAlt: embedData.displayName,
+      title: getMetaTitle()
+    }}
+    themeColor={themes.find((theme) => theme.id === $themeStore)?.light ? "#dbdbdb" : "#282828"}
+    manifest="/manifest.webmanifest" />
+{/key}
