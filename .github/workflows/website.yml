@@ -9,6 +9,27 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    if: github.event_name != 'pull_request'
+
+    permissions:
+      security-events: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: javascript
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+
   formatting-checks:
     name: Check linting (es-lint), formatting (prettier), and svelte checks (svelte-check)
     runs-on: ubuntu-latest
