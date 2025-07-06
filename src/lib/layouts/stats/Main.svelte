@@ -52,7 +52,7 @@
 {/if}
 
 <div class="@container/parent relative">
-  <div class="@container @[75rem]/parent:block fixed left-0 top-1/2 z-10 hidden h-dvh w-[30vw] -translate-y-1/2">
+  <div class="@container fixed top-1/2 left-0 z-10 hidden h-dvh w-[30vw] -translate-y-1/2 @[75rem]/parent:block">
     {#if browser && window.innerWidth >= 1200}
       {#await import('$lib/components/Skin3D.svelte') then { default: Skin3D }}
         <Skin3D class="h-full" />
@@ -60,10 +60,10 @@
     {/if}
   </div>
 
-  <div class={cn("@[75rem]/parent:w-[calc(100%-30vw)] fixed right-0 top-0 min-h-dvh w-full", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")}></div>
+  <div class={cn("fixed top-0 right-0 min-h-dvh w-full @[75rem]/parent:w-[calc(100%-30vw)]", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")}></div>
 
-  <main data-vaul-drawer-wrapper class="@container @[75rem]/parent:ml-[30vw] relative mx-auto mt-12">
-    <div class="@[75rem]/parent:p-8 space-y-5 p-4">
+  <main data-vaul-drawer-wrapper class="@container relative mx-auto mt-12 @[75rem]/parent:ml-[30vw]">
+    <div class="space-y-5 p-4 @[75rem]/parent:p-8">
       <PlayerProfile />
       <Skills />
       <Stats />
@@ -86,7 +86,7 @@
           {/if}
         {/snippet}
       </Dialog.Overlay>
-      <Dialog.Content forceMount class="bg-background-lore font-icomoon fixed left-[50%] top-[50%] z-50 flex max-h-[calc(96%-3rem)] max-w-[calc(100vw-2.5rem)] -translate-x-1/2 -translate-y-1/2 select-text flex-col overflow-hidden rounded-lg">
+      <Dialog.Content forceMount class="bg-background-lore font-icomoon fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] max-w-[calc(100vw-2.5rem)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg select-text">
         {#snippet child({ props, open })}
           {#if open}
             <div {...props} transition:flyAndScale>
@@ -112,7 +112,7 @@
           {/if}
         {/snippet}
       </Dialog.Overlay>
-      <Dialog.Content forceMount class="bg-background-lore font-icomoon fixed left-[50%] top-[50%] z-50 flex max-h-[calc(96%-3rem)] max-w-[calc(100vw-2.5rem)] -translate-x-1/2 -translate-y-1/2 select-text flex-col overflow-hidden rounded-lg">
+      <Dialog.Content forceMount class="bg-background-lore font-icomoon fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] max-w-[calc(100vw-2.5rem)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg select-text">
         {#snippet child({ props, open })}
           {#if open}
             <div {...props} transition:flyAndScale>
@@ -127,7 +127,7 @@
   <Drawer.Root bind:open={$showItem} shouldScaleBackground={true} setBackgroundColorOnScale={false}>
     <Drawer.Portal>
       <Drawer.Overlay class="fixed inset-0 z-40 bg-black/80" />
-      <Drawer.Content class="bg-background-lore fixed bottom-0 left-0 right-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px]">
+      <Drawer.Content class="bg-background-lore fixed right-0 bottom-0 left-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px]">
         <ItemContent piece={$itemContent!} isDrawer={true} />
       </Drawer.Content>
     </Drawer.Portal>
@@ -143,7 +143,7 @@
     }}>
     <Drawer.Portal>
       <Drawer.Overlay class="fixed inset-0 z-40 bg-black/80" />
-      <Drawer.Content class="bg-background-lore fixed bottom-0 left-0 right-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px]">
+      <Drawer.Content class="bg-background-lore fixed right-0 bottom-0 left-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px]">
         {@render containedItems()}
       </Drawer.Content>
     </Drawer.Portal>
@@ -160,7 +160,7 @@
 
 {#snippet containedItems()}
   {#if $itemContentSpecial}
-    <div class="@md:gap-1.5 @xl:gap-2 grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1">
+    <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 @md:gap-1.5 @xl:gap-2">
       {#if $itemContentSpecial.containsItems && $itemContentSpecial.containsItems.length !== 0}
         {#each $itemContentSpecial.containsItems as containedItem, index (index)}
           {#if index > 0}
