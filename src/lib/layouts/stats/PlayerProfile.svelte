@@ -12,7 +12,7 @@
   import Link from "@lucide/svelte/icons/link";
   import Star from "@lucide/svelte/icons/star";
   import TriangleAlert from "@lucide/svelte/icons/triangle-alert";
-  import { Avatar, Button, DropdownMenu, Popover, Tooltip } from "bits-ui";
+  import { Avatar, Button, Popover, Tooltip } from "bits-ui";
   import { getContext } from "svelte";
   import { toast } from "svelte-sonner";
 
@@ -51,8 +51,8 @@
 
 <div class="flex flex-wrap items-center gap-x-2 gap-y-3 text-4xl">
   Stats for
-  <DropdownMenu.Root bind:open={ignOpen}>
-    <DropdownMenu.Trigger
+  <Popover.Root bind:open={ignOpen}>
+    <Popover.Trigger
       disabled={!profile.members.length}
       class="inline-flex items-center rounded-full bg-[oklch(59.65%_0_0)]/20 py-2 pr-4 pl-2 align-middle text-xl font-semibold whitespace-nowrap sm:text-3xl"
       bind:ref={ignRef}
@@ -72,86 +72,75 @@
         <div class="absolute top-0 -right-3 bottom-0 z-10 h-14 w-1/2 skew-x-[-20deg] bg-[var(--plusColor)]" style={`--plusColor:${profile.rank?.plusColor ?? profile.rank?.rankColor}`}></div>
       </div>
       <span class="pl-4">{profile.displayName}</span>
-    </DropdownMenu.Trigger>
+    </Popover.Trigger>
 
-    <DropdownMenu.Portal>
-      <DropdownMenu.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", $performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={ignRef}>
-        {#snippet child({ wrapperProps, props, open })}
-          {#if open}
-            <div {...wrapperProps}>
-              <div {...props} transition:flyAndScale>
-                {#each profile.members as member (member.uuid)}
-                  {#if member.username !== profile.username}
-                    <DropdownMenu.Item class="group flex min-w-(--bits-dropdown-menu-anchor-width) items-center p-2" data-sveltekit-preload-code="viewport">
-                      {#snippet child({ props })}
-                        <a {...props} href={`/stats/${member.username}/${profile.profile_cute_name}`}>
-                          <span class="group-hover:bg-text/20 flex w-full items-center justify-between gap-2 rounded-lg bg-[oklch(59.65%_0_0)]/20 p-2 transition-colors duration-300">
-                            {member.username}
-                            {#if member.removed}
-                              <Ban class="size-6" />
-                            {/if}
-                          </span>
-                        </a>
-                      {/snippet}
-                    </DropdownMenu.Item>
-                  {/if}
-                {/each}
-              </div>
+    <Popover.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", $performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={ignRef} strategy="absolute">
+      {#snippet child({ wrapperProps, props, open })}
+        {#if open}
+          <div {...wrapperProps}>
+            <div {...props} transition:flyAndScale>
+              {#each profile.members as member (member.uuid)}
+                {#if member.username !== profile.username}
+                  <a href={`/stats/${member.username}/${profile.profile_cute_name}`} class="group flex min-w-(--bits-dropdown-menu-anchor-width) items-center p-2 focus-visible:outline-0" data-sveltekit-preload-code="viewport">
+                    <span class="outline-icon group-hover:bg-text/20 flex w-full items-center justify-between gap-2 rounded-lg bg-[oklch(59.65%_0_0)]/20 p-2 transition-colors duration-300 group-focus-visible:outline-1">
+                      {member.username}
+                      {#if member.removed}
+                        <Ban class="size-6" />
+                      {/if}
+                    </span>
+                  </a>
+                {/if}
+              {/each}
             </div>
-          {/if}
-        {/snippet}
-      </DropdownMenu.Content>
-    </DropdownMenu.Portal>
-  </DropdownMenu.Root>
+          </div>
+        {/if}
+      {/snippet}
+    </Popover.Content>
+  </Popover.Root>
   on
-  <div class="relative inline-flex items-center gap-2 rounded-full bg-[oklch(59.65%_0_0)]/20 px-4 py-2 align-middle text-xl font-semibold data-[warning=true]:border-2 data-[warning=true]:border-yellow-500/20 sm:text-3xl" data-warning={!!apiSettings.length} bind:this={noticeRef}>
-    <DropdownMenu.Root bind:open={profileOpen}>
-      <DropdownMenu.Trigger
+  <div class="relative inline-flex items-center gap-2 rounded-full bg-[oklch(59.65%_0_0)]/20 px-2 py-1 align-middle text-xl font-semibold data-[warning=true]:border-2 data-[warning=true]:border-yellow-500/20 sm:text-3xl" data-warning={!!apiSettings.length} bind:this={noticeRef}>
+    <Popover.Root bind:open={profileOpen}>
+      <Popover.Trigger
         disabled={!profile.profiles.length}
         onpointerenter={() => {
           if (!profile.profiles.length) return;
           if (!isHover.current) return;
           ignOpen = false;
           profileOpen = true;
-        }}>
+        }}
+        class="rounded-full px-2 py-1">
         {profile.profile_cute_name}
-      </DropdownMenu.Trigger>
-
-      <DropdownMenu.Portal>
-        <DropdownMenu.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", $performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={noticeRef}>
-          {#snippet child({ wrapperProps, props, open })}
-            {#if open}
-              <div {...wrapperProps}>
-                <div {...props} transition:flyAndScale>
-                  {#each profile.profiles ?? [] as otherProfile (otherProfile.profile_id)}
-                    {#if otherProfile.profile_id !== profile.profile_id}
-                      <DropdownMenu.Item class="group flex items-center p-2" data-sveltekit-preload-code="viewport">
-                        {#snippet child({ props })}
-                          <a {...props} href={`/stats/${profile.username}/${otherProfile.cute_name}`}>
-                            <div class="group-hover:bg-text/20 w-full rounded-lg bg-[oklch(59.65%_0_0)]/20 p-2 transition-colors duration-300">
-                              {otherProfile.cute_name}
-                              {#if otherProfile.game_mode === "bingo"}
-                                🎲
-                              {/if}
-                              {#if otherProfile.game_mode === "ironman"}
-                                ♻️
-                              {/if}
-                              {#if otherProfile.game_mode === "island"}
-                                🌴
-                              {/if}
-                            </div>
-                          </a>
-                        {/snippet}
-                      </DropdownMenu.Item>
-                    {/if}
-                  {/each}
-                </div>
+      </Popover.Trigger>
+      <Popover.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", $performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={noticeRef} strategy="absolute">
+        {#snippet child({ wrapperProps, props, open })}
+          {#if open}
+            <div {...wrapperProps}>
+              <div {...props} transition:flyAndScale>
+                {#each profile.profiles ?? [] as otherProfile (otherProfile.profile_id)}
+                  {#if otherProfile.profile_id !== profile.profile_id}
+                    <a href={`/stats/${profile.username}/${otherProfile.cute_name}`} class="group flex items-center p-2 focus-visible:outline-0" data-sveltekit-preload-code="viewport">
+                      <div class="group-hover:bg-text/20 outline-icon w-full rounded-lg bg-[oklch(59.65%_0_0)]/20 p-2 transition-colors duration-300 group-focus-visible:outline-1">
+                        {otherProfile.cute_name}
+                        {#if otherProfile.game_mode === "bingo"}
+                          🎲
+                        {/if}
+                        {#if otherProfile.game_mode === "ironman"}
+                          ♻️
+                        {/if}
+                        {#if otherProfile.game_mode === "island"}
+                          🌴
+                        {/if}
+                      </div>
+                    </a>
+                  {/if}
+                {/each}
               </div>
-            {/if}
-          {/snippet}
-        </DropdownMenu.Content>
-      </DropdownMenu.Portal>
-    </DropdownMenu.Root>
+            </div>
+          {/if}
+        {/snippet}
+      </Popover.Content>
+    </Popover.Root>
+
     {#if apiSettings.length}
       <Popover.Root bind:open={noticeOpen}>
         <Popover.Trigger class="rounded-full bg-yellow-500/20 px-4 py-2" onpointerenter={() => (noticeOpen = true)}>
