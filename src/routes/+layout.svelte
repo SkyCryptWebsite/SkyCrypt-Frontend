@@ -71,6 +71,8 @@
       window.location.reload();
     }
   });
+
+  const noEmbedUrls = ["/og/", "/stats/"];
 </script>
 
 <svelte:window
@@ -85,12 +87,12 @@
   onoffline={updateOnlineStatus} />
 
 <svelte:head>
-  {#if !page.url.pathname.startsWith("/stats")}
-    <link rel="icon" href="/favicon.png" />
+  {#if !noEmbedUrls.some((url) => page.url.pathname.startsWith(url))}
+    <link rel="icon" href="/favicon.png" sizes="32x32" type="image/png" />
   {/if}
 </svelte:head>
 
-{#if !page.url.pathname.startsWith("/stats")}
+{#if !noEmbedUrls.some((url) => page.url.pathname.startsWith(url))}
   <SvelteSeo
     title="SkyCrypt"
     description="A beautiful site for sharing your SkyBlock profile 🍣"
