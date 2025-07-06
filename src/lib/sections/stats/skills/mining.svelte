@@ -2,6 +2,7 @@
   import { getDynamicCtx } from "$ctx/dynamic.svelte";
   import AdditionStat from "$lib/components/AdditionStat.svelte";
   import Item from "$lib/components/Item.svelte";
+  import Notice from "$lib/components/Notice.svelte";
   import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
   import Items from "$lib/layouts/stats/Items.svelte";
   import { SectionName } from "$lib/shared/api";
@@ -131,6 +132,10 @@
 
   {#if mining.hotm.length > 0}
     <div class="pt-5">
+      <Notice type="warning" title="Heart of the Mountain" class="mb-5">
+        <p class="text-text/80">Unfortunately, Hypixel broke the Heart of the Mountain API after the Foraging update.<br />So we are unable to display the Heart of the Mountain data, because it simply doesn't exist anymore.</p>
+        <p class="text-text/80">We will add this back as soon as Hypixel fixes it.</p>
+      </Notice>
       <div class="bg-background/30 @container relative mb-0 rounded-lg p-5">
         <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
           {#each mining.hotm as item, index (index)}
