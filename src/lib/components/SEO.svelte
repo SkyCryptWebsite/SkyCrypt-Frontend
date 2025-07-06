@@ -180,34 +180,32 @@
   <link rel="icon" href={`https://crafatar.com/avatars/${embedData.uuid}?size=32&overlay`} sizes="32x32" type="image/png" />
 </svelte:head>
 
-{#key embedData}
-  <SvelteSeo
-    title="{embedData.displayName} | SkyCrypt"
-    description={getShortDescription()}
-    canonical="https://sky.shiiyu.moe/stats/{embedData.uuid}/{embedData.profile_id}"
-    openGraph={{
-      title: getMetaTitle(),
-      description: getLongDescription(),
-      type: "profile",
-      profile: {
-        username: embedData.username
-      },
-      images: [
-        {
-          url: `https://crafatar.com/avatars/${embedData.uuid}?size=512&overlay`,
-          width: 512,
-          height: 512,
-          alt: embedData.displayName
-        }
-      ],
-      site_name: "SkyCrypt"
-    }}
-    twitter={{
-      card: "summary",
-      image: `https://crafatar.com/avatars/${embedData.uuid}?size=512&overlay`,
-      imageAlt: embedData.displayName,
-      title: getMetaTitle()
-    }}
-    themeColor={themes.find((theme) => theme.id === $themeStore)?.light ? "#dbdbdb" : "#282828"}
-    manifest="/manifest.webmanifest" />
-{/key}
+<SvelteSeo
+  title="{embedData.displayName} | SkyCrypt"
+  description={getShortDescription()}
+  canonical="https://sky.shiiyu.moe/stats/{embedData.uuid}/{embedData.profile_id}"
+  openGraph={{
+    title: getMetaTitle(),
+    description: getLongDescription(),
+    type: "profile",
+    profile: {
+      username: embedData.username
+    },
+    images: [
+      {
+        url: `https://crafatar.com/avatars/${embedData.uuid}?size=512&overlay`,
+        width: 512,
+        height: 512,
+        alt: embedData.displayName
+      }
+    ],
+    site_name: "SkyCrypt"
+  }}
+  twitter={{
+    card: "summary",
+    image: `https://crafatar.com/avatars/${embedData.uuid}?size=512&overlay`,
+    imageAlt: embedData.displayName,
+    title: getMetaTitle()
+  }}
+  themeColor={themes.find((theme) => theme.id === $themeStore)?.light ? "#dbdbdb" : "#282828"}
+  manifest="/manifest.webmanifest" />

@@ -1,31 +1,15 @@
 <script lang="ts">
   import { page } from "$app/state";
   import SEO from "$lib/components/SEO.svelte";
-  import { api, SectionName } from "$lib/shared/api";
   import { cn } from "$lib/shared/utils";
   import { performanceMode } from "$lib/stores/preferences";
-  import type { EmbedV2 } from "$types/statsv2";
-  import { createQuery } from "@tanstack/svelte-query";
   import { Button } from "bits-ui";
+  import type { PageServerData } from "./$types";
 
-  const { ign, profile } = page.params;
-
-  const query = createQuery<EmbedV2>({
-    queryKey: [SectionName.EMBED, ign, profile],
-    queryFn: () => api(fetch).getSection(SectionName.EMBED, ign, profile)
-  });
-
-  const embedData = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data;
-  });
+  const { data }: { data: PageServerData } = $props();
 </script>
 
-{#key embedData}
-  {#if embedData}
-    <SEO {embedData} />
-  {/if}
-{/key}
+<SEO embedData={data.embed} />
 
 <main class="flex h-screen w-full flex-col items-center justify-center">
   <div class={cn("flex w-full max-w-md flex-col items-center justify-center gap-3 rounded-lg p-6", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}>
