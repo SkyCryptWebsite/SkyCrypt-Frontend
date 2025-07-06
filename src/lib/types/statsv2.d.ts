@@ -41,9 +41,22 @@ export type ArmorV2 = {
   wardrobe: ProcessedSkyBlockItem[][];
 };
 
-export type WeaponsV2 = {
-  weapons: ProcessedSkyBlockItem[];
-  highest_priority_weapon: ProcessedSkyBlockItem | null;
+export type GearV2 = {
+  armor: {
+    armor: ProcessedSkyBlockItem[];
+    stats: ItemStats;
+    set_name?: string;
+    set_rarity?: string;
+  };
+  equipment: {
+    equipment: ProcessedSkyBlockItem[];
+    stats: ItemStats;
+  };
+  wardrobe: ProcessedSkyBlockItem[][];
+  weapons: {
+    weapons: ProcessedSkyBlockItem[];
+    highest_priority_weapon: ProcessedSkyBlockItem | null;
+  };
 };
 
 export type AccessoriesV2 = {
@@ -516,3 +529,48 @@ export type PlayerStatsInputv2 = {
 };
 
 export type PlayerStatsV2 = Record<string, { base: number; total: number; [string: string]: number }>;
+
+export type EmbedV2 = Pick<StatsV2, "displayName" | "username" | "uuid" | "profile_id" | "profile_cute_name" | "joined" | "game_mode"> & {
+  skyblock_level: number;
+  skills: {
+    skillAverage: number;
+    skills: {
+      taming: number;
+      farming: number;
+      mining: number;
+      combat: number;
+      foraging: number;
+      fishing: number;
+      enchanting: number;
+      alchemy: number;
+      carpentry: number;
+      runecrafting: number;
+      social: number;
+    };
+  };
+  networth: number;
+  purse: number;
+  bank: number;
+  dungeons: {
+    dungoneering: number;
+    classAverage: number;
+    classes: {
+      healer: number;
+      mage: number;
+      berserk: number;
+      archer: number;
+      tank: number;
+    };
+  };
+  slayers: {
+    xp: number;
+    slayers: {
+      zombie: number;
+      spider: number;
+      wolf: number;
+      enderman: number;
+      blaze: number;
+      vampire: number;
+    };
+  };
+};

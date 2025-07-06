@@ -177,6 +177,22 @@
   ::-webkit-scrollbar-track {
     background-color: transparent;
   }
+
+  *:focus-visible {
+    outline: var(--color-skillbar) auto 1px;
+  }
+
+  *::selection {
+    background-color: var(--color-link);
+    color: var(--color-text);
+    text-shadow: var(--txt-shadow-lg);
+  }
+
+  *::target-text {
+    background-color: var(--color-skillbar);
+    color: var(--color-text);
+    text-shadow: var(--txt-shadow);
+  }
 }
 
 @layer components {

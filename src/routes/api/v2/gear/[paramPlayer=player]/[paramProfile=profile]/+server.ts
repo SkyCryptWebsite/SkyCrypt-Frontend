@@ -1,13 +1,15 @@
-import { REDIS } from "$lib/server/db/redis.js";
-import { getWeapons } from "$lib/server/stats/items/category.js";
-import { processItems } from "$lib/server/stats/items/processing.js";
+import { REDIS } from "$lib/server/db/redis";
+import { getWeapons } from "$lib/server/stats/items/category";
+import { processItems } from "$lib/server/stats/items/processing";
+import { getMainItems } from "$lib/server/stats/main_items.js";
 import { json } from "@sveltejs/kit";
 
 export async function GET({ params, cookies }) {
-  const { paramProfile } = params;
+  const { paramProfile = null } = params;
 
   const packs = JSON.parse(cookies.get("disabledPacks") || "[]");
-  const allItemsRaw = await REDIS.get(`profile:${paramProfile}:${packs.join("")}:items`);
+
+  const [armor, allItemsRaw] = await Promise.all([getMainItems(paramProfile as string, packs), REDIS.get(`profile:${paramProfile}:${packs.join("")}:items`)]);
   const items = JSON.parse(allItemsRaw as string);
 
   const allItems = [];
@@ -19,8 +21,5 @@ export async function GET({ params, cookies }) {
 
   const weapons = getWeapons(allItems);
 
-  return json({
-    weapons: weapons.weapons,
-    highest_priority_weapon: weapons.highest_priority_weapon
-  });
+  return json({ ...armor, weapons });
 }

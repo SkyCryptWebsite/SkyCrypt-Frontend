@@ -1,15 +1,15 @@
 <script lang="ts">
   import { getProfileCtx } from "$ctx/profile.svelte";
   import Bonus from "$lib/components/Bonus.svelte";
-  import Error from "$lib/components/Error.svelte";
   import Item from "$lib/components/Item.svelte";
+  import Notice from "$lib/components/Notice.svelte";
   import Section from "$lib/components/Section.svelte";
   import Wardrobe from "$lib/components/Wardrobe.svelte";
   import Items from "$lib/layouts/stats/Items.svelte";
   import { api, SectionName } from "$lib/shared/api";
   import { getRarityClass, renderLore } from "$lib/shared/helper";
   import { cn } from "$lib/shared/utils";
-  import type { ArmorV2, WeaponsV2 } from "$types/statsv2";
+  import type { GearV2 } from "$types/statsv2";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import { createQuery } from "@tanstack/svelte-query";
   import { ScrollArea } from "bits-ui";
@@ -21,31 +21,17 @@
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
 
-  const query = createQuery<ArmorV2>({
-    queryKey: [SectionName.ARMOR, profileUUID, profileId],
-    queryFn: () => api(fetch).getSection(SectionName.ARMOR, profileUUID, profileId)
+  const query = createQuery<GearV2>({
+    queryKey: [SectionName.GEAR, profileUUID, profileId],
+    queryFn: () => api(fetch).getSection(SectionName.GEAR, profileUUID, profileId)
   });
 
-  const weaponsQuery = createQuery<WeaponsV2>({
-    queryKey: [SectionName.WEAPONS, profileUUID, profileId],
-    queryFn: () => api(fetch).getSection(SectionName.WEAPONS, profileUUID, profileId)
-  });
-
-  const anyQueryLoading = $derived.by(() => {
-    return $query.isPending || $weaponsQuery.isPending;
-  });
-
-  const weapons = $derived.by(() => {
-    if ($weaponsQuery.isPending || $weaponsQuery.error || !$weaponsQuery.data) return;
-    return $weaponsQuery.data;
-  });
-
-  const { armor, equipment, wardrobe } = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data) {
-      return { armor: null, equipment: null, wardrobe: null };
-    }
+  const gear = $derived.by(() => {
+    if ($query.isPending || $query.error || !$query.data) return;
     return $query.data;
   });
+
+  const { armor, equipment, wardrobe, weapons } = $derived(gear!);
   const firstWardrobeItems = $derived.by(() => {
     if ($query.isPending || $query.error || !$query.data || !wardrobe) return [];
     if (wardrobe.length === 0) return [];
@@ -54,10 +40,14 @@
 </script>
 
 <Section id="Gear" {order}>
-  {#if $query.error}
-    <Error />
+  {#if $query.isPending}
+    <LoaderCircle class="text-icon animate-spin" />
   {/if}
-  {#if $query.isSuccess && armor}
+  {#if $query.error}
+    <Notice title="An unexpected error has occurred" type="error" />
+  {/if}
+
+  {#if $query.isSuccess && gear}
     <Items subtitle="Armor">
       {#snippet text()}
         {#if armor.armor.length > 0 && !armor.armor.every((piece) => !piece.display_name)}
@@ -117,14 +107,7 @@
         </div>
       </Items>
     {/if}
-  {/if}
-  {#if anyQueryLoading}
-    <LoaderCircle class="text-icon animate-spin" />
-  {/if}
-  {#if $weaponsQuery.error}
-    <Error />
-  {/if}
-  {#if $weaponsQuery.isSuccess && $weaponsQuery.data && weapons}
+
     {#if weapons.weapons.length}
       <Items subtitle="Weapons">
         {#snippet text()}

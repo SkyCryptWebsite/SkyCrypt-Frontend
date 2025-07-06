@@ -1,5 +1,6 @@
 import { REDIS } from "$lib/server/db/redis";
 import { getProfile } from "$lib/server/lib";
+import { storeEmbedData } from "$lib/server/stats/embed.js";
 import type { ProcessedSkyBlockItem } from "$types/stats.js";
 import { json } from "@sveltejs/kit";
 import { getPreDecodedNetworth } from "skyhelper-networth";
@@ -42,6 +43,8 @@ export async function GET({ params, cookies }) {
   };
 
   const networth = await getPreDecodedNetworth(userProfile, items, bank, networthOptions);
+
+  storeEmbedData(profile, networth);
 
   return json(networth);
 }

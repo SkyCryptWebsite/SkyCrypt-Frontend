@@ -71,7 +71,7 @@ function getEnrichments(accessories: ProcessedItem[]) {
     }
 
     const enrichmentKey = item.tag.ExtraAttributes.talisman_enrichment ?? "missing";
-    const enrichment = constants.ENRICHMENT_TO_STAT[enrichmentKey] ?? enrichmentKey;
+    const enrichment = constants.ENRICHMENT_TO_STAT[enrichmentKey] ?? enrichmentKey.toLowerCase();
     output[enrichment] ??= 0;
     output[enrichment] += 1;
   }

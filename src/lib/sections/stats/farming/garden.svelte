@@ -2,7 +2,7 @@
   import { getProfileCtx } from "$ctx/profile.svelte";
   import AdditionStat from "$lib/components/AdditionStat.svelte";
   import Chip from "$lib/components/Chip.svelte";
-  import Error from "$lib/components/Error.svelte";
+  import Notice from "$lib/components/Notice.svelte";
   import ScrollItems from "$lib/components/scroll-items.svelte";
   import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
   import type { IsHover } from "$lib/hooks/is-hover.svelte";
@@ -62,7 +62,7 @@
         <LoaderCircle class="text-icon animate-spin" />
       {/if}
       {#if $query.error}
-        <Error />
+        <Notice title="An unexpected error has occurred" type="error" />
       {/if}
       {#if $query.isSuccess && $query.data && garden}
         {@const hasMaxed = garden.level.maxed}

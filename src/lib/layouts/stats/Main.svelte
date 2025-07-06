@@ -1,5 +1,6 @@
 <script lang="ts">
   import { browser } from "$app/environment";
+  import { getProfileCtx } from "$ctx/profile.svelte";
   import Item from "$lib/components/Item.svelte";
   import ItemContent from "$lib/components/item/item-content.svelte";
   import Navbar from "$lib/components/Navbar.svelte";
@@ -10,18 +11,45 @@
   import Skills from "$lib/layouts/stats/Skills.svelte";
   import Stats from "$lib/layouts/stats/Stats.svelte";
   import Sections from "$lib/sections/Sections.svelte";
+  import { api, SectionName } from "$lib/shared/api";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { itemContent, itemContentSpecial, showItem } from "$lib/stores/internal";
   import { performanceMode } from "$lib/stores/preferences";
+  import type { EmbedV2 } from "$types/statsv2";
+  import { createQuery } from "@tanstack/svelte-query";
   import { Dialog } from "bits-ui";
   import { getContext } from "svelte";
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
 
   const isHover = getContext<IsHover>("isHover");
+
+  const ctx = getProfileCtx();
+  const profile = $derived(ctx.profile);
+  const profileUUID = $derived(profile.uuid);
+  const profileId = $derived(profile.profile_id);
+
+  const query = createQuery<EmbedV2>({
+    queryKey: [SectionName.EMBED, profileUUID, profileId],
+    queryFn: () => api(fetch).getSection(SectionName.EMBED, profileUUID, profileId),
+    enabled: false
+  });
+
+  setTimeout(() => {
+    if (profileUUID && profileId) {
+      $query.refetch();
+    }
+  }, 3000);
+
+  const embedData = $derived.by(() => {
+    if ($query.isPending || $query.error || !$query.data) return;
+    return $query.data;
+  });
 </script>
 
-<SEO />
+{#if embedData}
+  <SEO {embedData} />
+{/if}
 
 <div class="@container/parent relative">
   <div class="@container fixed top-1/2 left-0 z-10 hidden h-dvh w-[30vw] -translate-y-1/2 @[75rem]/parent:block">

@@ -13,7 +13,6 @@
   import Wifi from "@lucide/svelte/icons/wifi";
   import WifiOff from "@lucide/svelte/icons/wifi-off";
   import { QueryClientProvider } from "@tanstack/svelte-query";
-  import { SvelteQueryDevtools } from "@tanstack/svelte-query-devtools";
   import { Tooltip } from "bits-ui";
   import { onMount, setContext, type Snippet } from "svelte";
   import SvelteSeo from "svelte-seo";
@@ -31,6 +30,28 @@
   let isHover = $state(new IsHover());
   let toastId: string | number = $state(0);
 
+  function updateOnlineStatus() {
+    toast.dismiss(toastId);
+    toastId = toast.loading("Checking connection status...");
+    setTimeout(() => {
+      if (navigator.onLine) {
+        toast.dismiss(toastId);
+        toastId = toast.success("You are now online!", {
+          icon: Wifi,
+          description: "Connection has been restored!",
+          duration: 5000
+        });
+      } else {
+        toast.dismiss(toastId);
+        toastId = toast.error("You are now offline!", {
+          icon: WifiOff,
+          description: "Please check your connection and try again.",
+          duration: 5000
+        });
+      }
+    }, 1000);
+  }
+
   setContext("isMobile", isMobile);
   setContext("isHover", isHover);
 
@@ -40,35 +61,6 @@
     if (window.innerWidth <= 600) {
       position.set("bottom-center");
     }
-
-    function updateOnlineStatus() {
-      toast.dismiss(toastId);
-      toastId = toast.loading("Checking connection status...");
-      setTimeout(() => {
-        if (navigator.onLine) {
-          toast.dismiss(toastId);
-          toastId = toast.success("You are now online!", {
-            icon: Wifi,
-            description: "Connection has been restored!",
-            duration: 5000
-          });
-        } else {
-          toast.dismiss(toastId);
-          toastId = toast.error("You are now offline!", {
-            icon: WifiOff,
-            description: "Please check your connection and try again.",
-            duration: 5000
-          });
-        }
-      }, 1000);
-    }
-
-    window.addEventListener("online", updateOnlineStatus);
-    window.addEventListener("offline", updateOnlineStatus);
-    return () => {
-      window.removeEventListener("online", updateOnlineStatus);
-      window.removeEventListener("offline", updateOnlineStatus);
-    };
   });
 
   $effect(() => {
@@ -79,6 +71,8 @@
       window.location.reload();
     }
   });
+
+  const noEmbedUrls = ["/og/", "/stats/"];
 </script>
 
 <svelte:window
@@ -88,15 +82,17 @@
     } else {
       position.set("bottom-right");
     }
-  }} />
+  }}
+  ononline={updateOnlineStatus}
+  onoffline={updateOnlineStatus} />
 
 <svelte:head>
-  {#if !page.url.pathname.startsWith("/stats")}
-    <link rel="icon" href="/favicon.png" />
+  {#if !noEmbedUrls.some((url) => page.url.pathname.startsWith(url))}
+    <link rel="icon" href="/favicon.png" sizes="32x32" type="image/png" />
   {/if}
 </svelte:head>
 
-{#if !page.url.pathname.startsWith("/stats")}
+{#if !noEmbedUrls.some((url) => page.url.pathname.startsWith(url))}
   <SvelteSeo
     title="SkyCrypt"
     description="A beautiful site for sharing your SkyBlock profile 🍣"
@@ -139,7 +135,9 @@
     {@render children()}
   </Tooltip.Provider>
   {#if dev}
-    <SvelteQueryDevtools />
+    {#await import("@tanstack/svelte-query-devtools") then { SvelteQueryDevtools }}
+      <SvelteQueryDevtools />
+    {/await}
   {/if}
 </QueryClientProvider>
 

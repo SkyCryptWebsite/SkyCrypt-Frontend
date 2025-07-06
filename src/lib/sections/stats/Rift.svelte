@@ -3,8 +3,8 @@
   import AdditionStat from "$lib/components/AdditionStat.svelte";
   import Bonus from "$lib/components/Bonus.svelte";
   import Chip from "$lib/components/Chip.svelte";
-  import Error from "$lib/components/Error.svelte";
   import Item from "$lib/components/Item.svelte";
+  import Notice from "$lib/components/Notice.svelte";
   import ScrollItems from "$lib/components/scroll-items.svelte";
   import Section from "$lib/components/Section.svelte";
   import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
@@ -44,7 +44,7 @@
     <LoaderCircle class="text-icon animate-spin" />
   {/if}
   {#if $query.error}
-    <Error />
+    <Notice title="An unexpected error has occurred" type="error" />
   {/if}
   {#if $query.isSuccess && $query.data && rift}
     <Items class="flex-col">

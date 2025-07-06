@@ -2,7 +2,7 @@
   import { afterNavigate, replaceState } from "$app/navigation";
   import { page } from "$app/state";
   import { setProfileCtx } from "$ctx/profile.svelte";
-  import Error from "$lib/components/Error.svelte";
+  import Notice from "$lib/components/Notice.svelte";
   import Main from "$lib/layouts/stats/Main.svelte";
   import type { SectionName } from "$lib/sections/types";
   import { api } from "$lib/shared/api";
@@ -94,7 +94,7 @@
       </div>
     {/if}
     {#if $query.error}
-      <Error />
+      <Notice title="An unexpected error has occurred" type="error" />
     {/if}
   </div>
 {/if}
