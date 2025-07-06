@@ -1,8 +1,10 @@
 import { building } from "$app/environment";
-import { MONGO_DATABASE, MONGO_HOST, MONGO_PORT } from "$env/static/private";
+import { env } from "$env/dynamic/private";
 import { MongoClient, type Db } from "mongodb";
 import { updateCollections } from "./mongo/update-collections";
 import { updateItems } from "./mongo/update-items";
+
+const { MONGO_DATABASE, MONGO_HOST, MONGO_PORT } = env;
 
 const client = !building ? new MongoClient(`mongodb://${MONGO_HOST}:${MONGO_PORT}/${MONGO_DATABASE}`) : null;
 

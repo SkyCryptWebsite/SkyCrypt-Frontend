@@ -1,6 +1,8 @@
 import { dev } from "$app/environment";
-import { PUBLIC_SENTRY_DSN } from "$env/static/public";
+import { env } from "$env/dynamic/public";
 import { browserTracingIntegration, contextLinesIntegration, extraErrorDataIntegration, handleErrorWithSentry, httpClientIntegration, init } from "@sentry/sveltekit";
+
+const { PUBLIC_SENTRY_DSN } = env;
 
 init({
   dsn: PUBLIC_SENTRY_DSN,

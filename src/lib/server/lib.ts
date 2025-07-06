@@ -1,10 +1,13 @@
 import { CACHED_EMOJIS } from "$constants/emojis";
-import { DISCORD_WEBHOOK, HYPIXEL_API_KEY } from "$env/static/private";
+import { env } from "$env/dynamic/private";
 import { isPlayer } from "$params/player";
 import { isUUID } from "$params/uuid";
 import type { Profile, ProfilesResponse } from "$types/global";
 import { SkyCryptError } from "./constants/error";
 import { REDIS } from "./db/redis";
+
+const { DISCORD_WEBHOOK, HYPIXEL_API_KEY } = env;
+
 const headers = { Accept: "application/json", "User-Agent": "SkyCrypt", "API-KEY": HYPIXEL_API_KEY };
 
 export async function getProfiles(paramPlayer: string) {

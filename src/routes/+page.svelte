@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { PUBLIC_DISCORD_INVITE, PUBLIC_PATREON } from "$env/static/public";
+  import { env } from "$env/dynamic/public";
   import type { IsHover } from "$lib/hooks/is-hover.svelte";
   import { getUsername } from "$lib/shared/helper";
   import { cn, flyAndScale } from "$lib/shared/utils";
@@ -19,6 +19,8 @@
   import type { PageData } from "./$types";
   import { Role } from "./enums";
   import { schema } from "./schema";
+
+  const { PUBLIC_DISCORD_INVITE, PUBLIC_PATREON } = env;
 
   let { data }: { data: PageData } = $props();
 
