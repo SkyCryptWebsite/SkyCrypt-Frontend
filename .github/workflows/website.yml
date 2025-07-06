@@ -9,34 +9,6 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  conflicts:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check for PR conflicts
-        uses: eps1lon/actions-label-merge-conflict@releases/2.x
-        with:
-          dirtyLabel: "has conflicts"
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-
-  analyze:
-    name: Analyze
-    runs-on: ubuntu-latest
-
-    permissions:
-      security-events: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
-        with:
-          languages: javascript
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
-
   formatting-checks:
     name: Check linting (es-lint), formatting (prettier), and svelte checks (svelte-check)
     runs-on: ubuntu-latest
@@ -57,7 +29,8 @@ jobs:
         run: pnpm lint
 
   build:
-    name: Svelte Build
+    name: Vite Build
+    needs: [formatting-checks]
     runs-on: ubuntu-latest
     steps:
       - name: Git checkout
@@ -88,7 +61,7 @@ jobs:
       (github.ref == 'refs/heads/prod' || github.ref == 'refs/heads/dev')
       && github.repository_owner == 'SkyCryptWebsite'
       && github.event_name != 'pull_request'
-    needs: [conflicts, analyze, formatting-checks, build]
+    needs: [formatting-checks, build]
     runs-on: ubuntu-latest
 
     permissions:
