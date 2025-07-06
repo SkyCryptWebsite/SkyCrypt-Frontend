@@ -54,7 +54,7 @@
   <Popover.Root bind:open={ignOpen}>
     <Popover.Trigger
       disabled={!profile.members.length}
-      class="inline-flex items-center rounded-full bg-[oklch(59.65%_0_0)]/20 py-2 pr-4 pl-2 align-middle text-xl font-semibold whitespace-nowrap sm:text-3xl"
+      class="bg-[oklch(59.65%_0_0)]/20 inline-flex items-center whitespace-nowrap rounded-full py-2 pl-2 pr-4 align-middle text-xl font-semibold sm:text-3xl"
       bind:ref={ignRef}
       onpointerenter={() => {
         if (!profile.members.length) return;
@@ -69,7 +69,7 @@
             <span>{profile.rank.plusText}</span>
           {/if}
         </div>
-        <div class="absolute top-0 -right-3 bottom-0 z-10 h-14 w-1/2 skew-x-[-20deg] bg-[var(--plusColor)]" style={`--plusColor:${profile.rank?.plusColor ?? profile.rank?.rankColor}`}></div>
+        <div class="absolute -right-3 bottom-0 top-0 z-10 h-14 w-1/2 skew-x-[-20deg] bg-[var(--plusColor)]" style={`--plusColor:${profile.rank?.plusColor ?? profile.rank?.rankColor}`}></div>
       </div>
       <span class="pl-4">{profile.displayName}</span>
     </Popover.Trigger>
@@ -81,8 +81,8 @@
             <div {...props} transition:flyAndScale>
               {#each profile.members as member (member.uuid)}
                 {#if member.username !== profile.username}
-                  <a href={`/stats/${member.username}/${profile.profile_cute_name}`} class="group flex min-w-(--bits-dropdown-menu-anchor-width) items-center p-2 focus-visible:outline-0" data-sveltekit-preload-code="viewport">
-                    <span class="outline-icon group-hover:bg-text/20 flex w-full items-center justify-between gap-2 rounded-lg bg-[oklch(59.65%_0_0)]/20 p-2 transition-colors duration-300 group-focus-visible:outline-1">
+                  <a href={`/stats/${member.username}/${profile.profile_cute_name}`} class="min-w-(--bits-dropdown-menu-anchor-width) group flex items-center p-2 focus-visible:outline-0" data-sveltekit-preload-code="viewport">
+                    <span class="outline-icon group-hover:bg-text/20 bg-[oklch(59.65%_0_0)]/20 flex w-full items-center justify-between gap-2 rounded-lg p-2 transition-colors duration-300 group-focus-visible:outline-1">
                       {member.username}
                       {#if member.removed}
                         <Ban class="size-6" />
@@ -98,7 +98,7 @@
     </Popover.Content>
   </Popover.Root>
   on
-  <div class="relative inline-flex items-center gap-2 rounded-full bg-[oklch(59.65%_0_0)]/20 px-2 py-1 align-middle text-xl font-semibold data-[warning=true]:border-2 data-[warning=true]:border-yellow-500/20 sm:text-3xl" data-warning={!!apiSettings.length} bind:this={noticeRef}>
+  <div class="bg-[oklch(59.65%_0_0)]/20 relative inline-flex items-center gap-2 rounded-full px-2 py-1 align-middle text-xl font-semibold data-[warning=true]:border-2 data-[warning=true]:border-yellow-500/20 sm:text-3xl" data-warning={!!apiSettings.length} bind:this={noticeRef}>
     <Popover.Root bind:open={profileOpen}>
       <Popover.Trigger
         disabled={!profile.profiles.length}
@@ -119,7 +119,7 @@
                 {#each profile.profiles ?? [] as otherProfile (otherProfile.profile_id)}
                   {#if otherProfile.profile_id !== profile.profile_id}
                     <a href={`/stats/${profile.username}/${otherProfile.cute_name}`} class="group flex items-center p-2 focus-visible:outline-0" data-sveltekit-preload-code="viewport">
-                      <div class="group-hover:bg-text/20 outline-icon w-full rounded-lg bg-[oklch(59.65%_0_0)]/20 p-2 transition-colors duration-300 group-focus-visible:outline-1">
+                      <div class="group-hover:bg-text/20 outline-icon bg-[oklch(59.65%_0_0)]/20 w-full rounded-lg p-2 transition-colors duration-300 group-focus-visible:outline-1">
                         {otherProfile.cute_name}
                         {#if otherProfile.game_mode === "bingo"}
                           🎲
