@@ -39,6 +39,20 @@ export type ArmorV2 = {
     stats: ItemStats;
   };
   wardrobe: ProcessedSkyBlockItem[][];
+};
+
+export type GearV2 = {
+  armor: {
+    armor: ProcessedSkyBlockItem[];
+    stats: ItemStats;
+    set_name?: string;
+    set_rarity?: string;
+  };
+  equipment: {
+    equipment: ProcessedSkyBlockItem[];
+    stats: ItemStats;
+  };
+  wardrobe: ProcessedSkyBlockItem[][];
   weapons: {
     weapons: ProcessedSkyBlockItem[];
     highest_priority_weapon: ProcessedSkyBlockItem | null;
