@@ -177,6 +177,10 @@
   ::-webkit-scrollbar-track {
     background-color: transparent;
   }
+
+  *:focus-visible {
+    outline: var(--color-icon) auto 1px;
+  }
 }
 
 @layer components {
