@@ -36,7 +36,7 @@
     site_name: "SkyCrypt"
   }}
   twitter={{
-    card: "summary_large_image",
+    card: "summary",
     image: `https://visage.surgeplay.com/bust/${embedData.uuid}?y=-40`,
     imageAlt: embedData.displayName,
     title: getMetaTitle(embedData),
