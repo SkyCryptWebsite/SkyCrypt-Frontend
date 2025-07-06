@@ -1,12 +1,12 @@
 import type { Garden } from "$types/processed/profile/garden";
 import type { ProcessedSkyBlockItem } from "$types/stats";
-import type { AccessoriesV2, ArmorV2, BestiaryV2, CollectionsV2, CrimsonIsleV2, DungeonsV2, EmbedV2, EnchantingV2, FarmingV2, FishingV2, InventoryV2, InventoryV2All, MiningV2, MinionsV2, MiscV2, NetworthV2, PetsV2, PlayerStatsV2, RiftV2, SkillsV2, SlayerV2, StatsV2, WeaponsV2 } from "$types/statsv2";
+import type { AccessoriesV2, BestiaryV2, CollectionsV2, CrimsonIsleV2, DungeonsV2, EmbedV2, EnchantingV2, FarmingV2, FishingV2, GearV2, InventoryV2, InventoryV2All, MiningV2, MinionsV2, MiscV2, NetworthV2, PetsV2, PlayerStatsV2, RiftV2, SkillsV2, SlayerV2, StatsV2 } from "$types/statsv2";
 
 // Enum for section names
 export enum SectionName {
   NETWORTH = "networth",
   SKILLS = "skills",
-  ARMOR = "armor",
+  GEAR = "gear",
   MINING = "mining",
   FARMING = "farming",
   FISHING = "fishing",
@@ -21,7 +21,6 @@ export enum SectionName {
   ENCHANTING = "enchanting",
   ACCESSORIES = "accessories",
   PETS = "pets",
-  WEAPONS = "weapons",
   INVENTORY = "inventory",
   STATS = "playerStats",
   EMBED = "embed"
@@ -31,7 +30,7 @@ export enum SectionName {
 type SectionTypeMap = {
   [SectionName.NETWORTH]: NetworthV2;
   [SectionName.SKILLS]: SkillsV2;
-  [SectionName.ARMOR]: ArmorV2;
+  [SectionName.GEAR]: GearV2;
   [SectionName.MINING]: MiningV2;
   [SectionName.FARMING]: FarmingV2;
   [SectionName.FISHING]: FishingV2;
@@ -46,7 +45,6 @@ type SectionTypeMap = {
   [SectionName.ENCHANTING]: EnchantingV2;
   [SectionName.ACCESSORIES]: AccessoriesV2;
   [SectionName.PETS]: PetsV2;
-  [SectionName.WEAPONS]: WeaponsV2;
   [SectionName.INVENTORY]: InventoryV2;
   [SectionName.STATS]: PlayerStatsV2;
   [SectionName.EMBED]: EmbedV2;
