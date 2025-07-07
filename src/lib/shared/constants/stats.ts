@@ -597,7 +597,7 @@ export const STATS_BONUS = {
     1: { health: 1 },
     2: { intelligence: 2 },
     3: { health: 2 },
-    4: { intelligence: 2 },
+    4: { true_defense: 1 },
     5: { health: 3 },
     6: { intelligence: 5 },
     7: { health: 4 },
