@@ -135,6 +135,9 @@ importers:
       numerable:
         specifier: ^0.3.15
         version: 0.3.15
+      paneforge:
+        specifier: ^1.0.0
+        version: 1.0.0(svelte@5.35.2)
       path:
         specifier: ^0.12.7
         version: 0.12.7
@@ -2746,6 +2749,11 @@ packages:
 
   pako@1.0.11:
     resolution: {integrity: sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==}
+
+  paneforge@1.0.0:
+    resolution: {integrity: sha512-VlE5+inlTtfguYzSXCWlgFOrt92ofMkwm3/9dwwaDxABAJYYPOS6OJL+qNQbMr6RZkh7y1GSmB5sN+UG7EmVBA==}
+    peerDependencies:
+      svelte: ^5.29.0
 
   parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
@@ -5976,6 +5984,12 @@ snapshots:
       p-limit: 3.1.0
 
   pako@1.0.11: {}
+
+  paneforge@1.0.0(svelte@5.35.2):
+    dependencies:
+      runed: 0.23.4(svelte@5.35.2)
+      svelte: 5.35.2
+      svelte-toolbelt: 0.9.3(svelte@5.35.2)
 
   parent-module@1.0.1:
     dependencies:

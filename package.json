@@ -49,6 +49,7 @@
     "micromatch": "^4.0.8",
     "mongo-sanitize": "^1.1.0",
     "numerable": "^0.3.15",
+    "paneforge": "^1.0.0",
     "path": "^0.12.7",
     "prettier": "^3.6.2",
     "prettier-plugin-svelte": "^3.4.0",
