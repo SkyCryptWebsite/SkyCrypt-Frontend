@@ -6,7 +6,7 @@
   import themes from "$lib/shared/constants/themes";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { disabledPacks } from "$lib/stores/packs";
-  import { performanceMode, sectionOrderPreferences } from "$lib/stores/preferences";
+  import { keybind, performanceMode, sectionOrderPreferences } from "$lib/stores/preferences";
   import { theme as themeStore } from "$lib/stores/themes";
   import { wikiOrderPreferences } from "$lib/stores/wiki";
   import BookOpenText from "@lucide/svelte/icons/book-open-text";
@@ -14,6 +14,7 @@
   import Cog from "@lucide/svelte/icons/cog";
   import Fan from "@lucide/svelte/icons/fan";
   import GripVertical from "@lucide/svelte/icons/grip-vertical";
+  import Keyboard from "@lucide/svelte/icons/keyboard";
   import ListOrdered from "@lucide/svelte/icons/list-ordered";
   import PackageOpen from "@lucide/svelte/icons/package-open";
   import PaintBucket from "@lucide/svelte/icons/paint-bucket";
@@ -29,6 +30,7 @@
   import { Drawer } from "vaul-svelte";
 
   let settingsOpen = $state(false);
+  let isListening = $state(false);
 
   const isHover = getContext<IsHover>("isHover");
 
@@ -203,6 +205,46 @@
               <Switch.Thumb class="bg-text pointer-events-none block size-4 shrink-0 rounded-full transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
             </Switch.Root>
           </Label.Root>
+
+          <div class="bg-text/[0.05] flex items-center justify-between gap-4 rounded-lg p-2">
+            <div class="flex items-center gap-2">
+              <Keyboard class="size-6 " />
+              <div class="flex flex-col">
+                <h4 class="text-text/90 font-semibold">Keybind</h4>
+              </div>
+            </div>
+            <button
+              class="bg-text/10 hover:bg-text/20 border-text/20 text-text/90 focus:ring-icon/50 flex h-8 min-w-8 items-center justify-center rounded-md border px-2 py-1 font-mono text-sm font-semibold transition-colors focus:ring-2 focus:outline-none"
+              onclick={() => {
+                isListening = true;
+                setTimeout(() => {
+                  if (isListening) {
+                    isListening = false;
+                  }
+                }, 5000);
+              }}
+              onkeydown={(e) => {
+                if (isListening) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  const key = e.key;
+                  if (key.length === 1 && key.match(/[a-zA-Z0-9/\\.,;'"`~!@#$%^&*()_+\-=[\]{}|:<>?]/)) {
+                    keybind.set(key);
+                    isListening = false;
+                  } else if (key === "Escape") {
+                    isListening = false;
+                    keybind.set($keybind || "/");
+                  }
+                }
+              }}
+              tabindex="0">
+              {#if isListening}
+                <span class="text-icon animate-pulse">Press a key</span>
+              {:else}
+                <span class="min-w-2 text-center">{$keybind}</span>
+              {/if}
+            </button>
+          </div>
         </div>
         <Separator.Root class="bg-icon/30 shrink-0 data-[orientation=horizontal]:h-0.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-0.5" />
         <div class="bg-text/[0.05] space-y-4 rounded-lg p-4">
