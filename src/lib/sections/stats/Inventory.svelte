@@ -252,12 +252,17 @@
   const itemsFound = $derived(!debouncedSearchValue.pending && !$searchQuery.isLoading && debouncedSearchValue.current && debouncedSearchValue.current !== "" && searchedItems.length === 0);
 
   const tab = $derived<Tabs>(tabs?.find((t) => t.id === openTab) as Tabs);
-  // const hasEmptyInventory = $derived(tabs?.filter((tab) => tab.items.length > 0).length === 0);
 
   const [send, receive] = crossfade({
     duration: 300,
     easing: cubicInOut
   });
+
+  function shouldShine(item: ProcessedSkyBlockItem): boolean | undefined {
+    const enchanted = item.texture_path.includes("/api/leather/") ? false : item.shiny;
+    const shine = enchanted || item.shiny;
+    return shine;
+  }
 
   itemContentSpecial.subscribe((item) => {
     if (item) {
@@ -437,7 +442,7 @@
     <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
       {#each searchedItems as item, index (index)}
         {#if item}
-          <div class="bg-text/[0.04] flex aspect-square items-center justify-center rounded-sm">
+          <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={shouldShine(item)}>
             {@render itemSnippet(item)}
           </div>
         {:else}
@@ -457,7 +462,7 @@
             {#snippet child({ props })}
               <div {...props}>
                 {#if item.texture_path}
-                  <div class="group-data-[state=active]:bg-text/10 group-data-[state=inactive]:bg-text/[0.04] flex aspect-square items-center justify-center rounded-sm">
+                  <div class="group-data-[state=active]:bg-text/10 group-data-[state=inactive]:bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={shouldShine(item)}>
                     {@render itemSnippet(item)}
                   </div>
                 {:else}
@@ -482,7 +487,7 @@
                 {/if}
                 <Tabs.Content value={index.toString()}>
                   {#if containedItem.texture_path}
-                    <div class="bg-text/[0.04] flex aspect-square items-center justify-center rounded-sm">
+                    <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={shouldShine(item)}>
                       {@render itemSnippet(containedItem)}
                     </div>
                   {:else}
@@ -508,7 +513,7 @@
           {/if}
         {/if}
         {#if item.texture_path}
-          <div class="bg-text/[0.04] flex aspect-square items-center justify-center rounded-sm">
+          <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={shouldShine(item)}>
             {#if tab.id === "inventory"}
               {@render itemSnippet({ ...item, rarity: item.rarity ?? "uncommon" } as ProcessedSkyBlockItem)}
             {:else}

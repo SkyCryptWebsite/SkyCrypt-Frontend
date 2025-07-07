@@ -45,7 +45,7 @@
 
 <Tooltip.Root bind:open disableHoverableContent={true} ignoreNonKeyboardFocus={true} disabled={!inViewport.current} delayDuration={100}>
   <Tooltip.Trigger
-    class={cn(`nice-colors-dark relative flex aspect-square items-center justify-center overflow-clip `, isInventory ? "size-6 p-0 sm:size-16" : `size-18 rounded-lg p-2 ${bgColor}`, { shine: shine && !isInventory })}
+    class={cn(`nice-colors-dark relative flex aspect-square items-center justify-center overflow-clip `, isInventory ? "size-6 p-0 sm:size-16" : `size-18 p-2 ${bgColor}`, { shine: shine && !isInventory }, { "rounded-lg": !isInventory })}
     bind:ref={targetNode}
     onclick={() => {
       if (skyblockItem.containsItems) {
