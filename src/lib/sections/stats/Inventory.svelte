@@ -4,6 +4,7 @@
   import Notice from "$lib/components/Notice.svelte";
   import Section from "$lib/components/Section.svelte";
   import { api } from "$lib/shared/api";
+  import { renderLore } from "$lib/shared/helper";
   import { itemContentSpecial } from "$lib/stores/internal";
   import type { ProcessedSkyBlockItem } from "$types/stats";
   import type { InventoryV2 } from "$types/statsv2";
@@ -496,6 +497,15 @@
                 </Tabs.Content>
               {/each}
             {/if}
+          </div>
+          <div class="grid place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
+            <div class="pt-5">
+              {#if item?.lore}
+                {#each item?.lore as lore, index (index)}
+                  {@html renderLore(lore)}
+                {/each}
+              {/if}
+            </div>
           </div>
         </Tabs.Content>
       {/each}
