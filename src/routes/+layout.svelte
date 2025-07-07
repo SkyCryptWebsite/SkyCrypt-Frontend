@@ -10,7 +10,7 @@
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { favorites } from "$lib/stores/favorites";
   import { content, openCommand } from "$lib/stores/internal";
-  import { keybind, performanceMode, sectionOrderPreferences } from "$lib/stores/preferences";
+  import { keybind, performanceMode } from "$lib/stores/preferences";
   import { recentSearches } from "$lib/stores/searches";
   import { theme as themeStore } from "$lib/stores/themes";
   import CircleAlert from "@lucide/svelte/icons/circle-alert";
@@ -102,14 +102,6 @@
     }
   });
 
-  $effect(() => {
-    // @ts-expect-error Armor and Weapons do not exist in SectionName type, that's why we're checking for it and removing it
-    if ($sectionOrderPreferences.find((section) => section.name === "Armor" || section.name === "Weapons")) {
-      console.warn("Invalid section order detected! Resetting preferences.");
-      localStorage.removeItem("sectionOrderPreferences");
-      window.location.reload();
-    }
-  });
   beforeNavigate(({ type }) => {
     if (type === "leave" || type === "link") return;
     loading = true;
