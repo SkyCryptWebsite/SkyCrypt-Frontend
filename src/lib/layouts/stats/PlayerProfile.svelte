@@ -163,12 +163,12 @@
     <Tooltip.Trigger
       class="bg-icon/90 hover:bg-icon aspect-square rounded-full p-2 transition-opacity duration-150"
       onclick={() => {
-        if (!$favorites.includes(profile.uuid)) {
-          favorites.set([...$favorites, profile.uuid]);
+        if (!$favorites.some((fav) => fav.uuid === profile.uuid)) {
+          favorites.set([...$favorites, { uuid: profile.uuid, ign: profile.username }]);
           toast.dismiss(toastId);
           toastId = toast.success(`Added ${profile.username} to your favorites!`);
         } else {
-          favorites.set($favorites.filter((uuid) => uuid !== profile.uuid));
+          favorites.set($favorites.filter((fav) => fav.uuid !== profile.uuid));
           toast.dismiss(toastId);
           toastId = toast.success(`Removed ${profile.username} from your favorites!`);
         }
@@ -176,7 +176,7 @@
       onpointerdown={() => (favoriteTooltipOpen = !favoriteTooltipOpen)}>
       {#snippet child({ props })}
         <button {...props}>
-          {#if $favorites.includes(profile.uuid)}
+          {#if $favorites.some((fav) => fav.uuid === profile.uuid)}
             <Star class="size-4 fill-white" />
           {:else}
             <Star class="size-4" />
@@ -191,7 +191,7 @@
             <div {...wrapperProps}>
               <div {...props} transition:flyAndScale>
                 <Tooltip.Arrow />
-                {#if $favorites.includes(profile.uuid)}
+                {#if $favorites.some((fav) => fav.uuid === profile.uuid)}
                   <p>Remove from favorites</p>
                 {:else}
                   <p>Add to favorites</p>

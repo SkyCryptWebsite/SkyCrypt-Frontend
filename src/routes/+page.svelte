@@ -1,7 +1,6 @@
 <script lang="ts">
   import { env } from "$env/dynamic/public";
   import type { IsHover } from "$lib/hooks/is-hover.svelte";
-  import { getUsername } from "$lib/shared/helper";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { favorites } from "$lib/stores/favorites";
   import { content } from "$lib/stores/internal";
@@ -119,11 +118,7 @@
       {@render profile({ id: "0", name: "No favorites set!", quote: "Why don't you set a favorite?" }, { tip: true })}
     {:else}
       {#each $favorites.reverse() as favorite, index (index)}
-        {#await getUsername(favorite)}
-          {@render profileSkeleton()}
-        {:then username}
-          {@render profile({ id: favorite, name: username, role: Role.FAVORITE }, { favorite: true })}
-        {/await}
+        {@render profile({ id: favorite.uuid, name: favorite.ign, role: Role.FAVORITE }, { favorite: true })}
       {/each}
     {/if}
 
@@ -178,7 +173,7 @@
             if (!options?.favorite) {
               content.set(tooltipContent);
             } else {
-              favorites.set($favorites.filter((uuid) => uuid !== user.id));
+              favorites.set($favorites.filter((favorite) => favorite.uuid !== user.id));
             }
           }}>
           {#snippet child({ props })}

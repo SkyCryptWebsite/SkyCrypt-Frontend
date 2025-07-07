@@ -7,7 +7,6 @@
   import { IsHover } from "$lib/hooks/is-hover.svelte";
   import { IsMobile } from "$lib/hooks/is-mobile.svelte";
   import themes from "$lib/shared/constants/themes";
-  import { getUsername, getUUID } from "$lib/shared/helper";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { favorites } from "$lib/stores/favorites";
   import { content, openCommand } from "$lib/stores/internal";
@@ -116,7 +115,7 @@
     loading = true;
     if ($errors.query) return;
     if ($formData.query.trim() !== "") {
-      recentSearches.update((searches) => [...new Set([$formData.query.trim(), ...searches])].slice(0, 5));
+      recentSearches.update((searches) => [...new Set([{ ign: $formData.query.trim() }, ...searches])].slice(0, 5));
     }
     setTimeout(() => {
       loading = false;
@@ -290,29 +289,17 @@
             <Command.GroupHeading class="text-muted-foreground px-3 pt-4 pb-2 text-xs">Recent Searches</Command.GroupHeading>
             <Command.GroupItems>
               {#each $recentSearches.slice(0, 5) as recentSearch, index (index)}
-                {#await getUUID(recentSearch)}
-                  <Command.Loading class={cn("rounded-button flex h-10 animate-pulse cursor-pointer items-center gap-2 px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}>
-                    <Avatar.Root class="bg-text/10 size-4 shrink-0 rounded-lg">
-                      <Avatar.Image loading="lazy" src="https://mc-heads.net/avatar/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40/64" alt={recentSearch} class="aspect-square size-4 rounded-lg " />
+                {#if !ign || recentSearch.ign !== ign}
+                  <Command.LinkItem value={recentSearch.ign} href="/stats/{recentSearch.ign}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[recentSearch.ign, "profile", "player", "favorite", "favorites"]}>
+                    <Avatar.Root class="bg-text/10 size-4 shrink-0">
+                      <Avatar.Image loading="lazy" src={recentSearch.uuid ? `https://crafatar.com/avatars/${recentSearch.uuid}?size=64&overlay` : "https://mc-heads.net/avatar/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40/64"} alt={recentSearch.ign} class="aspect-square size-4 " />
                       <Avatar.Fallback class="text-text/60 flex h-full items-center justify-center text-lg font-semibold uppercase">
-                        {recentSearch.slice(0, 2)}
+                        {recentSearch.ign.slice(0, 2)}
                       </Avatar.Fallback>
                     </Avatar.Root>
-                    <LoaderCircle class="text-text size-4 animate-spin" />
-                  </Command.Loading>
-                {:then uuid}
-                  {#if !ign || recentSearch !== ign}
-                    <Command.LinkItem value={recentSearch} href="/stats/{recentSearch}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[recentSearch, "profile", "player", "favorite", "favorites"]}>
-                      <Avatar.Root class="bg-text/10 size-4 shrink-0">
-                        <Avatar.Image loading="lazy" src={`https://crafatar.com/avatars/${uuid}?size=64&overlay`} alt={recentSearch} class="aspect-square size-4 " />
-                        <Avatar.Fallback class="text-text/60 flex h-full items-center justify-center text-lg font-semibold uppercase">
-                          {recentSearch.slice(0, 2)}
-                        </Avatar.Fallback>
-                      </Avatar.Root>
-                      {recentSearch}
-                    </Command.LinkItem>
-                  {/if}
-                {/await}
+                    {recentSearch.ign}
+                  </Command.LinkItem>
+                {/if}
               {/each}
             </Command.GroupItems>
           </Command.Group>
@@ -323,29 +310,17 @@
             <Command.GroupHeading class="text-muted-foreground px-3 pt-4 pb-2 text-xs">Favorites</Command.GroupHeading>
             <Command.GroupItems>
               {#each $favorites.slice(0, 5) as favorite, index (index)}
-                {#await getUsername(favorite)}
-                  <Command.Loading class={cn("rounded-button flex h-10 animate-pulse cursor-pointer items-center gap-2 px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}>
-                    <Avatar.Root class="bg-text/10 size-4 shrink-0 rounded-lg">
-                      <Avatar.Image loading="lazy" src="https://mc-heads.net/avatar/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40/64" alt={favorite} class="aspect-square size-4 rounded-lg " />
+                {#if !ign || favorite.ign !== ign}
+                  <Command.LinkItem value={favorite.ign} href="/stats/{favorite.ign}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[favorite.ign, favorite.uuid, "profile", "player", "favorite", "favorites"]}>
+                    <Avatar.Root class="bg-text/10 size-4 shrink-0">
+                      <Avatar.Image loading="lazy" src={`https://crafatar.com/avatars/${favorite.uuid}?size=64&overlay`} alt={favorite.ign} class="aspect-square size-4 " />
                       <Avatar.Fallback class="text-text/60 flex h-full items-center justify-center text-lg font-semibold uppercase">
-                        {favorite.slice(0, 2)}
+                        {favorite.ign.slice(0, 2)}
                       </Avatar.Fallback>
                     </Avatar.Root>
-                    <LoaderCircle class="text-text size-4 animate-spin" />
-                  </Command.Loading>
-                {:then username}
-                  {#if !ign || username !== ign}
-                    <Command.LinkItem value={username} href="/stats/{username}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[username, favorite, "profile", "player", "favorite", "favorites"]}>
-                      <Avatar.Root class="bg-text/10 size-4 shrink-0">
-                        <Avatar.Image loading="lazy" src={`https://crafatar.com/avatars/${favorite}?size=64&overlay`} alt={username} class="aspect-square size-4 " />
-                        <Avatar.Fallback class="text-text/60 flex h-full items-center justify-center text-lg font-semibold uppercase">
-                          {username.slice(0, 2)}
-                        </Avatar.Fallback>
-                      </Avatar.Root>
-                      {username}
-                    </Command.LinkItem>
-                  {/if}
-                {/await}
+                    {favorite.ign}
+                  </Command.LinkItem>
+                {/if}
               {/each}
             </Command.GroupItems>
           </Command.Group>
