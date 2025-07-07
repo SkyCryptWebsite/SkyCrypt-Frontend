@@ -429,7 +429,14 @@
 {/snippet}
 
 {#snippet searchSection()}
-  <input type="search" placeholder="Search all inventories" class="bg-text/10 text-text placeholder:text-text/80 mx-auto mt-4 block w-full max-w-52 rounded-lg px-2 py-2 font-normal focus-visible:outline-none" bind:value={searchValue} />
+  <input
+    type="search"
+    placeholder="Search all inventories"
+    class="bg-text/10 text-text placeholder:text-text/80 mx-auto mt-4 block w-full max-w-52 rounded-lg px-2 py-2 font-normal focus-visible:outline-none"
+    bind:value={searchValue}
+    onkeydown={(e) => {
+      e.stopPropagation();
+    }} />
   {#if debouncedSearchValue.pending || $searchQuery.isLoading}
     <LoaderCircle class="text-icon mx-auto mt-4 animate-spin" />
   {/if}
