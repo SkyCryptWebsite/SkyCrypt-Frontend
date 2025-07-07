@@ -3,6 +3,7 @@
   import HeaderInfo from "$lib/components/header/Info.svelte";
   import Settings from "$lib/components/header/Settings.svelte";
   import { openCommand } from "$lib/stores/internal";
+  import { keybind } from "$lib/stores/preferences";
   import Search from "@lucide/svelte/icons/search";
   import { Avatar, Button } from "bits-ui";
 </script>
@@ -23,7 +24,7 @@
     {#if page.url.pathname.startsWith("/stats")}
       <div class="mx-auto my-1.5 w-full max-w-lg px-4 @[38rem]:block">
         <Button.Root class="bg-background/20 relative flex h-full w-4/5 items-center justify-start overflow-clip rounded-[1.125rem] @[38rem]:w-full" onpointerdown={() => openCommand.set(true)}>
-          <div class="text-text/80 hover:bg-background/20 focus-visible:bg-background/20 peer flex h-full w-full shrink items-center rounded-r-3xl bg-transparent pr-0 pl-2 text-xs font-semibold outline-hidden transition-[colors_border-radius_opacity] duration-300 hover:rounded-r-none focus-visible:rounded-r-none focus-visible:ring-transparent focus-visible:outline-hidden @[38rem]:grow @[38rem]:pl-4 @[38rem]:text-base">Enter username</div>
+          <div class="text-text/80 hover:bg-background/20 focus-visible:bg-background/20 peer flex h-full w-full shrink items-center rounded-r-3xl bg-transparent pr-0 pl-2 text-xs font-semibold outline-hidden transition-[colors_border-radius_opacity] duration-300 hover:rounded-r-none focus-visible:rounded-r-none focus-visible:ring-transparent focus-visible:outline-hidden @[38rem]:grow @[38rem]:pl-4 @[38rem]:text-base">Press <kbd class="bg-background/20 mx-1 rounded-sm px-1">{$keybind}</kbd> to search</div>
 
           <div class="bg-background/15 peer-hover:bg-background/20 peer-focus-visible:bg-background/20 flex aspect-square h-full items-center justify-center rounded-full transition-all duration-300 peer-hover:rounded-l-none peer-focus-visible:rounded-l-none @[38rem]:aspect-video @[38rem]:px-4">
             <Search class="text-text size-4 @[38rem]:size-6" />
