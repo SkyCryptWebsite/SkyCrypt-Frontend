@@ -4,6 +4,7 @@
   import { api, SectionName } from "$lib/shared/api";
   import { calculatePercentage, formatNumber } from "$lib/shared/helper";
   import type { NetworthV2 } from "$types/statsv2";
+  import { tz } from "@date-fns/tz";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import { createQuery } from "@tanstack/svelte-query";
   import { format as dateFormat, formatDistanceToNowStrict } from "date-fns";
@@ -29,8 +30,8 @@
 </script>
 
 <div class="additional-stats flex flex-col gap-2 @md:flex-row @md:flex-wrap">
-  <AdditionStat text="Joined" data={formatDistanceToNowStrict(profile.joined, { addSuffix: true })} asterisk={true}>
-    Joined on {dateFormat(profile.joined, "dd MMMM yyyy 'at' HH:mm")}
+  <AdditionStat text="Joined" data={formatDistanceToNowStrict(profile.joined, { addSuffix: true, in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) })} asterisk={true}>
+    Joined on {dateFormat(profile.joined, "dd MMMM yyyy 'at' HH:mm", { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) })}
   </AdditionStat>
   <AdditionStat text="Purse" data={`${formatNumber(profile.purse)} Coins`} />
   <AdditionStat text="Bank Account" data={`${formatNumber(profile.bank + profile.personalBank)} Coins`} asterisk={profile.bank && profile.personalBank ? true : false}>

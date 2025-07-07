@@ -6,6 +6,7 @@
   import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
   import { SectionName } from "$lib/shared/api";
   import type { SkillsV2 } from "$types/statsv2";
+  import { tz } from "@date-fns/tz";
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
   import { Collapsible } from "bits-ui";
   import { formatDistanceToNowStrict } from "date-fns";
@@ -40,10 +41,10 @@
                     <AdditionStat text="Bonus Clicks" data={`${enchating.stats.bonusClicks}`} />
                   {/if}
                   {#if enchating.stats.lastAttempt}
-                    <AdditionStat text="Last Attempt" data={formatDistanceToNowStrict(enchating.stats.lastAttempt, { addSuffix: true })} />
+                    <AdditionStat text="Last Attempt" data={formatDistanceToNowStrict(enchating.stats.lastAttempt, { addSuffix: true, in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) })} />
                   {/if}
                   {#if enchating.stats.lastClaimed}
-                    <AdditionStat text="Last Claimed" data={formatDistanceToNowStrict(enchating.stats.lastClaimed, { addSuffix: true })} />
+                    <AdditionStat text="Last Claimed" data={formatDistanceToNowStrict(enchating.stats.lastClaimed, { addSuffix: true, in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) })} />
                   {/if}
                 </div>
                 <div class="w-full space-y-5 px-5 pb-5">

@@ -12,6 +12,7 @@
   import { api, SectionName } from "$lib/shared/api";
   import { cn } from "$lib/shared/utils";
   import type { RiftV2 } from "$types/statsv2";
+  import { tz } from "@date-fns/tz";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import { createQuery } from "@tanstack/svelte-query";
   import { formatDate, formatDistanceToNowStrict } from "date-fns";
@@ -145,7 +146,8 @@
                   {#if hasUnlocked}
                     <span class="opacity-60">
                       Obtained {formatDistanceToNowStrict(timecharm.unlockedAt, {
-                        addSuffix: true
+                        addSuffix: true,
+                        in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone)
                       })}
                     </span>
                   {:else}
@@ -162,7 +164,7 @@
                 <span class="opacity-85">Obtained:</span>
                 <span class="text-text">
                   {#if hasUnlocked}
-                    {formatDate(timecharm.unlockedAt, "dd MMMM yyyy 'at' HH:mm")}
+                    {formatDate(timecharm.unlockedAt, "dd MMMM yyyy 'at' HH:mm", { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) })}
                   {/if}
                 </span>
               </div>

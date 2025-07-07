@@ -10,6 +10,7 @@
   import { formatNumber } from "$lib/shared/helper";
   import type { CatacombsData } from "$types/stats";
   import type { DungeonsV2 } from "$types/statsv2";
+  import { tz } from "@date-fns/tz";
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
   import Image from "@lucide/svelte/icons/image";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
@@ -36,7 +37,7 @@
   });
 
   function formatDuration(end: number) {
-    const duration = formatDurationDateFns(intervalToDuration({ start: 0, end }), {
+    const duration = formatDurationDateFns(intervalToDuration({ start: 0, end }, { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) }), {
       format: ["minutes", "seconds"],
       delimiter: ":",
       zero: true,
@@ -151,8 +152,8 @@
                   {#each Object.entries(catacomb.best_run) as [key, value], index (index)}
                     {#if typeof value === "number"}
                       {#if key === "timestamp"}
-                        <AdditionStat class="capitalize" text={key.toLowerCase().replaceAll("_", " ")} data={formatDistanceToNowStrict(value, { addSuffix: true })} asterisk={true}>
-                          {formatDate(value, "dd MMMM yyyy 'at' HH:mm")}
+                        <AdditionStat class="capitalize" text={key.toLowerCase().replaceAll("_", " ")} data={formatDistanceToNowStrict(value, { addSuffix: true, in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) })} asterisk={true}>
+                          {formatDate(value, "dd MMMM yyyy 'at' HH:mm", { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) })}
                         </AdditionStat>
                       {:else if key.includes("time")}
                         <AdditionStat class="capitalize" text={key.toLowerCase().replaceAll("_", " ")} data={formatDuration(value)} />

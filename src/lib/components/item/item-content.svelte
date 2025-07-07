@@ -6,9 +6,11 @@
   import { wikiOrderPreferences } from "$lib/stores/wiki";
   import type { ProcessedSkyBlockItem } from "$types/stats";
   import type { PetProcessedSkyBlockItem } from "$types/statsv2";
+  import { tz } from "@date-fns/tz";
   import Image from "@lucide/svelte/icons/image";
   import Info from "@lucide/svelte/icons/info";
   import { Avatar, Button } from "bits-ui";
+  import { format } from "date-fns";
   import { derived as derivedStore } from "svelte/store";
 
   type Props = {
@@ -70,6 +72,11 @@
       {#each skyblockItem?.lore as lore, index (index)}
         {@html renderLore(lore)}
       {/each}
+    {/if}
+
+    {#if skyblockItem && "timestamp" in skyblockItem && skyblockItem.timestamp}
+      <span class="text-minecraft-7">Your time:</span>
+      <span class="text-minecraft-c">{format(skyblockItem.timestamp, "MMM dd, yyyy, h:mm a", { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) })}</span>
     {/if}
 
     {#if skyblockItem && "containsItems" in skyblockItem && Array.isArray(skyblockItem?.containsItems) && !skyblockItem?.containsItems.every((item) => Object.keys(item).length === 0)}
