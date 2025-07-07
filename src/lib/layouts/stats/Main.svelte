@@ -14,7 +14,7 @@
   import { api, SectionName } from "$lib/shared/api";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { itemContent, itemContentSpecial, showItem } from "$lib/stores/internal";
-  import { performanceMode } from "$lib/stores/preferences";
+  import { performanceMode, showGlint } from "$lib/stores/preferences";
   import type { EmbedV2 } from "$types/statsv2";
   import GripVertical from "@lucide/svelte/icons/grip-vertical";
   import { createQuery } from "@tanstack/svelte-query";
@@ -207,13 +207,15 @@
   </Drawer.Root>
 {/if}
 
-<svg xmlns="http://www.w3.org/2000/svg" height="0" width="0" class="fixed">
-  <filter id="enchanted-glint">
-    <feImage href="/img/enchanted-glint.png" />
-    <feComposite in2="SourceGraphic" operator="in" />
-    <feBlend in="SourceGraphic" mode="screen" />
-  </filter>
-</svg>
+{#if $showGlint}
+  <svg xmlns="http://www.w3.org/2000/svg" height="0" width="0" class="fixed">
+    <filter id="enchanted-glint">
+      <feImage href="/img/enchanted-glint.png" />
+      <feComposite in2="SourceGraphic" operator="in" />
+      <feBlend in="SourceGraphic" mode="screen" />
+    </filter>
+  </svg>
+{/if}
 
 {#snippet containedItems()}
   {#if $itemContentSpecial}

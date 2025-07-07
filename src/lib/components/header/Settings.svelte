@@ -6,7 +6,7 @@
   import themes from "$lib/shared/constants/themes";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { disabledPacks } from "$lib/stores/packs";
-  import { keybind, performanceMode, sectionOrderPreferences } from "$lib/stores/preferences";
+  import { keybind, performanceMode, sectionOrderPreferences, showGlint } from "$lib/stores/preferences";
   import { theme as themeStore } from "$lib/stores/themes";
   import { wikiOrderPreferences } from "$lib/stores/wiki";
   import BookOpenText from "@lucide/svelte/icons/book-open-text";
@@ -20,6 +20,7 @@
   import PaintBucket from "@lucide/svelte/icons/paint-bucket";
   import Settings from "@lucide/svelte/icons/settings";
   import Settings2 from "@lucide/svelte/icons/settings-2";
+  import Sparkle from "@lucide/svelte/icons/sparkle";
   import { Avatar, Button, Label, Popover, RadioGroup, Separator, Switch, Tabs } from "bits-ui";
   import { getContext, onMount } from "svelte";
   import { dndzone, SHADOW_ITEM_MARKER_PROPERTY_NAME } from "svelte-dnd-action";
@@ -202,6 +203,18 @@
               </div>
             </div>
             <Switch.Root id="performance" checked={$performanceMode} class="data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30 peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors" onCheckedChange={() => performanceMode.update((value) => !value)}>
+              <Switch.Thumb class="bg-text pointer-events-none block size-4 shrink-0 rounded-full transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
+            </Switch.Root>
+          </Label.Root>
+
+          <Label.Root for="glint" class="bg-text/[0.05] flex items-center justify-between gap-4 rounded-lg p-2">
+            <div class="flex items-center gap-2">
+              <Sparkle class="size-6 will-change-transform" />
+              <div class="flex flex-col">
+                <h4 class="text-text/90 font-semibold">Show Glint</h4>
+              </div>
+            </div>
+            <Switch.Root id="glint" checked={$showGlint} class="data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30 peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors" onCheckedChange={() => showGlint.update((value) => !value)}>
               <Switch.Thumb class="bg-text pointer-events-none block size-4 shrink-0 rounded-full transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
             </Switch.Root>
           </Label.Root>
