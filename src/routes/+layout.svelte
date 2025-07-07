@@ -194,7 +194,7 @@
 
 <Dialog.Root bind:open={$openCommand}>
   <Dialog.Portal>
-    <Dialog.Overlay forceMount class="fixed inset-0 z-40 backdrop-blur-lg  backdrop-brightness-50">
+    <Dialog.Overlay forceMount class={cn("fixed inset-0 z-40", $performanceMode ? "bg-background-lore" : "backdrop-blur-lg backdrop-brightness-50")}>
       {#snippet child({ props, open })}
         {#if open}
           <div {...props} transition:fade={{ duration: 150 }}></div>
@@ -203,7 +203,7 @@
     </Dialog.Overlay>
     <Dialog.Content
       forceMount
-      class="font-icomoon fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg backdrop-blur-lg backdrop-brightness-50 select-text"
+      class={cn("font-icomoon fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg select-text", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}
       onOpenAutoFocus={(e) => {
         e.preventDefault();
         commandInput?.focus();
@@ -291,7 +291,7 @@
             <Command.GroupItems>
               {#each $recentSearches.slice(0, 5) as recentSearch, index (index)}
                 {#await getUUID(recentSearch)}
-                  <Command.Loading class="rounded-button data-selected:bg-background-grey flex h-10 animate-pulse cursor-pointer items-center gap-2 px-3 py-2.5 text-sm outline-hidden select-none">
+                  <Command.Loading class={cn("rounded-button flex h-10 animate-pulse cursor-pointer items-center gap-2 px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}>
                     <Avatar.Root class="bg-text/10 size-4 shrink-0 rounded-lg">
                       <Avatar.Image loading="lazy" src="https://mc-heads.net/avatar/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40/64" alt={recentSearch} class="aspect-square size-4 rounded-lg " />
                       <Avatar.Fallback class="text-text/60 flex h-full items-center justify-center text-lg font-semibold uppercase">
@@ -302,7 +302,7 @@
                   </Command.Loading>
                 {:then uuid}
                   {#if !ign || recentSearch !== ign}
-                    <Command.LinkItem value={recentSearch} href="/stats/{recentSearch}" class="data-selected:bg-background-grey flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none" keywords={[recentSearch, "profile", "player", "favorite", "favorites"]}>
+                    <Command.LinkItem value={recentSearch} href="/stats/{recentSearch}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[recentSearch, "profile", "player", "favorite", "favorites"]}>
                       <Avatar.Root class="bg-text/10 size-4 shrink-0">
                         <Avatar.Image loading="lazy" src={`https://crafatar.com/avatars/${uuid}?size=64&overlay`} alt={recentSearch} class="aspect-square size-4 " />
                         <Avatar.Fallback class="text-text/60 flex h-full items-center justify-center text-lg font-semibold uppercase">
@@ -324,7 +324,7 @@
             <Command.GroupItems>
               {#each $favorites.slice(0, 5) as favorite, index (index)}
                 {#await getUsername(favorite)}
-                  <Command.Loading class="rounded-button data-selected:bg-background-grey flex h-10 animate-pulse cursor-pointer items-center gap-2 px-3 py-2.5 text-sm outline-hidden select-none">
+                  <Command.Loading class={cn("rounded-button flex h-10 animate-pulse cursor-pointer items-center gap-2 px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}>
                     <Avatar.Root class="bg-text/10 size-4 shrink-0 rounded-lg">
                       <Avatar.Image loading="lazy" src="https://mc-heads.net/avatar/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40/64" alt={favorite} class="aspect-square size-4 rounded-lg " />
                       <Avatar.Fallback class="text-text/60 flex h-full items-center justify-center text-lg font-semibold uppercase">
@@ -335,7 +335,7 @@
                   </Command.Loading>
                 {:then username}
                   {#if !ign || username !== ign}
-                    <Command.LinkItem value={username} href="/stats/{username}" class="data-selected:bg-background-grey flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none" keywords={[username, favorite, "profile", "player", "favorite", "favorites"]}>
+                    <Command.LinkItem value={username} href="/stats/{username}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[username, favorite, "profile", "player", "favorite", "favorites"]}>
                       <Avatar.Root class="bg-text/10 size-4 shrink-0">
                         <Avatar.Image loading="lazy" src={`https://crafatar.com/avatars/${favorite}?size=64&overlay`} alt={username} class="aspect-square size-4 " />
                         <Avatar.Fallback class="text-text/60 flex h-full items-center justify-center text-lg font-semibold uppercase">
@@ -356,7 +356,7 @@
           <Command.Group>
             <Command.GroupHeading class="text-muted-foreground px-3 pt-4 pb-2 text-xs">Actions</Command.GroupHeading>
             <Command.GroupItems>
-              <Command.Item value="search" class="data-selected:bg-background-grey flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none" keywords={[$formData.query, "search", "find", "profile"]} onSelect={() => form.submit()}>
+              <Command.Item value="search" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[$formData.query, "search", "find", "profile"]} onSelect={() => form.submit()}>
                 {#if $submitting || loading}
                   <LoaderCircle class="size-4 animate-spin" />
                 {:else}
