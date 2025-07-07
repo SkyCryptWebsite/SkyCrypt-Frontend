@@ -236,7 +236,7 @@
 }
 
 @utility shine {
-  @apply before:animate-shine overflow-hidden before:absolute before:inset-0 before:z-8 before:size-full before:rounded-lg before:bg-linear-to-t before:from-[oklch(1_0_0_/_0)] before:via-[oklch(1_0_0_/_0.50)] before:to-[oklch(0.77_0.09_243.21_/_0)];
+  @apply before:animate-shine overflow-hidden before:pointer-events-none before:absolute before:inset-0 before:z-8 before:size-full before:rounded-lg before:bg-linear-to-t before:from-[oklch(1_0_0_/_0)] before:via-[oklch(1_0_0_/_0.50)] before:to-[oklch(0.77_0.09_243.21_/_0)];
 }
 
 @utility enchanted {

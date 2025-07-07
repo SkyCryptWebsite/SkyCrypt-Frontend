@@ -5,6 +5,7 @@
   import { getRarityClass } from "$lib/shared/helper";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { itemContent, itemContentSpecial, showItem } from "$lib/stores/internal";
+  import { performanceMode } from "$lib/stores/preferences";
   import type { ProcessedSkyBlockItem } from "$types/stats";
   import type { PetProcessedSkyBlockItem } from "$types/statsv2";
   import ImageOff from "@lucide/svelte/icons/image-off";
@@ -45,7 +46,7 @@
 
 <Tooltip.Root bind:open disableHoverableContent={true} ignoreNonKeyboardFocus={true} disabled={!inViewport.current} delayDuration={100}>
   <Tooltip.Trigger
-    class={cn(`nice-colors-dark relative flex aspect-square items-center justify-center overflow-clip `, isInventory ? "size-6 p-0 sm:size-16" : `size-18 p-2 ${bgColor}`, { shine: shine && !isInventory }, { "rounded-lg": !isInventory })}
+    class={cn(`nice-colors-dark relative flex aspect-square items-center justify-center overflow-clip `, isInventory ? "size-6 p-0 sm:size-16" : `size-18 p-2 ${bgColor}`, { shine: shine && !isInventory }, { "rounded-lg": !isInventory }, $performanceMode ? "" : "transition-all duration-150 hover:scale-110 active:scale-110")}
     bind:ref={targetNode}
     onclick={() => {
       if (skyblockItem.containsItems) {
@@ -60,7 +61,7 @@
         {#if hasBeenInViewport}
           <Avatar.Root bind:loadingStatus>
             {#snippet child({ props })}
-              <Avatar.Image loading="lazy" src={piece.texture_path} alt={piece.display_name} class={cn("data-[enchanted=true]:enchanted select-none [image-rendering:pixelated]", isInventory ? "size-6 sm:size-14" : "size-14")} data-enchanted={enchanted} {...props} />
+              <Avatar.Image loading="lazy" src={piece.texture_path} alt={piece.display_name} class={cn("data-[enchanted=true]:enchanted pointer-events-none select-none [image-rendering:pixelated]", isInventory ? "size-6 sm:size-14" : "size-14")} data-enchanted={enchanted} {...props} />
               {#if loadingStatus === "loading"}
                 {@render loadingState()}
               {/if}
