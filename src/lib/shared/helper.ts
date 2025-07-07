@@ -192,6 +192,21 @@ export const getUsername = async (uuid: string): Promise<string> => {
 };
 
 /**
+ * Returns the UUID of a player with the specified username.
+ * @param {string} username - The username of the player.
+ * @returns {Promise<string>} The UUID of the player.
+ */
+export const getUUID = async (username: string): Promise<string> => {
+  try {
+    const res = await fetch(`/api/uuid/${username}`);
+    const { uuid } = await res.json();
+    return uuid;
+  } catch {
+    return "???";
+  }
+};
+
+/**
  * Validates a URL and returns the path to the stats page
  * @param {string} url
  * @returns {string} The path to the stats page
