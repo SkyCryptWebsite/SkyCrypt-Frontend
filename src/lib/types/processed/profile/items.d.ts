@@ -144,6 +144,7 @@ export type ProcessedItem = {
   glowing?: boolean;
   position?: number;
   item_index: number;
+  timestamp?: number;
 };
 
 export type ProcessedSkyBlockItem = {
@@ -159,6 +160,7 @@ export type ProcessedSkyBlockItem = {
   wiki?: { fandom?: string; official?: string } | null;
   source?: string;
   sourceTab?: { name: string; icon: string } | null;
+  timestamp?: number;
   [key: string]: string | boolean;
 };
 
