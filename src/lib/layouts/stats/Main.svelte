@@ -64,7 +64,7 @@
 <svelte:window bind:innerWidth />
 
 <div class="@container/parent relative">
-  <PaneGroup direction="horizontal" class="relative w-full !overflow-x-clip !overflow-y-visible">
+  <PaneGroup direction="horizontal" autoSaveId="paneConfig" class="relative w-full !overflow-x-clip !overflow-y-visible">
     {#if innerWidth >= 1024}
       <div class="group/pane contents">
         <Pane
