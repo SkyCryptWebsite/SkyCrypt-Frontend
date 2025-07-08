@@ -127,7 +127,8 @@ export async function processItems(items: ProcessedItem[], source: string, packs
       }
 
       if (item.tag.ExtraAttributes.timestamp) {
-        itemLore.push("", `§7Obtained: §c${helper.formatTimestamp(item.tag.ExtraAttributes.timestamp)}`);
+        item.timestamp = item.tag.ExtraAttributes.timestamp;
+        itemLore.push("", `§7Obtained: §c{TIMESTAMP:${item.timestamp}}`);
       }
 
       if (item.tag?.display?.color) {

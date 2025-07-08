@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { PUBLIC_DISCORD_INVITE, PUBLIC_PATREON } from "$env/static/public";
+  import { env } from "$env/dynamic/public";
   import type { IsHover } from "$lib/hooks/is-hover.svelte";
   import { flyAndScale } from "$lib/shared/utils";
   import Info from "@lucide/svelte/icons/info";
@@ -8,6 +8,8 @@
   import { Drawer } from "vaul-svelte";
 
   const isHover = getContext<IsHover>("isHover");
+
+  const { PUBLIC_DISCORD_INVITE, PUBLIC_PATREON } = env;
 </script>
 
 {#snippet info()}

@@ -1,6 +1,8 @@
-import { PUBLIC_SENTRY_HOST, PUBLIC_SENTRY_PROJECT_ID } from "$env/static/public";
+import { env } from "$env/dynamic/public";
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
+
+const { PUBLIC_SENTRY_HOST, PUBLIC_SENTRY_PROJECT_ID } = env;
 
 const SENTRY_PROJECT_IDS = [PUBLIC_SENTRY_PROJECT_ID];
 

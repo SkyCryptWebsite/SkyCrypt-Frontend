@@ -110,6 +110,7 @@
         }}
         class="rounded-full px-2 py-1">
         {profile.profile_cute_name}
+        {@render profileIcon(profile.game_mode)}
       </Popover.Trigger>
       <Popover.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", $performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={noticeRef} strategy="absolute">
         {#snippet child({ wrapperProps, props, open })}
@@ -121,15 +122,7 @@
                     <a href={`/stats/${profile.username}/${otherProfile.cute_name}`} class="group flex items-center p-2 focus-visible:outline-0" data-sveltekit-preload-code="viewport">
                       <div class="group-hover:bg-text/20 outline-icon w-full rounded-lg bg-[oklch(59.65%_0_0)]/20 p-2 transition-colors duration-300 group-focus-visible:outline-1">
                         {otherProfile.cute_name}
-                        {#if otherProfile.game_mode === "bingo"}
-                          🎲
-                        {/if}
-                        {#if otherProfile.game_mode === "ironman"}
-                          ♻️
-                        {/if}
-                        {#if otherProfile.game_mode === "island"}
-                          🌴
-                        {/if}
+                        {@render profileIcon(otherProfile.game_mode)}
                       </div>
                     </a>
                   {/if}
@@ -170,12 +163,12 @@
     <Tooltip.Trigger
       class="bg-icon/90 hover:bg-icon aspect-square rounded-full p-2 transition-opacity duration-150"
       onclick={() => {
-        if (!$favorites.includes(profile.uuid)) {
-          favorites.set([...$favorites, profile.uuid]);
+        if (!$favorites.some((fav) => fav.uuid === profile.uuid)) {
+          favorites.set([...$favorites, { uuid: profile.uuid, ign: profile.username }]);
           toast.dismiss(toastId);
           toastId = toast.success(`Added ${profile.username} to your favorites!`);
         } else {
-          favorites.set($favorites.filter((uuid) => uuid !== profile.uuid));
+          favorites.set($favorites.filter((fav) => fav.uuid !== profile.uuid));
           toast.dismiss(toastId);
           toastId = toast.success(`Removed ${profile.username} from your favorites!`);
         }
@@ -183,7 +176,7 @@
       onpointerdown={() => (favoriteTooltipOpen = !favoriteTooltipOpen)}>
       {#snippet child({ props })}
         <button {...props}>
-          {#if $favorites.includes(profile.uuid)}
+          {#if $favorites.some((fav) => fav.uuid === profile.uuid)}
             <Star class="size-4 fill-white" />
           {:else}
             <Star class="size-4" />
@@ -198,7 +191,7 @@
             <div {...wrapperProps}>
               <div {...props} transition:flyAndScale>
                 <Tooltip.Arrow />
-                {#if $favorites.includes(profile.uuid)}
+                {#if $favorites.some((fav) => fav.uuid === profile.uuid)}
                   <p>Remove from favorites</p>
                 {:else}
                   <p>Add to favorites</p>
@@ -267,3 +260,15 @@
     {/if}
   </Button.Root>
 </div>
+
+{#snippet profileIcon(gameMode: string)}
+  {#if gameMode === "bingo"}
+    🎲
+  {/if}
+  {#if gameMode === "ironman"}
+    ♻️
+  {/if}
+  {#if gameMode === "island"}
+    🌴
+  {/if}
+{/snippet}

@@ -5,6 +5,7 @@
   import Items from "$lib/layouts/stats/Items.svelte";
   import { SectionName } from "$lib/shared/api";
   import type { MiscV2 } from "$types/statsv2";
+  import { tz } from "@date-fns/tz";
   import { formatDate, formatDistanceToNowStrict } from "date-fns";
 
   const ctx = getDynamicCtx<() => MiscV2 | undefined>(SectionName.MISC);
@@ -20,10 +21,11 @@
           <AdditionStat
             text={item.replaceAll("_", " ")}
             data={formatDistanceToNowStrict(time, {
-              addSuffix: true
+              addSuffix: true,
+              in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone)
             })}
             asterisk={true}>
-            {formatDate(time, "'Claimed on' dd MMMM yyyy 'at' HH:mm")}
+            {formatDate(time, "'Claimed on' dd MMMM yyyy 'at' HH:mm", { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) })}
           </AdditionStat>
         {/each}
       </div>

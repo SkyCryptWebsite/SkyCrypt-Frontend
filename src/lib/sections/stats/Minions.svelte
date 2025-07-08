@@ -48,7 +48,7 @@
       {#snippet text()}
         <div>
           <AdditionStat text="Unique Minions" data="{minions.maxedTiers} / {minions.totalTiers} ({calculatePercentage(minions.maxedTiers, minions.totalTiers, 0)}%)" maxed={minions.maxedTiers === minions.totalTiers} />
-          <AdditionStat text="Minion Slots" data={minions.minionsSlots.current} subData="({minions.minionsSlots.next} to next slot)" />
+          <AdditionStat text="Minion Slots" data={minions.minionsSlots.current} subData="({minions.minionsSlots.next} to next slot)" maxed={minions.maxedTiers === minions.totalTiers} />
           <AdditionStat text="Bonus Minion Slots" data="{minions.minionsSlots.bonusSlots} / 5" maxed={minions.minionsSlots.bonusSlots === 5} />
           <AdditionStat text="Maxed Minions" data="{minions.maxedMinions} / {minions.totalMinions}" maxed={minions.maxedMinions === minions.totalMinions} />
         </div>

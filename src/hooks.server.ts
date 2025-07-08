@@ -1,5 +1,5 @@
 import { building, dev } from "$app/environment";
-import { PUBLIC_SENTRY_DSN } from "$env/static/public";
+import { env } from "$env/dynamic/public";
 import { init as resourcesInit } from "$lib/server/custom_resources";
 import { indexCollectons } from "$lib/server/db/mongo/index-collections";
 import { intializeNEURepository, parseNEURepository } from "$lib/server/helper/NotEnoughUpdates/parseNEURepository";
@@ -9,6 +9,8 @@ import { sequence } from "@sveltejs/kit/hooks";
 import { getPrices } from "skyhelper-networth";
 import { startMongo } from "./lib/server/db/mongo";
 import { startRedis } from "./lib/server/db/redis";
+
+const { PUBLIC_SENTRY_DSN } = env;
 
 sentryInit({
   dsn: PUBLIC_SENTRY_DSN,

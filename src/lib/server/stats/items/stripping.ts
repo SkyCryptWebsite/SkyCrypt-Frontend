@@ -28,6 +28,10 @@ export function stripItem(item: ProcessedItem | ProcessedPet | null, keys?: stri
     output.Count = itemData.Count;
   }
 
+  if (itemData.timestamp) {
+    output.timestamp = Number(itemData.timestamp);
+  }
+
   if (itemData.recombobulated) {
     output.recombobulated = itemData.recombobulated;
   }

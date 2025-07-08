@@ -4,6 +4,7 @@
   import Notice from "$lib/components/Notice.svelte";
   import Section from "$lib/components/Section.svelte";
   import { api } from "$lib/shared/api";
+  import { renderLore } from "$lib/shared/helper";
   import { itemContentSpecial } from "$lib/stores/internal";
   import type { ProcessedSkyBlockItem } from "$types/stats";
   import type { InventoryV2 } from "$types/statsv2";
@@ -19,6 +20,8 @@
     id: string;
     icon: string;
     items: InventoryV2;
+    loading: boolean;
+    error: boolean;
     gap: number;
   };
 
@@ -43,7 +46,7 @@
   const inventoryQuery = createQuery({
     queryKey: ["inventory", uuid, profileId, "inventory"],
     queryFn: () => api(fetch).getInventory(uuid, profileId, "inventory"),
-    enabled: false
+    enabled: true
   });
 
   const enderchestQuery = createQuery({
@@ -143,72 +146,96 @@
       id: "inventory",
       icon: `https://crafatar.com/renders/head/${profile.uuid}?overlay`,
       items: $inventoryQuery.data ?? [],
+      loading: $inventoryQuery.isLoading,
+      error: $inventoryQuery.isError,
       gap: 27
     },
     {
       id: "backpack",
       icon: "/api/item/chest",
       items: $backpackQuery.data ?? [],
+      loading: $backpackQuery.isLoading,
+      error: $backpackQuery.isError,
       gap: 45
     },
     {
       id: "enderchest",
       icon: "/api/item/ender_chest",
       items: $enderchestQuery.data ?? [],
+      loading: $enderchestQuery.isLoading,
+      error: $enderchestQuery.isError,
       gap: 45
     },
     {
       id: "personal_vault",
       icon: "/api/head/f7aadff9ddc546fdcec6ed5919cc39dfa8d0c07ff4bc613a19f2e6d7f2593",
       items: $personalVaultQuery.data ?? [],
+      loading: $personalVaultQuery.isLoading,
+      error: $personalVaultQuery.isError,
       gap: 45
     },
     {
       id: "talisman_bag",
       icon: "/api/head/961a918c0c49ba8d053e522cb91abc74689367b4d8aa06bfc1ba9154730985ff",
       items: $talismanBagQuery.data ?? [],
+      loading: $talismanBagQuery.isLoading,
+      error: $talismanBagQuery.isError,
       gap: 45
     },
     {
       id: "potion_bag",
       icon: "/api/head/9f8b82427b260d0a61e6483fc3b2c35a585851e08a9a9df372548b4168cc817c",
       items: $potionBagQuery.data ?? [],
+      loading: $potionBagQuery.isLoading,
+      error: $potionBagQuery.isError,
       gap: 45
     },
     {
       id: "fishing_bag",
       icon: "/api/head/eb8e297df6b8dffcf135dba84ec792d420ad8ecb458d144288572a84603b1631",
       items: $fishingBagQuery.data ?? [],
+      loading: $fishingBagQuery.isLoading,
+      error: $fishingBagQuery.isError,
       gap: 45
     },
     {
       id: "quiver",
       icon: "/api/head/4cb3acdc11ca747bf710e59f4c8e9b3d949fdd364c6869831ca878f0763d1787",
       items: $quiverQuery.data ?? [],
+      loading: $quiverQuery.isLoading,
+      error: $quiverQuery.isError,
       gap: 45
     },
     {
       id: "museum",
       icon: "/api/head/438cf3f8e54afc3b3f91d20a49f324dca1486007fe545399055524c17941f4dc",
       items: $museumQuery.data ?? [],
+      loading: $museumQuery.isLoading,
+      error: $museumQuery.isError,
       gap: 54
     },
     {
       id: "rift_inventory",
       icon: "/api/head/445240fcf1a9796327dda5593985343af9121a7156bc76e3d6b341b02e6a6e52",
       items: $riftInventoryQuery.data ?? [],
+      loading: $riftInventoryQuery.isLoading,
+      error: $riftInventoryQuery.isError,
       gap: 45
     },
     {
       id: "rift_enderchest",
       icon: "/api/head/a6cc486c2be1cb9dfcb2e53dd9a3e9a883bfadb27cb956f1896d602b4067",
       items: $riftEnderchestQuery.data ?? [],
+      loading: $riftEnderchestQuery.isLoading,
+      error: $riftEnderchestQuery.isError,
       gap: 45
     },
     {
       id: "search",
       icon: "/api/item/EYE_OF_ENDER",
       items: $searchQuery.data ?? [],
+      loading: $searchQuery.isLoading,
+      error: $searchQuery.isError,
       gap: 45
     }
   ]);
@@ -223,35 +250,20 @@
     return searchedItemName;
   });
 
+  const itemsFound = $derived(!debouncedSearchValue.pending && !$searchQuery.isLoading && debouncedSearchValue.current && debouncedSearchValue.current !== "" && searchedItems.length === 0);
+
   const tab = $derived<Tabs>(tabs?.find((t) => t.id === openTab) as Tabs);
-  // const hasEmptyInventory = $derived(tabs?.filter((tab) => tab.items.length > 0).length === 0);
 
   const [send, receive] = crossfade({
     duration: 300,
     easing: cubicInOut
   });
 
-  const isLoading = $derived($backpackQuery.isLoading || $inventoryQuery.isLoading || $enderchestQuery.isLoading || $armorQuery.isLoading || $equipmentQuery.isLoading || $personalVaultQuery.isLoading || $wardrobeQuery.isLoading || $riftInventoryQuery.isLoading || $riftEnderchestQuery.isLoading || $riftArmorQuery.isLoading || $riftEquipmentQuery.isLoading || $potionBagQuery.isLoading || $talismanBagQuery.isLoading || $fishingBagQuery.isLoading || $quiverQuery.isLoading || $museumQuery.isLoading || $searchQuery.isLoading);
-
-  const hasErrored = $derived.by(() => ({
-    backpack: $backpackQuery.isError,
-    inventory: $inventoryQuery.isError,
-    enderchest: $enderchestQuery.isError,
-    armor: $armorQuery.isError,
-    equipment: $equipmentQuery.isError,
-    personal_vault: $personalVaultQuery.isError,
-    wardrobe: $wardrobeQuery.isError,
-    rift_inventory: $riftInventoryQuery.isError,
-    rift_enderchest: $riftEnderchestQuery.isError,
-    rift_armor: $riftArmorQuery.isError,
-    rift_equipment: $riftEquipmentQuery.isError,
-    potion_bag: $potionBagQuery.isError,
-    talisman_bag: $talismanBagQuery.isError,
-    fishing_bag: $fishingBagQuery.isError,
-    quiver: $quiverQuery.isError,
-    museum: $museumQuery.isError,
-    search: $searchQuery.isError
-  }));
+  function shouldShine(item: ProcessedSkyBlockItem): boolean | undefined {
+    const enchanted = item.texture_path.includes("/api/leather/") ? false : item.shiny;
+    const shine = enchanted || item.shiny;
+    return shine;
+  }
 
   itemContentSpecial.subscribe((item) => {
     if (item) {
@@ -374,6 +386,15 @@
     </Tabs.List>
 
     <Tabs.Content value={openTab}>
+      {#if openTab !== "search"}
+        {#if tab.loading}
+          <LoaderCircle class="text-icon mx-auto mt-4 animate-spin" />
+        {/if}
+        {#if tab.error}
+          <Notice title="An unexpected error has occurred" type="error" />
+        {/if}
+      {/if}
+
       {#if openTab === "backpack" || openTab === "museum"}
         {#if tabs.find((tab) => tab.id === openTab)?.items?.length ?? 0 > 0}
           {@render multipleInventorySection()}
@@ -386,7 +407,7 @@
         {@render searchSection()}
       {:else if tabs.find((tab) => tab.id === openTab)?.items?.length ?? 0 > 0}
         {@render inventorySection()}
-      {:else}
+      {:else if !tab.loading && !tab.error}
         <p class="mt-2 space-x-0.5 text-center leading-6">
           No items found in the {openTab.replaceAll("_", " ")}.
         </p>
@@ -408,7 +429,14 @@
 {/snippet}
 
 {#snippet searchSection()}
-  <input type="search" placeholder="Search all inventories" class="bg-text/10 text-text placeholder:text-text/80 mx-auto mt-4 block w-full max-w-52 rounded-lg px-2 py-2 font-normal focus-visible:outline-none" bind:value={searchValue} />
+  <input
+    type="search"
+    placeholder="Search all inventories"
+    class="bg-text/10 text-text placeholder:text-text/80 mx-auto mt-4 block w-full max-w-52 rounded-lg px-2 py-2 font-normal focus-visible:outline-none"
+    bind:value={searchValue}
+    onkeydown={(e) => {
+      e.stopPropagation();
+    }} />
   {#if debouncedSearchValue.pending || $searchQuery.isLoading}
     <LoaderCircle class="text-icon mx-auto mt-4 animate-spin" />
   {/if}
@@ -416,13 +444,13 @@
     <Notice title="An unexpected error has occurred" type="error" />
   {/if}
 
-  {#if (!debouncedSearchValue.pending || !$searchQuery.isPending) && debouncedSearchValue.current && debouncedSearchValue.current !== "" && searchedItems.length === 0}
+  {#if itemsFound}
     <p class="mx-auto w-fit leading-6">No items found.</p>
   {:else if debouncedSearchValue.current !== ""}
     <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
       {#each searchedItems as item, index (index)}
         {#if item}
-          <div class="bg-text/[0.04] flex aspect-square items-center justify-center rounded-sm">
+          <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={shouldShine(item)}>
             {@render itemSnippet(item)}
           </div>
         {:else}
@@ -442,7 +470,7 @@
             {#snippet child({ props })}
               <div {...props}>
                 {#if item.texture_path}
-                  <div class="group-data-[state=active]:bg-text/10 group-data-[state=inactive]:bg-text/[0.04] flex aspect-square items-center justify-center rounded-sm">
+                  <div class="group-data-[state=active]:bg-text/10 group-data-[state=inactive]:bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={shouldShine(item)}>
                     {@render itemSnippet(item)}
                   </div>
                 {:else}
@@ -467,7 +495,7 @@
                 {/if}
                 <Tabs.Content value={index.toString()}>
                   {#if containedItem.texture_path}
-                    <div class="bg-text/[0.04] flex aspect-square items-center justify-center rounded-sm">
+                    <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={shouldShine(item)}>
                       {@render itemSnippet(containedItem)}
                     </div>
                   {:else}
@@ -477,6 +505,15 @@
               {/each}
             {/if}
           </div>
+          <div class="grid place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
+            <div class="pt-5">
+              {#if item?.lore}
+                {#each item?.lore as lore, index (index)}
+                  {@html renderLore(lore)}
+                {/each}
+              {/if}
+            </div>
+          </div>
         </Tabs.Content>
       {/each}
     {/if}
@@ -484,13 +521,6 @@
 {/snippet}
 
 {#snippet inventorySection()}
-  {#if isLoading}
-    <LoaderCircle class="text-icon animate-spin" />
-  {/if}
-  {#if hasErrored[tab?.id as keyof typeof hasErrored]}
-    <Notice title="An unexpected error has occurred" type="error" />
-  {/if}
-
   {#if tab?.items?.length}
     <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
       {#each tab.items as item, index (index)}
@@ -500,7 +530,7 @@
           {/if}
         {/if}
         {#if item.texture_path}
-          <div class="bg-text/[0.04] flex aspect-square items-center justify-center rounded-sm">
+          <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={shouldShine(item)}>
             {#if tab.id === "inventory"}
               {@render itemSnippet({ ...item, rarity: item.rarity ?? "uncommon" } as ProcessedSkyBlockItem)}
             {:else}

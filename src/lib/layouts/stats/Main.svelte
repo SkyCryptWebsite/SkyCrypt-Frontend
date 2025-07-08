@@ -14,10 +14,12 @@
   import { api, SectionName } from "$lib/shared/api";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { itemContent, itemContentSpecial, showItem } from "$lib/stores/internal";
-  import { performanceMode } from "$lib/stores/preferences";
+  import { performanceMode, showGlint } from "$lib/stores/preferences";
   import type { EmbedV2 } from "$types/statsv2";
+  import GripVertical from "@lucide/svelte/icons/grip-vertical";
   import { createQuery } from "@tanstack/svelte-query";
   import { Dialog } from "bits-ui";
+  import { Pane, PaneGroup, PaneResizer } from "paneforge";
   import { getContext } from "svelte";
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
@@ -28,6 +30,14 @@
   const profile = $derived(ctx.profile);
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
+
+  let rightSize = $state(0);
+  let leftSize = $state(0);
+  let skinCollapsed = $state(false);
+  let leftPane = $state<Pane>(null!);
+  let innerWidth = $state(0);
+  let defaultLeftPanel = $derived(Math.ceil((300 / innerWidth) * 100));
+  let defaultRightPanel = $derived(Math.ceil((700 / innerWidth) * 100));
 
   const query = createQuery<EmbedV2>({
     queryKey: [SectionName.EMBED, profileUUID, profileId],
@@ -51,29 +61,76 @@
   <SEO {embedData} />
 {/if}
 
+<svelte:window bind:innerWidth />
+
 <div class="@container/parent relative">
-  <div class="@container fixed top-1/2 left-0 z-10 hidden h-dvh w-[30vw] -translate-y-1/2 @[75rem]/parent:block">
-    {#if browser && window.innerWidth >= 1200}
-      {#await import('$lib/components/Skin3D.svelte') then { default: Skin3D }}
-        <Skin3D class="h-full" />
-      {/await}
+  <PaneGroup direction="horizontal" class="relative w-full !overflow-x-clip !overflow-y-visible">
+    {#if innerWidth >= 1024}
+      <div class="group/pane contents">
+        <Pane
+          defaultSize={defaultLeftPanel}
+          collapsedSize={0}
+          collapsible={true}
+          order={0}
+          onResize={(size) => {
+            leftSize = size;
+            if (size < 10) {
+              leftPane.collapse();
+              skinCollapsed = true;
+            } else {
+              leftPane.expand();
+              skinCollapsed = false;
+            }
+          }}
+          bind:this={leftPane}>
+          <div class="relative flex h-full items-center justify-center">
+            <div class="fixed top-1/2 z-10 -translate-y-1/2">
+              {#if !skinCollapsed}
+                {#if browser && innerWidth >= 1024}
+                  {#await import('$lib/components/Skin3D.svelte') then { default: Skin3D }}
+                    <Skin3D class="h-full" />
+                  {/await}
+                {/if}
+              {/if}
+            </div>
+          </div>
+        </Pane>
+
+        <PaneResizer class="fixed top-1/2 left-(--size) z-20 flex w-2 -translate-x-1 -translate-y-[calc(50%-1.5rem)] items-center justify-center rounded-xs opacity-30 transition-opacity duration-300 group-hover/pane:opacity-100" style="--size: {leftSize}%">
+          <div
+            class="bg-icon absolute h-[50dvh] w-2
+          rounded-xs transition-[clip-path] duration-300 ease-in-out [clip-path:inset(50%_0_50%_0)] group-hover/pane:[clip-path:inset(0_0_0_0)]">
+          </div>
+
+          <div class="bg-background-grey group-hover/pane:bg-icon z-10 flex h-7 min-w-5 items-center justify-center rounded-sm transition-colors duration-300">
+            <GripVertical class="text-text/80 size-4" />
+          </div>
+        </PaneResizer>
+      </div>
     {/if}
-  </div>
 
-  <div class={cn("fixed top-0 right-0 min-h-dvh w-full @[75rem]/parent:w-[calc(100%-30vw)]", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")}></div>
+    <Pane
+      defaultSize={defaultRightPanel}
+      class="relative z-10 !overflow-x-clip !overflow-y-visible"
+      order={1}
+      onResize={(size) => {
+        rightSize = size;
+      }}>
+      <div class={cn("fixed top-0 right-0 h-dvh w-(--width)", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")} style="--width: {skinCollapsed ? 100 : rightSize}%"></div>
+      <main data-vaul-drawer-wrapper class="@container relative mx-auto mt-12">
+        <div class="space-y-5 p-4 @[75rem]/parent:p-8">
+          <PlayerProfile />
+          <Skills />
+          <Stats />
+          <AdditionalStats />
+        </div>
 
-  <main data-vaul-drawer-wrapper class="@container relative mx-auto mt-12 @[75rem]/parent:ml-[30vw]">
-    <div class="space-y-5 p-4 @[75rem]/parent:p-8">
-      <PlayerProfile />
-      <Skills />
-      <Stats />
-      <AdditionalStats />
-    </div>
-
-    <Navbar>
-      <Sections />
-    </Navbar>
-  </main>
+        <Navbar>
+          <Sections />
+        </Navbar>
+      </main>
+    </Pane>
+  </PaneGroup>
 </div>
 
 {#if isHover.current}
@@ -150,13 +207,15 @@
   </Drawer.Root>
 {/if}
 
-<svg xmlns="http://www.w3.org/2000/svg" height="0" width="0" class="fixed">
-  <filter id="enchanted-glint">
-    <feImage href="/img/enchanted-glint.png" />
-    <feComposite in2="SourceGraphic" operator="in" />
-    <feBlend in="SourceGraphic" mode="screen" />
-  </filter>
-</svg>
+{#if $showGlint}
+  <svg xmlns="http://www.w3.org/2000/svg" height="0" width="0" class="fixed">
+    <filter id="enchanted-glint">
+      <feImage href="/img/enchanted-glint.png" />
+      <feComposite in2="SourceGraphic" operator="in" />
+      <feBlend in="SourceGraphic" mode="screen" />
+    </filter>
+  </svg>
+{/if}
 
 {#snippet containedItems()}
   {#if $itemContentSpecial}

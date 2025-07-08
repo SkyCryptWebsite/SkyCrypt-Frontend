@@ -9,6 +9,7 @@
   import { renderLore } from "$lib/shared/helper";
   import { cn } from "$lib/shared/utils";
   import type { SkillsV2 } from "$types/statsv2";
+  import { tz } from "@date-fns/tz";
   import { formatDate, formatDistanceToNowStrict } from "date-fns";
   import { format } from "numerable";
   import { fade } from "svelte/transition";
@@ -53,12 +54,14 @@
         <span class="text-text">
           {#if passActive}
             {formatDistanceToNowStrict(mining.crystalHollows.crystalHollowsLastAccess, {
-              addSuffix: true
+              addSuffix: true,
+              in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone)
             })}
           {:else}
-            {formatDate(mining.crystalHollows.crystalHollowsLastAccess, "dd MMMM yyyy 'at' HH:mm")}
+            {formatDate(mining.crystalHollows.crystalHollowsLastAccess, "dd MMMM yyyy 'at' HH:mm", { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) })}
             ({formatDistanceToNowStrict(mining.crystalHollows.crystalHollowsLastAccess, {
-              addSuffix: true
+              addSuffix: true,
+              in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone)
             })})
           {/if}
         </span>
@@ -159,7 +162,7 @@
     {/if}
     {#each mining.forge as item, index (index)}
       {@const ended = item.endingTime < Date.now()}
-      <AdditionStat text={`Slot ${item.slot}`} data={`${item.name} - ${ended ? "ended" : `ends ${formatDistanceToNowStrict(item.endingTime, { addSuffix: true })}`}`} asterisk={true}>
+      <AdditionStat text={`Slot ${item.slot}`} data={`${item.name} - ${ended ? "ended" : `ends ${formatDistanceToNowStrict(item.endingTime, { addSuffix: true, in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) })}`}`} asterisk={true}>
         {formatDate(item.endingTime, "dd MMMM yyyy 'at' HH:mm")}
       </AdditionStat>
     {/each}

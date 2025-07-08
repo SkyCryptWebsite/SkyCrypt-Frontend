@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { PUBLIC_DISCORD_INVITE } from "$env/static/public";
+  import { env } from "$env/dynamic/public";
   import { cn } from "$lib/shared/utils";
   import { performanceMode } from "$lib/stores/preferences";
   import CircleAlert from "@lucide/svelte/icons/circle-alert";
@@ -7,6 +7,8 @@
   import Info from "@lucide/svelte/icons/info";
   import { Button } from "bits-ui";
   import type { Snippet } from "svelte";
+
+  const { PUBLIC_DISCORD_INVITE } = env;
 
   type Props = {
     title: string;

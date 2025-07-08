@@ -9,6 +9,7 @@
   import { cn } from "$lib/shared/utils";
   import { tabValue } from "$lib/stores/internal";
   import { performanceMode, sectionOrderPreferences } from "$lib/stores/preferences";
+  import { recentSearches } from "$lib/stores/searches";
   import type { StatsV2 } from "$types/statsv2";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import { createQuery } from "@tanstack/svelte-query";
@@ -38,6 +39,26 @@
   $effect(() => {
     const abortController = new AbortController();
     setProfileCtx($query.data!);
+
+    recentSearches.update((searches) => {
+      if (!$query.data) return searches;
+
+      const { username, uuid } = $query.data;
+      if (!username || !uuid) return searches;
+
+      // Find existing search by username/IGN and update with UUID
+      const existingIndex = searches.findIndex((search) => search.ign.toLowerCase() === username.toLowerCase());
+
+      if (existingIndex !== -1) {
+        // Update existing search with UUID
+        searches[existingIndex] = {
+          ...searches[existingIndex],
+          uuid: uuid
+        };
+      }
+
+      return searches;
+    });
 
     untrack(() => {
       if (!$query.data) return;
