@@ -1,6 +1,8 @@
 import { MAX_ENCHANTS } from "$lib/shared/constants/enchantments";
 import { RARITY_COLORS } from "$lib/shared/constants/items";
 import type { ProcessedItem } from "$types/global";
+import { tz } from "@date-fns/tz";
+import { format } from "date-fns";
 import prettyMilliseconds from "pretty-ms";
 export { prettyMilliseconds as formatTime };
 
@@ -111,6 +113,14 @@ export function renderLore(text: string): string {
 
     if (formats.size > 0) {
       output += ` class='${Array.from(formats, (x) => "§" + x).join(" ")}'`;
+    }
+
+    if (part.includes("{TIMESTAMP:")) {
+      const timestampMatch = part.match(/{TIMESTAMP:(\d+)}/);
+      if (timestampMatch) {
+        const formattedTime = format(parseInt(timestampMatch[1], 10), "MMM dd, yyyy, h:mm a", { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) });
+        part = part.replace(timestampMatch[0], formattedTime);
+      }
     }
 
     output += `>${part}</span>`;
