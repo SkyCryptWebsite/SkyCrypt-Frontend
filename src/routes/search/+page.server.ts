@@ -1,6 +1,6 @@
 import { fail, redirect } from "@sveltejs/kit";
 import { message, superValidate } from "sveltekit-superforms";
-import { zod } from "sveltekit-superforms/adapters";
+import { zod4 as zod } from "sveltekit-superforms/adapters";
 import { schema } from "../schema";
 import type { Actions, PageServerLoad } from "./$types";
 

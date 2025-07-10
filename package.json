@@ -81,7 +81,7 @@
     "vaul-svelte": "1.0.0-next.7",
     "vite": "^7.0.4",
     "vite-plugin-devtools-json": "^0.2.1",
-    "zod": "^3.25.76"
+    "zod": "^4.0.2"
   },
   "dependencies": {
     "@napi-rs/canvas": "^0.1.68",

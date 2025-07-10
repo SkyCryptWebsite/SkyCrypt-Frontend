@@ -14,7 +14,7 @@
   import { Control, Field, FieldErrors, Label } from "formsnap";
   import { getContext, onMount } from "svelte";
   import { superForm } from "sveltekit-superforms";
-  import { zodClient } from "sveltekit-superforms/adapters";
+  import { zod4Client as zodClient } from "sveltekit-superforms/adapters";
   import type { PageData } from "./$types";
   import { Role } from "./enums";
   import { schema } from "./schema";
