@@ -49,7 +49,7 @@
     if (profileUUID && profileId) {
       $query.refetch();
     }
-  }, 3000);
+  }, 1000);
 
   const embedData = $derived.by(() => {
     if ($query.isPending || $query.error || !$query.data) return;
