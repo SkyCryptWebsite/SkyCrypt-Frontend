@@ -34,7 +34,7 @@
     "@types/lodash": "^4.17.20",
     "@types/micromatch": "^4.0.9",
     "@types/mongo-sanitize": "^1.0.3",
-    "@types/node": "^24.0.12",
+    "@types/node": "^24.0.13",
     "@types/relaxed-json": "^1.0.4",
     "@types/upng-js": "^2.1.5",
     "bits-ui": "^2.8.10",
@@ -61,7 +61,7 @@
     "simple-git": "^3.27.0",
     "skinview3d": "^3.4.1",
     "skyhelper-networth": "^1.27.3",
-    "svelte": "^5.35.5",
+    "svelte": "^5.35.6",
     "svelte-check": "^4.2.2",
     "svelte-dnd-action": "^0.9.63",
     "svelte-interactions": "^0.2.0",
@@ -81,12 +81,12 @@
     "vaul-svelte": "1.0.0-next.7",
     "vite": "^7.0.4",
     "vite-plugin-devtools-json": "^0.2.1",
-    "zod": "^4.0.2"
+    "zod": "^4.0.5"
   },
   "dependencies": {
     "@napi-rs/canvas": "^0.1.68",
     "@rollup/rollup-linux-x64-gnu": "^4.38.0",
-    "@sentry/sveltekit": "^9.37.0",
+    "@sentry/sveltekit": "^9.38.0",
     "dotenv-cli": "^8.0.0",
     "farming-weight": "^0.8.3",
     "minecraft-data": "^3.85.0",
