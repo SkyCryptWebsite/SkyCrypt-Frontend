@@ -21,8 +21,6 @@
   const mining = $derived(data?.mining);
   const miningTools = $derived(mining?.tools);
   const highestPriorityMiningTool = $derived(miningTools?.highest_priority_tool);
-
-  $inspect(mining);
 </script>
 
 <SectionSubtitle>Mining Tools</SectionSubtitle>
