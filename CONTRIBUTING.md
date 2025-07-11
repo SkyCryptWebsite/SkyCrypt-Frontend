@@ -16,7 +16,7 @@ Before contributing to SkyCrypt, make sure you install the development environme
 1. Clone the repository. You can do this on the command line by running
 
    ```
-   git clone https://github.com/SkyCryptWebsite/SkyCrypt.git
+   git clone --recurse-submodules https://github.com/SkyCryptWebsite/SkyCryptv2.git
    ```
 
    Alternatively, you can use a git GUI like GitHub Desktop or VS Code to clone it.
