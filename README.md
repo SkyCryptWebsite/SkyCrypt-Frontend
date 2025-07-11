@@ -10,55 +10,20 @@ This is the new version of [SkyCrypt](https://github.com/SkyCryptWebsite/SkyCryp
 
 Originally inspired by [LeaPhant's skyblock-stats](https://github.com/LeaPhant/skyblock-stats).
 
-**Development Website**: https://cupcake.shiiyu.moe \
-**Production Website**: https://sky.shiiyu.moe
+**Website**: https://sky.shiiyu.moe \
+**Development Website**: https://cupcake.shiiyu.moe
+
+[![CI/CD](https://github.com/SkyCryptWebsite/SkyCryptv2/actions/workflows/website.yml/badge.svg)](https://github.com/SkyCryptWebsite/SkyCryptv2/actions/workflows/website.yml)
+
+<h2 align="center">Screenshot</h1>
+
+![Screenshot](static/img/screenshots/windows-0.jpg)
 
 <h2 align="center">Contributing</h1>
 
 You are free to report bugs or contribute to this project. Just open <a href="../../issues">Issues</a> or <a href="../../pulls">Pull Requests</a> and the team will look into them.
 
-<h3>Prerequisites</h3>
-
-- <a href="https://nodejs.org/">Node.js</a> 20+ and <a href="https://pnpm.io/">pnpm</a> 9.4+ installed
-- Existing <a href="https://docs.mongodb.com/manual/administration/install-community/">MongoDB</a> and <a href="https://redis.io/">Redis</a> servers to connect to, or <a href="https://docs.docker.com/desktop/">Docker</a> for an easier setup
-- A valid <a href="https://api.hypixel.net/">Hypixel API</a> Key
-  - Obtain a temporary development key on Hypixel's [Developer Dashboard](https://developer.hypixel.net/dashboard)
-  - A permanent key can be requested on the same page, but are meant for active projects and not sporadic use and require approval
-- Optional for a production deployment:
-  - A domain name and a server to host the website
-  - Valid SSL certificates for HTTPS
-  - A reverse proxy like <a href="https://www.nginx.com/">Nginx</a> for web requests and load balancing
-
-<h3>Project Setup</h3>
-
-1. Clone the project and run `pnpm i` to install the dependencies.
-   - If missing `pnpm`, you can install it with `npm i -g pnpm`
-2. Copy the `.env.example` file to a new `.env` file.
-   1. Fill in your Hypixel API Key
-
-   ```sh
-   HYPIXEL_API_KEY="KEY"
-   ```
-
-   2. If you are using the easier Docker setup for MongoDB and Redis, you can leave the default values. Otherwise adjust the connection values to match your setup.
-   3. The Discord Webhook URL is optional and can be left alone
-
-3. Start the MongoDB and Redis servers
-   - To do this, run `docker compose up -d` in the project directory
-   - If you are using your own servers, just make sure they are running
-4. Run `pnpm run dev` to start the website in development mode
-   - The website will be available at <a href="http://localhost:5173">http://localhost:5173</a>
-
-<h3>Contributing Changes</h3>
-
-When contributing changes, the following checks must pass:
-
-- `pnpm run lint` to check for code style issues
-  - Use `pnpm run format` to automatically fix formatting issues
-- `pnpm run check` to run more extensive checks
-- `pnpm run build` to make sure the project builds correctly
-
-If these checks pass, you can open a pull request with your changes! These checks are also run automatically on pull requests, but it's good to check locally first.
+Refer to the <a href="/CONTRIBUTING.md">CONTRIBUTING.md</a> file for more information on how to contribute.
 
 <h2 align="center">Credits</h2>
 
