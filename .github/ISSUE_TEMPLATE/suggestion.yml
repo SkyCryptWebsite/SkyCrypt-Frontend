@@ -1,0 +1,66 @@
+name: 💡 Suggestions
+description: Suggest a new feature, improvement, or idea
+title: "[SUGGESTION] <title>"
+labels: ["suggestion", "triage"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Thanks for taking the time to create an suggestion! Please search open/closed suggestions before submitting, as the suggestion may have already been suggested/addressed.
+
+  - type: markdown
+    attributes:
+      value: |
+        #### If you aren't sure if something is a suggestion or not, please do not create a suggestion, instead ask in one of the following channels:
+        - [Discord](https://discord.gg/cNgADv2kEQ)
+
+  - type: checkboxes
+    attributes:
+      label: Is there an existing suggestion for this?
+      description: Please search to see if a suggestion already exists for the feature you are suggesting.
+      options:
+        - label: I have searched the existing suggestions
+          required: true
+
+  - type: textarea
+    id: suggestion-description
+    attributes:
+      label: Is your feature request related to a problem? Please describe.
+      description: A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+      placeholder: Feature description
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Describe the solution you'd like
+      description: A clear and concise description of what you want to happen. Ex. I would like to see [...]
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Describe alternatives you've considered
+      description: A clear and concise description of any alternative solutions or features you've considered.
+    placeholder: |
+      I have considered the following alternatives:
+      - Alternative 1
+      - Alternative 2
+      - Alternative 3
+    render: markdown
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context or screenshots about the feature request here.
+      placeholder: |
+        ![Screenshot](https://example.com/screenshot.png)
+      render: markdown
+    validations:
+      required: false
