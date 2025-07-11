@@ -167,6 +167,7 @@ export type MiningV2 = {
     fossilDust: number;
     corpses: {
       found: number;
+      max: number;
       corpses: {
         name: string;
         amount: number;
@@ -175,6 +176,7 @@ export type MiningV2 = {
     };
     fossils: {
       found: number;
+      max: number;
       fossils: {
         name: string;
         found: boolean;

@@ -1,8 +1,10 @@
 <script lang="ts">
   import { getDynamicCtx } from "$ctx/dynamic.svelte";
   import AdditionStat from "$lib/components/AdditionStat.svelte";
+  import Chip from "$lib/components/Chip.svelte";
   import Item from "$lib/components/Item.svelte";
   import Notice from "$lib/components/Notice.svelte";
+  import ScrollItems from "$lib/components/scroll-items.svelte";
   import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
   import Items from "$lib/layouts/stats/Items.svelte";
   import { SectionName } from "$lib/shared/api";
@@ -19,6 +21,8 @@
   const mining = $derived(data?.mining);
   const miningTools = $derived(mining?.tools);
   const highestPriorityMiningTool = $derived(miningTools?.highest_priority_tool);
+
+  $inspect(mining);
 </script>
 
 <SectionSubtitle>Mining Tools</SectionSubtitle>
@@ -155,7 +159,54 @@
     </div>
   {/if}
 
-  <h3 class="text-text/90 my-5 text-xl font-semibold capitalize">Forge</h3>
+  <SectionSubtitle class="mt-5">Glacite Tunnels</SectionSubtitle>
+  <div class="space-y-0.5">
+    <AdditionStat text="Fossil Dust" data={mining.glaciteTunnels.fossilDust.toString()} />
+    <AdditionStat text="Mineshafts Entered" data={mining.glaciteTunnels.mineshaftsEntered.toString()} />
+    <Items class="flex-col" subtitle="Fossils">
+      <AdditionStat text="Fossils Found" data={mining.glaciteTunnels.fossils.found} maxed={mining.glaciteTunnels.fossils.found === mining.glaciteTunnels.fossils.max} />
+      <ScrollItems>
+        {#each mining.glaciteTunnels.fossils.fossils as fossil, index (index)}
+          {@const hasFound = fossil.found}
+          <Chip image={{ src: fossil.texture_path }} class={cn("h-fit w-fit", { "opacity-50": !hasFound })}>
+            <div class={cn("flex flex-col")}>
+              <div class="font-bold whitespace-nowrap">
+                {fossil.name}
+              </div>
+            </div>
+            {#snippet tooltip()}
+              <div class="text-sm font-bold">
+                <span class="text-text">{fossil.found ? "Found" : "Not Found"}</span>
+              </div>
+            {/snippet}
+          </Chip>
+        {/each}
+      </ScrollItems>
+    </Items>
+
+    <Items class="flex-col" subtitle="Corpses">
+      <AdditionStat text="Corpses Found" data={mining.glaciteTunnels.corpses.found} maxed={mining.glaciteTunnels.corpses.found === mining.glaciteTunnels.corpses.max} />
+
+      <ScrollItems>
+        {#each mining.glaciteTunnels.corpses.corpses as corpse, index (index)}
+          {@const hasUnlocked = corpse.amount}
+          <Chip image={{ src: corpse.texture_path }} class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked })}>
+            <div class="flex flex-col">
+              <div class="font-bold whitespace-nowrap">
+                <span class="opacity-60">{corpse.name}</span>
+                <div class="text-sm">
+                  <span class="opacity-60">Amount:</span>
+                  <span class="text-text">{format(corpse.amount)}</span>
+                </div>
+              </div>
+            </div>
+          </Chip>
+        {/each}
+      </ScrollItems>
+    </Items>
+  </div>
+
+  <SectionSubtitle class="mt-5">Forge</SectionSubtitle>
   <div class="space-y-1">
     {#if mining.forge.length === 0}
       No items currently forging!
