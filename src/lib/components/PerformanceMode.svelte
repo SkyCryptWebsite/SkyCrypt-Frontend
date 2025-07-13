@@ -5,7 +5,7 @@
   import { toast } from "svelte-sonner";
 
   const THRESHOLD = 45;
-  const MIN_SAMPLES = 5; // Require more samples before triggering
+  const MIN_SAMPLES = 8; // Require more samples before triggering
   const SMOOTHING_FACTOR = 0.2; // For exponential moving average
   const INITIALIZATION_DELAY = 3000; // Wait 3 seconds after mount before detecting
 
@@ -19,22 +19,33 @@
   let shownToast = $state(false);
   let lowFpsStreak = 0;
   let fpsHistory: number[] = [];
+  let isTabActive = $state(true);
+  let lastVisibilityChange = 0;
 
-  // Start measuring FPS once component mounts
-  onMount(() => {
-    if (browser) {
-      startTime = performance.now();
-      lastTime = startTime;
-      rafId = requestAnimationFrame(measure);
+  // Handle visibility changes to avoid false positives when tab/window is inactive
+  function handleVisibilityChange() {
+    const wasActive = isTabActive;
+    isTabActive = !document.hidden;
+    lastVisibilityChange = performance.now();
+
+    // If tab becomes active again, reset some tracking to avoid stale data
+    if (!wasActive && isTabActive) {
+      // Reset FPS history after becoming active again
+      fpsHistory = [];
+      lowFpsStreak = 0;
+      smoothedFps = 60; // Reset to a neutral value
+      frameCount = 0;
+      lastTime = performance.now();
     }
-    return () => {
-      if (browser && rafId) {
-        cancelAnimationFrame(rafId);
-      }
-    };
-  });
+  }
 
   function measure(now: number) {
+    // Skip measurement if tab is not active to avoid false positives
+    if (!isTabActive) {
+      rafId = requestAnimationFrame(measure);
+      return;
+    }
+
     frameCount++;
     const delta = now - lastTime;
 
@@ -48,13 +59,16 @@
 
       // Add to history for trend analysis
       fpsHistory.push(fps);
-      if (fpsHistory.length > 10) {
-        fpsHistory.shift(); // Keep only last 10 samples
+      if (fpsHistory.length > 15) {
+        fpsHistory.shift(); // Keep only last 15 samples for better accuracy
       }
 
-      // Only start detecting after initialization period
+      // Only start detecting after initialization period and ensure we have enough samples
       const timeSinceStart = now - startTime;
-      if (timeSinceStart > INITIALIZATION_DELAY && fpsHistory.length >= MIN_SAMPLES) {
+      const timeSinceVisibilityChange = now - lastVisibilityChange;
+
+      // Wait for initialization AND ensure tab has been active for at least 2 seconds
+      if (timeSinceStart > INITIALIZATION_DELAY && timeSinceVisibilityChange > 2000 && fpsHistory.length >= MIN_SAMPLES) {
         checkPerformance();
       }
     }
@@ -66,22 +80,23 @@
     // Calculate average of recent samples
     const recentAverage = fpsHistory.reduce((sum, fps) => sum + fps, 0) / fpsHistory.length;
 
-    // Check if both current and smoothed FPS are consistently low
-    const isConsistentlyLow = recentAverage < THRESHOLD && smoothedFps < THRESHOLD;
-
     // Count how many recent samples are below threshold
     const lowSamples = fpsHistory.filter((fps) => fps < THRESHOLD).length;
     const lowPercentage = lowSamples / fpsHistory.length;
 
-    if (isConsistentlyLow && lowPercentage > 0.6) {
-      // 60% of samples are low
+    // More strict detection: require ALL recent samples to be below threshold
+    // AND the smoothed FPS to be consistently low
+    const allSamplesLow = lowPercentage === 1.0; // 100% of samples are low
+    const isConsistentlyLow = recentAverage < THRESHOLD && smoothedFps < THRESHOLD;
+
+    if (allSamplesLow && isConsistentlyLow) {
       lowFpsStreak++;
-      if (lowFpsStreak >= 3 && !shownToast) {
-        // Require 3 consecutive low periods
+      if (lowFpsStreak >= 2 && !shownToast) {
+        // Require 2 consecutive periods where ALL samples are low
         activatePerformanceMode();
       }
     } else {
-      lowFpsStreak = 0; // Reset streak if performance improves
+      lowFpsStreak = 0; // Reset streak if any sample is good
     }
   }
 
@@ -106,5 +121,20 @@
     shownToast = true;
   }
 
-  // Expose FPS for UI or metrics
+  // Start measuring FPS once component mounts
+  onMount(() => {
+    if (browser) {
+      startTime = performance.now();
+      lastTime = startTime;
+      lastVisibilityChange = startTime;
+      rafId = requestAnimationFrame(measure);
+    }
+    return () => {
+      if (browser && rafId) {
+        cancelAnimationFrame(rafId);
+      }
+    };
+  });
 </script>
+
+<svelte:document on:visibilitychange={handleVisibilityChange} />
