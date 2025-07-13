@@ -13,7 +13,7 @@ const headers = { Accept: "application/json", "User-Agent": "SkyCrypt", "API-KEY
 export async function getProfiles(paramPlayer: string) {
   const uuid = await getUUID(paramPlayer, { cache: true });
   if (!uuid) {
-    throw new SkyCryptError("Player not found");
+    SkyCryptError("Player not found");
   }
 
   const profiles = await fetchProfiles(uuid, { cache: true });
@@ -46,12 +46,12 @@ export async function fetchProfiles(uuid: string, options = { cache: false }): P
 
   const data: ProfilesResponse = await response.json();
   if (data.success === false) {
-    throw new SkyCryptError(data?.cause ?? "Request to Hypixel API failed. Please try again!");
+    SkyCryptError(data?.cause ?? "Request to Hypixel API failed. Please try again!");
   }
 
   const { profiles } = data;
   if (!profiles || profiles.length === 0) {
-    throw new SkyCryptError("No profiles found");
+    SkyCryptError("No profiles found");
   }
 
   // 5 minutes
@@ -104,7 +104,7 @@ async function resolveUsernameOrUUID(paramPlayer: string, options = { cache: fal
       return null;
     }
 
-    throw new SkyCryptError("Player not found");
+    SkyCryptError("Player not found");
   }
 
   const data = await response.json();
@@ -113,7 +113,7 @@ async function resolveUsernameOrUUID(paramPlayer: string, options = { cache: fal
       return null;
     }
 
-    throw new SkyCryptError(data.errorMessage);
+    SkyCryptError(data.errorMessage);
   }
 
   return data;
@@ -123,7 +123,7 @@ export async function getProfile(uuid: string, profileId: string | null, options
   const profiles = await fetchProfiles(uuid, options);
   const profile = (profileId && profiles.find((p) => p.cute_name.toUpperCase() === profileId.toUpperCase() || p.profile_id === profileId)) ?? profiles.find((p) => p.selected);
   if (!profile) {
-    throw new SkyCryptError("Profile not found");
+    SkyCryptError("Profile not found");
   }
 
   profile.uuid = uuid;
@@ -147,7 +147,7 @@ export async function fetchPlayer(uuid: string, options = { cache: false }) {
 
   const data = await response.json();
   if (data.success === false) {
-    throw new SkyCryptError(data?.cause ?? "Request to Hypixel API failed. Please try again!");
+    SkyCryptError(data?.cause ?? "Request to Hypixel API failed. Please try again!");
   }
 
   // 30 minutes
@@ -168,7 +168,7 @@ export async function fetchMuseum(profileId: string) {
 
   const data = await response.json();
   if (data.success === false) {
-    throw new SkyCryptError(data?.cause ?? "Request to Hypixel API failed. Please try again!");
+    SkyCryptError(data?.cause ?? "Request to Hypixel API failed. Please try again!");
   }
 
   const { members } = data;
@@ -196,7 +196,7 @@ export async function getGarden(profileId: string) {
   const data = await response.json();
   if (data.success === false) {
     REDIS.SETEX(`GARDEN:${profileId}`, 60 * 5, JSON.stringify({}));
-    throw new SkyCryptError(data?.cause ?? "Request to Hypixel API failed. Please try again!");
+    SkyCryptError(data?.cause ?? "Request to Hypixel API failed. Please try again!");
   }
 
   const { garden } = data;

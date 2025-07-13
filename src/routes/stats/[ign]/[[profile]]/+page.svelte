@@ -115,7 +115,7 @@
       </div>
     {/if}
     {#if $query.error}
-      <Notice title="An unexpected error has occurred" type="error" />
+      <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
     {/if}
   </div>
 {/if}

@@ -15,9 +15,10 @@
     children?: Snippet;
     type: "error" | "warning" | "info";
     class?: string;
+    error?: Error;
   };
 
-  let { title, children, type, class: className }: Props = $props();
+  let { title, children, type, class: className, error }: Props = $props();
 </script>
 
 <div class={cn("space-y-5 rounded-lg p-6 data-[type=error]:text-red-200 data-[type=info]:text-blue-200 data-[type=warning]:text-yellow-200 @[75rem]/parent:p-8", $performanceMode ? "data-[type=error]:bg-red-800 data-[type=info]:bg-blue-800 data-[type=warning]:bg-yellow-800" : "backdrop-blur-sm data-[type=error]:bg-red-700/[0.05] data-[type=info]:bg-blue-700/[0.05] data-[type=warning]:bg-yellow-700/[0.05]", className)} data-type={type}>
@@ -37,6 +38,12 @@
   {@render children?.()}
 
   {#if type === "error"}
-    <p>If applicable, please report this error on our <Button.Root target="_blank" href={PUBLIC_DISCORD_INVITE} class="underline">Discord</Button.Root></p>
+    {#if error && error.message}
+      <p class="text-center">
+        {error.message}
+      </p>
+    {/if}
+
+    <p class="text-center">If applicable, please report this error on our <Button.Root target="_blank" href={PUBLIC_DISCORD_INVITE} class="underline">Discord</Button.Root></p>
   {/if}
 </div>

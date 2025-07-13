@@ -40,7 +40,7 @@
       {#snippet child({ props, open })}
         {#if open}
           {#if $query.error}
-            <Notice title="An unexpected error has occurred" type="error" />
+            <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
           {/if}
           {#if $query.isSuccess && $query.data && stats}
             <div {...props} transition:slide={{ duration: 300, easing: quadInOut }}>

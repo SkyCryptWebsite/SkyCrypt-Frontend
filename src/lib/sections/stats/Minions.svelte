@@ -41,7 +41,7 @@
     <LoaderCircle class="text-icon animate-spin" />
   {/if}
   {#if $query.error}
-    <Notice title="An unexpected error has occurred" type="error" />
+    <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
   {/if}
   {#if $query.isSuccess && $query.data && minions}
     <Items class="flex-col">
