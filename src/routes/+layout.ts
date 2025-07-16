@@ -7,7 +7,9 @@ export const load = (async ({ data }) => {
     defaultOptions: {
       queries: {
         enabled: browser,
-        staleTime: 60 * 1000
+        staleTime: Infinity,
+        retry: 3,
+        retryDelay: 1000
       }
     }
   });
