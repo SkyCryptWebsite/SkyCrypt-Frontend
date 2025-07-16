@@ -4,7 +4,6 @@
   import Item from "$lib/components/Item.svelte";
   import ItemContent from "$lib/components/item/item-content.svelte";
   import Navbar from "$lib/components/Navbar.svelte";
-  import SEO from "$lib/components/SEO.svelte";
   import { IsHover } from "$lib/hooks/is-hover.svelte";
   import AdditionalStats from "$lib/layouts/stats/AdditionalStats.svelte";
   import PlayerProfile from "$lib/layouts/stats/PlayerProfile.svelte";
@@ -50,16 +49,12 @@
       $query.refetch();
     }
   }, 1000);
-
-  const embedData = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data;
-  });
 </script>
 
-{#if embedData}
-  <SEO {embedData} />
-{/if}
+<svelte:head>
+  <link rel="icon" href="https://crafatar.com/avatars/{profile.uuid}?size=32&overlay" sizes="32x32" type="image/png" />
+  <title>{profile.displayName} | SkyCrypt</title>
+</svelte:head>
 
 <svelte:window bind:innerWidth />
 
