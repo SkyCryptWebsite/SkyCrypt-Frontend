@@ -39,6 +39,7 @@ export type DatabaseItem = {
   item_id?: number;
   skyblock_id?: string;
   color?: string;
+  hex_color?: string;
   damage?: number;
   museum_data?: {
     armor_set_donation_xp: number;
@@ -96,6 +97,7 @@ export type ProcessedItem = {
       };
       talisman_enrichment?: string;
       gems: Record<string, string>;
+      dye_item?: string;
     };
     SkullOwner: {
       Properties: {
