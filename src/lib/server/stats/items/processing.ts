@@ -89,6 +89,27 @@ export async function processItems(items: ProcessedItem[], source: string, packs
       item.extra = { source };
     }
 
+    // Remove any exotic color codes
+    if (item.tag?.display?.color && item.tag.ExtraAttributes.id) {
+      let color = "";
+
+      // Use default color from constants if not dyed
+      if (!item.tag.ExtraAttributes.dye_item) {
+        const defaultColor = constants.ITEMS.get(item.tag.ExtraAttributes.id)?.hex_color;
+        if (defaultColor) {
+          color = defaultColor;
+        }
+      } else {
+        // Use color if dye_item is set (it's probably just dyed, not exotic)
+        color = (item.tag.display.color as unknown as number).toString(16).padStart(6, "0");
+      }
+
+      if (color) {
+        // For some reason this is typed as a string, but it should be a number
+        item.tag.display.color = parseInt(color, 16) as unknown as string;
+      }
+    }
+
     if (!options?.pack) {
       helper.applyResourcePack(item, packs);
     }
