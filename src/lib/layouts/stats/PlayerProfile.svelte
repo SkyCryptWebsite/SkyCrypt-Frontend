@@ -62,16 +62,18 @@
         profileOpen = false;
         ignOpen = true;
       }}>
-      <div class="relative flex items-center justify-center overflow-hidden rounded-full bg-[var(--color)] px-2 py-1 text-xl" style={`--color:${profile.rank?.rankColor}`}>
-        <div class="relative z-20 inline-flex justify-between gap-3 text-sm font-bold sm:text-lg">
-          <span>{profile.rank?.rankText}</span>
-          {#if profile.rank?.plusText}
-            <span>{profile.rank.plusText}</span>
-          {/if}
+      {#if profile.rank?.rankColor}
+        <div class="relative flex items-center justify-center overflow-hidden rounded-full bg-[var(--color)] px-2 py-1 text-xl" style={`--color:${profile.rank.rankColor}`}>
+          <div class="relative z-20 inline-flex justify-between gap-3 text-sm font-bold sm:text-lg">
+            <span>{profile.rank.rankText}</span>
+            {#if profile.rank.plusText}
+              <span>{profile.rank.plusText}</span>
+            {/if}
+          </div>
+          <div class="absolute top-0 -right-3 bottom-0 z-10 h-14 w-1/2 skew-x-[-20deg] bg-[var(--plusColor)]" style={`--plusColor:${profile.rank.plusColor ?? profile.rank.rankColor}`}></div>
         </div>
-        <div class="absolute top-0 -right-3 bottom-0 z-10 h-14 w-1/2 skew-x-[-20deg] bg-[var(--plusColor)]" style={`--plusColor:${profile.rank?.plusColor ?? profile.rank?.rankColor}`}></div>
-      </div>
-      <span class="pl-4">{profile.displayName}</span>
+      {/if}
+      <span class={cn(profile.rank?.rankColor ? "pl-4" : "pl-2")}>{profile.displayName}</span>
     </Popover.Trigger>
 
     <Popover.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", $performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={ignRef} strategy="absolute">
