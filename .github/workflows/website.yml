@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Git checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: PNPM Install
         uses: ./.github/actions/pnpm-install
@@ -56,10 +56,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Git checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Clone NotEnoughUpdates-REPO
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: NotEnoughUpdates/NotEnoughUpdates-REPO
           path: NotEnoughUpdates-REPO/
@@ -92,7 +92,7 @@ jobs:
 
     steps:
       - name: Git checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Registry login
         uses: docker/login-action@v3

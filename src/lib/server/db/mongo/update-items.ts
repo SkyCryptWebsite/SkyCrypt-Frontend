@@ -59,6 +59,13 @@ export async function updateItems() {
         obj.texture = getSkinHash(skin.value);
       }
 
+      if (item.color) {
+        obj.hex_color = (item.color as string)
+          .split(",")
+          .map((c) => parseInt(c).toString(16).padStart(2, "0"))
+          .join("");
+      }
+
       items[id] = obj;
     }
 

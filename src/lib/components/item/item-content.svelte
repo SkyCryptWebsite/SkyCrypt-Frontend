@@ -8,6 +8,7 @@
   import type { PetProcessedSkyBlockItem } from "$types/statsv2";
   import Image from "@lucide/svelte/icons/image";
   import Info from "@lucide/svelte/icons/info";
+  import TriangleAlert from "@lucide/svelte/icons/triangle-alert";
   import { Avatar, Button } from "bits-ui";
   import { derived as derivedStore } from "svelte/store";
 
@@ -23,6 +24,7 @@
   const isMulticolor = $derived((itemNameHtml?.match(/<\/span>/g) || [])?.length > 1);
   const bgColor = $derived(getRarityClass(piece?.rarity ?? ("common".toLowerCase() as string), "bg"));
   const enchanted = $derived(skyblockItem?.texture_path?.includes("/api/leather/") ? false : skyblockItem && "shiny" in skyblockItem ? skyblockItem.shiny : false);
+  const isLeather = $derived(skyblockItem?.texture_path?.includes("/api/leather/") || false);
   const packData = $derived(packConfigs.find((pack) => pack.id === skyblockItem?.texture_pack));
 
   // Get the wiki link for the itemf
@@ -106,6 +108,14 @@
       </div>
     {/if}
     <div class="mt-4 flex w-full flex-nowrap gap-4">
+      {#if isLeather && !packData}
+        <div class="bg-text/[0.05] flex items-center justify-between gap-4 rounded-[0.625rem] p-2 transition-colors">
+          <div class="text-text/60 flex max-w-64 items-center gap-2">
+            <TriangleAlert class="size-10" />
+            <div class="text-sm font-semibold">Due to abuse, all leather armor uses default color values</div>
+          </div>
+        </div>
+      {/if}
       {#if packData}
         <Button.Root href={packData.link} target="_blank">
           <div class="bg-text/[0.05] hover:bg-text/[0.08] flex items-center justify-between gap-4 rounded-[0.625rem] p-2 transition-colors">
