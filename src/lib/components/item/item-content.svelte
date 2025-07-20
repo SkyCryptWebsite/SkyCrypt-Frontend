@@ -24,7 +24,7 @@
   const isMulticolor = $derived((itemNameHtml?.match(/<\/span>/g) || [])?.length > 1);
   const bgColor = $derived(getRarityClass(piece?.rarity ?? ("common".toLowerCase() as string), "bg"));
   const enchanted = $derived(skyblockItem?.texture_path?.includes("/api/leather/") ? false : skyblockItem && "shiny" in skyblockItem ? skyblockItem.shiny : false);
-  const isLeather = $derived(skyblockItem?.texture_path?.includes("/api/leather/") || false);
+  const hasColor = $derived(skyblockItem?.lore?.some((lore) => lore.includes("Color:")) ?? false);
   const packData = $derived(packConfigs.find((pack) => pack.id === skyblockItem?.texture_pack));
 
   // Get the wiki link for the itemf
@@ -107,15 +107,15 @@
         </div>
       </div>
     {/if}
-    <div class="mt-4 flex w-full flex-nowrap gap-4">
-      {#if isLeather && !packData}
-        <div class="bg-text/[0.05] flex items-center justify-between gap-4 rounded-[0.625rem] p-2 transition-colors">
-          <div class="text-text/60 flex max-w-64 items-center gap-2">
-            <TriangleAlert class="size-10" />
-            <div class="text-sm font-semibold">Due to abuse, all leather armor uses default color values</div>
-          </div>
+    {#if hasColor}
+      <div class="bg-text/[0.05] mt-4 flex max-w-72 items-center justify-start gap-4 rounded-[0.625rem] p-2 transition-colors">
+        <div class="text-text/60 flex items-center gap-2">
+          <TriangleAlert class="size-10" />
+          <div class="text-sm font-semibold">Due to abuse, all leather armor uses default color values</div>
         </div>
-      {/if}
+      </div>
+    {/if}
+    <div class="mt-4 flex w-full flex-nowrap gap-4">
       {#if packData}
         <Button.Root href={packData.link} target="_blank">
           <div class="bg-text/[0.05] hover:bg-text/[0.08] flex items-center justify-between gap-4 rounded-[0.625rem] p-2 transition-colors">
