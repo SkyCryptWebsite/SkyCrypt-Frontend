@@ -54,6 +54,6 @@ export const packConfigs: PackConfig = [
     name: "Worlds and Beyond",
     version: "v1.6",
     author: "Skeletony_",
-    folder: "Worlds_and_Beyond_1_4_1"
+    folder: "Worlds_and_Beyond"
   }
 ];
