@@ -1,6 +1,6 @@
 import type { Garden } from "$types/processed/profile/garden";
 import type { ProcessedSkyBlockItem } from "$types/stats";
-import type { AccessoriesV2, BestiaryV2, CollectionsV2, CrimsonIsleV2, DungeonsV2, EmbedV2, EnchantingV2, FarmingV2, FishingV2, GearV2, InventoryV2, InventoryV2All, MiningV2, MinionsV2, MiscV2, NetworthV2, PetsV2, PlayerStatsV2, RiftV2, SkillsV2, SlayerV2, StatsV2 } from "$types/statsv2";
+import type { AccessoriesV2, BestiaryV2, CollectionsV2, CrimsonIsleV2, DungeonsV2, EmbedV2, EnchantingV2, FarmingV2, FishingV2, GearV2, InventoryV2, InventoryV2All, MiningV2, MinionsV2, MiscV2, NetworthV2, PetsV2, PlayerStatsV2, RiftV2, SkillsV2, SlayerV2 } from "$types/statsv2";
 
 // Enum for section names
 export enum SectionName {
@@ -51,18 +51,6 @@ type SectionTypeMap = {
 };
 
 export const api = (customFetch = fetch) => ({
-  getProfile: async (ign: string, profile?: string): Promise<StatsV2 & { message?: string }> => {
-    const response = await customFetch(`/api/v2/stats/${ign}${profile ? "/" + profile : ""}`);
-    if (!response.ok && response.status !== 500) {
-      throw new Error(`${response.status} - Failed to fetch data - ${response.statusText}`);
-    }
-    const data = (await response.json()) as StatsV2 & { message?: string };
-    if (data.message) {
-      throw new Error(data.message);
-    }
-
-    return data;
-  },
   getItem: async (itemUUID: string): Promise<ProcessedSkyBlockItem> => {
     const response = await customFetch(`/api/v2/item/${itemUUID}`);
     if (!response.ok && response.status !== 500) {

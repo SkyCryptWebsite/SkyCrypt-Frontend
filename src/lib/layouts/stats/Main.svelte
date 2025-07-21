@@ -1,6 +1,8 @@
 <script lang="ts">
   import { browser } from "$app/environment";
-  import { getProfileCtx } from "$ctx/profile.svelte";
+  import { replaceState } from "$app/navigation";
+  import { page } from "$app/state";
+  import { setProfileCtx } from "$ctx/profile.svelte";
   import Item from "$lib/components/Item.svelte";
   import ItemContent from "$lib/components/item/item-content.svelte";
   import Navbar from "$lib/components/Navbar.svelte";
@@ -14,21 +16,29 @@
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { itemContent, itemContentSpecial, showItem } from "$lib/stores/internal";
   import { performanceMode, showGlint } from "$lib/stores/preferences";
-  import type { EmbedV2 } from "$types/statsv2";
+  import { recentSearches } from "$lib/stores/searches";
+  import type { EmbedV2, StatsV2 } from "$types/statsv2";
   import GripVertical from "@lucide/svelte/icons/grip-vertical";
   import { createQuery } from "@tanstack/svelte-query";
   import { Dialog } from "bits-ui";
   import { Pane, PaneGroup, PaneResizer } from "paneforge";
-  import { getContext } from "svelte";
+  import { getContext, tick, untrack } from "svelte";
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
 
+  const { data: ctx }: { data: StatsV2 } = $props();
+
   const isHover = getContext<IsHover>("isHover");
 
-  const ctx = getProfileCtx();
-  const profile = $derived(ctx.profile);
+  const profile = $derived(ctx);
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
+
+  const query = createQuery<EmbedV2>({
+    queryKey: [SectionName.EMBED, profileUUID, profileId],
+    queryFn: () => api(fetch).getSection(SectionName.EMBED, profileUUID, profileId),
+    enabled: false
+  });
 
   let rightSize = $state(0);
   let leftSize = $state(0);
@@ -38,17 +48,70 @@
   let defaultLeftPanel = $derived(Math.ceil((300 / innerWidth) * 100));
   let defaultRightPanel = $derived(Math.ceil((700 / innerWidth) * 100));
 
-  const query = createQuery<EmbedV2>({
-    queryKey: [SectionName.EMBED, profileUUID, profileId],
-    queryFn: () => api(fetch).getSection(SectionName.EMBED, profileUUID, profileId),
-    enabled: false
-  });
+  // Initialize the profile context
+  setProfileCtx(ctx);
 
   setTimeout(() => {
     if (profileUUID && profileId) {
       $query.refetch();
     }
   }, 1000);
+
+  // Update the profile context when the data changes
+  $effect(() => {
+    const abortController = new AbortController();
+    setProfileCtx(ctx);
+
+    recentSearches.update((searches) => {
+      if (!ctx) return searches;
+
+      const { username, uuid } = ctx;
+      if (!username || !uuid) return searches;
+
+      // Find existing search by username/IGN and update with UUID
+      const existingIndex = searches.findIndex((search) => search.ign.toLowerCase() === username.toLowerCase());
+
+      if (existingIndex !== -1) {
+        // Update existing search with UUID
+        searches[existingIndex] = {
+          ...searches[existingIndex],
+          uuid: uuid
+        };
+      }
+
+      return searches;
+    });
+
+    untrack(() => {
+      if (ctx as StatsV2) return;
+
+      const { username, profile_cute_name } = ctx;
+      if (!username) return;
+
+      const current = page.url.pathname;
+      const wanted = `/stats/${username}/${profile_cute_name || ""}`;
+
+      // Update the URL to match the username and cute name
+      if (current !== wanted) {
+        const newUrl = page.url.toString().replace(current, wanted);
+
+        // Only proceed if not aborted
+        if (!abortController.signal.aborted) {
+          tick()
+            .then(() => {
+              if (!abortController.signal.aborted) {
+                replaceState(newUrl, page.state);
+              }
+            })
+            .catch(() => {});
+        }
+      }
+    });
+
+    return () => {
+      abortController.abort();
+    };
+  });
 </script>
 
 <svelte:head>
