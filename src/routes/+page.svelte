@@ -69,6 +69,17 @@
         src: "/img/icons/discord.svg",
         alt: "Discord logo"
       }
+    },
+    {
+      href: "https://forms.gle/2Jfbs9tjm76Rihfe8",
+      text: {
+        title: "Skyblock Texture Pack Survey",
+        description: "Updating SkyCrypt to prioritize most used texture packs"
+      },
+      img: {
+        src: "/img/icons/google-forms.svg",
+        alt: "Google Forms"
+      }
     }
   ];
 
