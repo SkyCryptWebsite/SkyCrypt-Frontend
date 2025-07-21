@@ -24,7 +24,7 @@
   let targetNode = $state<HTMLButtonElement | null>(null);
   let hasBeenInViewport = $state(false);
   let open = $state(false);
-  let loadingStatus = $state<AvatarImageLoadingStatus>();
+  let loadingStatus = $state<AvatarImageLoadingStatus>(null!);
 
   const inViewport = new IsInViewport(() => targetNode, { rootMargin: "200px 0px", threshold: 0 });
   const skyblockItem = $derived(piece as ProcessedSkyBlockItem);
@@ -39,7 +39,6 @@
   $effect(() => {
     if (inViewport.current && !hasBeenInViewport) {
       hasBeenInViewport = true;
-      loadingStatus = "loading";
     }
   });
 </script>
@@ -60,17 +59,14 @@
       <div {...props}>
         {#if hasBeenInViewport}
           <Avatar.Root bind:loadingStatus>
-            {#snippet child({ props })}
-              <Avatar.Image loading="lazy" src={piece.texture_path} alt={piece.display_name} class={cn("data-[enchanted=true]:enchanted pointer-events-none select-none [image-rendering:pixelated]", isInventory ? "size-6 sm:size-14" : "size-14")} data-enchanted={enchanted} {...props} />
-              {#if loadingStatus === "loading"}
-                {@render loadingState()}
-              {/if}
-              {#if loadingStatus === "error"}
-                <div class={cn("rounded-lg", isInventory ? "size-6 sm:size-14" : "size-14")}>
-                  <ImageOff class="size-full" />
-                </div>
-              {/if}
-            {/snippet}
+            <Avatar.Image loading="lazy" src={piece.texture_path} alt={piece.display_name} class={cn("data-[enchanted=true]:enchanted pointer-events-none aspect-square select-none [image-rendering:pixelated]", isInventory ? "size-6 sm:size-14" : "size-14")} data-enchanted={enchanted} />
+            {#if loadingStatus === "loading"}
+              {@render loadingState()}
+            {:else}
+              <Avatar.Fallback class={cn("rounded-lg", isInventory ? "size-6 sm:size-14" : "size-14")}>
+                <ImageOff class="size-full" />
+              </Avatar.Fallback>
+            {/if}
           </Avatar.Root>
         {:else}
           {@render loadingState()}
