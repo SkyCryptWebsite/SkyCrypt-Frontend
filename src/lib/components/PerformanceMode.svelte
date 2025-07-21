@@ -4,8 +4,8 @@
   import { onMount } from "svelte";
   import { toast } from "svelte-sonner";
 
-  const THRESHOLD = 45;
-  const MIN_SAMPLES = 8; // Require more samples before triggering
+  const THRESHOLD = 24;
+  const MIN_SAMPLES = 10; // Require more samples before triggering
   const SMOOTHING_FACTOR = 0.2; // For exponential moving average
   const INITIALIZATION_DELAY = 3000; // Wait 3 seconds after mount before detecting
 
