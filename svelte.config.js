@@ -38,6 +38,16 @@ const config = {
     },
     serviceWorker: {
       register: false
+    },
+    csp: {
+      mode: "auto",
+      directives: {
+        "script-src": ["self", "https://www.googletagmanager.com"],
+        "style-src": ["self", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        "img-src": ["self", "data:", "https://visage.surgeplay.com", "https://www.google-analytics.com", "https://crafatar.com", "https://mc-heads.net"],
+        "connect-src": ["self", "https://crafatar.com", "https://www.google-analytics.com"],
+        "font-src": ["self", "https://fonts.gstatic.com"]
+      }
     }
   },
   // Hide build warnings from node_modules
