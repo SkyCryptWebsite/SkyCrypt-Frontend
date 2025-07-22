@@ -81,7 +81,7 @@ async function ResolveWithSecurityHeaders(resolve: Parameters<Handle>[0]["resolv
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
 
-  // Cross-Origin policies (relaxed to allow external resources like Visage API)
+  // Cross-Origin policies
   response.headers.set("Cross-Origin-Embedder-Policy", "unsafe-none");
   response.headers.set("Cross-Origin-Opener-Policy", "same-origin");
   response.headers.set("Cross-Origin-Resource-Policy", "cross-origin");
