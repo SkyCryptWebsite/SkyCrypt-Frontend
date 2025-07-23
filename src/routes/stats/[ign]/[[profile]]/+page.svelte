@@ -1,28 +1,16 @@
 <script lang="ts">
-  import { afterNavigate, replaceState } from "$app/navigation";
+  import { afterNavigate } from "$app/navigation";
   import { page } from "$app/state";
-  import { setProfileCtx } from "$ctx/profile.svelte";
   import Notice from "$lib/components/Notice.svelte";
   import Main from "$lib/layouts/stats/Main.svelte";
   import type { SectionName } from "$lib/sections/types";
-  import { api } from "$lib/shared/api";
   import { cn } from "$lib/shared/utils";
   import { tabValue } from "$lib/stores/internal";
   import { performanceMode, sectionOrderPreferences } from "$lib/stores/preferences";
-  import { recentSearches } from "$lib/stores/searches";
-  import type { StatsV2 } from "$types/statsv2";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
-  import { createQuery } from "@tanstack/svelte-query";
-  import { tick, untrack } from "svelte";
-  let { ign, profile } = page.params;
+  import type { PageServerData } from "./$types";
 
-  const query = createQuery<StatsV2>({
-    queryKey: ["profile", ign, profile],
-    queryFn: () => api(fetch).getProfile(ign, profile)
-  });
-
-  // Initialize the profile context
-  setProfileCtx($query.data!);
+  const { data }: { data: PageServerData } = $props();
 
   $effect.pre(() => {
     const hash = page.url.hash;
@@ -33,62 +21,6 @@
         tabValue.set(sectionName);
       }
     }
-  });
-
-  // Update the profile context when the data changes
-  $effect(() => {
-    const abortController = new AbortController();
-    setProfileCtx($query.data!);
-
-    recentSearches.update((searches) => {
-      if (!$query.data) return searches;
-
-      const { username, uuid } = $query.data;
-      if (!username || !uuid) return searches;
-
-      // Find existing search by username/IGN and update with UUID
-      const existingIndex = searches.findIndex((search) => search.ign.toLowerCase() === username.toLowerCase());
-
-      if (existingIndex !== -1) {
-        // Update existing search with UUID
-        searches[existingIndex] = {
-          ...searches[existingIndex],
-          uuid: uuid
-        };
-      }
-
-      return searches;
-    });
-
-    untrack(() => {
-      if (!$query.data) return;
-
-      const { username, profile_cute_name } = $query.data;
-      if (!username) return;
-
-      const current = page.url.pathname;
-      const wanted = `/stats/${username}/${profile_cute_name || ""}`;
-
-      // Update the URL to match the username and cute name
-      if (current !== wanted) {
-        const newUrl = page.url.toString().replace(current, wanted);
-
-        // Only proceed if not aborted
-        if (!abortController.signal.aborted) {
-          tick()
-            .then(() => {
-              if (!abortController.signal.aborted) {
-                replaceState(newUrl, page.state);
-              }
-            })
-            .catch(() => {});
-        }
-      }
-    });
-
-    return () => {
-      abortController.abort();
-    };
   });
 
   afterNavigate(async ({ from, to, willUnload }) => {
@@ -104,23 +36,21 @@
   });
 </script>
 
-{#if $query.isPending || $query.error}
+{#await data.stats}
   <div class="flex h-screen items-center justify-center">
-    {#if $query.isPending}
-      <div class={cn("bg-text/[0.05] rounded-lg p-6", $performanceMode ? "bg-background-grey" : "backdrop-blur-sm")}>
-        <div class="flex items-center gap-2">
-          <LoaderCircle class="text-text/60 size-5 animate-spin" />
-          <span class="text-text/80 font-semibold">Loading profile...</span>
-        </div>
+    <div class={cn("bg-text/[0.05] rounded-lg p-6", $performanceMode ? "bg-background-grey" : "backdrop-blur-sm")}>
+      <div class="flex items-center gap-2">
+        <LoaderCircle class="text-text/60 size-5 animate-spin" />
+        <span class="text-text/80 font-semibold">Loading profile...</span>
       </div>
-    {/if}
-    {#if $query.error}
-      <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
-    {/if}
+    </div>
   </div>
-{/if}
-{#if $query.isSuccess}
-  {#if $query.data}
-    <Main />
+{:then stats}
+  {#if stats}
+    <Main data={stats} />
   {/if}
-{/if}
+{:catch e}
+  <div class="flex h-screen items-center justify-center">
+    <Notice title="An unexpected error has occurred" type="error" error={e} />
+  </div>
+{/await}

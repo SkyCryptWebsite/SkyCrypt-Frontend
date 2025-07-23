@@ -1,10 +1,12 @@
 <script lang="ts">
+  import { SettingsTab } from "$lib/components/header/types";
   import type { IsHover } from "$lib/hooks/is-hover.svelte";
   import { sections } from "$lib/sections/constants";
   import { packConfigs } from "$lib/shared/constants/packs";
   import type { Theme } from "$lib/shared/constants/themes";
   import themes from "$lib/shared/constants/themes";
   import { cn, flyAndScale } from "$lib/shared/utils";
+  import { settingsOpen, settingsTab } from "$lib/stores/internal";
   import { disabledPacks } from "$lib/stores/packs";
   import { keybind, performanceMode, sectionOrderPreferences, showGlint } from "$lib/stores/preferences";
   import { theme as themeStore } from "$lib/stores/themes";
@@ -30,7 +32,6 @@
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
 
-  let settingsOpen = $state(false);
   let isListening = $state(false);
 
   const isHover = getContext<IsHover>("isHover");
@@ -102,21 +103,21 @@
 </script>
 
 {#snippet settings()}
-  <Tabs.Root value="packs">
+  <Tabs.Root bind:value={$settingsTab}>
     <Tabs.List class={cn("text-text mb-4 flex justify-between rounded-lg p-2 font-semibold", $performanceMode ? "bg-text/30" : "backdrop-blur-lg backdrop-brightness-10")}>
-      <Tabs.Trigger value="packs" class="data-[state=active]:bg-icon/80 flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
+      <Tabs.Trigger value={SettingsTab.Packs} class="data-[state=active]:bg-icon/80 flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
         <PackageOpen class="size-5" />
         Packs
       </Tabs.Trigger>
-      <Tabs.Trigger value="themes" class="data-[state=active]:bg-icon/80 flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
+      <Tabs.Trigger value={SettingsTab.Themes} class="data-[state=active]:bg-icon/80 flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
         <PaintBucket class="size-5" />
         Themes
       </Tabs.Trigger>
-      <Tabs.Trigger value="order" class="data-[state=active]:bg-icon/80 flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
+      <Tabs.Trigger value={SettingsTab.Order} class="data-[state=active]:bg-icon/80 flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
         <ListOrdered class="size-5" />
         Order
       </Tabs.Trigger>
-      <Tabs.Trigger value="misc" class="data-[state=active]:bg-icon/80 flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
+      <Tabs.Trigger value={SettingsTab.Misc} class="data-[state=active]:bg-icon/80 flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold">
         <Settings class="size-5" />
         Misc
       </Tabs.Trigger>
@@ -155,7 +156,7 @@
         </Button.Root>
       {/if}
     </Tabs.Content>
-    <Tabs.Content value="themes">
+    <Tabs.Content value={SettingsTab.Themes}>
       <RadioGroup.Root class="flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto" bind:value={$themeStore} onValueChange={changeTheme}>
         {#each themes as theme (theme.id)}
           <Label.Root for={theme.id} class="bg-text/[0.05] flex items-center justify-between gap-4 rounded-lg p-2">
@@ -179,7 +180,7 @@
         {/each}
       </RadioGroup.Root>
     </Tabs.Content>
-    <Tabs.Content value="order">
+    <Tabs.Content value={SettingsTab.Order}>
       <div
         class="flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto"
         use:dndzone={{ items: sectionOrder, flipDurationMs: 300, dropTargetStyle: {} }}
@@ -212,7 +213,7 @@
         </Button.Root>
       {/if}
     </Tabs.Content>
-    <Tabs.Content value="misc" class="space-y-6">
+    <Tabs.Content value={SettingsTab.Misc} class="space-y-6">
       <div class="flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto">
         <div class="bg-text/[0.05] space-y-4 rounded-lg p-4">
           <h4 class="flex items-center gap-2 rounded-lg p-2 font-semibold">
@@ -304,13 +305,13 @@
 
 {#snippet settingsButton(props: Record<string, unknown>)}
   <button {...props} class="bg-background/20 text-text group absolute top-1/2 right-4 flex aspect-square shrink -translate-y-1/2 items-center justify-center gap-1 rounded-full px-2.5 py-1.5 text-sm font-semibold transition-all duration-100 @md:relative @md:top-0 @md:right-0 @md:my-1.5 @md:aspect-auto @md:translate-y-0">
-    <Cog class="size-5 transition-all duration-300 data-[is-open=true]:rotate-45" data-is-open={settingsOpen} />
+    <Cog class="size-5 transition-all duration-300 data-[is-open=true]:rotate-45" data-is-open={$settingsOpen} />
     <p class="hidden @md:block">Settings</p>
   </button>
 {/snippet}
 
 {#if isHover.current}
-  <Popover.Root bind:open={settingsOpen}>
+  <Popover.Root bind:open={$settingsOpen}>
     <Popover.Trigger>
       {#snippet child({ props })}
         {@render settingsButton(props)}
@@ -331,7 +332,7 @@
     </Popover.Portal>
   </Popover.Root>
 {:else}
-  <Drawer.Root shouldScaleBackground={true} setBackgroundColorOnScale={false} bind:open={settingsOpen}>
+  <Drawer.Root shouldScaleBackground={true} setBackgroundColorOnScale={false} bind:open={$settingsOpen}>
     <Drawer.Trigger>
       {#snippet child({ props })}
         {@render settingsButton(props)}

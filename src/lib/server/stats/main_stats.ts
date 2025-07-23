@@ -1,5 +1,6 @@
 import type { Member, Profile } from "$types/global";
 import type { Player } from "$types/raw/player/lib";
+import type { StatsV2 } from "$types/statsv2";
 import { FAIRY_SOULS } from "../constants/constants";
 import { fetchMuseum, getDisplayName, getProfiles } from "../lib";
 import { getAPISettings } from "./api_settings";
@@ -9,7 +10,7 @@ import { getRank } from "./rank";
 import { getSkills } from "./skills";
 import { getSkyblockLevel } from "./skyblock_level";
 
-export async function getMainStats(userProfile: Member, profile: Profile, player: Player, packs: string[]) {
+export async function getMainStats(userProfile: Member, profile: Profile, player: Player, packs: string[]): Promise<StatsV2> {
   const [profiles, members, museumData] = await Promise.all([getProfiles(profile.uuid), getProfileMembers(profile.members), fetchMuseum(profile.profile_id)]);
 
   await getItems(userProfile, museumData?.[profile.uuid], packs, profile.profile_id);
@@ -38,5 +39,5 @@ export async function getMainStats(userProfile: Member, profile: Profile, player
       total: FAIRY_SOULS[profile.game_mode ?? "normal"] ?? FAIRY_SOULS["normal"]
     },
     apiSettings: getAPISettings(profile, userProfile, museumData)
-  };
+  } satisfies StatsV2;
 }

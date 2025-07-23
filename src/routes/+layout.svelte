@@ -3,19 +3,27 @@
   import { beforeNavigate } from "$app/navigation";
   import { page } from "$app/state";
   import Header from "$lib/components/header/Header.svelte";
+  import { SettingsTab } from "$lib/components/header/types";
   import PerformanceMode from "$lib/components/PerformanceMode.svelte";
   import { IsHover } from "$lib/hooks/is-hover.svelte";
   import { IsMobile } from "$lib/hooks/is-mobile.svelte";
   import themes from "$lib/shared/constants/themes";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { favorites } from "$lib/stores/favorites";
-  import { content, openCommand } from "$lib/stores/internal";
-  import { keybind, performanceMode } from "$lib/stores/preferences";
+  import { content, openCommand, settingsOpen, settingsTab } from "$lib/stores/internal";
+  import { keybind, performanceMode, showGlint } from "$lib/stores/preferences";
   import { recentSearches } from "$lib/stores/searches";
   import { theme as themeStore } from "$lib/stores/themes";
+  import BookOpenText from "@lucide/svelte/icons/book-open-text";
   import CircleAlert from "@lucide/svelte/icons/circle-alert";
+  import Fan from "@lucide/svelte/icons/fan";
+  import Keyboard from "@lucide/svelte/icons/keyboard";
+  import ListOrdered from "@lucide/svelte/icons/list-ordered";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
+  import PackageOpen from "@lucide/svelte/icons/package-open";
+  import PaintBucket from "@lucide/svelte/icons/paint-bucket";
   import Search from "@lucide/svelte/icons/search";
+  import Sparkle from "@lucide/svelte/icons/sparkle";
   import Wifi from "@lucide/svelte/icons/wifi";
   import WifiOff from "@lucide/svelte/icons/wifi-off";
   import { QueryClientProvider } from "@tanstack/svelte-query";
@@ -39,6 +47,7 @@
   let toastId: string | number = $state(0);
   let commandInput = $state<HTMLElement>(null!);
   let loading = $state(false);
+  let commandValue = $state(null!);
 
   const { ign } = page.params;
 
@@ -89,6 +98,18 @@
       return 0.98; // High score to ensure these commands are always shown
     }
     return score;
+  }
+
+  function closeCommand() {
+    openCommand.set(false);
+    commandValue = null!;
+    $formData.query = "";
+  }
+
+  function handleSettingTab(tab: SettingsTab) {
+    settingsTab.set(tab);
+    closeCommand();
+    settingsOpen.set(true);
   }
 
   setContext("isMobile", isMobile);
@@ -239,7 +260,7 @@
       </Control>
     </Field>
   </form>
-  <Command.Root class="divide-icon/30 flex h-full w-full flex-col divide-y self-start overflow-hidden rounded-lg" filter={customFilter}>
+  <Command.Root bind:value={commandValue} class="divide-icon/30 flex h-full w-full flex-col divide-y self-start overflow-hidden rounded-lg" filter={customFilter}>
     <div class="flex h-12 items-center">
       <Button.Root type="button" class="text-text flex aspect-square  h-full items-center justify-center" onclick={() => form.submit()}>
         {#if $formData.query.length > 0 && isTainted($tainted?.query) && $errors.query !== undefined}
@@ -258,6 +279,7 @@
         bind:value={$formData.query}
         bind:ref={commandInput}
         onkeydown={(e) => {
+          if (commandValue && commandValue !== "search") return;
           const k = e.key.toLowerCase();
           if (k === "enter" || k === "search") {
             e.preventDefault();
@@ -266,7 +288,7 @@
         }} />
     </div>
 
-    <Command.List class="max-h-[17.5rem] overflow-x-hidden overflow-y-auto px-2 pb-2">
+    <Command.List class="max-h-[30rem] overflow-x-hidden overflow-y-auto px-2 pb-2">
       <Command.Viewport>
         <Command.Empty class="text-muted-foreground flex w-full items-center justify-center pt-8 pb-6 text-sm">
           {#if $message && $message.type === "error"}
@@ -297,7 +319,7 @@
           </Command.Group>
         {/if}
         <Command.Separator class="bg-foreground/5 h-px w-full" />
-        {#if $favorites.length !== 0}
+        {#if $favorites.length !== 0 && (!ign || !$favorites.some((f) => f.ign === ign))}
           <Command.Group>
             <Command.GroupHeading class="text-muted-foreground px-3 pt-4 pb-2 text-xs">Favorites</Command.GroupHeading>
             <Command.GroupItems>
@@ -338,6 +360,69 @@
             </Command.GroupItems>
           </Command.Group>
         {/if}
+        <Command.Separator class="bg-foreground/5 h-px w-full" />
+
+        <Command.Group>
+          <Command.GroupHeading class="text-muted-foreground px-3 pt-4 pb-2 text-xs">Settings</Command.GroupHeading>
+          <Command.GroupItems>
+            <Command.Item value="packs" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["packs", "change", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Packs)}>
+              <div class="bg-icon/80 rounded-lg p-1">
+                <PackageOpen class="size-4" />
+              </div>
+              Change Packs
+            </Command.Item>
+            <Command.Item value="themes" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["themes", "change", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Themes)}>
+              <div class="bg-icon/80 rounded-lg p-1">
+                <PaintBucket class="size-4" />
+              </div>
+              Change Theme
+            </Command.Item>
+            <Command.Item value="section-order" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["order", "change", "section", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Order)}>
+              <div class="bg-icon/80 rounded-lg p-1">
+                <ListOrdered class="size-4" />
+              </div>
+              Change Section Order
+            </Command.Item>
+            <Command.Item value="wiki-order" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["order", "misc", "change", "wiki", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Misc)}>
+              <div class="bg-icon/80 rounded-lg p-1">
+                <BookOpenText class="size-4" />
+              </div>
+              Change Wiki Order
+            </Command.Item>
+            <Command.Item value="keybind" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["keybind", "misc", "change", "command", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Misc)}>
+              <div class="bg-icon/80 rounded-lg p-1">
+                <Keyboard class="size-4" />
+              </div>
+              Change Command Keybind
+            </Command.Item>
+            <Command.Item
+              value="performance-mode"
+              class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}
+              keywords={["performance", "mode", "toggle", "settings"]}
+              onSelect={() => {
+                performanceMode.set(!$performanceMode);
+                closeCommand();
+              }}>
+              <div class="bg-icon/80 rounded-lg p-1">
+                <Fan class="data-[performance=false]:animate-spin-slow size-4 will-change-transform data-[performance=true]:animate-spin" data-performance={$performanceMode} />
+              </div>
+              Toggle Performance Mode
+            </Command.Item>
+            <Command.Item
+              value="glint"
+              class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}
+              keywords={["glint", "toggle", "settings"]}
+              onSelect={() => {
+                showGlint.set(!$showGlint);
+                closeCommand();
+              }}>
+              <div class="bg-icon/80 rounded-lg p-1">
+                <Sparkle class="size-4" />
+              </div>
+              Toggle Glint
+            </Command.Item>
+          </Command.GroupItems>
+        </Command.Group>
       </Command.Viewport>
     </Command.List>
   </Command.Root>

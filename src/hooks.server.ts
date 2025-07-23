@@ -4,7 +4,7 @@ import { init as resourcesInit } from "$lib/server/custom_resources";
 import { indexCollectons } from "$lib/server/db/mongo/index-collections";
 import { intializeNEURepository, parseNEURepository } from "$lib/server/helper/NotEnoughUpdates/parseNEURepository";
 import { contextLinesIntegration, extraErrorDataIntegration, handleErrorWithSentry, sentryHandle, init as sentryInit } from "@sentry/sveltekit";
-import type { ServerInit } from "@sveltejs/kit";
+import type { Handle, ServerInit } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 import { getPrices } from "skyhelper-networth";
 import { startMongo } from "./lib/server/db/mongo";
@@ -69,4 +69,25 @@ export const init: ServerInit = async () => {
   console.info(`[SkyCrypt] Started in ${(performance.now() - timeNow).toFixed(2)}ms`);
 };
 export const handleError = handleErrorWithSentry();
-export const handle = sequence(sentryHandle());
+export const handle = sequence(sentryHandle(), async ({ event, resolve }) => await ResolveWithSecurityHeaders(resolve, event));
+
+async function ResolveWithSecurityHeaders(resolve: Parameters<Handle>[0]["resolve"], event: Parameters<Handle>[0]["event"]): Promise<ReturnType<Handle>> {
+  const response = await resolve(event);
+
+  // Security headers
+  response.headers.set("X-Frame-Options", "SAMEORIGIN");
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  response.headers.set("Permissions-Policy", "accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(), gyroscope=(), interest-cohort=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), sync-xhr=(), usb=(), xr-spatial-tracking=(), geolocation=()");
+  response.headers.set("X-Content-Type-Options", "nosniff");
+  response.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+
+  // Cross-Origin policies
+  response.headers.set("Cross-Origin-Embedder-Policy", "unsafe-none");
+  response.headers.set("Cross-Origin-Opener-Policy", "same-origin");
+  response.headers.set("Cross-Origin-Resource-Policy", "cross-origin");
+
+  // Legacy XSS protection
+  response.headers.set("X-XSS-Protection", "1; mode=block");
+
+  return response;
+}

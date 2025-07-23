@@ -1,3 +1,4 @@
+import { SettingsTab } from "$lib/components/header/types";
 import { sections } from "$lib/sections/constants";
 import type { SectionName } from "$lib/sections/types";
 import { sectionOrderPreferences } from "$lib/stores/preferences";
@@ -13,3 +14,5 @@ export const itemContent = writable<ProcessedSkyBlockItem | PetProcessedSkyBlock
 export const itemContentSpecial = writable<ProcessedSkyBlockItem | undefined>();
 export const content = writable<Snippet | undefined>(undefined);
 export const openCommand = writable<boolean>(false);
+export const settingsOpen = writable<boolean>(false);
+export const settingsTab = writable<SettingsTab>(SettingsTab.Packs);
