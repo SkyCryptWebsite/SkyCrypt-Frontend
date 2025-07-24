@@ -8,6 +8,16 @@ const { API_SECRET } = env;
 
 const encoder = new TextEncoder();
 
+export function generateDynamicKey(ip: string, userAgent: string, route: string): string {
+  // Create a deterministic key based on request context with time window
+  // Use 5-minute intervals to allow for small timing differences
+  const timeWindow = Math.floor(Date.now() / (5 * 60 * 1000)); // 5-minute intervals
+  const keyMessage = `key:${ip}:${userAgent}:${route}:${timeWindow}`;
+  const keyMac = hmac(SHA512, encoder.encode(API_SECRET), encoder.encode(keyMessage));
+  // Use first 16 bytes of the HMAC for the key, encoded as hex
+  return encodeHexLowerCase(keyMac.slice(0, 16));
+}
+
 export function generateToken(ip: string, userAgent: string, route: string) {
   const timestamp = Date.now().toString();
   const message = `${ip}:${timestamp}:${userAgent}:${route}`;

@@ -8,11 +8,39 @@
   import { api_token, tabValue } from "$lib/stores/internal";
   import { performanceMode, sectionOrderPreferences } from "$lib/stores/preferences";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
+  import { decodeBase64 } from "@oslojs/encoding";
   import type { PageServerData } from "./$types";
 
   const { data }: { data: PageServerData } = $props();
 
-  api_token.set(data.api_token);
+  // Find the API token by looking for a value that contains keyId matching its key
+  // Now with time-based keys, we need to be more robust in our search
+  const apiTokenEntry = Object.entries(data).find(([encodedKey, encodedValue]) => {
+    try {
+      const decodedKey = new TextDecoder().decode(decodeBase64(encodedKey));
+      const decodedValue = JSON.parse(new TextDecoder().decode(decodeBase64(encodedValue as string)));
+
+      // Check if this token's keyId matches the current key
+      // The keyId should exactly match the decoded key since the server sets it
+      return decodedValue.keyId === decodedKey;
+    } catch {
+      return false;
+    }
+  });
+
+  if (!apiTokenEntry) {
+    throw new Error("API token not found in server data.");
+  }
+
+  const decoded = decodeBase64(apiTokenEntry[1] as string);
+  if (!decoded) {
+    throw new Error("Invalid API token provided.");
+  }
+
+  const tokenData = JSON.parse(new TextDecoder().decode(decoded));
+  // Remove metadata from token data before setting it
+  const { keyId, timeWindow, ...apiTokenData } = tokenData;
+  api_token.set(apiTokenData);
 
   $effect.pre(() => {
     const hash = page.url.hash;

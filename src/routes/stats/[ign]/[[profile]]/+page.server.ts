@@ -1,8 +1,10 @@
 import { fetchPlayer, getProfile, getUUID } from "$lib/server/lib";
 import { getMainStats } from "$lib/server/stats/main_stats.js";
-import { generateToken } from "$lib/server/token";
+import { generateDynamicKey, generateToken } from "$lib/server/token";
+import { encodeBase64 } from "@oslojs/encoding";
 import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
+
 export const load = (async ({ params, cookies, getClientAddress, request, route }) => {
   const { ign: paramPlayer, profile: paramProfile = null } = params;
   const ip = getClientAddress();
@@ -21,8 +23,22 @@ export const load = (async ({ params, cookies, getClientAddress, request, route 
 
   const stats = getMainStats(profile.members[profile.uuid], profile, player, packs);
 
+  // Generate dynamic key based on request context (includes time window)
+  const dynamicKey = generateDynamicKey(ip, userAgent, routeId);
+  const tokenData = generateToken(ip, userAgent, routeId);
+  const timeWindow = Math.floor(Date.now() / (5 * 60 * 1000)); // Same 5-minute interval
+
   return {
     stats,
-    api_token: generateToken(ip, userAgent, routeId)
+    // Use dynamic key and include key identifier and time window in token data
+    [encodeBase64(new TextEncoder().encode(dynamicKey))]: encodeBase64(
+      new TextEncoder().encode(
+        JSON.stringify({
+          ...tokenData,
+          keyId: dynamicKey, // Include the key identifier so client can find it
+          timeWindow // Include time window for potential fallback key generation
+        })
+      )
+    )
   };
 }) satisfies PageServerLoad;
