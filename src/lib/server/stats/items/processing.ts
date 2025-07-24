@@ -99,6 +99,10 @@ export async function processItems(items: ProcessedItem[], source: string, packs
         if (defaultColor) {
           color = defaultColor;
         }
+
+        if (constants.BLACKLISTED_HEX_ARMOR_PIECES.includes(item.tag.ExtraAttributes.id)) {
+          item.tag.display.color = null;
+        }
       } else {
         // Use color if dye_item is set (it's probably just dyed, not exotic)
         color = (item.tag.display.color as unknown as number).toString(16).padStart(6, "0");

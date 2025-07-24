@@ -71,7 +71,7 @@ export type ProcessedItem = {
     display: {
       Lore: string[];
       Name: string;
-      color: string;
+      color: string | null;
     };
     ExtraAttributes: {
       rarity_upgrades?: number;
