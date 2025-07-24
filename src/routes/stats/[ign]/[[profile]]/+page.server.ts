@@ -28,10 +28,31 @@ export const load = (async ({ params, cookies, getClientAddress, request, route 
   const tokenData = generateToken(ip, userAgent, routeId);
   const timeWindow = Math.floor(Date.now() / (5 * 60 * 1000)); // Same 5-minute interval
 
-  return {
-    stats,
-    // Use dynamic key and include key identifier and time window in token data
-    [encodeBase64(new TextEncoder().encode(dynamicKey))]: encodeBase64(
+  // Create decoy objects to obfuscate the real token
+  const generateDecoyData = (index: number) => ({
+    token: Array.from({ length: 128 }, () => Math.random().toString(36).charAt(2)).join(""),
+    timestamp: (Date.now() + Math.random() * 1000000).toString(),
+    route: `/fake/route/${index}`,
+    decoy: true,
+    sessionId: Math.random().toString(36).substring(2),
+    checksum: Math.random().toString(16).substring(2)
+  });
+
+  // Generate 3-7 decoy objects with random keys
+  const numDecoys = Math.floor(Math.random() * 5) + 3; // 3-7 decoys
+  const allObjects: Array<[string, string]> = [];
+
+  // Add decoy objects
+  for (let i = 0; i < numDecoys; i++) {
+    const decoyKey = Array.from({ length: 32 }, () => Math.random().toString(36).charAt(2)).join("");
+    const decoyData = generateDecoyData(i);
+    allObjects.push([encodeBase64(new TextEncoder().encode(decoyKey)), encodeBase64(new TextEncoder().encode(JSON.stringify(decoyData)))]);
+  }
+
+  // Add the real token at a random position
+  const realTokenEntry: [string, string] = [
+    encodeBase64(new TextEncoder().encode(dynamicKey)),
+    encodeBase64(
       new TextEncoder().encode(
         JSON.stringify({
           ...tokenData,
@@ -40,5 +61,17 @@ export const load = (async ({ params, cookies, getClientAddress, request, route 
         })
       )
     )
+  ];
+
+  // Insert real token at random position
+  const randomPosition = Math.floor(Math.random() * (allObjects.length + 1));
+  allObjects.splice(randomPosition, 0, realTokenEntry);
+
+  // Convert back to object
+  const shuffledObjects = Object.fromEntries(allObjects);
+
+  return {
+    stats,
+    ...shuffledObjects
   };
 }) satisfies PageServerLoad;
