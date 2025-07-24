@@ -30,7 +30,7 @@
 
   const query = createQuery<Garden>({
     queryKey: ["garden", profileUUID, profileId],
-    queryFn: () => api(fetch).getGarden(profileUUID),
+    queryFn: () => api().getGarden(profileUUID),
     enabled: queryEnabled
   });
 

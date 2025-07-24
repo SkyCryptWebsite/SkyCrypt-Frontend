@@ -18,7 +18,7 @@
 
   const query = createQuery<PlayerStatsV2>({
     queryKey: [SectionName.STATS, profileUUID, profileId],
-    queryFn: () => api(fetch).getSection(SectionName.STATS, profileUUID, profileId),
+    queryFn: () => api().getSection(SectionName.STATS, profileUUID, profileId),
     enabled: false
   });
 

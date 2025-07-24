@@ -25,7 +25,7 @@
 
   const query = createQuery<PetsV2>({
     queryKey: [SectionName.PETS, profileUUID, profileId],
-    queryFn: () => api(fetch).getSection(SectionName.PETS, profileUUID, profileId)
+    queryFn: () => api().getSection(SectionName.PETS, profileUUID, profileId)
   });
 
   const pets = $derived.by(() => {

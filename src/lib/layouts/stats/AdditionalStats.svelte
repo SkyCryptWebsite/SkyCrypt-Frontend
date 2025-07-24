@@ -17,7 +17,7 @@
 
   const query = createQuery<NetworthV2>({
     queryKey: [SectionName.NETWORTH, profileUUID, profileId],
-    queryFn: () => api(fetch).getSection(SectionName.NETWORTH, profileUUID, profileId)
+    queryFn: () => api().getSection(SectionName.NETWORTH, profileUUID, profileId)
   });
 
   const networth = $derived.by(() => {

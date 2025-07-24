@@ -24,7 +24,7 @@
 
   const query = createQuery<MinionsV2>({
     queryKey: [SectionName.MINIONS, profileUUID, profileId],
-    queryFn: () => api(fetch).getSection(SectionName.MINIONS, profileUUID, profileId)
+    queryFn: () => api().getSection(SectionName.MINIONS, profileUUID, profileId)
   });
 
   const minions = $derived.by(() => {

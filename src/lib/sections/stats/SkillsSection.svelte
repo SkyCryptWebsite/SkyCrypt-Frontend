@@ -21,7 +21,7 @@
 
   const query = createQuery<SkillsV2>({
     queryKey: [SectionName.SKILLS, profileUUID, profileId],
-    queryFn: () => api(fetch).getSection(SectionName.SKILLS, profileUUID, profileId)
+    queryFn: () => api().getSection(SectionName.SKILLS, profileUUID, profileId)
   });
 
   const skills = $derived.by(() => {

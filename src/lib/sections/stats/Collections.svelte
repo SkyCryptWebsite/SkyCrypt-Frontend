@@ -23,7 +23,7 @@
 
   const query = createQuery<CollectionsV2>({
     queryKey: [SectionName.COLLECTIONS, profileUUID, profileId],
-    queryFn: () => api(fetch).getSection(SectionName.COLLECTIONS, profileUUID, profileId)
+    queryFn: () => api().getSection(SectionName.COLLECTIONS, profileUUID, profileId)
   });
 
   const collections = $derived.by(() => {
