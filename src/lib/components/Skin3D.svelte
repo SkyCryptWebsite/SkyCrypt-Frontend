@@ -1,6 +1,7 @@
 <script lang="ts">
   import { getProfileCtx } from "$ctx/profile.svelte";
   import { cn } from "$lib/shared/utils";
+  import ky from "ky";
   import * as skinview3d from "skinview3d";
   import { onDestroy } from "svelte";
 
@@ -26,9 +27,7 @@
     if (loadedUuid === uuid) return;
     canvasIsLoading = true;
 
-    const cape = await fetch(`https://crafatar.com/capes/${uuid}`, {
-      method: "HEAD"
-    }).catch(() => ({ ok: false }));
+    const cape = await ky.head(`https://crafatar.com/capes/${uuid}`).catch(() => ({ ok: false }));
 
     if (!viewer) {
       viewer = new skinview3d.SkinViewer({

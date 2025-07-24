@@ -132,6 +132,9 @@ importers:
       globals:
         specifier: ^16.3.0
         version: 16.3.0
+      ky:
+        specifier: ^1.8.2
+        version: 1.8.2
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -182,7 +185,7 @@ importers:
         version: 5.36.14
       svelte-check:
         specifier: ^4.3.0
-        version: 4.3.0(picomatch@4.0.2)(svelte@5.36.14)(typescript@5.8.3)
+        version: 4.3.0(picomatch@4.0.3)(svelte@5.36.14)(typescript@5.8.3)
       svelte-dnd-action:
         specifier: ^0.9.64
         version: 0.9.64(svelte@5.36.14)
@@ -2517,6 +2520,10 @@ packages:
 
   known-css-properties@0.37.0:
     resolution: {integrity: sha512-JCDrsP4Z1Sb9JwG0aJ8Eo2r7k4Ou5MwmThS/6lcIe1ICyb7UBJKGRIUUdqc2ASdE/42lgz6zFUnzAIhtXnBVrQ==}
+
+  ky@1.8.2:
+    resolution: {integrity: sha512-XybQJ3d4Ea1kI27DoelE5ZCT3bSJlibYTtQuMsyzKox3TMyayw1asgQdl54WroAm+fIA3ZCr8zXW2RpR7qWVpA==}
+    engines: {node: '>=18'}
 
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
@@ -5871,6 +5878,8 @@ snapshots:
 
   known-css-properties@0.37.0: {}
 
+  ky@1.8.2: {}
+
   levn@0.4.1:
     dependencies:
       prelude-ls: 1.2.1
@@ -6469,11 +6478,11 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  svelte-check@4.3.0(picomatch@4.0.2)(svelte@5.36.14)(typescript@5.8.3):
+  svelte-check@4.3.0(picomatch@4.0.3)(svelte@5.36.14)(typescript@5.8.3):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.29
       chokidar: 4.0.3
-      fdir: 6.4.6(picomatch@4.0.2)
+      fdir: 6.4.6(picomatch@4.0.3)
       picocolors: 1.1.1
       sade: 1.8.1
       svelte: 5.36.14

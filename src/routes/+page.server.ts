@@ -1,11 +1,11 @@
+import ky from "ky";
 import type { PageServerLoad } from "./$types";
 import { Role } from "./enums";
 
-export const load = (async ({ fetch }) => {
+export const load = (async () => {
   const getUsername = async (uuid: string): Promise<string> => {
     try {
-      const res = await fetch(`/api/username/${uuid}`);
-      const { username } = await res.json();
+      const { username } = await ky(`/api/username/${uuid}`).json<{ username: string }>();
       return username;
     } catch {
       return "???";

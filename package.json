@@ -47,6 +47,7 @@
     "formsnap": "^2.0.1",
     "fs-extra": "^11.3.0",
     "globals": "^16.3.0",
+    "ky": "^1.8.2",
     "lodash": "^4.17.21",
     "micromatch": "^4.0.8",
     "mongo-sanitize": "^1.1.0",

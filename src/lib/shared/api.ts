@@ -1,7 +1,37 @@
 import type { Garden } from "$types/processed/profile/garden";
 import type { ProcessedSkyBlockItem } from "$types/stats";
 import type { AccessoriesV2, BestiaryV2, CollectionsV2, CrimsonIsleV2, DungeonsV2, EmbedV2, EnchantingV2, FarmingV2, FishingV2, GearV2, InventoryV2, InventoryV2All, MiningV2, MinionsV2, MiscV2, NetworthV2, PetsV2, PlayerStatsV2, RiftV2, SkillsV2, SlayerV2 } from "$types/statsv2";
+import ky from "ky";
 
+const customKy = ky.create({
+  hooks: {
+    beforeError: [
+      (error) => {
+        const { request, response } = error;
+        let kind;
+
+        switch (request.url) {
+          case "/api/v2/item/":
+            kind = "Item";
+            break;
+          case "/api/v2/inventory/":
+            kind = "Inventory";
+            break;
+          case "/api/v2/garden/":
+            kind = "Garden";
+            break;
+          default:
+            kind = "section";
+        }
+
+        if (!response.ok && response.status !== 500) {
+          error.message = `${response.status} - Failed to fetch ${kind ? kind + " " : ""} - ${response.statusText}`;
+        }
+        return error;
+      }
+    ]
+  }
+});
 // Enum for section names
 export enum SectionName {
   NETWORTH = "networth",
@@ -50,24 +80,17 @@ type SectionTypeMap = {
   [SectionName.EMBED]: EmbedV2;
 };
 
-export const api = (customFetch = fetch) => ({
+export const api = () => ({
   getItem: async (itemUUID: string): Promise<ProcessedSkyBlockItem> => {
-    const response = await customFetch(`/api/v2/item/${itemUUID}`);
-    if (!response.ok && response.status !== 500) {
-      throw new Error(`${response.status} - Failed to fetch item - ${response.statusText}`);
-    }
-    const data = (await response.json()) as ProcessedSkyBlockItem & { message?: string };
+    const data = await customKy(`/api/v2/item/${itemUUID}`).json<ProcessedSkyBlockItem & { message?: string }>();
+
     if (data.message) {
       throw new Error(data.message);
     }
     return data;
   },
   getSection: async <T extends keyof SectionTypeMap>(sectionName: T, ign: string, profile?: string): Promise<SectionTypeMap[T]> => {
-    const response = await customFetch(`/api/v2/${sectionName}/${ign}${profile ? "/" + profile : ""}`);
-    if (!response.ok && response.status !== 500) {
-      throw new Error(`${response.status} - Failed to fetch section - ${response.statusText}`);
-    }
-    const data = (await response.json()) as SectionTypeMap[T] & { message?: string };
+    const data = await customKy(`/api/v2/${sectionName}/${ign}${profile ? "/" + profile : ""}`).json<SectionTypeMap[T] & { message?: string }>();
     if (data.message) {
       throw new Error(data.message);
     }
@@ -76,11 +99,7 @@ export const api = (customFetch = fetch) => ({
   // Generic inventory function - returns InventoryV2 if tab specified, InventoryV2All if not
   getInventory: <T extends string | undefined = undefined>(ign: string, profile: string, inventoryTab?: T, searchParam?: string): Promise<T extends string ? InventoryV2 : InventoryV2All> => {
     return (async () => {
-      const response = await customFetch(`/api/v2/inventory/${ign}/${profile}${inventoryTab ? `/${inventoryTab}` : ""}${searchParam ? `/${encodeURIComponent(searchParam)}` : ""}`);
-      if (!response.ok && response.status !== 500) {
-        throw new Error(`${response.status} - Failed to fetch inventory - ${response.statusText}`);
-      }
-      const data = (await response.json()) as (T extends string ? InventoryV2 : InventoryV2All) & { message?: string };
+      const data = await customKy(`/api/v2/inventory/${ign}/${profile}${inventoryTab ? `/${inventoryTab}` : ""}${searchParam ? `/${encodeURIComponent(searchParam)}` : ""}`).json<(T extends string ? InventoryV2 : InventoryV2All) & { message?: string }>();
       if (data.message) {
         throw new Error(data.message);
       }
@@ -88,11 +107,7 @@ export const api = (customFetch = fetch) => ({
     })();
   },
   getGarden: async (profile: string): Promise<Garden> => {
-    const response = await customFetch(`/api/garden/${profile}`);
-    if (!response.ok && response.status !== 500) {
-      throw new Error(`${response.status} - Failed to fetch Garden - ${response.statusText}`);
-    }
-    const data = (await response.json()) as Garden & { message?: string };
+    const data = await customKy(`/api/garden/${profile}`).json<Garden & { message?: string }>();
     if (data.message) {
       throw new Error(data.message);
     }
