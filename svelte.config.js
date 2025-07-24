@@ -43,7 +43,7 @@ const config = {
       mode: "auto",
       directives: {
         "script-src": ["self"],
-        "style-src": ["self", "https://fonts.googleapis.com"],
+        "style-src": ["self", "unsafe-inline", "https://fonts.googleapis.com"],
         "img-src": ["self", "data:", "https://visage.surgeplay.com", "https://crafatar.com", "https://mc-heads.net"],
         "connect-src": ["self", "https://crafatar.com"],
         "font-src": ["self", "https://fonts.gstatic.com"]
