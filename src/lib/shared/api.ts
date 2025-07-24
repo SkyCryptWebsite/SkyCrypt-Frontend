@@ -1,7 +1,9 @@
+import { api_token } from "$lib/stores/internal";
 import type { Garden } from "$types/processed/profile/garden";
 import type { ProcessedSkyBlockItem } from "$types/stats";
 import type { AccessoriesV2, BestiaryV2, CollectionsV2, CrimsonIsleV2, DungeonsV2, EmbedV2, EnchantingV2, FarmingV2, FishingV2, GearV2, InventoryV2, InventoryV2All, MiningV2, MinionsV2, MiscV2, NetworthV2, PetsV2, PlayerStatsV2, RiftV2, SkillsV2, SlayerV2 } from "$types/statsv2";
 import ky from "ky";
+import { get } from "svelte/store";
 
 const customKy = ky.create({
   hooks: {
@@ -80,37 +82,120 @@ type SectionTypeMap = {
   [SectionName.EMBED]: EmbedV2;
 };
 
-export const api = () => ({
-  getItem: async (itemUUID: string): Promise<ProcessedSkyBlockItem> => {
-    const data = await customKy(`/api/v2/item/${itemUUID}`).json<ProcessedSkyBlockItem & { message?: string }>();
+// Client-side token refresh function
+async function refreshToken(): Promise<void> {
+  const tokenData = get(api_token);
+  if (!tokenData?.route) {
+    throw new Error("No token data available for refresh");
+  }
 
-    if (data.message) {
-      throw new Error(data.message);
+  try {
+    const response = await ky
+      .post("/api/auth/refresh", {
+        json: { route: tokenData.route }
+      })
+      .json<{
+        success: boolean;
+        token: string;
+        timestamp: string;
+        route: string;
+      }>();
+
+    if (response.success) {
+      api_token.set({
+        token: response.token,
+        timestamp: response.timestamp,
+        route: response.route
+      });
     }
-    return data;
-  },
-  getSection: async <T extends keyof SectionTypeMap>(sectionName: T, ign: string, profile?: string): Promise<SectionTypeMap[T]> => {
-    const data = await customKy(`/api/v2/${sectionName}/${ign}${profile ? "/" + profile : ""}`).json<SectionTypeMap[T] & { message?: string }>();
-    if (data.message) {
-      throw new Error(data.message);
+  } catch (error) {
+    console.error("Failed to refresh token:", error);
+    throw error;
+  }
+}
+
+export const api = () => {
+  const tokenData = get(api_token);
+
+  // Check if token exists and is not expired
+  if (!tokenData || !tokenData.token || !tokenData.timestamp || !tokenData.route) {
+    throw new Error("No authentication token available");
+  }
+
+  const now = Date.now();
+  const tokenAge = now - Number(tokenData.timestamp);
+  const maxAge = 5 * 60 * 1000; // 5 minutes
+  const refreshThreshold = 3 * 60 * 1000; // Refresh when 2 minutes left
+
+  // Auto-refresh token if close to expiring
+  const shouldRefresh = tokenAge > refreshThreshold && tokenAge < maxAge;
+
+  if (tokenAge > maxAge) {
+    throw new Error("Authentication token has expired");
+  }
+
+  const extendedCustomKy = customKy.extend({
+    hooks: {
+      beforeRequest: [
+        async (request) => {
+          // Check if we should refresh the token before this request
+          if (shouldRefresh) {
+            try {
+              await refreshToken();
+              // Get the updated token data
+              const updatedTokenData = get(api_token);
+              if (updatedTokenData) {
+                request.headers.set("Authorization", `Bearer ${updatedTokenData.token}`);
+                request.headers.set("X-Timestamp", updatedTokenData.timestamp);
+                request.headers.set("X-Route", updatedTokenData.route);
+              }
+            } catch (error) {
+              console.warn("Token refresh failed:", error);
+              // Continue with original token - it might still be valid
+            }
+          }
+        }
+      ]
+    },
+    headers: {
+      Authorization: `Bearer ${tokenData.token}`,
+      "X-Timestamp": tokenData.timestamp,
+      "X-Route": tokenData.route
     }
-    return data;
-  },
-  // Generic inventory function - returns InventoryV2 if tab specified, InventoryV2All if not
-  getInventory: <T extends string | undefined = undefined>(ign: string, profile: string, inventoryTab?: T, searchParam?: string): Promise<T extends string ? InventoryV2 : InventoryV2All> => {
-    return (async () => {
-      const data = await customKy(`/api/v2/inventory/${ign}/${profile}${inventoryTab ? `/${inventoryTab}` : ""}${searchParam ? `/${encodeURIComponent(searchParam)}` : ""}`).json<(T extends string ? InventoryV2 : InventoryV2All) & { message?: string }>();
+  });
+
+  return {
+    getItem: async (itemUUID: string): Promise<ProcessedSkyBlockItem> => {
+      const data = await extendedCustomKy(`/api/v2/item/${itemUUID}`).json<ProcessedSkyBlockItem & { message?: string }>();
+
       if (data.message) {
         throw new Error(data.message);
       }
       return data;
-    })();
-  },
-  getGarden: async (profile: string): Promise<Garden> => {
-    const data = await customKy(`/api/garden/${profile}`).json<Garden & { message?: string }>();
-    if (data.message) {
-      throw new Error(data.message);
+    },
+    getSection: async <T extends keyof SectionTypeMap>(sectionName: T, ign: string, profile?: string): Promise<SectionTypeMap[T]> => {
+      const data = await extendedCustomKy(`/api/v2/${sectionName}/${ign}${profile ? "/" + profile : ""}`).json<SectionTypeMap[T] & { message?: string }>();
+      if (data.message) {
+        throw new Error(data.message);
+      }
+      return data;
+    },
+    // Generic inventory function - returns InventoryV2 if tab specified, InventoryV2All if not
+    getInventory: <T extends string | undefined = undefined>(ign: string, profile: string, inventoryTab?: T, searchParam?: string): Promise<T extends string ? InventoryV2 : InventoryV2All> => {
+      return (async () => {
+        const data = await extendedCustomKy(`/api/v2/inventory/${ign}/${profile}${inventoryTab ? `/${inventoryTab}` : ""}${searchParam ? `/${encodeURIComponent(searchParam)}` : ""}`).json<(T extends string ? InventoryV2 : InventoryV2All) & { message?: string }>();
+        if (data.message) {
+          throw new Error(data.message);
+        }
+        return data;
+      })();
+    },
+    getGarden: async (profile: string): Promise<Garden> => {
+      const data = await extendedCustomKy(`/api/garden/${profile}`).json<Garden & { message?: string }>();
+      if (data.message) {
+        throw new Error(data.message);
+      }
+      return data;
     }
-    return data;
-  }
-});
+  };
+};

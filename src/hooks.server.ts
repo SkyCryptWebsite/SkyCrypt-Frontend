@@ -3,8 +3,9 @@ import { env } from "$env/dynamic/public";
 import { init as resourcesInit } from "$lib/server/custom_resources";
 import { indexCollectons } from "$lib/server/db/mongo/index-collections";
 import { intializeNEURepository, parseNEURepository } from "$lib/server/helper/NotEnoughUpdates/parseNEURepository";
+import { validateToken } from "$lib/server/token";
 import { contextLinesIntegration, extraErrorDataIntegration, handleErrorWithSentry, sentryHandle, init as sentryInit } from "@sentry/sveltekit";
-import type { Handle, ServerInit } from "@sveltejs/kit";
+import { error, type Handle, type ServerInit } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 import { getPrices } from "skyhelper-networth";
 import { startMongo } from "./lib/server/db/mongo";
@@ -69,9 +70,8 @@ export const init: ServerInit = async () => {
   console.info(`[SkyCrypt] Started in ${(performance.now() - timeNow).toFixed(2)}ms`);
 };
 export const handleError = handleErrorWithSentry();
-export const handle = sequence(sentryHandle(), async ({ event, resolve }) => await ResolveWithSecurityHeaders(resolve, event));
-
-async function ResolveWithSecurityHeaders(resolve: Parameters<Handle>[0]["resolve"], event: Parameters<Handle>[0]["event"]): Promise<ReturnType<Handle>> {
+export const handle = sequence(sentryHandle(), async ({ event, resolve }) => {
+  checkRoutes(event);
   const response = await resolve(event);
 
   // Security headers
@@ -90,4 +90,28 @@ async function ResolveWithSecurityHeaders(resolve: Parameters<Handle>[0]["resolv
   response.headers.set("X-XSS-Protection", "1; mode=block");
 
   return response;
+});
+
+function checkRoutes(event: Parameters<Handle>[0]["event"]) {
+  // if (dev) return; // Skip route checks in development
+  const routeId = event.route.id;
+  if (!routeId) return;
+
+  const isProtectedRoute = routeId.includes("(protected)");
+  if (!isProtectedRoute) return;
+
+  const ip = event.getClientAddress();
+  const authHeader = event.request.headers.get("Authorization");
+  const timestamp = event.request.headers.get("X-Timestamp");
+  const userAgent = event.request.headers.get("User-Agent") || "";
+  const route = event.request.headers.get("X-Route") || routeId;
+
+  // Always perform validation to prevent timing attacks
+  const token = authHeader?.replace(/^Bearer\s+/, "") || "invalid";
+  const validToken = validateToken(ip, token, timestamp || "0", userAgent, route);
+
+  // Check all conditions after validation
+  if (!authHeader || !timestamp || !validToken) {
+    error(401, "Unauthorized access to protected route");
+  }
 }

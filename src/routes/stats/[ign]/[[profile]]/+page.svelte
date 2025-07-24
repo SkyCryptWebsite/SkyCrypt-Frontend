@@ -5,12 +5,14 @@
   import Main from "$lib/layouts/stats/Main.svelte";
   import type { SectionName } from "$lib/sections/types";
   import { cn } from "$lib/shared/utils";
-  import { tabValue } from "$lib/stores/internal";
+  import { api_token, tabValue } from "$lib/stores/internal";
   import { performanceMode, sectionOrderPreferences } from "$lib/stores/preferences";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import type { PageServerData } from "./$types";
 
   const { data }: { data: PageServerData } = $props();
+
+  api_token.set(data.api_token);
 
   $effect.pre(() => {
     const hash = page.url.hash;
