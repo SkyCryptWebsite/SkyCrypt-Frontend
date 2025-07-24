@@ -25,7 +25,7 @@
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
     "@sveltejs/adapter-node": "^5.2.13",
-    "@sveltejs/kit": "^2.25.2",
+    "@sveltejs/kit": "^2.26.0",
     "@sveltejs/vite-plugin-svelte": "^6.1.0",
     "@tailwindcss/vite": "^4.1.11",
     "@tanstack/eslint-plugin-query": "^5.81.2",
@@ -65,7 +65,7 @@
     "simple-git": "^3.27.0",
     "skinview3d": "^3.4.1",
     "skyhelper-networth": "^1.27.3",
-    "svelte": "^5.36.14",
+    "svelte": "^5.36.16",
     "svelte-check": "^4.3.0",
     "svelte-dnd-action": "^0.9.64",
     "svelte-interactions": "^0.2.0",
@@ -85,13 +85,13 @@
     "vaul-svelte": "1.0.0-next.7",
     "vite": "^7.0.6",
     "vite-plugin-devtools-json": "^0.3.0",
-    "zod": "^4.0.8"
+    "zod": "^4.0.9"
   },
   "dependencies": {
     "@napi-rs/canvas": "^0.1.68",
     "@napi-rs/canvas-linux-x64-gnu": "^0.1.74",
     "@rollup/rollup-linux-x64-gnu": "^4.45.1",
-    "@sentry/sveltekit": "^9.40.0",
+    "@sentry/sveltekit": "^9.41.0",
     "dotenv-cli": "^9.0.0",
     "farming-weight": "^0.8.3",
     "minecraft-data": "^3.85.0",
