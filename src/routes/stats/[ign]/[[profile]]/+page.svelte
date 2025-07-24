@@ -18,7 +18,7 @@
   const apiTokenEntry = Object.entries(data).find(([encodedKey, encodedValue]) => {
     try {
       const decodedKey = new TextDecoder().decode(decodeBase64(encodedKey));
-      const decodedValue = JSON.parse(new TextDecoder().decode(decodeBase64(encodedValue as string)));
+      const decodedValue = JSON.parse(new TextDecoder().decode(decodeBase64(encodedValue as unknown as string)));
 
       // Check if this token's keyId matches the current key
       // The keyId should exactly match the decoded key since the server sets it
@@ -32,7 +32,7 @@
     throw new Error("API token not found in server data.");
   }
 
-  const decoded = decodeBase64(apiTokenEntry[1] as string);
+  const decoded = decodeBase64(apiTokenEntry[1] as unknown as string);
   if (!decoded) {
     throw new Error("Invalid API token provided.");
   }
