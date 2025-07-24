@@ -80,9 +80,9 @@
     "upng-js": "^2.1.0",
     "util": "^0.12.5",
     "vaul-svelte": "1.0.0-next.7",
-    "vite": "^7.0.5",
+    "vite": "^7.0.6",
     "vite-plugin-devtools-json": "^0.3.0",
-    "zod": "^4.0.5"
+    "zod": "^4.0.8"
   },
   "dependencies": {
     "@napi-rs/canvas": "^0.1.68",
