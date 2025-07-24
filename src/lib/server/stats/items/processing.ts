@@ -152,7 +152,13 @@ export async function processItems(items: ProcessedItem[], source: string, packs
       }
 
       if (item.tag.ExtraAttributes.timestamp) {
-        item.timestamp = item.tag.ExtraAttributes.timestamp;
+        const timestamp = item.tag.ExtraAttributes.timestamp;
+        if (!isNaN(Number(timestamp))) {
+          item.timestamp = timestamp;
+        } else {
+          item.timestamp = Date.parse(timestamp + " EDT");
+        }
+
         itemLore.push("", `§7Obtained: §c{TIMESTAMP:${item.timestamp}}`);
       }
 
