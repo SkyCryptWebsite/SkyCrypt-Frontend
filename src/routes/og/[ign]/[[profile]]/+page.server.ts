@@ -3,10 +3,10 @@ import { error } from "@sveltejs/kit";
 import ky from "ky";
 import type { PageServerLoad } from "./$types";
 
-export const load = (async ({ params }) => {
+export const load = (async ({ params, url }) => {
   const { ign, profile } = params;
 
-  const data = await ky(`/api/v2/embed/${ign}${profile ? "/" + profile : ""}`, {
+  const data = await ky(`${url.origin}/api/v2/embed/${ign}${profile ? "/" + profile : ""}`, {
     hooks: {
       beforeError: [
         (error) => {
