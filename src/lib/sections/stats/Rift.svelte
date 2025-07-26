@@ -28,7 +28,7 @@
 
   const query = createQuery<RiftV2>({
     queryKey: [SectionName.RIFT, profileUUID, profileId],
-    queryFn: () => api(fetch).getSection(SectionName.RIFT, profileUUID, profileId)
+    queryFn: () => api().getSection(SectionName.RIFT, profileUUID, profileId)
   });
 
   const rift = $derived.by(() => {

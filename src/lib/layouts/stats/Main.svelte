@@ -36,7 +36,7 @@
 
   const query = createQuery<EmbedV2>({
     queryKey: [SectionName.EMBED, profileUUID, profileId],
-    queryFn: () => api(fetch).getSection(SectionName.EMBED, profileUUID, profileId),
+    queryFn: () => api().getSection(SectionName.EMBED, profileUUID, profileId),
     enabled: false
   });
 

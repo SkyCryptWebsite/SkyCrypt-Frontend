@@ -27,7 +27,7 @@ export async function getMainStats(userProfile: Member, profile: Profile, player
     members: members,
     rank: getRank(player),
     social: player.socialMedia?.links ?? {},
-    skills: getSkills(userProfile, profile, null),
+    skills: getSkills(userProfile, profile, player),
     skyblock_level: getSkyblockLevel(userProfile),
     joined: userProfile.profile?.first_join ?? 0,
     // cookieBuffActive: userProfile.profile?.cookie_buff_active ?? false, // TODO: Implement cookie buff on the frontend

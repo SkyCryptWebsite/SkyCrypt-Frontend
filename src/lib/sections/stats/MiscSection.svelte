@@ -31,7 +31,7 @@
 
   const query = createQuery<MiscV2>({
     queryKey: [SectionName.MISC, profileUUID, profileId],
-    queryFn: () => api(fetch).getSection(SectionName.MISC, profileUUID, profileId)
+    queryFn: () => api().getSection(SectionName.MISC, profileUUID, profileId)
   });
 
   const misc = $derived.by(() => {

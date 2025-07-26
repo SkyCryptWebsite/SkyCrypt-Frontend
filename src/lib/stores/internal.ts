@@ -16,3 +16,8 @@ export const content = writable<Snippet | undefined>(undefined);
 export const openCommand = writable<boolean>(false);
 export const settingsOpen = writable<boolean>(false);
 export const settingsTab = writable<SettingsTab>(SettingsTab.Packs);
+export const api_token = writable<{
+  token: string;
+  timestamp: string;
+  route: string;
+} | null>(null);

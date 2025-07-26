@@ -23,7 +23,7 @@
 
   const query = createQuery<BestiaryV2>({
     queryKey: [SectionName.BESTIARY, profileUUID, profileId],
-    queryFn: () => api(fetch).getSection(SectionName.BESTIARY, profileUUID, profileId)
+    queryFn: () => api().getSection(SectionName.BESTIARY, profileUUID, profileId)
   });
 
   const bestiary = $derived.by(() => {

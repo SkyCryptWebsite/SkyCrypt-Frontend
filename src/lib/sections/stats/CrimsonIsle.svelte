@@ -25,7 +25,7 @@
 
   const query = createQuery<CrimsonIsleV2>({
     queryKey: [SectionName.CRIMSON_ISLE, profileUUID, profileId],
-    queryFn: () => api(fetch).getSection(SectionName.CRIMSON_ISLE, profileUUID, profileId)
+    queryFn: () => api().getSection(SectionName.CRIMSON_ISLE, profileUUID, profileId)
   });
 
   const isle = $derived.by(() => {

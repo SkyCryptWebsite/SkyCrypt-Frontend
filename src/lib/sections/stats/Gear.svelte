@@ -23,7 +23,7 @@
 
   const query = createQuery<GearV2>({
     queryKey: [SectionName.GEAR, profileUUID, profileId],
-    queryFn: () => api(fetch).getSection(SectionName.GEAR, profileUUID, profileId)
+    queryFn: () => api().getSection(SectionName.GEAR, profileUUID, profileId)
   });
 
   const gear = $derived.by(() => {

@@ -27,7 +27,7 @@
 
   const query = createQuery<AccessoriesV2>({
     queryKey: [SectionName.ACCESSORIES, profileUUID, profileId],
-    queryFn: () => api(fetch).getSection(SectionName.ACCESSORIES, profileUUID, profileId)
+    queryFn: () => api().getSection(SectionName.ACCESSORIES, profileUUID, profileId)
   });
 
   const accessories = $derived.by(() => {

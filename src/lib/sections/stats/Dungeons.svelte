@@ -28,7 +28,7 @@
 
   const query = createQuery<DungeonsV2>({
     queryKey: [SectionName.DUNGEONS, profileUUID, profileId],
-    queryFn: () => api(fetch).getSection(SectionName.DUNGEONS, profileUUID, profileId)
+    queryFn: () => api().getSection(SectionName.DUNGEONS, profileUUID, profileId)
   });
 
   const dungeons = $derived.by(() => {

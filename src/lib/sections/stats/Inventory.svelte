@@ -39,103 +39,103 @@
 
   const backpackQuery = createQuery({
     queryKey: ["inventory", uuid, profileId, "backpack"],
-    queryFn: () => api(fetch).getInventory(uuid, profileId, "backpack"),
+    queryFn: () => api().getInventory(uuid, profileId, "backpack"),
     enabled: false
   });
 
   const inventoryQuery = createQuery({
     queryKey: ["inventory", uuid, profileId, "inventory"],
-    queryFn: () => api(fetch).getInventory(uuid, profileId, "inventory"),
+    queryFn: () => api().getInventory(uuid, profileId, "inventory"),
     enabled: true
   });
 
   const enderchestQuery = createQuery({
     queryKey: ["inventory", uuid, profileId, "enderchest"],
-    queryFn: () => api(fetch).getInventory(uuid, profileId, "enderchest"),
+    queryFn: () => api().getInventory(uuid, profileId, "enderchest"),
     enabled: false
   });
 
   const armorQuery = createQuery({
     queryKey: ["inventory", uuid, profileId, "armor"],
-    queryFn: () => api(fetch).getInventory(uuid, profileId, "armor"),
+    queryFn: () => api().getInventory(uuid, profileId, "armor"),
     enabled: false
   });
 
   const equipmentQuery = createQuery({
     queryKey: ["inventory", uuid, profileId, "equipment"],
-    queryFn: () => api(fetch).getInventory(uuid, profileId, "equipment"),
+    queryFn: () => api().getInventory(uuid, profileId, "equipment"),
     enabled: false
   });
 
   const personalVaultQuery = createQuery({
     queryKey: ["inventory", uuid, profileId, "personal_vault"],
-    queryFn: () => api(fetch).getInventory(uuid, profileId, "personal_vault"),
+    queryFn: () => api().getInventory(uuid, profileId, "personal_vault"),
     enabled: false
   });
 
   const wardrobeQuery = createQuery({
     queryKey: ["inventory", uuid, profileId, "wardrobe"],
-    queryFn: () => api(fetch).getInventory(uuid, profileId, "wardrobe"),
+    queryFn: () => api().getInventory(uuid, profileId, "wardrobe"),
     enabled: false
   });
 
   const riftInventoryQuery = createQuery({
     queryKey: ["inventory", uuid, profileId, "rift_inventory"],
-    queryFn: () => api(fetch).getInventory(uuid, profileId, "rift_inventory"),
+    queryFn: () => api().getInventory(uuid, profileId, "rift_inventory"),
     enabled: false
   });
 
   const riftEnderchestQuery = createQuery({
     queryKey: ["inventory", uuid, profileId, "rift_enderchest"],
-    queryFn: () => api(fetch).getInventory(uuid, profileId, "rift_enderchest"),
+    queryFn: () => api().getInventory(uuid, profileId, "rift_enderchest"),
     enabled: false
   });
 
   const riftArmorQuery = createQuery({
     queryKey: ["inventory", uuid, profileId, "rift_armor"],
-    queryFn: () => api(fetch).getInventory(uuid, profileId, "rift_armor"),
+    queryFn: () => api().getInventory(uuid, profileId, "rift_armor"),
     enabled: false
   });
 
   const riftEquipmentQuery = createQuery({
     queryKey: ["inventory", uuid, profileId, "rift_equipment"],
-    queryFn: () => api(fetch).getInventory(uuid, profileId, "rift_equipment"),
+    queryFn: () => api().getInventory(uuid, profileId, "rift_equipment"),
     enabled: false
   });
 
   const potionBagQuery = createQuery({
     queryKey: ["inventory", uuid, profileId, "potion_bag"],
-    queryFn: () => api(fetch).getInventory(uuid, profileId, "potion_bag"),
+    queryFn: () => api().getInventory(uuid, profileId, "potion_bag"),
     enabled: false
   });
 
   const talismanBagQuery = createQuery({
     queryKey: ["inventory", uuid, profileId, "talisman_bag"],
-    queryFn: () => api(fetch).getInventory(uuid, profileId, "talisman_bag"),
+    queryFn: () => api().getInventory(uuid, profileId, "talisman_bag"),
     enabled: false
   });
 
   const fishingBagQuery = createQuery({
     queryKey: ["inventory", uuid, profileId, "fishing_bag"],
-    queryFn: () => api(fetch).getInventory(uuid, profileId, "fishing_bag"),
+    queryFn: () => api().getInventory(uuid, profileId, "fishing_bag"),
     enabled: false
   });
 
   const quiverQuery = createQuery({
     queryKey: ["inventory", uuid, profileId, "quiver"],
-    queryFn: () => api(fetch).getInventory(uuid, profileId, "quiver"),
+    queryFn: () => api().getInventory(uuid, profileId, "quiver"),
     enabled: false
   });
 
   const museumQuery = createQuery({
     queryKey: ["inventory", uuid, profileId, "museum"],
-    queryFn: () => api(fetch).getInventory(uuid, profileId, "museum"),
+    queryFn: () => api().getInventory(uuid, profileId, "museum"),
     enabled: false
   });
 
   const searchQuery = createQuery({
     queryKey: ["inventory", uuid, profileId, "search"],
-    queryFn: () => api(fetch).getInventory(uuid, profileId, "search", debouncedSearchValue.current),
+    queryFn: () => api().getInventory(uuid, profileId, "search", debouncedSearchValue.current),
     enabled: false
   });
 

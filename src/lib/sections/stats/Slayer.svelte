@@ -24,7 +24,7 @@
 
   const query = createQuery<SlayerV2>({
     queryKey: [SectionName.SLAYER, profileUUID, profileId],
-    queryFn: () => api(fetch).getSection(SectionName.SLAYER, profileUUID, profileId)
+    queryFn: () => api().getSection(SectionName.SLAYER, profileUUID, profileId)
   });
 
   const slayer = $derived.by(() => {
