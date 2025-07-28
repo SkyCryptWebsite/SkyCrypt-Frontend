@@ -115,19 +115,19 @@
             {@const colors = {
               bronze: {
                 bg: "bg-[oklch(55.23%_0.1295_59.21)]",
-                text: "text-[oklch(55.23%_0.1295_59.21)]"
+                text: "text-[oklch(55.23%_0.1295_59.21)]/80"
               },
               silver: {
                 bg: "bg-[oklch(77.02%_0.0014_286.37)]",
-                text: "text-[oklch(77.02%_0.0014_286.37)]"
+                text: "text-[oklch(77.02%_0.0014_286.37)]/80"
               },
               gold: {
                 bg: "bg-[oklch(82.61%_0.1706_80.88)]",
-                text: "text-[oklch(82.61%_0.1706_80.88)]"
+                text: "text-[oklch(82.61%_0.1706_80.88)]/80"
               },
               diamond: {
                 bg: "bg-[oklch(87.66%_0.1178_208.16)]",
-                text: "text-[oklch(87.66%_0.1178_208.16)]"
+                text: "text-[oklch(87.66%_0.1178_208.16)]/80"
               }
             } satisfies Record<(typeof tiers)[number], { bg: string; text: string }>}
             {#each trophyFishes as [_, trophyFish], index (index)}
