@@ -153,7 +153,7 @@
     {/if}
     {#if nextSection}
       <Button.Root class="bg-icon flex items-center justify-between rounded-lg px-4 py-2 text-lg" onclick={() => handleSectionClick(nextSection.name ?? filteredSectionOrderPreferences[filteredSectionOrderPreferences.length - 1].name)}>
-        {nextSection.name}
+        {nextSection.name.replaceAll("_", " ")}
         <ChevronRight />
       </Button.Root>
     {/if}
