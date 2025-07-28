@@ -67,7 +67,7 @@
     });
 
     untrack(() => {
-      if (ctx as StatsV2) return;
+      if (!(ctx as StatsV2)) return;
 
       const { username, profile_cute_name } = ctx;
       if (!username) return;
