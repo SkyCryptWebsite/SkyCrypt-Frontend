@@ -191,7 +191,7 @@ export const api = () => {
       })();
     },
     getGarden: async (profile: string): Promise<Garden> => {
-      const data = await extendedCustomKy(`/api/garden/${profile}`).json<Garden & { message?: string }>();
+      const data = await extendedCustomKy(`/api/v2/garden/${profile}`).json<Garden & { message?: string }>();
       if (data.message) {
         throw new Error(data.message);
       }
