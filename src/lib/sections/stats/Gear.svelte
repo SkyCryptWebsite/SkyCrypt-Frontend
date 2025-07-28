@@ -1,6 +1,7 @@
 <script lang="ts">
   import { getProfileCtx } from "$ctx/profile.svelte";
   import Bonus from "$lib/components/Bonus.svelte";
+  import EmptyEquipment from "$lib/components/EmptyEquipment.svelte";
   import Item from "$lib/components/Item.svelte";
   import Notice from "$lib/components/Notice.svelte";
   import Section from "$lib/components/Section.svelte";
@@ -62,7 +63,11 @@
 
       {#if armor.armor.length > 0 && !armor.armor.every((piece) => !piece.display_name)}
         {#each armor.armor as piece, index (index)}
-          <Item {piece} />
+          {#if piece && piece.display_name}
+            <Item {piece} />
+          {:else}
+            <EmptyEquipment {index} />
+          {/if}
         {/each}
       {:else}
         <p class="space-x-0.5 leading-6">{profile.username} has no armor equipped</p>
