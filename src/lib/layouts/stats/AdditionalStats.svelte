@@ -85,7 +85,7 @@
       </div>
     </AdditionStat>
   {/if}
-  <AdditionStat text="Fairy Souls" data={`${profile.fairySouls.found} / ${profile.fairySouls.total}`} asterisk={true}>
+  <AdditionStat text="Fairy Souls" data={`${profile.fairySouls.found} / ${profile.fairySouls.total}`} maxed={profile.fairySouls.found >= profile.fairySouls.total} asterisk={true}>
     {calculatePercentage(profile.fairySouls.found, profile.fairySouls.total)}% of fairy souls found.
   </AdditionStat>
 
