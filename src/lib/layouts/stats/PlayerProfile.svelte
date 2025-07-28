@@ -64,7 +64,7 @@
       }}>
       {#if profile.rank?.rankColor}
         <div class="relative flex items-center justify-center overflow-hidden rounded-full bg-[var(--color)] px-2 py-1 text-xl" style={`--color:${profile.rank.rankColor}`}>
-          <div class="relative z-20 inline-flex justify-between gap-3 text-sm font-bold sm:text-lg">
+          <div class="relative z-20 inline-flex justify-between gap-3 text-sm font-bold text-white sm:text-lg">
             <span>{profile.rank.rankText}</span>
             {#if profile.rank.plusText}
               <span>{profile.rank.plusText}</span>
