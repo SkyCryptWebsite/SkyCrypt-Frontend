@@ -12,14 +12,12 @@
   import Skills from "$lib/layouts/stats/Skills.svelte";
   import Stats from "$lib/layouts/stats/Stats.svelte";
   import Sections from "$lib/sections/Sections.svelte";
-  import { api, SectionName } from "$lib/shared/api";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { itemContent, itemContentSpecial, showItem } from "$lib/stores/internal";
   import { performanceMode, showGlint } from "$lib/stores/preferences";
   import { recentSearches } from "$lib/stores/searches";
-  import type { EmbedV2, StatsV2 } from "$types/statsv2";
+  import type { StatsV2 } from "$types/statsv2";
   import GripVertical from "@lucide/svelte/icons/grip-vertical";
-  import { createQuery } from "@tanstack/svelte-query";
   import { Dialog } from "bits-ui";
   import { Pane, PaneGroup, PaneResizer } from "paneforge";
   import { getContext, tick, untrack } from "svelte";
@@ -31,14 +29,6 @@
   const isHover = getContext<IsHover>("isHover");
 
   const profile = $derived(ctx);
-  const profileUUID = $derived(profile.uuid);
-  const profileId = $derived(profile.profile_id);
-
-  const query = createQuery<EmbedV2>({
-    queryKey: [SectionName.EMBED, profileUUID, profileId],
-    queryFn: () => api().getSection(SectionName.EMBED, profileUUID, profileId),
-    enabled: false
-  });
 
   let rightSize = $state(0);
   let leftSize = $state(0);
@@ -50,12 +40,6 @@
 
   // Initialize the profile context
   setProfileCtx(ctx);
-
-  setTimeout(() => {
-    if (profileUUID && profileId) {
-      $query.refetch();
-    }
-  }, 1000);
 
   // Update the profile context when the data changes
   $effect(() => {
@@ -115,6 +99,7 @@
 </script>
 
 <svelte:head>
+  <link rel="canonical" href={`https://sky.shiiyu.moe/stats/${profile.uuid}/${profile.profile_id}`} />
   <link rel="icon" href="https://crafatar.com/avatars/{profile.uuid}?size=32&overlay" sizes="32x32" type="image/png" />
   <title>{profile.displayName} | SkyCrypt</title>
 </svelte:head>

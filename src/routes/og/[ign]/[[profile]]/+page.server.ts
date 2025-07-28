@@ -1,31 +1,28 @@
+import { REDIS } from "$lib/server/db/redis.js";
+import { getProfile, getUUID } from "$lib/server/lib.js";
+import { isUUID } from "$params/uuid.js";
 import type { EmbedV2 } from "$types/statsv2";
 import { error } from "@sveltejs/kit";
-import ky from "ky";
 import type { PageServerLoad } from "./$types";
 
-export const load = (async ({ params, url }) => {
-  const { ign, profile } = params;
+export const load = (async ({ params }) => {
+  const { ign: paramPlayer, profile: paramProfile = null } = params;
 
-  const data = await ky(`${url.origin}/api/v2/embed/${ign}${profile ? "/" + profile : ""}`, {
-    hooks: {
-      beforeError: [
-        (error) => {
-          const { response } = error;
+  const uuid = await getUUID(paramPlayer, { cache: true });
+  const profileId = !paramProfile || !isUUID(paramProfile) ? (await getProfile(uuid, paramProfile, { cache: true })).profile_id : paramProfile;
 
-          if (!response.ok && response.status !== 500) {
-            error.message = `${response.status} - Failed to fetch embed - ${response.statusText}`;
-          }
-          return error;
-        }
-      ]
-    }
-  }).json<EmbedV2 & { message?: string }>();
+  const data = await REDIS.get(`embed_data:${uuid}:${profileId}`);
+  if (!data) {
+    error(404, "Embed data not found");
+  }
 
-  if (data.message) {
-    error(500, data.message);
+  const embedData = JSON.parse(data) as EmbedV2 & { message?: string };
+
+  if (embedData.message) {
+    error(500, embedData.message);
   }
 
   return {
-    embed: data as EmbedV2
+    embed: embedData as EmbedV2
   };
 }) satisfies PageServerLoad;
