@@ -125,7 +125,7 @@ let packConfigHashes: { [key: string]: string } = {};
 const outputPacks: OutputResourcePack[] = [];
 
 export async function init() {
-  console.log(`[CUSTOM-RESOURCES] Custom Resources loading started.`);
+  console.info(`[CUSTOM-RESOURCES] Custom Resources loading started.`);
   const timeNow = performance.now();
 
   await loadPackConfigs();
@@ -185,7 +185,7 @@ export async function init() {
   resourcesReady = true;
 
   const packs = new Set(resourcePacks.map((pack) => pack.config.id));
-  console.log(`[CUSTOM-RESOURCES] Successfully loaded ${packs.size} resource packs in ${(performance.now() - timeNow).toFixed(2)}ms`);
+  console.info(`[CUSTOM-RESOURCES] Successfully loaded ${packs.size} resource packs in ${(performance.now() - timeNow).toFixed(2)}ms`);
 }
 
 async function loadPackConfigs() {
@@ -209,7 +209,7 @@ async function loadPackConfigs() {
         textures: []
       });
     } catch {
-      console.log("Couldn't find config for resource pack", pack);
+      console.info("Couldn't find config for resource pack", pack);
     }
   }
 }
@@ -372,19 +372,19 @@ async function loadResourcePacks() {
                   .toBuffer()
               );
             } catch (resizeError) {
-              console.log(`Error resizing file ${textureFile}:`, (resizeError as Error).message);
+              console.info(`Error resizing file ${textureFile}:`, (resizeError as Error).message);
             }
           }
         } catch (metadataError) {
-          console.log(`Error reading metadata for ${textureFile}:`, (metadataError as Error).message);
+          console.info(`Error reading metadata for ${textureFile}:`, (metadataError as Error).message);
         }
       } catch (sharpError) {
-        console.log(`Error processing image ${textureFile}:`, (sharpError as Error).message);
+        console.info(`Error processing image ${textureFile}:`, (sharpError as Error).message);
       }
 
       try {
         const imageData = await fs.readFile(textureFile).catch(() => {
-          console.log("Error reading file", textureFile);
+          console.info("Error reading file", textureFile);
         });
 
         if (!imageData) {
@@ -402,7 +402,7 @@ async function loadResourcePacks() {
           texture.animated = true;
         }
       } catch {
-        console.log("Error reading file", textureFile);
+        console.info("Error reading file", textureFile);
         texture.animated = false;
       }
 
@@ -498,7 +498,7 @@ async function loadResourcePacks() {
               });
             }
           } else {
-            console.log("Error reading file", textureFile);
+            console.info("Error reading file", textureFile);
             animation.frames = [];
           }
         }
@@ -607,7 +607,7 @@ async function loadResourcePacks() {
               await execFile(apng2gif, [textureFile, "-o", textureFile]);
             }
           } catch (error) {
-            console.log(error);
+            console.info(error);
           }*/
         }
       }
@@ -615,7 +615,7 @@ async function loadResourcePacks() {
       pack.textures.push(texture as ItemTexture);
     }
 
-    console.log(`[CUSTOM-RESOURCES] Loaded ${format(pack.textures.length)} textures from ${pack.config.id}`);
+    console.info(`[CUSTOM-RESOURCES] Loaded ${format(pack.textures.length)} textures from ${pack.config.id}`);
   }
 }
 

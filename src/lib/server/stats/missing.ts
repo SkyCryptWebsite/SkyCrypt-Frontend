@@ -4,7 +4,6 @@ import type { AccessoriesOutput, Member } from "$types/global";
 import type { Accessories, Accessory, ProcessedItem, SpecialAccessory } from "$types/stats";
 import { NEU_ITEMS } from "../helper/NotEnoughUpdates/parseNEURepository";
 import { getStatsFromItems } from "./items/stats";
-import { stripItems } from "./items/stripping";
 
 /**
  * Checks if an accessory is present in an array of accessories.
@@ -72,7 +71,7 @@ function getEnrichments(accessories: ProcessedItem[]) {
     }
 
     const enrichmentKey = item.tag.ExtraAttributes.talisman_enrichment ?? "missing";
-    const enrichment = constants.ENRICHMENT_TO_STAT[enrichmentKey] ?? enrichmentKey;
+    const enrichment = constants.ENRICHMENT_TO_STAT[enrichmentKey] ?? enrichmentKey.toLowerCase();
     output[enrichment] ??= 0;
     output[enrichment] += 1;
   }
@@ -256,10 +255,6 @@ export async function getMissingAccessories(items: Accessories, userProfile: Mem
       magicalPower: accessories.reduce((a, b) => a + getMagicalPower(rarity, helper.getId(b)), 0)
     };
   }
-
-  output.accessories = stripItems(output.accessories as unknown as ProcessedItem[], ["isInactive"]);
-  output.missing = stripItems(output.missing as unknown as ProcessedItem[]);
-  output.upgrades = stripItems(output.upgrades as unknown as ProcessedItem[]);
 
   return output;
 }

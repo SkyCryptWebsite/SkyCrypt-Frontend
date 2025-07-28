@@ -1,11 +1,4 @@
-import { dev } from "$app/environment";
-import { REDIS } from "$lib/server/db/redis";
-import { getDisplayName, getProfiles, sendWebhookMessage } from "$lib/server/lib";
-import * as stats from "$lib/server/stats/stats";
-import type { MuseumRawResponse, Profile } from "$types/global";
-import type { Player } from "$types/raw/player/lib";
-import { stripAllItems } from "./stats/items/stripping";
-
+/*
 async function processStats<T>(player: Player, profile: Profile, stats: Array<[string, () => Promise<T>]>, errors: Record<string, string>): Promise<Record<string, T | string>> {
   const result: Record<string, T | string> = {};
 
@@ -14,7 +7,7 @@ async function processStats<T>(player: Player, profile: Profile, stats: Array<[s
       result[key] = await fetchFn();
     } catch (error) {
       if (dev) {
-        console.log(error);
+        console.info(error);
       }
 
       const uuid = profile.uuid;
@@ -29,7 +22,9 @@ async function processStats<T>(player: Player, profile: Profile, stats: Array<[s
 
   return result;
 }
+*/
 
+/*
 export async function getStats(profile: Profile, player: Player, extra: { museum?: MuseumRawResponse; packs?: string[] } = {}) {
   const cacheId = `STATS:${profile.uuid}:${profile.profile_id}:${extra.packs?.join(",") ?? "NONE"}`;
   const cache = await REDIS.get(cacheId);
@@ -89,3 +84,4 @@ export async function getStats(profile: Profile, player: Player, extra: { museum
 
   return output;
 }
+*/

@@ -229,4 +229,4 @@ NBTTagParser.Patterns = {
 
 const result = NBTTagParser.parse('{HideFlags:254,SkullOwner:{Id:"da4494c1-1a56-4cf1-b4e4-d2be6e55ea0b",hypixelPopulated:1b,Properties:{textures:[0:{Value:"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTNjMTUzYzM5MWMzNGUyZDMyOGE2MDgzOWU2ODNhOWY4MmFkMzA0ODI5OWQ4YmM2YTM5ZTZmOTE1Y2M1YSJ9fX0\u003d"}]},Name:"§da4494c1-1a56-4cf1-b4e4-d2be6e55ea0b"},display:{Lore:[0:"§7Mining Wisdom: §a+1.5",1:"",2:"§7§7Grants §6+1 Magical Power §7per §a2",3:"§a§7contacts in your Abiphone.",4:"",5:"§7§8Only ONE case will have an effect",6:"§8while in accessory bag.",7:"",8:"§9§lRARE ACCESSORY",9:"",10:"§7Cost",11:"§b17,000 Bits"],Name:"§9Actually Blue™ Abicase"},ExtraAttributes:{model:"BLUE_BLUE",id:"ABICASE_BLUE_BLUE"}}');
 
-console.log(result);
+console.info(result);

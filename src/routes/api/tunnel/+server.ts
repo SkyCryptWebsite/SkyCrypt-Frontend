@@ -1,6 +1,9 @@
-import { PUBLIC_SENTRY_HOST, PUBLIC_SENTRY_PROJECT_ID } from "$env/static/public";
+import { env } from "$env/dynamic/public";
 import { json } from "@sveltejs/kit";
+import ky from "ky";
 import type { RequestHandler } from "./$types";
+
+const { PUBLIC_SENTRY_HOST, PUBLIC_SENTRY_PROJECT_ID } = env;
 
 const SENTRY_PROJECT_IDS = [PUBLIC_SENTRY_PROJECT_ID];
 
@@ -22,8 +25,7 @@ export const POST: RequestHandler = async ({ request }) => {
     }
 
     const upstream_sentry_url = `https://${PUBLIC_SENTRY_HOST}/api/${project_id}/envelope/`;
-    await fetch(upstream_sentry_url, {
-      method: "POST",
+    await ky.post(upstream_sentry_url, {
       body: envelopeBytes
     });
 

@@ -147,6 +147,7 @@ export type PlayerData = {
   paused_effects: string[];
   disabled_potion_effects: string[];
   reaper_peppers_eaten: number;
+  visited_zones: string[];
 };
 
 export type Experience = {
@@ -208,6 +209,10 @@ export type NetherIslandPlayerData = {
 
 export type ProfilePets = {
   pets: Pet[];
+  pet_care: {
+    coins_spent: number;
+    pet_types_sacrificed: string[];
+  };
 };
 
 export type Mining = {

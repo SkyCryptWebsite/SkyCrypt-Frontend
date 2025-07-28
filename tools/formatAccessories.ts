@@ -66,8 +66,8 @@ async function getAccessories() {
   const input = response.talisman_upgrades as ItemMap;
 
   const output = getSeparateChains(input);
-  console.log("Chains:", output.chains);
-  console.log("Aliases:", output.aliases);
+  console.info("Chains:", output.chains);
+  console.info("Aliases:", output.aliases);
 }
 
 getAccessories();

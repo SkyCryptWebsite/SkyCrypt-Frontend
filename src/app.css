@@ -31,6 +31,7 @@
 
   /* Animations */
   --animate-shine: shine 4s infinite;
+  --animate-spin-slow: spin 3s linear infinite;
 
   @keyframes shine {
     0% {
@@ -176,6 +177,22 @@
   ::-webkit-scrollbar-track {
     background-color: transparent;
   }
+
+  *:focus-visible {
+    outline: var(--color-skillbar) auto 1px;
+  }
+
+  *::selection {
+    background-color: var(--color-link);
+    color: var(--color-text);
+    text-shadow: var(--txt-shadow-lg);
+  }
+
+  *::target-text {
+    background-color: var(--color-skillbar);
+    color: var(--color-text);
+    text-shadow: var(--txt-shadow);
+  }
 }
 
 @layer components {
@@ -219,7 +236,7 @@
 }
 
 @utility shine {
-  @apply before:animate-shine overflow-hidden before:absolute before:inset-0 before:z-8 before:bg-linear-to-t before:from-[oklch(1_0_0_/_0)] before:via-[oklch(1_0_0_/_0.50)] before:to-[oklch(0.77_0.09_243.21_/_0)];
+  @apply before:animate-shine overflow-hidden before:pointer-events-none before:absolute before:inset-0 before:z-8 before:size-full before:rounded-lg before:bg-linear-to-t before:from-[oklch(1_0_0_/_0)] before:via-[oklch(1_0_0_/_0.50)] before:to-[oklch(0.77_0.09_243.21_/_0)];
 }
 
 @utility enchanted {

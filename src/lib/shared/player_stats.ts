@@ -1,7 +1,7 @@
 import { getBonusStat } from "$lib/shared/constants/stats";
-import type { Stats } from "$types/global";
+import type { PlayerStatsInputv2 } from "$types/statsv2";
 
-export function getPlayerStats(profile: Stats) {
+export function getPlayerStats(profile: PlayerStatsInputv2) {
   const stats = {
     health: { base: 100 },
     defense: { base: 0 },
@@ -58,33 +58,31 @@ export function getPlayerStats(profile: Stats) {
     fear: { base: 0 }
   } as Record<string, { base: number; [string: string]: number }>;
 
-  if (profile.skyblock_level && profile.skyblock_level.level > 0) {
-    stats.health.skyblock_level = profile.skyblock_level.level * 5;
-    stats.strength.skyblock_level = Math.floor(profile.skyblock_level.level / 5);
+  if (profile.skyblock_level && profile.skyblock_level > 0) {
+    stats.health.skyblock_level = profile.skyblock_level * 5;
+    stats.strength.skyblock_level = Math.floor(profile.skyblock_level / 5);
   }
 
-  if (profile.items && profile.items.armor.stats) {
-    const armorStats = profile.items.armor.stats;
-    for (const key of Object.keys(armorStats)) {
+  if (profile.armor) {
+    for (const key of Object.keys(profile.armor)) {
       if (key in stats) {
-        stats[key].armor = armorStats[key] ?? 0;
+        stats[key].armor = profile.armor[key] ?? 0;
       }
     }
   }
 
-  if (profile.items && profile.items.equipment.stats) {
-    const equipmentStats = profile.items.equipment.stats;
-    for (const key of Object.keys(equipmentStats)) {
+  if (profile.equipment && profile.equipment) {
+    for (const key of Object.keys(profile.equipment)) {
       if (key in stats === false) {
         continue;
       }
 
-      stats[key].equipment = equipmentStats[key] ?? 0;
+      stats[key].equipment = profile.equipment[key] ?? 0;
     }
   }
 
-  if (profile.skills && profile.skills.skills) {
-    for (const [skill, data] of Object.entries(profile.skills.skills)) {
+  if (profile.skills) {
+    for (const [skill, data] of Object.entries(profile.skills)) {
       const bonusStats = getBonusStat(data.level, `skill_${skill}`, data.maxLevel);
 
       for (const [name, value] of Object.entries(bonusStats)) {
@@ -98,36 +96,39 @@ export function getPlayerStats(profile: Stats) {
     }
   }
 
-  if (profile.pets && profile.pets.pets) {
-    const activePet = profile.pets.pets.find((pet) => pet.active);
-    if (activePet) {
-      for (const [stat, value] of Object.entries(activePet.stats ?? {})) {
-        if (stat in stats === false && value) {
-          continue;
-        }
-
-        stats[stat].active_pet = value ?? 0;
+  if (profile.pets) {
+    for (const [stat, value] of Object.entries(profile.pets)) {
+      if (stat in stats === false && value) {
+        continue;
       }
+
+      stats[stat].active_pet = value ?? 0;
     }
   }
 
-  if (profile.slayer?.data) {
-    for (const [slayer, data] of Object.entries(profile.slayer.data)) {
-      const bonusStats = getBonusStat(data.level.level, `slayer_${slayer}`, data.level.maxLevel);
-
-      for (const [name, value] of Object.entries(bonusStats)) {
-        if (name in stats === false) {
-          continue;
-        }
-
-        stats[name][`slayer_${slayer}`] ??= 0;
-        stats[name][`slayer_${slayer}`] += value;
+  if (profile.petScore) {
+    for (const [name, value] of Object.entries(profile.petScore)) {
+      if (name in stats === false) {
+        continue;
       }
+
+      stats[name].pet_score = value ?? 0;
     }
   }
 
-  if (profile.dungeons?.level?.level) {
-    const bonusStats = getBonusStat(profile.dungeons.level.level, "skill_dungeoneering", 50);
+  if (profile.slayers) {
+    for (const [name, value] of Object.entries(profile.slayers)) {
+      if (name in stats === false) {
+        continue;
+      }
+
+      stats[name][`slayers`] ??= 0;
+      stats[name][`slayers`] += value ?? 0;
+    }
+  }
+
+  if (profile.dungeons) {
+    const bonusStats = getBonusStat(profile.dungeons, "skill_dungeoneering", 50);
 
     for (const [name, value] of Object.entries(bonusStats)) {
       if (name in stats === false) {
@@ -138,22 +139,17 @@ export function getPlayerStats(profile: Stats) {
     }
   }
 
-  if (profile.bestiary && profile.bestiary.level > 0) {
-    stats.health.bestiary = Math.floor(profile.bestiary.level);
+  if (profile.bestiary && profile.bestiary > 0) {
+    stats.health.bestiary = Math.floor(profile.bestiary);
   }
 
-  if (profile.pets && profile.pets.petScore && profile.pets.petScore.stats.magic_find > 0) {
-    stats.magic_find.pet_score = profile.pets.petScore.stats.magic_find;
-  }
-
-  if (profile.accessories && profile.accessories.stats) {
-    const accessoryStats = profile.accessories.stats;
-    for (const key of Object.keys(accessoryStats)) {
+  if (profile.accessories) {
+    for (const key of Object.keys(profile.accessories)) {
       if (key in stats === false) {
         continue;
       }
 
-      stats[key].accessories = accessoryStats[key] ?? 0;
+      stats[key].accessories = profile.accessories[key] ?? 0;
     }
   }
 

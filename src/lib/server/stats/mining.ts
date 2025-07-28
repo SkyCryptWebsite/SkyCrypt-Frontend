@@ -106,6 +106,8 @@ export function getMining(userProfile: Member, player: Player, packs: string[]) 
 
   const crystalNucleusRunsAmount = crystalNucleusRuns.length ? Math.min(...crystalNucleusRuns) : 0;
 
+  const hotm = getHotmItems(userProfile, packs);
+
   return {
     level: HOTM,
     peak_of_the_mountain: {
@@ -145,7 +147,7 @@ export function getMining(userProfile: Member, player: Player, packs: string[]) 
       }
     },
     forge: getForge(userProfile),
-    hotm: stripItems(getHotmItems(userProfile, packs)),
+    hotm: stripItems(hotm),
     glaciteTunnels: getGlaciteTunnels(userProfile)
   };
 }

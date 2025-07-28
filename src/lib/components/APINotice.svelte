@@ -12,33 +12,32 @@
   const profile = $derived(ctx.profile);
 
   const apiSettings = $derived(Object.entries(profile.apiSettings).filter(([_, value]) => !value));
+
   const isHover = getContext<IsHover>("isHover");
 </script>
 
-{#if apiSettings.length}
-  <div class="bg-background/30 mx-auto w-full max-w-lg overflow-clip rounded-lg">
-    <div class="bg-icon py-1 text-center text-xl font-semibold uppercase">Notice</div>
-    <div class="p-5 text-center font-medium text-pretty">
-      <p>
-        {#each apiSettings as [key, _], index (index)}
-          {#if index === apiSettings.length - 1 && index > 0}
-            &nbsp;and
-          {/if}
-          <span class="inline-block whitespace-nowrap capitalize">{key.replaceAll("_", " ")}</span>{#if index < apiSettings.length - 1},{/if}
-        {/each}
-        {apiSettings.length === 1 ? "is" : "are"} not available for {profile.username} due to limited API access.
-      </p>
-      <p>
-        {#if isHover.current}
-          {@render modal()}
-        {:else}
-          {@render drawer()}
+<div class="bg-background/30 mx-auto w-full max-w-lg overflow-clip rounded-lg">
+  <div class="bg-icon py-1 text-center text-xl font-semibold uppercase">Notice</div>
+  <div class="p-5 text-center text-base font-medium text-pretty">
+    <p>
+      {#each apiSettings as [key, _], index (index)}
+        {#if index === apiSettings.length - 1 && index > 0}
+          &nbsp;and
         {/if}
-        how to enable full API access.
-      </p>
-    </div>
+        <span class="inline-block whitespace-nowrap capitalize">{key.replaceAll("_", " ")}</span>{#if index < apiSettings.length - 1},{/if}
+      {/each}
+      {apiSettings.length === 1 ? "is" : "are"} not available for {profile.username} due to limited API access.
+    </p>
+    <p>
+      {#if isHover.current}
+        {@render modal()}
+      {:else}
+        {@render drawer()}
+      {/if}
+      how to enable full API access.
+    </p>
   </div>
-{/if}
+</div>
 
 {#snippet video()}
   <video preload="metadata" muted loop disablepictureinpicture disableremoteplayback controlslist="nodownload noremoteplayback noplaybackrate" controls autoplay playsinline class="data-[is-hover=false]:rounded-t-lg data-[is-hover=true]:rounded-lg" data-is-hover={isHover.current}>

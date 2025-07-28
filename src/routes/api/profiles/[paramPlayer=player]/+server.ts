@@ -1,10 +1,9 @@
-import type { RequestHandler } from "./$types";
-import { json, error } from "@sveltejs/kit";
 import { getProfiles } from "$lib/server/lib";
+import { error, json } from "@sveltejs/kit";
+import type { RequestHandler } from "./$types";
 
 // GET /api/profiles/[id=player]
 export const GET: RequestHandler = async ({ params }) => {
-  const timeNow = Date.now();
   const { paramPlayer } = params;
   if (!paramPlayer) {
     throw error(404, "Profiles not found");
@@ -14,6 +13,5 @@ export const GET: RequestHandler = async ({ params }) => {
     throw error(404, e.message);
   });
 
-  console.log(`/api/profiles/${paramPlayer} took ${Date.now() - timeNow}ms`);
   return json(profiles);
 };

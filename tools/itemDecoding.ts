@@ -33,4 +33,4 @@ export async function decodeItems(encodedItems) {
 
 const timeNow = Date.now();
 const items = await decodeItems(Object.values(itemData));
-console.log(`Decoded ${items.length} items in ${Date.now() - timeNow}ms`);
+console.info(`Decoded ${items.length} items in ${Date.now() - timeNow}ms`);

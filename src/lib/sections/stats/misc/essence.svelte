@@ -1,16 +1,18 @@
 <script lang="ts">
-  import { getProfileCtx } from "$ctx/profile.svelte";
+  import { getDynamicCtx } from "$ctx/dynamic.svelte";
   import Chip from "$lib/components/Chip.svelte";
   import ScrollItems from "$lib/components/scroll-items.svelte";
   import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
+  import { SectionName } from "$lib/shared/api";
   import { cn } from "$lib/shared/utils";
+  import type { MiscV2 } from "$types/statsv2";
   import { format } from "numerable";
 
-  const ctx = getProfileCtx();
-  const misc = $derived(ctx.misc);
+  const ctx = getDynamicCtx<() => MiscV2 | undefined>(SectionName.MISC);
+  const misc = $derived(ctx?.data?.());
 </script>
 
-{#if misc.essence != null}
+{#if misc && misc.essence != null}
   <div class="space-y-4">
     <SectionSubtitle class="uppercase!">Essence</SectionSubtitle>
     <ScrollItems>

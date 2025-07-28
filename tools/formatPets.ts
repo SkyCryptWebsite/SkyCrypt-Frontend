@@ -46,9 +46,9 @@ async function getData() {
   }
 
   Object.assign(output, { LVL: level });
-  console.log(replaceVariables(itemData.displayname, output));
+  console.info(replaceVariables(itemData.displayname, output));
   for (const line of itemData.lore) {
-    console.log(replaceVariables(line, output));
+    console.info(replaceVariables(line, output));
   }
 }
 

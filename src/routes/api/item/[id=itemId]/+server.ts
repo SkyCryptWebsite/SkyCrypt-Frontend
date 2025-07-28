@@ -21,8 +21,7 @@ export const GET: RequestHandler = async ({ params, cookies, url }) => {
         "Content-Type": "image/png"
       }
     });
-  } catch (errorMsg) {
-    console.log("ERROR:", errorMsg);
+  } catch {
     throw error(500, "Internal server error");
   }
 };

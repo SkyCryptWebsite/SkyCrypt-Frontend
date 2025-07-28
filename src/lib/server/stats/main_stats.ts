@@ -1,40 +1,36 @@
-import type { GetItemsItems, Member, Profile } from "$types/global";
-import { getPreDecodedNetworth } from "skyhelper-networth";
+import type { Member, Profile } from "$types/global";
+import type { Player } from "$types/raw/player/lib";
+import type { StatsV2 } from "$types/statsv2";
 import { FAIRY_SOULS } from "../constants/constants";
+import { fetchMuseum, getDisplayName, getProfiles } from "../lib";
+import { getAPISettings } from "./api_settings";
+import { getItems } from "./items";
+import { getProfileMembers } from "./members";
+import { getRank } from "./rank";
+import { getSkills } from "./skills";
+import { getSkyblockLevel } from "./skyblock_level";
 
-export async function getMainStats(userProfile: Member, profile: Profile, items: GetItemsItems) {
-  // consolllle.log(ts);
+export async function getMainStats(userProfile: Member, profile: Profile, player: Player, packs: string[]): Promise<StatsV2> {
+  const [profiles, members, museumData] = await Promise.all([getProfiles(profile.uuid), getProfileMembers(profile.members), fetchMuseum(profile.profile_id)]);
 
-  const bank = profile.banking?.balance ?? 0;
-  const networthOptions = {
-    onlyNetworth: true,
-    returnItemData: false,
-    cache: true,
-    v2Endpoint: true
-  };
-
-  const networthItems = {
-    armor: items?.armor?.armor ?? [],
-    equipment: items?.equipment?.equipment ?? [],
-    wardrobe: items?.wardrobe.flat() ?? [],
-    inventory: items?.inventory ?? [],
-    enderchest: items?.enderchest ?? [],
-    accessories: items?.talisman_bag ?? [],
-    personal_vault: items?.personal_vault ?? [],
-    storage: items?.backpack ? items?.backpack.concat(items?.backpack.map((item) => item.containsItems ?? []).flat()).flat() : [],
-    fishing_bag: items?.fishing_bag ?? [],
-    potion_bag: items?.potion_bag ?? [],
-    museum: items?.museumItems ?? []
-  };
-
-  const predecodedNetworth = await getPreDecodedNetworth(userProfile, networthItems, bank, networthOptions);
-  if (items) {
-    items.museumItems = [];
-  }
+  await getItems(userProfile, museumData?.[profile.uuid], packs, profile.profile_id);
 
   return {
+    displayName: getDisplayName(player.displayname, profile.uuid),
+    username: player.displayname,
+    uuid: profile.uuid,
+    profile_id: profile.profile_id,
+    profile_cute_name: profile.cute_name,
+    game_mode: profile.game_mode,
+    selected: profile.selected,
+    profiles: profiles,
+    members: members,
+    rank: getRank(player),
+    social: player.socialMedia?.links ?? {},
+    skills: getSkills(userProfile, profile, player),
+    skyblock_level: getSkyblockLevel(userProfile),
     joined: userProfile.profile?.first_join ?? 0,
-    cookieBuffActive: userProfile.profile?.cookie_buff_active ?? false,
+    // cookieBuffActive: userProfile.profile?.cookie_buff_active ?? false, // TODO: Implement cookie buff on the frontend
     purse: userProfile.currencies?.coin_purse ?? 0,
     bank: profile.banking?.balance ?? 0,
     personalBank: userProfile.profile?.bank_account ?? 0,
@@ -42,6 +38,6 @@ export async function getMainStats(userProfile: Member, profile: Profile, items:
       found: userProfile.fairy_soul?.total_collected ?? 0,
       total: FAIRY_SOULS[profile.game_mode ?? "normal"] ?? FAIRY_SOULS["normal"]
     },
-    networth: predecodedNetworth
-  };
+    apiSettings: getAPISettings(profile, userProfile, museumData)
+  } satisfies StatsV2;
 }

@@ -1,0 +1,132 @@
+name: 🐞 Bug
+description: File a bug/issue
+title: "[BUG] <title>"
+labels: ["bug", "triage"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Thanks for taking the time to create an issue! Please search open/closed issues before submitting, as the issue may have already been reported/addressed.
+
+  - type: markdown
+    attributes:
+      value: |
+        #### If you aren't sure if something is a bug or not, please do not create an issue, instead ask in one of the following channels:
+        - [Discord](https://discord.gg/cNgADv2kEQ)
+
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search to see if an issue already exists for the bug you encountered.
+      options:
+        - label: I have searched the existing issues
+          required: true
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is. If you intend to submit a PR for this issue, tell us how in the description. Thanks!
+      placeholder: Bug description
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: A concise description of what you expected to happen.
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain your problem.
+      placeholder: |
+        ![Screenshot](https://example.com/screenshot.png)
+      render: markdown
+    validations:
+      required: false
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps To Reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Please include browser console logs around the time this bug occurred. Please try not to insert an image but copy paste the log text.
+      render: bash
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Environment
+      description: |
+        examples:
+          - **OS**: iOS 26
+          - **Browser**: Safari
+          - **Version**: 26
+          - **Extensions**: uBlock Origin
+      value: |
+        - OS:
+        - Browser:
+        - Version:
+        - Extensions:
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here.
+      value: |
+        Link: [e.g. https://sky.shiiyu.moe/stats/DeathStreeks/Blueberry]
+      render: markdown
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Default Settings
+      description: |
+        Let us know if you've changed any of the default settings.
+        The defaults are:
+        - Packs: All enabled
+        - Themes: "Default Theme" selected
+        - Order: No "RESET TO DEFAULT" button visible
+        - Wiki:
+          1. Official
+          2. Fandom
+        - Performance Mode: Off
+        - Show Glint: On
+        - Keybind: `/`
+      value: |
+        - [ ] I have not changed any of the default settings.
+        - [ ] I have changed the default settings:
+          - [ ] Packs: <!-- List the packs you have disabled -->
+          - [ ] Themes: <!-- List the theme you have selected -->
+          - [ ] Order: <!-- Describe the order you have set -->
+          - [ ] Wiki: <!-- List the wiki you have selected -->
+          - [ ] Performance Mode: <!-- On/Off -->
+          - [ ] Show Glint: <!-- On/Off -->
+          - [ ] Keybind: <!-- Describe the keybind you have set -->
+          - [ ] Other: <!-- Describe any other changes you have made -->
+      render: markdown
+    validations:
+      required: true

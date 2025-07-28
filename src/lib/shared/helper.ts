@@ -1,6 +1,8 @@
 import { MAX_ENCHANTS } from "$lib/shared/constants/enchantments";
 import { RARITY_COLORS } from "$lib/shared/constants/items";
 import type { ProcessedItem } from "$types/global";
+import { tz } from "@date-fns/tz";
+import { format } from "date-fns";
 import prettyMilliseconds from "pretty-ms";
 export { prettyMilliseconds as formatTime };
 
@@ -113,6 +115,14 @@ export function renderLore(text: string): string {
       output += ` class='${Array.from(formats, (x) => "§" + x).join(" ")}'`;
     }
 
+    if (part.includes("{TIMESTAMP:")) {
+      const timestampMatch = part.match(/{TIMESTAMP:(\d+)}/);
+      if (timestampMatch) {
+        const formattedTime = format(parseInt(timestampMatch[1], 10), "MMM dd, yyyy, h:mm a", { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) });
+        part = part.replace(timestampMatch[0], formattedTime);
+      }
+    }
+
     output += `>${part}</span>`;
   }
 
@@ -186,6 +196,21 @@ export const getUsername = async (uuid: string): Promise<string> => {
     const res = await fetch(`/api/username/${uuid}`);
     const { username } = await res.json();
     return username;
+  } catch {
+    return "???";
+  }
+};
+
+/**
+ * Returns the UUID of a player with the specified username.
+ * @param {string} username - The username of the player.
+ * @returns {Promise<string>} The UUID of the player.
+ */
+export const getUUID = async (username: string): Promise<string> => {
+  try {
+    const res = await fetch(`/api/uuid/${username}`);
+    const { uuid } = await res.json();
+    return uuid;
   } catch {
     return "???";
   }

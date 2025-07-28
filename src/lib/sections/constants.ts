@@ -1,18 +1,17 @@
 import type { SectionID } from "$lib/sections/types";
 
 export const sections: SectionID[] = [
-  { id: 0, name: "Armor" },
-  { id: 1, name: "Weapons" },
-  { id: 2, name: "Accessories" },
-  { id: 3, name: "Pets" },
-  { id: 4, name: "Inventory" },
-  { id: 5, name: "Skills" },
-  { id: 6, name: "Dungeons" },
-  { id: 7, name: "Slayer" },
-  { id: 8, name: "Minions" },
-  { id: 9, name: "Bestiary" },
-  { id: 10, name: "Collections" },
-  { id: 11, name: "Crimson_Isle" },
-  { id: 12, name: "Rift" },
-  { id: 13, name: "Misc" }
+  { id: 0, name: "Gear" },
+  { id: 1, name: "Accessories" },
+  { id: 2, name: "Pets" },
+  { id: 3, name: "Inventory" },
+  { id: 4, name: "Skills" },
+  { id: 5, name: "Dungeons" },
+  { id: 6, name: "Slayer" },
+  { id: 7, name: "Minions" },
+  { id: 8, name: "Bestiary" },
+  { id: 9, name: "Collections" },
+  { id: 10, name: "Crimson_Isle" },
+  { id: 11, name: "Rift" },
+  { id: 12, name: "Misc" }
 ];

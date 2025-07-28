@@ -1,7 +1,7 @@
 import * as helper from "$lib/server/helper";
 import type { ProcessedItem } from "$types/stats";
 
-export function getWardrobe(wardrobeInventory: ProcessedItem[]) {
+export function getWardrobe(wardrobeInventory: ProcessedItem[]): ProcessedItem[][] {
   const wardrobeColumns = wardrobeInventory.length / 4;
 
   const wardrobe = [];
@@ -24,5 +24,5 @@ export function getWardrobe(wardrobeInventory: ProcessedItem[]) {
     }
   }
 
-  return wardrobe;
+  return wardrobe as ProcessedItem[][];
 }

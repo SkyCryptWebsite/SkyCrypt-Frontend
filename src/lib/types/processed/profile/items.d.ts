@@ -39,6 +39,7 @@ export type DatabaseItem = {
   item_id?: number;
   skyblock_id?: string;
   color?: string;
+  hex_color?: string;
   damage?: number;
   museum_data?: {
     armor_set_donation_xp: number;
@@ -65,11 +66,12 @@ export type ProcessedItem = {
   id: number;
   Damage: number;
   Count: number;
+  uuid: string;
   tag: {
     display: {
       Lore: string[];
       Name: string;
-      color: string;
+      color: string | null;
     };
     ExtraAttributes: {
       rarity_upgrades?: number;
@@ -95,6 +97,7 @@ export type ProcessedItem = {
       };
       talisman_enrichment?: string;
       gems: Record<string, string>;
+      dye_item?: string;
     };
     SkullOwner: {
       Properties: {
@@ -143,6 +146,7 @@ export type ProcessedItem = {
   glowing?: boolean;
   position?: number;
   item_index: number;
+  timestamp?: number;
 };
 
 export type ProcessedSkyBlockItem = {
@@ -154,8 +158,11 @@ export type ProcessedSkyBlockItem = {
   texture_path: string;
   containsItems?: ProcessedSkyBlockItem[];
   shiny?: boolean;
-  texture_pack?: string;
+  texture_pack: string;
   wiki?: { fandom?: string; official?: string } | null;
+  source?: string;
+  sourceTab?: { name: string; icon: string } | null;
+  timestamp?: number;
   [key: string]: string | boolean;
 };
 
@@ -169,6 +176,8 @@ export type ProcessedSkyblockPet = {
   active: boolean;
   stats?: ItemStats;
   wiki?: { fandom?: string; official?: string } | null;
+  uuid: string;
+  texture_pack: string;
 };
 
 export type getTextureParams = {

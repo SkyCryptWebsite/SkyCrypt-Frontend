@@ -1,9 +1,16 @@
 <script lang="ts">
   import { getProfileCtx } from "$ctx/profile.svelte";
-  import CollapsibleSection from "$lib/components/CollapsibleSection.svelte";
   import Item from "$lib/components/Item.svelte";
-  import type { ProcessedSkyBlockItem } from "$lib/types/stats";
+  import Notice from "$lib/components/Notice.svelte";
+  import Section from "$lib/components/Section.svelte";
+  import { api } from "$lib/shared/api";
+  import { renderLore } from "$lib/shared/helper";
+  import { itemContentSpecial } from "$lib/stores/internal";
+  import type { ProcessedSkyBlockItem } from "$types/stats";
+  import type { InventoryV2 } from "$types/statsv2";
   import Image from "@lucide/svelte/icons/image";
+  import LoaderCircle from "@lucide/svelte/icons/loader-circle";
+  import { createQuery } from "@tanstack/svelte-query";
   import { Avatar, ScrollArea, Tabs } from "bits-ui";
   import { Debounced } from "runed";
   import { cubicInOut } from "svelte/easing";
@@ -12,192 +19,405 @@
   type Tabs = {
     id: string;
     icon: string;
-    items: ProcessedSkyBlockItem[];
+    items: InventoryV2;
+    loading: boolean;
+    error: boolean;
     gap: number;
   };
 
   let { order }: { order: number } = $props();
-  let openTab = $state<string>("inv");
+  let openTab = $state<string>("inventory");
   let searchValue = $state<string>();
-
-  const debouncedSearchValue = new Debounced(() => searchValue, 300);
 
   const ctx = getProfileCtx();
   const profile = $derived(ctx.profile);
+  const profileId = $derived(profile.profile_id);
+  const uuid = $derived(profile.uuid);
 
-  const inventory = $derived(profile.items.inventory.slice(9).concat(profile.items.inventory.slice(0, 9)));
-  const rift_inventory = $derived(profile.items.rift_inventory.slice(9).concat(profile.items.rift_inventory.slice(0, 9)));
-  const rift_enderchest = $derived(profile.items.rift_enderchest);
-  const backpack = $derived(profile.items.backpack);
-  const enderchest = $derived(profile.items.enderchest);
-  const vault = $derived(profile.items.personal_vault);
-  const accs = $derived(profile.items.talisman_bag);
-  const pots = $derived(profile.items.potion_bag);
-  const fish = $derived(profile.items.fishing_bag);
-  const quiver = $derived(profile.items.quiver);
-  const museum = $derived(profile.items.museum);
+  // Use this for the actual inventory queries
+  const _inventories = ["backpack", "inventory", "enderchest", "armor", "equipment", "personal_vault", "wardrobe", "rift_inventory", "rift_enderchest", "rift_armor", "rift_equipment", "potion_bag", "talisman_bag", "fishing_bag", "quiver", "museum", "search"] as readonly string[]; // List of inventory types to be used in the tabs
 
-  const tabs = $derived<Tabs[]>(
-    [
-      {
-        id: "inv",
-        icon: `https://crafatar.com/renders/head/${profile.uuid}?overlay`,
-        items: inventory,
-        gap: 27
-      },
-      {
-        id: "storage",
-        icon: "/api/item/chest",
-        items: backpack,
-        gap: 45
-      },
-      {
-        id: "ender",
-        icon: "/api/item/ender_chest",
-        items: enderchest,
-        gap: 45
-      },
-      {
-        id: "vault",
-        icon: "/api/head/f7aadff9ddc546fdcec6ed5919cc39dfa8d0c07ff4bc613a19f2e6d7f2593",
-        items: vault,
-        gap: 45
-      },
-      {
-        id: "accs",
-        icon: "/api/head/961a918c0c49ba8d053e522cb91abc74689367b4d8aa06bfc1ba9154730985ff",
-        items: accs,
-        gap: 45
-      },
-      {
-        id: "pots",
-        icon: "/api/head/9f8b82427b260d0a61e6483fc3b2c35a585851e08a9a9df372548b4168cc817c",
-        items: pots,
-        gap: 45
-      },
-      {
-        id: "fish",
-        icon: "/api/head/eb8e297df6b8dffcf135dba84ec792d420ad8ecb458d144288572a84603b1631",
-        items: fish,
-        gap: 45
-      },
-      {
-        id: "quiver",
-        icon: "/api/head/4cb3acdc11ca747bf710e59f4c8e9b3d949fdd364c6869831ca878f0763d1787",
-        items: quiver,
-        gap: 45
-      },
-      {
-        id: "museum",
-        icon: "/api/head/438cf3f8e54afc3b3f91d20a49f324dca1486007fe545399055524c17941f4dc",
-        items: museum,
-        gap: 54
-      },
-      {
-        id: "rift inv",
-        icon: "/api/head/445240fcf1a9796327dda5593985343af9121a7156bc76e3d6b341b02e6a6e52",
-        items: rift_inventory,
-        gap: 45
-      },
-      {
-        id: "rift ender",
-        icon: "/api/head/a6cc486c2be1cb9dfcb2e53dd9a3e9a883bfadb27cb956f1896d602b4067",
-        items: rift_enderchest,
-        gap: 45
-      },
-      {
-        id: "search",
-        icon: "/api/item/EYE_OF_ENDER",
-        items: [],
-        gap: 45
-      }
-    ].filter((tab) => tab.id === "search" || tab.items.length > 0)
-  );
-
-  const allItemNames = $derived(
-    [...inventory, ...rift_inventory, ...rift_enderchest, ...backpack, ...enderchest, ...vault, ...accs, ...pots, ...fish, ...quiver, ...museum, ...backpack.map((item) => (item.containsItems ? item.containsItems : []))]
-      .flat()
-      .filter((item) => item && item.display_name)
-      .map((item) => item.display_name)
-  );
-
-  type SearchedItem = { item: ProcessedSkyBlockItem; sourceTab: { name: string; icon: string } };
-  const searchedItems = $derived.by<SearchedItem[] | []>(() => {
-    const search = debouncedSearchValue.current?.trim();
-    if (!search) return [];
-    const searchedItemName = allItemNames.filter((name) => name.toLowerCase().includes(search.toLowerCase())).slice(0, 45);
-    if (searchedItemName.length === 0) return [];
-
-    const items: SearchedItem[] = [];
-
-    for (const tab of tabs) {
-      for (const item of tab.items.concat(tab.items.map((item) => (item.containsItems ? item.containsItems : [])).flat())) {
-        if (searchedItemName.includes(item.display_name)) {
-          items.push({ item, sourceTab: { name: tab.id, icon: tab.icon } });
-        }
-      }
-    }
-
-    return items;
+  const backpackQuery = createQuery({
+    queryKey: ["inventory", uuid, profileId, "backpack"],
+    queryFn: () => api().getInventory(uuid, profileId, "backpack"),
+    enabled: false
   });
 
-  const tab = $derived<Tabs>(tabs.find((t) => t.id === openTab) as Tabs);
-  const hasEmptyInventory = $derived(tabs.filter((tab) => tab.items.length > 0).length === 0);
+  const inventoryQuery = createQuery({
+    queryKey: ["inventory", uuid, profileId, "inventory"],
+    queryFn: () => api().getInventory(uuid, profileId, "inventory"),
+    enabled: true
+  });
+
+  const enderchestQuery = createQuery({
+    queryKey: ["inventory", uuid, profileId, "enderchest"],
+    queryFn: () => api().getInventory(uuid, profileId, "enderchest"),
+    enabled: false
+  });
+
+  const armorQuery = createQuery({
+    queryKey: ["inventory", uuid, profileId, "armor"],
+    queryFn: () => api().getInventory(uuid, profileId, "armor"),
+    enabled: false
+  });
+
+  const equipmentQuery = createQuery({
+    queryKey: ["inventory", uuid, profileId, "equipment"],
+    queryFn: () => api().getInventory(uuid, profileId, "equipment"),
+    enabled: false
+  });
+
+  const personalVaultQuery = createQuery({
+    queryKey: ["inventory", uuid, profileId, "personal_vault"],
+    queryFn: () => api().getInventory(uuid, profileId, "personal_vault"),
+    enabled: false
+  });
+
+  const wardrobeQuery = createQuery({
+    queryKey: ["inventory", uuid, profileId, "wardrobe"],
+    queryFn: () => api().getInventory(uuid, profileId, "wardrobe"),
+    enabled: false
+  });
+
+  const riftInventoryQuery = createQuery({
+    queryKey: ["inventory", uuid, profileId, "rift_inventory"],
+    queryFn: () => api().getInventory(uuid, profileId, "rift_inventory"),
+    enabled: false
+  });
+
+  const riftEnderchestQuery = createQuery({
+    queryKey: ["inventory", uuid, profileId, "rift_enderchest"],
+    queryFn: () => api().getInventory(uuid, profileId, "rift_enderchest"),
+    enabled: false
+  });
+
+  const riftArmorQuery = createQuery({
+    queryKey: ["inventory", uuid, profileId, "rift_armor"],
+    queryFn: () => api().getInventory(uuid, profileId, "rift_armor"),
+    enabled: false
+  });
+
+  const riftEquipmentQuery = createQuery({
+    queryKey: ["inventory", uuid, profileId, "rift_equipment"],
+    queryFn: () => api().getInventory(uuid, profileId, "rift_equipment"),
+    enabled: false
+  });
+
+  const potionBagQuery = createQuery({
+    queryKey: ["inventory", uuid, profileId, "potion_bag"],
+    queryFn: () => api().getInventory(uuid, profileId, "potion_bag"),
+    enabled: false
+  });
+
+  const talismanBagQuery = createQuery({
+    queryKey: ["inventory", uuid, profileId, "talisman_bag"],
+    queryFn: () => api().getInventory(uuid, profileId, "talisman_bag"),
+    enabled: false
+  });
+
+  const fishingBagQuery = createQuery({
+    queryKey: ["inventory", uuid, profileId, "fishing_bag"],
+    queryFn: () => api().getInventory(uuid, profileId, "fishing_bag"),
+    enabled: false
+  });
+
+  const quiverQuery = createQuery({
+    queryKey: ["inventory", uuid, profileId, "quiver"],
+    queryFn: () => api().getInventory(uuid, profileId, "quiver"),
+    enabled: false
+  });
+
+  const museumQuery = createQuery({
+    queryKey: ["inventory", uuid, profileId, "museum"],
+    queryFn: () => api().getInventory(uuid, profileId, "museum"),
+    enabled: false
+  });
+
+  const searchQuery = createQuery({
+    queryKey: ["inventory", uuid, profileId, "search"],
+    queryFn: () => api().getInventory(uuid, profileId, "search", debouncedSearchValue.current),
+    enabled: false
+  });
+
+  const debouncedSearchValue = $state(new Debounced(() => searchValue, 300));
+
+  const tabs = $derived<Tabs[]>([
+    {
+      id: "inventory",
+      icon: `https://crafatar.com/renders/head/${profile.uuid}?overlay`,
+      items: $inventoryQuery.data ?? [],
+      loading: $inventoryQuery.isLoading,
+      error: $inventoryQuery.isError,
+      gap: 27
+    },
+    {
+      id: "backpack",
+      icon: "/api/item/chest",
+      items: $backpackQuery.data ?? [],
+      loading: $backpackQuery.isLoading,
+      error: $backpackQuery.isError,
+      gap: 45
+    },
+    {
+      id: "enderchest",
+      icon: "/api/item/ender_chest",
+      items: $enderchestQuery.data ?? [],
+      loading: $enderchestQuery.isLoading,
+      error: $enderchestQuery.isError,
+      gap: 45
+    },
+    {
+      id: "personal_vault",
+      icon: "/api/head/f7aadff9ddc546fdcec6ed5919cc39dfa8d0c07ff4bc613a19f2e6d7f2593",
+      items: $personalVaultQuery.data ?? [],
+      loading: $personalVaultQuery.isLoading,
+      error: $personalVaultQuery.isError,
+      gap: 45
+    },
+    {
+      id: "talisman_bag",
+      icon: "/api/head/961a918c0c49ba8d053e522cb91abc74689367b4d8aa06bfc1ba9154730985ff",
+      items: $talismanBagQuery.data ?? [],
+      loading: $talismanBagQuery.isLoading,
+      error: $talismanBagQuery.isError,
+      gap: 45
+    },
+    {
+      id: "potion_bag",
+      icon: "/api/head/9f8b82427b260d0a61e6483fc3b2c35a585851e08a9a9df372548b4168cc817c",
+      items: $potionBagQuery.data ?? [],
+      loading: $potionBagQuery.isLoading,
+      error: $potionBagQuery.isError,
+      gap: 45
+    },
+    {
+      id: "fishing_bag",
+      icon: "/api/head/eb8e297df6b8dffcf135dba84ec792d420ad8ecb458d144288572a84603b1631",
+      items: $fishingBagQuery.data ?? [],
+      loading: $fishingBagQuery.isLoading,
+      error: $fishingBagQuery.isError,
+      gap: 45
+    },
+    {
+      id: "quiver",
+      icon: "/api/head/4cb3acdc11ca747bf710e59f4c8e9b3d949fdd364c6869831ca878f0763d1787",
+      items: $quiverQuery.data ?? [],
+      loading: $quiverQuery.isLoading,
+      error: $quiverQuery.isError,
+      gap: 45
+    },
+    {
+      id: "museum",
+      icon: "/api/head/438cf3f8e54afc3b3f91d20a49f324dca1486007fe545399055524c17941f4dc",
+      items: $museumQuery.data ?? [],
+      loading: $museumQuery.isLoading,
+      error: $museumQuery.isError,
+      gap: 54
+    },
+    {
+      id: "rift_inventory",
+      icon: "/api/head/445240fcf1a9796327dda5593985343af9121a7156bc76e3d6b341b02e6a6e52",
+      items: $riftInventoryQuery.data ?? [],
+      loading: $riftInventoryQuery.isLoading,
+      error: $riftInventoryQuery.isError,
+      gap: 45
+    },
+    {
+      id: "rift_enderchest",
+      icon: "/api/head/a6cc486c2be1cb9dfcb2e53dd9a3e9a883bfadb27cb956f1896d602b4067",
+      items: $riftEnderchestQuery.data ?? [],
+      loading: $riftEnderchestQuery.isLoading,
+      error: $riftEnderchestQuery.isError,
+      gap: 45
+    },
+    {
+      id: "search",
+      icon: "/api/item/EYE_OF_ENDER",
+      items: $searchQuery.data ?? [],
+      loading: $searchQuery.isLoading,
+      error: $searchQuery.isError,
+      gap: 45
+    }
+  ]);
+
+  const searchedItems = $derived.by<ProcessedSkyBlockItem[] | []>(() => {
+    if (!$searchQuery.data) return [];
+    const search = debouncedSearchValue.current?.trim();
+    if (!search) return [];
+    const searchedItemName = $searchQuery.data.filter((item) => item?.display_name?.toLowerCase().includes(search?.toLowerCase())).slice(0, 45);
+    if (searchedItemName.length === 0) return [];
+
+    return searchedItemName;
+  });
+
+  const itemsFound = $derived(!debouncedSearchValue.pending && !$searchQuery.isLoading && debouncedSearchValue.current && debouncedSearchValue.current !== "" && searchedItems.length === 0);
+
+  const tab = $derived<Tabs>(tabs?.find((t) => t.id === openTab) as Tabs);
 
   const [send, receive] = crossfade({
     duration: 300,
     easing: cubicInOut
   });
+
+  function shouldShine(item: ProcessedSkyBlockItem): boolean | undefined {
+    const enchanted = item.texture_path.includes("/api/leather/") ? false : item.shiny;
+    const shine = enchanted || item.shiny;
+    return shine;
+  }
+
+  itemContentSpecial.subscribe((item) => {
+    if (item) {
+      if (openTab === "search" || openTab === "backpack" || openTab === "museum") {
+        console.warn("Item content special should not be set for search, backpack, or museum tabs.");
+        itemContentSpecial.set(undefined);
+      }
+    }
+  });
+
+  $effect.pre(() => {
+    switch (openTab) {
+      case "backpack":
+        if ($backpackQuery.isSuccess) return;
+        $backpackQuery.refetch();
+        break;
+      case "inventory":
+        if ($inventoryQuery.isSuccess) return;
+        $inventoryQuery.refetch();
+        break;
+      case "enderchest":
+        if ($enderchestQuery.isSuccess) return;
+        $enderchestQuery.refetch();
+        break;
+      case "armor":
+        if ($armorQuery.isSuccess) return;
+        $armorQuery.refetch();
+        break;
+      case "equipment":
+        if ($equipmentQuery.isSuccess) return;
+        $equipmentQuery.refetch();
+        break;
+      case "personal_vault":
+        if ($personalVaultQuery.isSuccess) return;
+        $personalVaultQuery.refetch();
+        break;
+      case "wardrobe":
+        if ($wardrobeQuery.isSuccess) return;
+        $wardrobeQuery.refetch();
+        break;
+      case "rift_inventory":
+        if ($riftInventoryQuery.isSuccess) return;
+        $riftInventoryQuery.refetch();
+        break;
+      case "rift_enderchest":
+        if ($riftEnderchestQuery.isSuccess) return;
+        $riftEnderchestQuery.refetch();
+        break;
+      case "rift_armor":
+        if ($riftArmorQuery.isSuccess) return;
+        $riftArmorQuery.refetch();
+        break;
+      case "rift_equipment":
+        if ($riftEquipmentQuery.isSuccess) return;
+        $riftEquipmentQuery.refetch();
+        break;
+      case "potion_bag":
+        if ($potionBagQuery.isSuccess) return;
+        $potionBagQuery.refetch();
+        break;
+      case "talisman_bag":
+        if ($talismanBagQuery.isSuccess) return;
+        $talismanBagQuery.refetch();
+        break;
+      case "fishing_bag":
+        if ($fishingBagQuery.isSuccess) return;
+        $fishingBagQuery.refetch();
+        break;
+      case "quiver":
+        if ($quiverQuery.isSuccess) return;
+        $quiverQuery.refetch();
+        break;
+      case "museum":
+        if ($museumQuery.isSuccess) return;
+        $museumQuery.refetch();
+        break;
+      case "search":
+        break; // Search is handled separately
+      default:
+        console.warn(`Unknown tab: ${openTab}`);
+        break;
+    }
+  });
+
+  $effect(() => {
+    if (debouncedSearchValue.current && debouncedSearchValue.current !== "" && openTab === "search" && !debouncedSearchValue.pending) {
+      $searchQuery.refetch();
+    }
+  });
 </script>
 
-<CollapsibleSection id="Inventory" {order}>
-  {#if !hasEmptyInventory}
-    <Tabs.Root bind:value={openTab} class="bg-background/30 @container relative mb-0 rounded-lg p-5 pt-4">
-      <Tabs.List>
-        <ScrollArea.Root>
-          <ScrollArea.Viewport class="border-icon border-b">
-            <div class="flex! h-full shrink-0 flex-nowrap items-center gap-3 px-4 whitespace-nowrap">
-              {#each tabs as tab (tab.id)}
-                <Tabs.Trigger value={tab.id} class="group relative flex items-center justify-center gap-0.5 pb-2 text-xs uppercase">
-                  <Avatar.Root class="size-8">
-                    <Avatar.Image loading="lazy" src={tab.icon} class="size-8 object-contain" />
-                    <Avatar.Fallback>
-                      <Image class="size-8" />
-                    </Avatar.Fallback>
-                  </Avatar.Root>
-                  {tab.id}
-                  {#if openTab === tab.id}
-                    <div class="bg-icon absolute -bottom-1 h-2 w-full rounded-full" in:send={{ key: "active-tab" }} out:receive={{ key: "active-tab" }}></div>
-                  {:else}
-                    <div class="bg-icon absolute -bottom-1 h-2 w-full rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100" out:fade={{ duration: 300 }}></div>
-                  {/if}
-                </Tabs.Trigger>
-              {/each}
-            </div>
-          </ScrollArea.Viewport>
-          <ScrollArea.Scrollbar orientation="horizontal">
-            <ScrollArea.Thumb />
-          </ScrollArea.Scrollbar>
-        </ScrollArea.Root>
-      </Tabs.List>
+<Section id="Inventory" {order} class="min-h-[600px]">
+  <Tabs.Root bind:value={openTab} class="bg-background/30 @container relative mb-0 rounded-lg p-5 pt-4">
+    <Tabs.List>
+      <ScrollArea.Root>
+        <ScrollArea.Viewport class="border-icon border-b">
+          <div class="flex! h-full shrink-0 flex-nowrap items-center gap-3 px-4 whitespace-nowrap">
+            {#each tabs as tab (tab.id)}
+              <Tabs.Trigger value={tab.id} class="group relative flex items-center justify-center gap-0.5 pb-2 text-xs uppercase">
+                <Avatar.Root class="size-8">
+                  <Avatar.Image loading="lazy" src={tab.icon} class="size-8 object-contain" />
+                  <Avatar.Fallback>
+                    <Image class="size-8" />
+                  </Avatar.Fallback>
+                </Avatar.Root>
+                {tab.id.replaceAll("_", " ")}
+                {#if openTab === tab.id}
+                  <div class="bg-icon absolute -bottom-1 h-2 w-full rounded-full" in:send={{ key: "active-tab" }} out:receive={{ key: "active-tab" }}></div>
+                {:else}
+                  <div class="bg-icon absolute -bottom-1 h-2 w-full rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100" out:fade={{ duration: 300 }}></div>
+                {/if}
+              </Tabs.Trigger>
+            {/each}
+          </div>
+        </ScrollArea.Viewport>
+        <ScrollArea.Scrollbar orientation="horizontal">
+          <ScrollArea.Thumb />
+        </ScrollArea.Scrollbar>
+      </ScrollArea.Root>
+    </Tabs.List>
 
-      <Tabs.Content value={openTab}>
-        {#if openTab === "storage" || openTab === "museum"}
-          {@render multipleInventorySection()}
-        {:else if openTab == "search"}
-          {@render searchSection()}
-        {:else}
-          {@render inventorySection()}
+    <Tabs.Content value={openTab}>
+      {#if openTab !== "search"}
+        {#if tab.loading}
+          <LoaderCircle class="text-icon mx-auto mt-4 animate-spin" />
         {/if}
-      </Tabs.Content>
-    </Tabs.Root>
-  {:else}
-    <p class="space-x-0.5 leading-6">{profile.username} doesn't have any items.</p>
-  {/if}
-</CollapsibleSection>
+        {#if tab.error}
+          <Notice title="An unexpected error has occurred" type="error" />
+        {/if}
+      {/if}
 
-{#snippet itemSnippet(item: ProcessedSkyBlockItem, tab?: { name: string; icon: string })}
-  <Item piece={item} isInventory={true} showRecombobulated={false} showCount={true} {tab} />
+      {#if openTab === "backpack" || openTab === "museum"}
+        {#if tabs.find((tab) => tab.id === openTab)?.items?.length ?? 0 > 0}
+          {@render multipleInventorySection()}
+        {:else}
+          <p class="mt-2 space-x-0.5 text-center leading-6">
+            No items found in the {openTab.replaceAll("_", " ")}.
+          </p>
+        {/if}
+      {:else if openTab == "search"}
+        {@render searchSection()}
+      {:else if tabs.find((tab) => tab.id === openTab)?.items?.length ?? 0 > 0}
+        {@render inventorySection()}
+      {:else if !tab.loading && !tab.error}
+        <p class="mt-2 space-x-0.5 text-center leading-6">
+          No items found in the {openTab.replaceAll("_", " ")}.
+        </p>
+      {/if}
+    </Tabs.Content>
+  </Tabs.Root>
+</Section>
+
+{#snippet itemSnippet(item: ProcessedSkyBlockItem)}
+  <Item piece={item} isInventory={true} showRecombobulated={false} showCount={true} />
 {/snippet}
 
 {#snippet emptyItem()}
@@ -209,15 +429,29 @@
 {/snippet}
 
 {#snippet searchSection()}
-  <input type="search" placeholder="Search inventory" class="bg-text/10 text-text placeholder:text-text/80 mx-auto mt-4 block w-1/5 rounded-lg px-2 py-2 font-normal focus-visible:outline-none" bind:value={searchValue} />
-  {#if searchValue && searchValue !== "" && searchedItems.length === 0}
+  <input
+    type="search"
+    placeholder="Search all inventories"
+    class="bg-text/10 text-text placeholder:text-text/80 mx-auto mt-4 block w-full max-w-52 rounded-lg px-2 py-2 font-normal focus-visible:outline-none"
+    bind:value={searchValue}
+    onkeydown={(e) => {
+      e.stopPropagation();
+    }} />
+  {#if debouncedSearchValue.pending || $searchQuery.isLoading}
+    <LoaderCircle class="text-icon mx-auto mt-4 animate-spin" />
+  {/if}
+  {#if $searchQuery.isError}
+    <Notice title="An unexpected error has occurred" type="error" />
+  {/if}
+
+  {#if itemsFound}
     <p class="mx-auto w-fit leading-6">No items found.</p>
-  {:else if searchValue !== ""}
+  {:else if debouncedSearchValue.current !== ""}
     <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
       {#each searchedItems as item, index (index)}
-        {#if item.item}
-          <div class="bg-text/[0.04] flex aspect-square items-center justify-center rounded-sm">
-            {@render itemSnippet(item.item, item.sourceTab)}
+        {#if item}
+          <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={shouldShine(item)}>
+            {@render itemSnippet(item)}
           </div>
         {:else}
           {@render emptyItem()}
@@ -236,7 +470,7 @@
             {#snippet child({ props })}
               <div {...props}>
                 {#if item.texture_path}
-                  <div class="group-data-[state=active]:bg-text/10 group-data-[state=inactive]:bg-text/[0.04] flex aspect-square items-center justify-center rounded-sm">
+                  <div class="group-data-[state=active]:bg-text/10 group-data-[state=inactive]:bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={shouldShine(item)}>
                     {@render itemSnippet(item)}
                   </div>
                 {:else}
@@ -261,7 +495,7 @@
                 {/if}
                 <Tabs.Content value={index.toString()}>
                   {#if containedItem.texture_path}
-                    <div class="bg-text/[0.04] flex aspect-square items-center justify-center rounded-sm">
+                    <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={shouldShine(item)}>
                       {@render itemSnippet(containedItem)}
                     </div>
                   {:else}
@@ -270,6 +504,15 @@
                 </Tabs.Content>
               {/each}
             {/if}
+          </div>
+          <div class="grid place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
+            <div class="pt-5">
+              {#if item?.lore}
+                {#each item?.lore as lore, index (index)}
+                  {@html renderLore(lore)}
+                {/each}
+              {/if}
+            </div>
           </div>
         </Tabs.Content>
       {/each}
@@ -287,8 +530,8 @@
           {/if}
         {/if}
         {#if item.texture_path}
-          <div class="bg-text/[0.04] flex aspect-square items-center justify-center rounded-sm">
-            {#if tab.id === "inv"}
+          <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={shouldShine(item)}>
+            {#if tab.id === "inventory"}
               {@render itemSnippet({ ...item, rarity: item.rarity ?? "uncommon" } as ProcessedSkyBlockItem)}
             {:else}
               {@render itemSnippet(item)}

@@ -131,11 +131,11 @@ export function getLevelByXp(
  * @param {Object} hypixelPlayer The Hypixel player data containing information about the player's achievements.
  * @returns {Object} An object containing the skill level caps for farming, taming, and runecrafting.
  */
-export function getSkillLevelCaps(userProfile: Member, player: Player) {
+export function getSkillLevelCaps(userProfile: Member, player: Player | null) {
   return {
     farming: 50 + (userProfile.jacobs_contest?.perks?.farming_level_cap || 0),
-    taming: Math.min(Math.max(player.achievements?.skyblock_domesticator || 50, 50), 60),
-    runecrafting: player.newPackageRank ? 25 : 3
+    taming: 50 + (userProfile.pets_data?.pet_care?.pet_types_sacrificed?.length || 0),
+    runecrafting: player?.newPackageRank ? 25 : 3
   };
 }
 

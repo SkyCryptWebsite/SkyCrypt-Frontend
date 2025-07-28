@@ -1,14 +1,17 @@
-import { dev } from "$app/environment";
-import { PUBLIC_SENTRY_DSN } from "$env/static/public";
+import { building, dev } from "$app/environment";
+import { env } from "$env/dynamic/public";
 import { init as resourcesInit } from "$lib/server/custom_resources";
 import { indexCollectons } from "$lib/server/db/mongo/index-collections";
 import { intializeNEURepository, parseNEURepository } from "$lib/server/helper/NotEnoughUpdates/parseNEURepository";
+import { validateToken } from "$lib/server/token";
 import { contextLinesIntegration, extraErrorDataIntegration, handleErrorWithSentry, sentryHandle, init as sentryInit } from "@sentry/sveltekit";
-import type { ServerInit } from "@sveltejs/kit";
+import { error, type Handle, type ServerInit } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 import { getPrices } from "skyhelper-networth";
 import { startMongo } from "./lib/server/db/mongo";
 import { startRedis } from "./lib/server/db/redis";
+
+const { PUBLIC_SENTRY_DSN } = env;
 
 sentryInit({
   dsn: PUBLIC_SENTRY_DSN,
@@ -40,7 +43,8 @@ sentryInit({
 });
 
 export const init: ServerInit = async () => {
-  console.log("[SkyCrypt] Starting...");
+  if (building) return; // Skip initialization during build time
+  console.info("[SkyCrypt] Starting...");
   const timeNow = performance.now();
 
   await intializeNEURepository().then(() => {
@@ -50,20 +54,64 @@ export const init: ServerInit = async () => {
   await resourcesInit();
 
   await startMongo().then(() => {
-    console.log("[MONGO] MongoDB successfully connected");
+    console.info("[MONGO] MongoDB successfully connected");
 
     indexCollectons();
   });
 
   await startRedis().then(() => {
-    console.log("[REDIS] Redis successfully connected");
+    console.info("[REDIS] Redis successfully connected");
   });
 
   await getPrices(true).then(() => {
-    console.log("[NETWORTH] Prices successfully fetched!");
+    console.info("[NETWORTH] Prices successfully fetched!");
   });
 
-  console.log(`[SkyCrypt] Started in ${(performance.now() - timeNow).toFixed(2)}ms`);
+  console.info(`[SkyCrypt] Started in ${(performance.now() - timeNow).toFixed(2)}ms`);
 };
 export const handleError = handleErrorWithSentry();
-export const handle = sequence(sentryHandle());
+export const handle = sequence(sentryHandle(), async ({ event, resolve }) => {
+  checkRoutes(event);
+  const response = await resolve(event);
+
+  // Security headers
+  response.headers.set("X-Frame-Options", "SAMEORIGIN");
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  response.headers.set("Permissions-Policy", "accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(), gyroscope=(), interest-cohort=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), sync-xhr=(), usb=(), xr-spatial-tracking=(), geolocation=()");
+  response.headers.set("X-Content-Type-Options", "nosniff");
+  response.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+
+  // Cross-Origin policies
+  response.headers.set("Cross-Origin-Embedder-Policy", "unsafe-none");
+  response.headers.set("Cross-Origin-Opener-Policy", "same-origin");
+  response.headers.set("Cross-Origin-Resource-Policy", "cross-origin");
+
+  // Legacy XSS protection
+  response.headers.set("X-XSS-Protection", "1; mode=block");
+
+  return response;
+});
+
+function checkRoutes(event: Parameters<Handle>[0]["event"]) {
+  // if (dev) return; // Skip route checks in development
+  const routeId = event.route.id;
+  if (!routeId) return;
+
+  const isProtectedRoute = routeId.includes("(protected)");
+  if (!isProtectedRoute) return;
+
+  const ip = event.getClientAddress();
+  const authHeader = event.request.headers.get("Authorization");
+  const timestamp = event.request.headers.get("X-Timestamp");
+  const userAgent = event.request.headers.get("User-Agent") || "";
+  const route = event.request.headers.get("X-Route") || routeId;
+
+  // Always perform validation to prevent timing attacks
+  const token = authHeader?.replace(/^Bearer\s+/, "") || "invalid";
+  const validToken = validateToken(ip, token, timestamp || "0", userAgent, route);
+
+  // Check all conditions after validation
+  if (!authHeader || !timestamp || !validToken) {
+    error(401, "Unauthorized access to protected route");
+  }
+}

@@ -1,24 +1,23 @@
+import { SettingsTab } from "$lib/components/header/types";
+import { sections } from "$lib/sections/constants";
 import type { SectionName } from "$lib/sections/types";
-import type { ProcessedSkyBlockItem, ProcessedSkyblockPet } from "$types/global";
+import { sectionOrderPreferences } from "$lib/stores/preferences";
+import type { ProcessedSkyBlockItem } from "$types/global";
+import type { PetProcessedSkyBlockItem } from "$types/statsv2";
 import type { Snippet } from "svelte";
-import { writable } from "svelte/store";
+import { get, writable } from "svelte/store";
 
+export const tabValue = writable<SectionName>(get(sectionOrderPreferences)[0].name || sections[0].name);
 export const showItem = writable<boolean>(false);
-export const itemContent = writable<ProcessedSkyBlockItem | ProcessedSkyblockPet | undefined>();
-export const inviewportSections = writable<Record<SectionName, boolean>>({
-  Armor: false,
-  Weapons: false,
-  Accessories: false,
-  Pets: false,
-  Inventory: false,
-  Skills: false,
-  Dungeons: false,
-  Slayer: false,
-  Minions: false,
-  Bestiary: false,
-  Collections: false,
-  Crimson_Isle: false,
-  Rift: false,
-  Misc: false
-});
+export const tooltipAnchor = writable<HTMLElement>(null!);
+export const itemContent = writable<ProcessedSkyBlockItem | PetProcessedSkyBlockItem | undefined>();
+export const itemContentSpecial = writable<ProcessedSkyBlockItem | undefined>();
 export const content = writable<Snippet | undefined>(undefined);
+export const openCommand = writable<boolean>(false);
+export const settingsOpen = writable<boolean>(false);
+export const settingsTab = writable<SettingsTab>(SettingsTab.Packs);
+export const api_token = writable<{
+  token: string;
+  timestamp: string;
+  route: string;
+} | null>(null);

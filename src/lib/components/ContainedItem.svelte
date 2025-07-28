@@ -1,6 +1,6 @@
 <script lang="ts">
   import { cn } from "$lib/shared/utils";
-  import type { ProcessedSkyBlockItem } from "$lib/types/global";
+  import type { ProcessedSkyBlockItem } from "$types/stats";
   import Image from "@lucide/svelte/icons/image";
   import { Avatar } from "bits-ui";
 

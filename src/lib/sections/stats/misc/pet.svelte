@@ -1,16 +1,18 @@
 <script lang="ts">
-  import { getProfileCtx } from "$ctx/profile.svelte";
+  import { getDynamicCtx } from "$ctx/dynamic.svelte";
   import AdditionStat from "$lib/components/AdditionStat.svelte";
   import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
   import Items from "$lib/layouts/stats/Items.svelte";
+  import { SectionName } from "$lib/shared/api";
   import { titleCase } from "$lib/shared/helper";
+  import type { MiscV2 } from "$types/statsv2";
   import { format } from "numerable";
 
-  const ctx = getProfileCtx();
-  const misc = $derived(ctx.misc);
+  const ctx = getDynamicCtx<() => MiscV2 | undefined>(SectionName.MISC);
+  const misc = $derived(ctx?.data?.());
 </script>
 
-{#if misc.pet_milestones != null}
+{#if misc && misc.pet_milestones != null}
   <SectionSubtitle class="uppercase!">Pet Milestones</SectionSubtitle>
   <Items>
     {#snippet text()}

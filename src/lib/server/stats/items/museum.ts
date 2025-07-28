@@ -15,7 +15,7 @@ export async function decodeMusemItems(museum: MuseumRaw, packs: string[]): Prom
   const [itemResults, specialResults] = await Promise.all([
     Promise.all(
       Object.entries(decodedmuseumItems).map(async ([id, itemData]) => {
-        const encodedData = await processItems(itemData, "museum", packs);
+        const encodedData = await processItems(itemData, "museum", packs, {});
 
         const { donated_time: donatedTime, borrowing: isBorrowing } = museum.items[id];
         const items = encodedData
@@ -43,7 +43,7 @@ export async function decodeMusemItems(museum: MuseumRaw, packs: string[]): Prom
     Promise.all(
       decodedSpecialItems.map(async (itemData, index) => {
         const specialItem = museum.special[index];
-        const decodedData = await processItems(itemData, "museum", packs);
+        const decodedData = await processItems(itemData, "museum", packs, {});
 
         const { donated_time: donatedTime } = specialItem;
         const items = decodedData

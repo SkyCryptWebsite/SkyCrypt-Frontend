@@ -9,7 +9,6 @@ export function getEquipment(equipment: ProcessedItem[]) {
       stats: {}
     };
   }
-  // TODO: implement name & rarity parsing just like the armor
 
   return {
     equipment: equipment.reverse(),

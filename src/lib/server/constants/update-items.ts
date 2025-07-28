@@ -21,7 +21,7 @@ export async function updateItemsConstants() {
     ITEMS.set(skyblockItem.skyblock_id, skyblockItem);
   }
 
-  console.log(`[ITEMS] Updated item constants in ${(Date.now() - timeNow).toLocaleString()}ms`);
+  console.info(`[ITEMS] Updated item constants in ${(Date.now() - timeNow).toLocaleString()}ms`);
 }
 
 setTimeout(updateItemsConstants, 1000 * 60 * 60 * 12); // 12 hours

@@ -1,21 +1,36 @@
 <script lang="ts">
   import { getProfileCtx } from "$ctx/profile.svelte";
-  import { flyAndScale } from "$lib/shared/utils";
+  import ApiNotice from "$lib/components/APINotice.svelte";
+  import { IsHover } from "$lib/hooks/is-hover.svelte";
+  import { cn, flyAndScale } from "$lib/shared/utils";
   import { favorites } from "$lib/stores/favorites";
+  import { performanceMode } from "$lib/stores/preferences";
+  import Ban from "@lucide/svelte/icons/ban";
   import ChevronLeft from "@lucide/svelte/icons/chevron-left";
   import ChevronRight from "@lucide/svelte/icons/chevron-right";
   import ExternalLink from "@lucide/svelte/icons/external-link";
   import Link from "@lucide/svelte/icons/link";
   import Star from "@lucide/svelte/icons/star";
-  import { Avatar, Button, DropdownMenu, Tooltip } from "bits-ui";
+  import TriangleAlert from "@lucide/svelte/icons/triangle-alert";
+  import { Avatar, Button, Popover, Tooltip } from "bits-ui";
+  import { getContext } from "svelte";
   import { toast } from "svelte-sonner";
 
   let toastId: string | number = $state(0);
   let showMore = $state(false);
-  let open = $state(false);
+  let favoriteTooltipOpen = $state(false);
+  let noticeOpen = $state(false);
+  let ignOpen = $state(false);
+  let profileOpen = $state(false);
+
+  let noticeRef = $state<HTMLElement>(null!);
+  let ignRef = $state<HTMLElement>(null!);
 
   const ctx = getProfileCtx();
   const profile = $derived(ctx.profile);
+  const isHover = getContext<IsHover>("isHover");
+
+  const apiSettings = $derived(Object.entries(profile.apiSettings).filter(([_, value]) => !value));
 
   const iconMapper: Record<string, string> = {
     TWITTER: "x-twitter.svg",
@@ -36,105 +51,134 @@
 
 <div class="flex flex-wrap items-center gap-x-2 gap-y-3 text-4xl">
   Stats for
-  <DropdownMenu.Root>
-    <DropdownMenu.Trigger class="inline-flex items-center rounded-full bg-[oklch(59.65%_0_0)]/20 py-2 pr-4 pl-2 align-middle text-3xl font-semibold whitespace-nowrap">
-      <div class="relative flex items-center justify-center overflow-hidden rounded-full bg-[var(--color)] px-2 py-1 text-xl" style={`--color:${profile.rank?.rankColor}`}>
-        <div class="relative z-20 inline-flex justify-between gap-3 text-lg font-bold">
-          <span>{profile.rank?.rankText}</span>
-          {#if profile.rank?.plusText}
-            <span>{profile.rank.plusText}</span>
-          {/if}
+  <Popover.Root bind:open={ignOpen}>
+    <Popover.Trigger
+      disabled={!profile.members.length}
+      class="inline-flex items-center rounded-full bg-[oklch(59.65%_0_0)]/20 py-2 pr-4 pl-2 align-middle text-xl font-semibold whitespace-nowrap sm:text-3xl"
+      bind:ref={ignRef}
+      onpointerenter={() => {
+        if (!profile.members.length) return;
+        if (!isHover.current) return;
+        profileOpen = false;
+        ignOpen = true;
+      }}>
+      {#if profile.rank?.rankColor}
+        <div class="relative flex items-center justify-center overflow-hidden rounded-full bg-[var(--color)] px-2 py-1 text-xl" style={`--color:${profile.rank.rankColor}`}>
+          <div class="relative z-20 inline-flex justify-between gap-3 text-sm font-bold sm:text-lg">
+            <span>{profile.rank.rankText}</span>
+            {#if profile.rank.plusText}
+              <span>{profile.rank.plusText}</span>
+            {/if}
+          </div>
+          <div class="absolute top-0 -right-3 bottom-0 z-10 h-14 w-1/2 skew-x-[-20deg] bg-[var(--plusColor)]" style={`--plusColor:${profile.rank.plusColor ?? profile.rank.rankColor}`}></div>
         </div>
-        <div class="absolute top-0 -right-3 bottom-0 z-10 h-14 w-1/2 skew-x-[-20deg] bg-[var(--plusColor)]" style={`--plusColor:${profile.rank?.plusColor ?? profile.rank?.rankColor}`}></div>
-      </div>
-      <span class="pl-4">{profile.displayName}</span>
-    </DropdownMenu.Trigger>
+      {/if}
+      <span class={cn(profile.rank?.rankColor ? "pl-4" : "pl-2")}>{profile.displayName}</span>
+    </Popover.Trigger>
 
-    <DropdownMenu.Portal>
-      <DropdownMenu.Content forceMount class="bg-background-grey/95 z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold" align="start" side="bottom">
-        {#snippet child({ wrapperProps, props, open })}
-          {#if open}
-            <div {...wrapperProps}>
-              <div {...props} transition:flyAndScale={{ y: 8, duration: 150 }}>
-                {#each profile.members as member (member.uuid)}
-                  {#if member.username !== profile.username}
-                    <DropdownMenu.Item class="hover:bg-text/20 flex items-center p-4" data-sveltekit-preload-code="viewport">
-                      {#snippet child({ props })}
-                        <a {...props} href={`/stats/${member.username}/${profile.profile_cute_name}`}>
-                          <span class="pl-4 {member.removed ? 'line-through' : ''}">
-                            {member.username}
-                          </span>
-                        </a>
-                      {/snippet}
-                    </DropdownMenu.Item>
-                  {/if}
-                {/each}
-              </div>
+    <Popover.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", $performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={ignRef} strategy="absolute">
+      {#snippet child({ wrapperProps, props, open })}
+        {#if open}
+          <div {...wrapperProps}>
+            <div {...props} transition:flyAndScale>
+              {#each profile.members as member (member.uuid)}
+                {#if member.username !== profile.username}
+                  <a href={`/stats/${member.username}/${profile.profile_cute_name}`} class="group flex min-w-(--bits-dropdown-menu-anchor-width) items-center p-2 focus-visible:outline-0" data-sveltekit-preload-code="viewport">
+                    <span class="outline-icon group-hover:bg-text/20 flex w-full items-center justify-between gap-2 rounded-lg bg-[oklch(59.65%_0_0)]/20 p-2 transition-colors duration-300 group-focus-visible:outline-1">
+                      {member.username}
+                      {#if member.removed}
+                        <Ban class="size-6" />
+                      {/if}
+                    </span>
+                  </a>
+                {/if}
+              {/each}
             </div>
-          {/if}
-        {/snippet}
-      </DropdownMenu.Content>
-    </DropdownMenu.Portal>
-  </DropdownMenu.Root>
+          </div>
+        {/if}
+      {/snippet}
+    </Popover.Content>
+  </Popover.Root>
   on
-  <DropdownMenu.Root>
-    <DropdownMenu.Trigger class="inline-flex items-center rounded-full bg-[oklch(59.65%_0_0)]/20 px-4 py-2 align-middle text-3xl font-semibold">
-      {profile.profile_cute_name}
-    </DropdownMenu.Trigger>
-    <DropdownMenu.Portal>
-      <DropdownMenu.Content forceMount class="bg-background-grey/95 z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold" align="start" side="bottom">
+  <div class="relative inline-flex items-center gap-2 rounded-full bg-[oklch(59.65%_0_0)]/20 px-2 py-1 align-middle text-xl font-semibold data-[warning=true]:border-2 data-[warning=true]:border-yellow-500/20 sm:text-3xl" data-warning={!!apiSettings.length} bind:this={noticeRef}>
+    <Popover.Root bind:open={profileOpen}>
+      <Popover.Trigger
+        disabled={!profile.profiles.length}
+        onpointerenter={() => {
+          if (!profile.profiles.length) return;
+          if (!isHover.current) return;
+          ignOpen = false;
+          profileOpen = true;
+        }}
+        class="rounded-full px-2 py-1">
+        {profile.profile_cute_name}
+        {@render profileIcon(profile.game_mode)}
+      </Popover.Trigger>
+      <Popover.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", $performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={noticeRef} strategy="absolute">
         {#snippet child({ wrapperProps, props, open })}
           {#if open}
             <div {...wrapperProps}>
-              <div {...props} transition:flyAndScale={{ y: 8, duration: 150 }}>
+              <div {...props} transition:flyAndScale>
                 {#each profile.profiles ?? [] as otherProfile (otherProfile.profile_id)}
                   {#if otherProfile.profile_id !== profile.profile_id}
-                    <DropdownMenu.Item class="hover:bg-text/20 flex items-center p-4" data-sveltekit-preload-code="viewport">
-                      {#snippet child({ props })}
-                        <a {...props} href={`/stats/${profile.username}/${otherProfile.cute_name}`}>
-                          {otherProfile.cute_name}
-                          {#if otherProfile.game_mode === "bingo"}
-                            🎲
-                          {/if}
-                          {#if otherProfile.game_mode === "ironman"}
-                            ♻️
-                          {/if}
-                          {#if otherProfile.game_mode === "island"}
-                            🌴
-                          {/if}
-                        </a>
-                      {/snippet}
-                    </DropdownMenu.Item>
+                    <a href={`/stats/${profile.username}/${otherProfile.cute_name}`} class="group flex items-center p-2 focus-visible:outline-0" data-sveltekit-preload-code="viewport">
+                      <div class="group-hover:bg-text/20 outline-icon w-full rounded-lg bg-[oklch(59.65%_0_0)]/20 p-2 transition-colors duration-300 group-focus-visible:outline-1">
+                        {otherProfile.cute_name}
+                        {@render profileIcon(otherProfile.game_mode)}
+                      </div>
+                    </a>
                   {/if}
                 {/each}
               </div>
             </div>
           {/if}
         {/snippet}
-      </DropdownMenu.Content>
-    </DropdownMenu.Portal>
-  </DropdownMenu.Root>
+      </Popover.Content>
+    </Popover.Root>
+
+    {#if apiSettings.length}
+      <Popover.Root bind:open={noticeOpen}>
+        <Popover.Trigger class="rounded-full bg-yellow-500/20 px-4 py-2" onpointerenter={() => (noticeOpen = true)}>
+          <TriangleAlert class="size-6 text-yellow-500" />
+        </Popover.Trigger>
+        <Popover.Portal>
+          <Popover.Content forceMount class="bg-background-grey z-50 max-w-sm rounded-lg" sideOffset={0} side="bottom" align="center" customAnchor={noticeRef} collisionPadding={6}>
+            {#snippet child({ wrapperProps, props, open })}
+              {#if open}
+                <div {...wrapperProps}>
+                  <div {...props} transition:flyAndScale>
+                    <ApiNotice />
+                    <Popover.Arrow class="!text-icon [&>svg[data-arrow]]:text-icon" />
+                  </div>
+                </div>
+              {/if}
+            {/snippet}
+          </Popover.Content>
+        </Popover.Portal>
+      </Popover.Root>
+    {/if}
+  </div>
 </div>
 
 <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
-  <Tooltip.Root bind:open disableCloseOnTriggerClick={false}>
+  <Tooltip.Root bind:open={favoriteTooltipOpen} disableCloseOnTriggerClick={false}>
     <Tooltip.Trigger
       class="bg-icon/90 hover:bg-icon aspect-square rounded-full p-2 transition-opacity duration-150"
       onclick={() => {
-        if (!$favorites.includes(profile.uuid)) {
-          favorites.set([...$favorites, profile.uuid]);
+        if (!$favorites.some((fav) => fav.uuid === profile.uuid)) {
+          favorites.set([...$favorites, { uuid: profile.uuid, ign: profile.username }]);
           toast.dismiss(toastId);
           toastId = toast.success(`Added ${profile.username} to your favorites!`);
         } else {
-          favorites.set($favorites.filter((uuid) => uuid !== profile.uuid));
+          favorites.set($favorites.filter((fav) => fav.uuid !== profile.uuid));
           toast.dismiss(toastId);
           toastId = toast.success(`Removed ${profile.username} from your favorites!`);
         }
       }}
-      onpointerdown={() => (open = !open)}>
+      onpointerdown={() => (favoriteTooltipOpen = !favoriteTooltipOpen)}>
       {#snippet child({ props })}
         <button {...props}>
-          {#if $favorites.includes(profile.uuid)}
+          {#if $favorites.some((fav) => fav.uuid === profile.uuid)}
             <Star class="size-4 fill-white" />
           {:else}
             <Star class="size-4" />
@@ -147,9 +191,9 @@
         {#snippet child({ wrapperProps, props, open })}
           {#if open}
             <div {...wrapperProps}>
-              <div {...props} transition:flyAndScale={{ y: 8, duration: 150 }}>
+              <div {...props} transition:flyAndScale>
                 <Tooltip.Arrow />
-                {#if $favorites.includes(profile.uuid)}
+                {#if $favorites.some((fav) => fav.uuid === profile.uuid)}
                   <p>Remove from favorites</p>
                 {:else}
                   <p>Add to favorites</p>
@@ -218,3 +262,15 @@
     {/if}
   </Button.Root>
 </div>
+
+{#snippet profileIcon(gameMode: string)}
+  {#if gameMode === "bingo"}
+    🎲
+  {/if}
+  {#if gameMode === "ironman"}
+    ♻️
+  {/if}
+  {#if gameMode === "island"}
+    🌴
+  {/if}
+{/snippet}

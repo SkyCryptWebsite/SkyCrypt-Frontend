@@ -21,7 +21,7 @@ export async function updateCollectionConstants() {
     COLLECTIONS.set(category, collections.collections[category] as Collection);
   }
 
-  console.log("[COLLECTIONS] Updated collection constants");
+  console.info("[COLLECTIONS] Updated collection constants");
 }
 
 setTimeout(updateCollectionConstants, 1000 * 60 * 60 * 12); // 12 hours

@@ -1,6 +1,8 @@
 import { building } from "$app/environment";
-import { REDIS_HOST, REDIS_PASSWORD, REDIS_PORT } from "$env/static/private";
+import { env } from "$env/dynamic/private";
 import { createClient } from "redis";
+
+const { REDIS_HOST, REDIS_PASSWORD, REDIS_PORT } = env;
 
 export const REDIS = createClient({
   url: `redis://default:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}`

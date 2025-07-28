@@ -134,4 +134,5 @@ export type ProcessedPet = {
       fandom?: string;
     };
   };
+  uuid: string;
 };

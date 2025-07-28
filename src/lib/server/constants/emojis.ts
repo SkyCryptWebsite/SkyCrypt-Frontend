@@ -11,7 +11,7 @@ export async function updateCachedEmojis() {
     CACHED_EMOJIS.set(emoji.uuid, emoji.emoji);
   }
 
-  console.log(`[EMOJIS] Updated emojis in ${Date.now() - timeNow}ms`);
+  console.info(`[EMOJIS] Updated emojis in ${Date.now() - timeNow}ms`);
 }
 
 setInterval(updateCachedEmojis, 1000 * 60 * 60); // 1 hour

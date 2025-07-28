@@ -1,25 +1,77 @@
-import type { Stats as StatsType } from "$lib/types/stats";
+import { fetchPlayer, getProfile, getUUID } from "$lib/server/lib";
+import { getMainStats } from "$lib/server/stats/main_stats.js";
+import { generateDynamicKey, generateToken } from "$lib/server/token";
+import { encodeBase64 } from "@oslojs/encoding";
 import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
-type APIError = { body?: { message?: string } };
-
-export const load = (async ({ params, fetch }) => {
-  const { ign, profile } = params;
-
-  try {
-    const data = await fetch(`/api/stats/${ign}${profile ? "/" + profile : ""}`);
-    if (!data.ok && data.status !== 500) {
-      error(data.status, "Failed to fetch data");
-    }
-
-    const user = (await data.json()) as StatsType & { message?: string };
-    if (user.message) {
-      error(404, user.message);
-    }
-
-    return { user };
-  } catch (e) {
-    error(500, (e as APIError).body?.message ?? "Failed to fetch data");
+export const load = (async ({ params, cookies, getClientAddress, request, route }) => {
+  const { ign: paramPlayer, profile: paramProfile = null } = params;
+  const ip = getClientAddress();
+  const userAgent = request.headers.get("User-Agent");
+  const routeId = route.id;
+  if (!ip) {
+    error(400, "IP address not found");
   }
+  if (!userAgent) {
+    error(400, "User-Agent header not found");
+  }
+
+  const uuid = await getUUID(paramPlayer, { cache: true });
+  const [profile, player] = await Promise.all([getProfile(uuid, paramProfile, { cache: true }), fetchPlayer(uuid, { cache: true })]);
+  const packs = JSON.parse(cookies.get("disabledPacks") || "[]");
+
+  const stats = getMainStats(profile.members[profile.uuid], profile, player, packs);
+
+  // Generate dynamic key based on request context (includes time window)
+  const dynamicKey = generateDynamicKey(ip, userAgent, routeId);
+  const tokenData = generateToken(ip, userAgent, routeId);
+  const timeWindow = Math.floor(Date.now() / (5 * 60 * 1000)); // Same 5-minute interval
+
+  // Create decoy objects to obfuscate the real token
+  const generateDecoyData = (index: number) => ({
+    token: Array.from({ length: 128 }, () => Math.random().toString(36).charAt(2)).join(""),
+    timestamp: (Date.now() + Math.random() * 1000000).toString(),
+    route: `/fake/route/${index}`,
+    decoy: true,
+    sessionId: Math.random().toString(36).substring(2),
+    checksum: Math.random().toString(16).substring(2)
+  });
+
+  // Generate 3-7 decoy objects with random keys
+  const numDecoys = Math.floor(Math.random() * 5) + 3; // 3-7 decoys
+  const allObjects: Array<[string, string]> = [];
+
+  // Add decoy objects
+  for (let i = 0; i < numDecoys; i++) {
+    const decoyKey = Array.from({ length: 32 }, () => Math.random().toString(36).charAt(2)).join("");
+    const decoyData = generateDecoyData(i);
+    allObjects.push([encodeBase64(new TextEncoder().encode(decoyKey)), encodeBase64(new TextEncoder().encode(JSON.stringify(decoyData)))]);
+  }
+
+  // Add the real token at a random position
+  const realTokenEntry: [string, string] = [
+    encodeBase64(new TextEncoder().encode(dynamicKey)),
+    encodeBase64(
+      new TextEncoder().encode(
+        JSON.stringify({
+          ...tokenData,
+          keyId: dynamicKey, // Include the key identifier so client can find it
+          timeWindow // Include time window for potential fallback key generation
+        })
+      )
+    )
+  ];
+
+  // Insert real token at random position
+  const randomPosition = Math.floor(Math.random() * (allObjects.length + 1));
+  allObjects.splice(randomPosition, 0, realTokenEntry);
+
+  // Convert back to object
+  const shuffledObjects = Object.fromEntries(allObjects);
+
+  return {
+    stats,
+    ...shuffledObjects
+  };
 }) satisfies PageServerLoad;

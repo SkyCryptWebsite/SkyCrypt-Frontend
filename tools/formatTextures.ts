@@ -11,7 +11,7 @@ for (const textureData of data) {
   const itemId = id.split(":")[1];
   const itemDamage = id.split(":")[2];
 
-  console.log(itemId, parseInt(itemDamage ?? 0), name);
+  console.info(itemId, parseInt(itemDamage ?? 0), name);
 
   fs.writeFileSync("static/resourcepacks/Vanilla/assets/minecraft/mcpatcher/cit/textures/" + id.replace("minecraft:", "") + ".png", buffer);
 

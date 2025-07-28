@@ -4,7 +4,7 @@ import * as helper from "$lib/server/helper";
 import type { Item, ProcessedItem } from "$types/stats";
 
 import { NEU_ITEMS } from "$lib/server/helper/NotEnoughUpdates/parseNEURepository";
-import { getItemNetworth } from "skyhelper-networth";
+import { decodeItem } from "./decoding";
 import { addLevelableEnchantmentsToLore, parseItemGems } from "./helper";
 
 export function itemSorter(a: ProcessedItem, b: ProcessedItem) {
@@ -70,8 +70,8 @@ function getCategories(type: string, item: Item) {
   return [...new Set(categories.concat(constants.TYPE_TO_CATEGORIES[type as keyof typeof constants.TYPE_TO_CATEGORIES]))];
 }
 
-// Process items returned by API
-export async function processItems(items: ProcessedItem[], source: string, packs: string[]): Promise<ProcessedItem[]> {
+// options = ignore that part
+export async function processItems(items: ProcessedItem[], source: string, packs: string[], options: { pack?: boolean; category?: boolean }): Promise<ProcessedItem[]> {
   for (const item of items) {
     if (!item.tag?.ExtraAttributes?.id && item.exp === undefined) {
       continue;
@@ -85,9 +85,38 @@ export async function processItems(items: ProcessedItem[], source: string, packs
       item.texture_path = `/api/potion/${type}/${color}`;
     }
 
-    item.extra = { source };
+    if (!item.extra?.source) {
+      item.extra = { source };
+    }
 
-    helper.applyResourcePack(item, packs);
+    // Remove any exotic color codes
+    if (item.tag?.display?.color && item.tag.ExtraAttributes.id) {
+      let color = "";
+
+      // Use default color from constants if not dyed
+      if (!item.tag.ExtraAttributes.dye_item) {
+        const defaultColor = constants.ITEMS.get(item.tag.ExtraAttributes.id)?.hex_color;
+        if (defaultColor) {
+          color = defaultColor;
+        }
+
+        if (constants.BLACKLISTED_HEX_ARMOR_PIECES.includes(item.tag.ExtraAttributes.id)) {
+          item.tag.display.color = null;
+        }
+      } else {
+        // Use color if dye_item is set (it's probably just dyed, not exotic)
+        color = (item.tag.display.color as unknown as number).toString(16).padStart(6, "0");
+      }
+
+      if (color) {
+        // For some reason this is typed as a string, but it should be a number
+        item.tag.display.color = parseInt(color, 16) as unknown as string;
+      }
+    }
+
+    if (!options?.pack) {
+      helper.applyResourcePack(item, packs);
+    }
 
     if (item.tag?.display?.Name != undefined) {
       item.display_name = item.tag.display.Name;
@@ -100,7 +129,7 @@ export async function processItems(items: ProcessedItem[], source: string, packs
 
     item.rarity = null;
     item.categories = [];
-    if (lore.length > 0) {
+    if (lore.length > 0 && !options?.category) {
       // item categories, rarity, recombobulated, dungeon, shiny
       const itemType = parseItemTypeFromLore(lore, item);
 
@@ -109,12 +138,12 @@ export async function processItems(items: ProcessedItem[], source: string, packs
         // @ts-expect-error
         item[key] = itemType[key as keyof typeof itemType];
       }
+    }
 
-      // Fix custom maps texture, happens when player is inside of Dungeons
-      if (item.id == 358) {
-        item.id = 395;
-        item.Damage = 0;
-      }
+    // Fix custom maps texture, happens when player is inside of Dungeons
+    if (item.id == 358) {
+      item.id = 395;
+      item.Damage = 0;
     }
 
     if (itemLore.length > 0 && item.tag.ExtraAttributes) {
@@ -123,7 +152,14 @@ export async function processItems(items: ProcessedItem[], source: string, packs
       }
 
       if (item.tag.ExtraAttributes.timestamp) {
-        itemLore.push("", `§7Obtained: §c${helper.formatTimestamp(item.tag.ExtraAttributes.timestamp)}`);
+        const timestamp = item.tag.ExtraAttributes.timestamp;
+        if (!isNaN(Number(timestamp))) {
+          item.timestamp = timestamp;
+        } else {
+          item.timestamp = Date.parse(timestamp + " EDT");
+        }
+
+        itemLore.push("", `§7Obtained: §c{TIMESTAMP:${item.timestamp}}`);
       }
 
       if (item.tag?.display?.color) {
@@ -147,7 +183,7 @@ export async function processItems(items: ProcessedItem[], source: string, packs
       }
     }
 
-    if (item.tag || item.exp !== undefined) {
+    /*if (item.tag || item.exp !== undefined) {
       try {
         const ITEM_PRICE = await getItemNetworth(item, { cache: true });
         if (ITEM_PRICE?.price > 0) {
@@ -157,7 +193,7 @@ export async function processItems(items: ProcessedItem[], source: string, packs
         console.log(error);
         itemLore.push("", `§7Item Value: §cAn error occurred while calculating the value of this item.`);
       }
-    }
+    }*/
 
     const NEUItem = NEU_ITEMS.get(helper.getId(item));
     if (NEUItem?.info) {
@@ -168,6 +204,22 @@ export async function processItems(items: ProcessedItem[], source: string, packs
         fandom: (isFandom ? link1 : link2) ?? null,
         official: (isFandom ? link2 : link1) ?? null
       };
+    }
+
+    if (item.tag?.display?.Name.includes("Backpack") || ["NEW_YEAR_CAKE_BAG", "BUILDERS_WAND", "BASKET_OF_SEEDS"].includes(item.tag?.ExtraAttributes?.id ?? "")) {
+      let backpackData;
+      for (const key of Object.keys(item.tag.ExtraAttributes)) {
+        if (key.endsWith("_data")) {
+          backpackData = item.tag.ExtraAttributes[key as keyof typeof item.tag.ExtraAttributes];
+        }
+      }
+
+      if (Array.isArray(backpackData)) {
+        const decodedItems = await decodeItem(Buffer.from(backpackData) as unknown as string);
+        if (Object.keys(decodedItems).length > 0) {
+          item.containsItems = await processItems(decodedItems, source, packs, options);
+        }
+      }
     }
   }
 

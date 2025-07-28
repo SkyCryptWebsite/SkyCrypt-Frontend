@@ -34,4 +34,4 @@ for (const key in output) {
   output[key] = lowStat + (highStat - lowStat) * progress;
 }
 
-console.log(output);
+console.info(output);

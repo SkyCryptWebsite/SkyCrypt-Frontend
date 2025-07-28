@@ -26,7 +26,7 @@ function getBestiaryMobs(bestiary: Record<string, number>, mobList: Mob[]) {
 }
 
 export function getBestiaryFamily(userProfile: Member, mobName: string) {
-  const bestiary = userProfile.bestiary.kills || {};
+  const bestiary = userProfile.bestiary?.kills ?? {};
   const bestiaryConstants = NEU_CONSTANTS.get("bestiary") as NEUBestiaryConstant;
   const family = Object.values(bestiaryConstants.islands)
     .flatMap((category) => category.mobs)
