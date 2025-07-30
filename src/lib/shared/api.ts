@@ -12,20 +12,10 @@ const customKy = ky.create({
       (error) => {
         const { request, response } = error;
         let kind;
-
-        switch (request.url) {
-          case "/api/v2/item/":
-            kind = "Item";
-            break;
-          case "/api/v2/inventory/":
-            kind = "Inventory";
-            break;
-          case "/api/v2/garden/":
-            kind = "Garden";
-            break;
-          default:
-            kind = "section";
-        }
+        if (request.url.includes("item/")) kind = "Item";
+        else if (request.url.includes("inventory/")) kind = "Inventory";
+        else if (request.url.includes("garden/")) kind = "Garden";
+        else kind = "section";
 
         if (!response.ok && response.status !== 500) {
           error.message = `${response.status} - Failed to fetch ${kind ? kind + " " : ""} - ${response.statusText}`;
