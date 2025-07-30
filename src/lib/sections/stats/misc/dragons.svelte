@@ -7,9 +7,9 @@
   import { formatTime } from "$lib/shared/helper";
   import type { MiscV2 } from "$types/statsv2";
   import { format } from "numerable";
-  const ctx = getDynamicCtx<() => MiscV2 | undefined>(SectionName.MISC);
-  const misc = $derived(ctx?.data?.());
+  const ctx = getDynamicCtx<() => MiscV2[SectionName.MISC] | undefined>(SectionName.MISC);
 
+  const misc = $derived(ctx?.data?.());
   const dragons = $derived(misc?.dragons);
 </script>
 

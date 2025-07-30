@@ -73,7 +73,7 @@ export const load = (async ({ params, getClientAddress, request, route }) => {
         "X-Timestamp": tokenData.timestamp,
         "X-Route": tokenData.route
       }
-    }).json<StatsV2>(),
+    }).json<{ stats: StatsV2 }>(),
     ...shuffledObjects
   };
 }) satisfies PageServerLoad;

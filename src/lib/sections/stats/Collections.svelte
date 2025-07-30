@@ -28,7 +28,7 @@
 
   const collections = $derived.by(() => {
     if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data;
+    return $query.data[SectionName.COLLECTIONS];
   });
 </script>
 

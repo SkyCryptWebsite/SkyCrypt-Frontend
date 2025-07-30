@@ -30,7 +30,7 @@
 
   const pets = $derived.by(() => {
     if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data;
+    return $query.data[SectionName.PETS];
   });
 
   const activePet = $derived(pets?.pets.find((pet) => pet.active === true));

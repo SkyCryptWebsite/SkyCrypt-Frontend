@@ -33,7 +33,7 @@
 
   const dungeons = $derived.by(() => {
     if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data;
+    return $query.data[SectionName.DUNGEONS];
   });
 
   function formatDuration(end: number) {

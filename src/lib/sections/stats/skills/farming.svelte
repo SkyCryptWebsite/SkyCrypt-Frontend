@@ -24,24 +24,6 @@
 {#if farming}
   <div class="space-y-5">
     <div class="space-y-0.5">
-      <AdditionStat text="Farming Weight" data={formatNumber(farming.weight.totalWeight)} asterisk={true}>
-        <div class="space-y-5">
-          <div>
-            <h4 class="font-semibold text-white">Farming Weight</h4>
-            <p class="text-text/50 text-sm italic">Weight calculations by <a href="https://elitebot.dev/" target="_blank" class="text-icon underline">Elite</a></p>
-          </div>
-          <div>
-            {#each Object.entries(farming.weight.bonusSources) as [key, value], index (index)}
-              <AdditionStat text={key} data={formatNumber(value)} class="capitalize" />
-            {/each}
-          </div>
-          <div>
-            {#each farming.weight.crops as crop, index (index)}
-              <AdditionStat text={crop.name.toLowerCase().replace("_", " ")} data={formatNumber(crop.amount)} class="capitalize" />
-            {/each}
-          </div>
-        </div>
-      </AdditionStat>
       <AdditionStat text="Pelts" data={farming.pelts.toString()} />
       <AdditionStat text="Contests Attended" data={farming.contestsAttended.toString()} />
       <AdditionStat text="Unique Golds" data={farming.uniqueGolds.toString()} maxed={farming.uniqueGolds === 10} />

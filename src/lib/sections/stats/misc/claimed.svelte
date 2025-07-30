@@ -8,7 +8,7 @@
   import { tz } from "@date-fns/tz";
   import { formatDate, formatDistanceToNowStrict } from "date-fns";
 
-  const ctx = getDynamicCtx<() => MiscV2 | undefined>(SectionName.MISC);
+  const ctx = getDynamicCtx<() => MiscV2[SectionName.MISC] | undefined>(SectionName.MISC);
   const misc = $derived(ctx?.data?.());
 </script>
 

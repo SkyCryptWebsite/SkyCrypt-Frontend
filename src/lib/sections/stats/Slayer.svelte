@@ -29,7 +29,7 @@
 
   const slayer = $derived.by(() => {
     if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data;
+    return $query.data[SectionName.SLAYER];
   });
 </script>
 

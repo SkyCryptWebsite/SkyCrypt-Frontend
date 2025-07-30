@@ -33,7 +33,7 @@
 
   const rift = $derived.by(() => {
     if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data;
+    return $query.data[SectionName.RIFT];
   });
 
   const equipment = $derived(rift?.equipment);

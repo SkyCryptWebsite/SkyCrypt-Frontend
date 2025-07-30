@@ -8,7 +8,7 @@
   import { format } from "numerable";
   import VirtualList from "svelte-tiny-virtual-list";
 
-  const ctx = getDynamicCtx<() => MiscV2 | undefined>(SectionName.MISC);
+  const ctx = getDynamicCtx<() => MiscV2[SectionName.MISC] | undefined>(SectionName.MISC);
   const misc = $derived(ctx?.data?.());
 </script>
 
