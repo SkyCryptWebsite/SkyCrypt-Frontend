@@ -8,7 +8,7 @@
   import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
   import Items from "$lib/layouts/stats/Items.svelte";
   import { api, SectionName } from "$lib/shared/api";
-  import { RARITY_COLORS } from "$lib/shared/constants/items";
+  import { RARITY_COLORS } from "$lib/shared/constants/rarities";
   import { STATS_DATA } from "$lib/shared/constants/stats";
   import * as helper from "$lib/shared/helper";
   import { calculatePercentage } from "$lib/shared/helper";

@@ -1,6 +1,5 @@
 import { MAX_ENCHANTS } from "$lib/shared/constants/enchantments";
-import { RARITY_COLORS } from "$lib/shared/constants/items";
-import type { ProcessedItem } from "$types/global";
+import { RARITY_COLORS } from "$lib/shared/constants/rarities";
 import { tz } from "@date-fns/tz";
 import { format } from "date-fns";
 import prettyMilliseconds from "pretty-ms";
@@ -130,38 +129,6 @@ export function renderLore(text: string): string {
 }
 
 /**
- * Checks if an item is enchanted
- * @param {Item} item The item to check
- * @returns  {boolean} Whether the item is enchanted
- */
-export function isEnchanted(item: ProcessedItem): boolean {
-  // heads
-  if ([397].includes(item.id)) {
-    return false;
-  }
-
-  // enchanted book, bottle o' enchanting, nether star
-  if ([403, 384, 399].includes(item.id)) {
-    return true;
-  }
-
-  //potions with actual effects (not water bottles)
-  if (item.id === 373 && item.Damage !== 0) {
-    return true;
-  }
-
-  if ("tag" in item && (Array.isArray(item.tag.ench) || item.tag.ExtraAttributes?.enchantments)) {
-    return true;
-  }
-
-  if (item.glowing) {
-    return true;
-  }
-
-  return false;
-}
-
-/**
  * Removes Minecraft formatting codes from a string
  * @param {string} string
  * @returns {string}
@@ -185,36 +152,6 @@ export function uniqBy<T>(arr: T[], key: string) {
     return seen.has(k) ? false : seen.add(k);
   });
 }
-
-/**
- * Returns the username of a player with the specified UUID.
- * @param {string} uuid - The UUID of the player.
- * @returns {Promise<string>} The username of the player.
- */
-export const getUsername = async (uuid: string): Promise<string> => {
-  try {
-    const res = await fetch(`/api/username/${uuid}`);
-    const { username } = await res.json();
-    return username;
-  } catch {
-    return "???";
-  }
-};
-
-/**
- * Returns the UUID of a player with the specified username.
- * @param {string} username - The username of the player.
- * @returns {Promise<string>} The UUID of the player.
- */
-export const getUUID = async (username: string): Promise<string> => {
-  try {
-    const res = await fetch(`/api/uuid/${username}`);
-    const { uuid } = await res.json();
-    return uuid;
-  } catch {
-    return "???";
-  }
-};
 
 /**
  * Validates a URL and returns the path to the stats page
