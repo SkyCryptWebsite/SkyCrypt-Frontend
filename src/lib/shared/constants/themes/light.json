@@ -5,7 +5,7 @@
   "schema": 2,
   "light": true,
   "images": {
-    "bg": "/img/themes/light/bg.webp"
+    "bg": "/img/themes/light/bg.avif"
   },
   "backgrounds": {
     "skillbar": { "type": "color", "color": "oklch(76.9% 0.2065 142.21)" },

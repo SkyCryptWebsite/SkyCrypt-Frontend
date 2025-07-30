@@ -4,7 +4,7 @@
   "author": "rainbowcraft2",
   "schema": 2,
   "images": {
-    "bg": "/img/themes/draconic/bg.webp"
+    "bg": "/img/themes/draconic/bg.avif"
   },
   "backgrounds": {
     "skillbar": { "type": "color", "color": "oklch(64.46% 0.1986 315.35)" }

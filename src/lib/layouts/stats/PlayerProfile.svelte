@@ -39,7 +39,7 @@
     TIKTOK: "tiktok.svg",
     TWITCH: "twitch.svg",
     DISCORD: "discord.svg",
-    HYPIXEL: "hypixel.png"
+    HYPIXEL: "hypixel.avif"
   };
 
   function copyToClipboard(value: string) {

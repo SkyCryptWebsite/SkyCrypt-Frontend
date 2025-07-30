@@ -253,7 +253,7 @@
 {#if $showGlint}
   <svg xmlns="http://www.w3.org/2000/svg" height="0" width="0" class="fixed">
     <filter id="enchanted-glint">
-      <feImage href="/img/enchanted-glint.png" />
+      <feImage href="/img/enchanted-glint.avif" />
       <feComposite in2="SourceGraphic" operator="in" />
       <feBlend in="SourceGraphic" mode="screen" />
     </filter>

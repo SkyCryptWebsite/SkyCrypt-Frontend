@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: light)" srcset="static/img/logo_black.png">
-    <img alt="SkyCrypt 🍣" height="96px" src="static/img/logo.png">
+    <source media="(prefers-color-scheme: light)" srcset="static/img/logo_black.avif">
+    <img alt="SkyCrypt 🍣" height="96px" src="static/img/logo.avif">
   </picture>
 </p>
 <h1 align="center">A Hypixel Skyblock Profile Viewer v2</h1>
@@ -17,7 +17,7 @@ Originally inspired by [LeaPhant's skyblock-stats](https://github.com/LeaPhant/s
 
 <h2 align="center">Screenshot</h1>
 
-![Screenshot](static/img/screenshots/windows-0.jpg)
+![Screenshot](static/img/screenshots/desktop.avif)
 
 <h2 align="center">Contributing</h1>
 
