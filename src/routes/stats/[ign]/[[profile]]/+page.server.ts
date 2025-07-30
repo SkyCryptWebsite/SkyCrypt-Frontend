@@ -1,5 +1,6 @@
 import { PUBLIC_API_URL } from "$env/static/public";
 import { generateDynamicKey, generateToken } from "$lib/server/token";
+import type { StatsV2 } from "$types/statsv2";
 import { encodeBase64 } from "@oslojs/encoding";
 import { error } from "@sveltejs/kit";
 import ky from "ky";
@@ -72,7 +73,7 @@ export const load = (async ({ params, getClientAddress, request, route }) => {
         "X-Timestamp": tokenData.timestamp,
         "X-Route": tokenData.route
       }
-    }).json(),
+    }).json<StatsV2>(),
     ...shuffledObjects
   };
 }) satisfies PageServerLoad;
