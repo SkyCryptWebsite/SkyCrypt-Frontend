@@ -6,6 +6,7 @@
   import { api } from "$lib/shared/api";
   import { renderLore } from "$lib/shared/helper";
   import { itemContentSpecial } from "$lib/stores/internal";
+  import { performanceMode } from "$lib/stores/preferences";
   import type { ProcessedSkyBlockItem } from "$types/stats";
   import type { InventoryV2 } from "$types/statsv2";
   import Image from "@lucide/svelte/icons/image";
@@ -261,7 +262,7 @@
 
   function shouldShine(item: ProcessedSkyBlockItem): boolean | undefined {
     const enchanted = item.texture_path.includes("/api/leather/") ? false : item.shiny;
-    const shine = enchanted || item.shiny;
+    const shine = !$performanceMode && (enchanted || item.shiny);
     return shine;
   }
 

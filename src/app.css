@@ -5,6 +5,7 @@
 @source "./safelist.ts";
 @source "app.html";
 @custom-variant dark (&:where(.dark, .dark *));
+@custom-variant light (&:where(.light, .light *));
 
 @theme {
   /* Colors */
