@@ -4,7 +4,7 @@
   "author": "DuckySoLucky",
   "schema": 2,
   "images": {
-    "bg": "/img/themes/april-fools-2024/bg.webp"
+    "bg": "/img/themes/april-fools-2024/bg.avif"
   },
   "backgrounds": {
     "skillbar": { "type": "stripes", "angle": "45deg", "colors": ["oklch(68.5% 0.2336 351.46)", "oklch(79.28% 0.1275 345.78)"], "width": 10 },

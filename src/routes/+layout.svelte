@@ -32,6 +32,7 @@
   import { onMount, setContext, type Snippet } from "svelte";
   import SvelteSeo from "svelte-seo";
   import { toast, Toaster, type ToasterProps } from "svelte-sonner";
+  import { cubicOut } from "svelte/easing";
   import { writable } from "svelte/store";
   import { fade } from "svelte/transition";
   import { superForm } from "sveltekit-superforms";
@@ -209,7 +210,7 @@
     <Dialog.Overlay forceMount class={cn("fixed inset-0 z-40", $performanceMode ? "bg-background-lore" : "backdrop-blur-lg backdrop-brightness-50")}>
       {#snippet child({ props, open })}
         {#if open}
-          <div {...props} transition:fade={{ duration: 150 }}></div>
+          <div {...props} transition:fade={{ duration: 150, easing: cubicOut }}></div>
         {/if}
       {/snippet}
     </Dialog.Overlay>
@@ -272,7 +273,7 @@
         {/if}
       </Button.Root>
       <Command.Input
-        class="placeholder:text-text/50 text-text inline-flex h-12 w-full truncate rounded-tl-lg rounded-tr-lg pr-4 text-base transition-colors focus:ring-0 focus:outline-hidden"
+        class="placeholder:text-text/50 text-text inline-flex h-12 w-full truncate rounded-tl-lg rounded-tr-lg pr-4 text-base transition-colors ease-out focus:ring-0 focus:outline-hidden"
         placeholder="Search for something..."
         type="search"
         required

@@ -126,7 +126,7 @@
 
             <Collapsible.Root class="p-5">
               <Collapsible.Trigger class="group flex items-center gap-0.5">
-                <ChevronDown class="size-5 transition-all duration-300 group-data-[state=open]:-rotate-180" />
+                <ChevronDown class="size-5 transition-all duration-300 ease-out group-data-[state=open]:-rotate-180" />
                 <SectionSubtitle class="my-0">Floor Stats</SectionSubtitle>
               </Collapsible.Trigger>
               <Collapsible.Content>
@@ -145,7 +145,7 @@
             {#if catacomb.best_run}
               <Collapsible.Root class="px-5 pb-[2.5rem]">
                 <Collapsible.Trigger class="group flex items-center gap-0.5">
-                  <ChevronDown class="size-5 transition-all duration-300 group-data-[state=open]:-rotate-180" />
+                  <ChevronDown class="size-5 transition-all duration-300 ease-out group-data-[state=open]:-rotate-180" />
                   <SectionSubtitle class="my-0">Best run</SectionSubtitle>
                 </Collapsible.Trigger>
                 <Collapsible.Content>

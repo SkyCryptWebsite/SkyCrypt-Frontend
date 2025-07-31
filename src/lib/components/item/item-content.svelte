@@ -92,7 +92,7 @@
 
     {#if piece && "sourceTab" in piece && piece.sourceTab}
       <div class="mt-4">
-        <div class="bg-text/[0.05] hover:bg-text/[0.08] flex items-center justify-between gap-4 rounded-[0.625rem] p-2 transition-colors">
+        <div class="bg-text/[0.05] hover:bg-text/[0.08] flex items-center justify-between gap-4 rounded-[0.625rem] p-2 transition-colors ease-out">
           <div class="flex items-center gap-2">
             <Avatar.Root class="shrink-0 select-none">
               <Avatar.Image loading="lazy" src={piece.sourceTab.icon} alt={piece.sourceTab.name} class="pointer-events-none aspect-square size-10 h-full rounded-lg select-none" />
@@ -108,7 +108,7 @@
       </div>
     {/if}
     {#if hasColor}
-      <div class="bg-text/[0.05] mt-4 flex max-w-72 items-center justify-start gap-4 rounded-[0.625rem] p-2 transition-colors">
+      <div class="bg-text/[0.05] mt-4 flex max-w-72 items-center justify-start gap-4 rounded-[0.625rem] p-2 transition-colors ease-out">
         <div class="text-text/60 flex items-center gap-2">
           <TriangleAlert class="size-10" />
           <div class="text-sm font-semibold">Due to abuse, all leather armor uses default color values</div>
@@ -118,7 +118,7 @@
     <div class="mt-4 flex w-full flex-nowrap gap-4">
       {#if packData}
         <Button.Root href={packData.link} target="_blank">
-          <div class="bg-text/[0.05] hover:bg-text/[0.08] flex items-center justify-between gap-4 rounded-[0.625rem] p-2 transition-colors">
+          <div class="bg-text/[0.05] hover:bg-text/[0.08] flex items-center justify-between gap-4 rounded-[0.625rem] p-2 transition-colors ease-out">
             <div class="flex items-center gap-2">
               <Avatar.Root class="shrink-0 select-none">
                 <Avatar.Image loading="lazy" src="/resourcepacks/{packData.folder}/pack.png" alt={packData.name} class="pointer-events-none aspect-square size-10 h-full rounded-lg select-none" />
@@ -143,7 +143,7 @@
       {/if}
 
       {#if $wikiInfo}
-        <Button.Root href={$wikiInfo.url} target="_blank" class="bg-text/[0.05] hover:bg-text/[0.08] flex shrink items-center justify-center rounded-[0.625rem] p-2 whitespace-nowrap transition-colors">
+        <Button.Root href={$wikiInfo.url} target="_blank" class="bg-text/[0.05] hover:bg-text/[0.08] flex shrink items-center justify-center rounded-[0.625rem] p-2 whitespace-nowrap transition-colors ease-out">
           <Info class="mr-2 ml-2 size-6 p-0" />
         </Button.Root>
       {/if}

@@ -5,6 +5,7 @@
   import X from "@lucide/svelte/icons/x";
   import { Dialog } from "bits-ui";
   import { getContext } from "svelte";
+  import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
 
@@ -40,9 +41,20 @@
 </div>
 
 {#snippet video()}
-  <video preload="metadata" muted loop disablepictureinpicture disableremoteplayback controlslist="nodownload noremoteplayback noplaybackrate" controls autoplay playsinline class="data-[is-hover=false]:rounded-t-lg data-[is-hover=true]:rounded-lg" data-is-hover={isHover.current}>
-    <source type="video/webm" src="/video/enable-api.webm" />
-    <source type="video/mp4" src="/video/enable-api.mp4" />
+  <video preload="metadata" poster="/img/enable-api-thumbnail.avif" muted loop disablepictureinpicture disableremoteplayback controlslist="nodownload noremoteplayback noplaybackrate" controls autoplay playsinline class="data-[is-hover=false]:rounded-t-lg data-[is-hover=true]:rounded-lg" data-is-hover={isHover.current}>
+    <!-- Best quality (AV1 in WebM) -->
+    <source src="/video/enable-api-av1.webm" type="video/webm; codecs=av01" />
+
+    <!-- AV1 in MP4 (Safari 17+ on new Apple chips) -->
+    <source src="/video/enable-api-av1.mp4" type="video/mp4; codecs=av01" />
+
+    <!-- VP9 in WebM (modern fallback) -->
+    <source src="/video/enable-api-vp9.webm" type="video/webm; codecs=vp9" />
+
+    <!-- H.264 MP4 (universal fallback) -->
+    <source src="/video/enable-api-h264.mp4" type="video/mp4" />
+
+    Your browser does not support the video tag.
   </video>
 {/snippet}
 
@@ -53,7 +65,7 @@
       <Dialog.Overlay forceMount class="fixed inset-0 z-40 bg-black/80">
         {#snippet child({ props, open })}
           {#if open}
-            <div {...props} transition:fade></div>
+            <div {...props} transition:fade={{ duration: 300, easing: cubicOut }}></div>
           {/if}
         {/snippet}
       </Dialog.Overlay>

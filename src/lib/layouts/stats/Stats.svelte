@@ -7,7 +7,7 @@
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import { createQuery } from "@tanstack/svelte-query";
   import { Collapsible } from "bits-ui";
-  import { quadInOut } from "svelte/easing";
+  import { cubicOut } from "svelte/easing";
   import { slide } from "svelte/transition";
 
   let openState = $state(false);
@@ -36,21 +36,19 @@
         $query.refetch();
       }
     }}>
-    <Collapsible.Content forceMount class="columns-[12.5rem]">
+    <Collapsible.Content forceMount={true} class="columns-[12.5rem]">
       {#snippet child({ props, open })}
-        {#if open}
-          {#if $query.error}
-            <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
-          {/if}
-          {#if $query.isSuccess && $query.data && stats}
-            <div {...props} transition:slide={{ duration: 300, easing: quadInOut }}>
-              {#each Object.entries(stats) as [statName, statData], index (index)}
-                {#if statData.total > 0}
-                  <Stat stat={statName} {statData} />
-                {/if}
-              {/each}
-            </div>
-          {/if}
+        {#if open && $query.error}
+          <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
+        {/if}
+        {#if open && $query.isSuccess && $query.data && stats}
+          <div {...props} transition:slide={{ duration: 300, easing: cubicOut, axis: "y" }}>
+            {#each Object.entries(stats) as [statName, statData], index (index)}
+              {#if statData.total > 0}
+                <Stat stat={statName} {statData} />
+              {/if}
+            {/each}
+          </div>
         {/if}
       {/snippet}
     </Collapsible.Content>

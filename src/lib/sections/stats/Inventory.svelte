@@ -13,7 +13,7 @@
   import { createQuery } from "@tanstack/svelte-query";
   import { Avatar, ScrollArea, Tabs } from "bits-ui";
   import { Debounced } from "runed";
-  import { cubicInOut } from "svelte/easing";
+  import { cubicOut } from "svelte/easing";
   import { crossfade, fade } from "svelte/transition";
 
   type Tabs = {
@@ -256,7 +256,7 @@
 
   const [send, receive] = crossfade({
     duration: 300,
-    easing: cubicInOut
+    easing: cubicOut
   });
 
   function shouldShine(item: ProcessedSkyBlockItem): boolean | undefined {
@@ -373,7 +373,7 @@
                 {#if openTab === tab.id}
                   <div class="bg-icon absolute -bottom-1 h-2 w-full rounded-full" in:send={{ key: "active-tab" }} out:receive={{ key: "active-tab" }}></div>
                 {:else}
-                  <div class="bg-icon absolute -bottom-1 h-2 w-full rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100" out:fade={{ duration: 300 }}></div>
+                  <div class="bg-icon absolute -bottom-1 h-2 w-full rounded-full opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100" out:fade={{ duration: 300, easing: cubicOut }}></div>
                 {/if}
               </Tabs.Trigger>
             {/each}

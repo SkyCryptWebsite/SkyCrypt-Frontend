@@ -39,7 +39,7 @@
     TIKTOK: "tiktok.svg",
     TWITCH: "twitch.svg",
     DISCORD: "discord.svg",
-    HYPIXEL: "hypixel.png"
+    HYPIXEL: "hypixel.avif"
   };
 
   function copyToClipboard(value: string) {
@@ -84,7 +84,7 @@
               {#each profile.members as member (member.uuid)}
                 {#if member.username !== profile.username}
                   <a href={`/stats/${member.username}/${profile.profile_cute_name}`} class="group flex min-w-(--bits-dropdown-menu-anchor-width) items-center p-2 focus-visible:outline-0" data-sveltekit-preload-code="viewport">
-                    <span class="outline-icon group-hover:bg-text/20 flex w-full items-center justify-between gap-2 rounded-lg bg-[oklch(59.65%_0_0)]/20 p-2 transition-colors duration-300 group-focus-visible:outline-1">
+                    <span class="outline-icon group-hover:bg-text/20 flex w-full items-center justify-between gap-2 rounded-lg bg-[oklch(59.65%_0_0)]/20 p-2 transition-colors duration-300 ease-out group-focus-visible:outline-1">
                       {member.username}
                       {#if member.removed}
                         <Ban class="size-6" />
@@ -122,7 +122,7 @@
                 {#each profile.profiles ?? [] as otherProfile (otherProfile.profile_id)}
                   {#if otherProfile.profile_id !== profile.profile_id}
                     <a href={`/stats/${profile.username}/${otherProfile.cute_name}`} class="group flex items-center p-2 focus-visible:outline-0" data-sveltekit-preload-code="viewport">
-                      <div class="group-hover:bg-text/20 outline-icon w-full rounded-lg bg-[oklch(59.65%_0_0)]/20 p-2 transition-colors duration-300 group-focus-visible:outline-1">
+                      <div class="group-hover:bg-text/20 outline-icon w-full rounded-lg bg-[oklch(59.65%_0_0)]/20 p-2 transition-colors duration-300 ease-out group-focus-visible:outline-1">
                         {otherProfile.cute_name}
                         {@render profileIcon(otherProfile.game_mode)}
                       </div>
@@ -163,7 +163,7 @@
 <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
   <Tooltip.Root bind:open={favoriteTooltipOpen} disableCloseOnTriggerClick={false}>
     <Tooltip.Trigger
-      class="bg-icon/90 hover:bg-icon aspect-square rounded-full p-2 transition-opacity duration-150"
+      class="bg-icon/90 hover:bg-icon aspect-square rounded-full p-2 transition-opacity duration-150 ease-out"
       onclick={() => {
         if (!$favorites.some((fav) => fav.uuid === profile.uuid)) {
           favorites.set([...$favorites, { uuid: profile.uuid, ign: profile.username }]);
@@ -207,23 +207,23 @@
   </Tooltip.Root>
 
   <Button.Root
-    class="bg-icon/90 hover:bg-icon aspect-square rounded-full p-2 transition-opacity duration-150"
+    class="bg-icon/90 hover:bg-icon aspect-square rounded-full p-2 transition-opacity duration-150 ease-out"
     onclick={() => {
       copyToClipboard(window.location.href);
     }}>
     <Link class="size-4" />
   </Button.Root>
 
-  <Button.Root href={`https://plancke.io/hypixel/player/stats/${profile.username}`} target="_blank" class="bg-icon/90 hover:bg-icon flex items-center justify-center gap-1.5 rounded-full px-2 py-1 font-semibold transition-opacity duration-150">
+  <Button.Root href={`https://plancke.io/hypixel/player/stats/${profile.username}`} target="_blank" class="bg-icon/90 hover:bg-icon flex items-center justify-center gap-1.5 rounded-full px-2 py-1 font-semibold transition-opacity duration-150 ease-out">
     Plancke <ExternalLink class="size-4" />
   </Button.Root>
 
-  <Button.Root href={`https://elitebot.dev/@${profile.username}/${profile.profile_cute_name}`} target="_blank" class="bg-icon/90 hover:bg-icon flex items-center justify-center gap-1.5 rounded-full px-2 py-1 font-semibold transition-opacity duration-150">
+  <Button.Root href={`https://elitebot.dev/@${profile.username}/${profile.profile_cute_name}`} target="_blank" class="bg-icon/90 hover:bg-icon flex items-center justify-center gap-1.5 rounded-full px-2 py-1 font-semibold transition-opacity duration-150 ease-out">
     Elite <ExternalLink class="size-4" />
   </Button.Root>
 
   <Button.Root
-    class="bg-icon/90 hover:bg-icon hidden items-center justify-center gap-1.5 rounded-full px-2 py-1 font-semibold transition-opacity duration-150 data-[visible=true]:flex"
+    class="bg-icon/90 hover:bg-icon hidden items-center justify-center gap-1.5 rounded-full px-2 py-1 font-semibold transition-opacity duration-150 ease-out data-[visible=true]:flex"
     data-visible={showMore}
     onclick={() => {
       copyToClipboard(profile.uuid);
@@ -233,7 +233,7 @@
 
   {#each Object.entries(profile.social) as [key, value], index (index)}
     {#if key === "DISCORD"}
-      <Button.Root class="bg-icon/90 hover:bg-icon hidden items-center justify-center gap-1.5 rounded-full px-2 py-1 font-semibold transition-opacity duration-150 data-[visible=true]:flex" data-visible={showMore} onclick={() => copyToClipboard(value)}>
+      <Button.Root class="bg-icon/90 hover:bg-icon hidden items-center justify-center gap-1.5 rounded-full px-2 py-1 font-semibold transition-opacity duration-150 ease-out data-[visible=true]:flex" data-visible={showMore} onclick={() => copyToClipboard(value)}>
         <Avatar.Root>
           <Avatar.Image loading="lazy" src="/img/icons/{iconMapper[key]}" alt="{profile.username}'s {key.toLocaleLowerCase()}" class="size-4 text-white" />
           <Avatar.Fallback>
@@ -243,7 +243,7 @@
         {value}
       </Button.Root>
     {:else}
-      <Button.Root href={value} target="_blank" class="bg-icon/90 hover:bg-icon hidden aspect-square items-center justify-center gap-1.5 rounded-full px-2 py-1 font-semibold transition-opacity duration-150 data-[visible=true]:flex" data-visible={showMore}>
+      <Button.Root href={value} target="_blank" class="bg-icon/90 hover:bg-icon hidden aspect-square items-center justify-center gap-1.5 rounded-full px-2 py-1 font-semibold transition-opacity duration-150 ease-out data-[visible=true]:flex" data-visible={showMore}>
         <Avatar.Root>
           <Avatar.Image loading="lazy" src="/img/icons/{iconMapper[key]}" alt="{profile.username}'s {key.toLocaleLowerCase()}" class="size-4 text-white" />
           <Avatar.Fallback>
@@ -254,7 +254,7 @@
     {/if}
   {/each}
 
-  <Button.Root class="bg-icon/90 hover:bg-icon rounded-full p-2 transition-opacity duration-150" onclick={() => (showMore = !showMore)}>
+  <Button.Root class="bg-icon/90 hover:bg-icon rounded-full p-2 transition-opacity duration-150 ease-out" onclick={() => (showMore = !showMore)}>
     {#if showMore}
       <ChevronLeft class="size-4" />
     {:else}

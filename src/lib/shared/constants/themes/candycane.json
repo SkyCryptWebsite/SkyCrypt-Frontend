@@ -5,7 +5,7 @@
   "schema": 2,
   "light": true,
   "images": {
-    "bg": "/img/themes/candycane/bg.webp"
+    "bg": "/img/themes/candycane/bg.avif"
   },
   "backgrounds": {
     "skillbar": { "type": "stripes", "angle": "45deg", "colors": ["oklch(68.22% 0.2063 24.43)", "oklch(100% 0 0)"], "width": 10 },

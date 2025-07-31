@@ -63,7 +63,7 @@ export function getFishing(userProfile: Member) {
     kills.push({
       id: mob,
       name: constants.MOB_NAMES[mob] ?? mob.split("_").map(helper.titleCase).join(" "),
-      texture: `/img/sea_creatures/${mob}.png`,
+      texture: `/img/sea_creatures/${mob}.avif`,
       amount: userProfile.player_stats?.kills?.[mob] ?? 0
     });
   }
