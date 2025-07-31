@@ -146,7 +146,7 @@
     {#if previousSection}
       <Button.Root class="bg-icon flex items-center justify-between rounded-lg px-4 py-2 text-lg" onclick={() => handleSectionClick(previousSection.name ?? filteredSectionOrderPreferences[0].name)}>
         <ChevronLeft />
-        {previousSection.name}
+        {previousSection.name.replaceAll("_", " ")}
       </Button.Root>
     {:else}
       <div></div>
