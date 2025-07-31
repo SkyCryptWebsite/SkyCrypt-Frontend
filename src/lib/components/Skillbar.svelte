@@ -55,6 +55,6 @@
         </div>
       </div>
     {/if}
-    <div class={cn("h-full w-full flex-1 rounded-full transition-all duration-1000 ease-in-out group-data-[maxed=false]:[background:var(--skillbar)] group-data-[maxed=true]:[background:var(--maxedbar)]", apiEnabled ? "" : "bg-gray-500")} style={`transform: translateX(-${100 - parseFloat(calculatePercentage(skillData.xpCurrent, isMaxed ? skillData.xpCurrent : skillData.xpForNext))}%)`}></div>
+    <div class={cn("h-full w-full flex-1 rounded-full transition-all duration-300 ease-out group-data-[maxed=false]:[background:var(--skillbar)] group-data-[maxed=true]:[background:var(--maxedbar)]", apiEnabled ? "" : "bg-gray-500")} style={`transform: translateX(-${100 - parseFloat(calculatePercentage(skillData.xpCurrent, isMaxed ? skillData.xpCurrent : skillData.xpForNext))}%)`}></div>
   </Progress.Root>
 </div>

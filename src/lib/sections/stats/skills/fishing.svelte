@@ -13,6 +13,7 @@
   import Image from "@lucide/svelte/icons/image";
   import { Avatar, Collapsible } from "bits-ui";
   import { format } from "numerable";
+  import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
 
   const ctx = getDynamicCtx<() => SkillsV2 | undefined>(SectionName.SKILLS);
@@ -58,14 +59,14 @@
   {#if Object.entries(fishing.kills).find(([_, seaCreature]) => seaCreature.amount > 0)}
     <Collapsible.Root>
       <Collapsible.Trigger class="group flex items-center gap-0.5 pt-4">
-        <ChevronDown class="size-5 transition-all duration-300 group-data-[state=open]:-rotate-180" />
+        <ChevronDown class="size-5 transition-all duration-300 ease-out group-data-[state=open]:-rotate-180" />
         <SectionSubtitle class="my-0">Sea Creatures</SectionSubtitle>
       </Collapsible.Trigger>
       <Collapsible.Content class="mt-4 flex flex-wrap gap-4">
         {@const seaCreatures = Object.entries(fishing.kills)}
         <ScrollItems>
           {#each seaCreatures as [_, seaCreature], index (index)}
-            <div class="bg-background/30 flex h-full max-h-56 flex-col rounded-lg p-2 whitespace-nowrap" in:fade|global={{ duration: 300, delay: 25 * (index + 1) }} out:fade={{ duration: 300, delay: 5 * (seaCreatures.length - index) }}>
+            <div class="bg-background/30 flex h-full max-h-56 flex-col rounded-lg p-2 whitespace-nowrap" in:fade|global={{ duration: 300, delay: 25 * (index + 1), easing: cubicOut }} out:fade={{ duration: 300, delay: 5 * (seaCreatures.length - index), easing: cubicOut }}>
               <div class="border-icon flex h-12 items-center justify-center border-b-2 pb-2 text-center font-bold">
                 {seaCreature.name}
               </div>
@@ -90,7 +91,7 @@
   {#if fishing.trophyFish != null && fishing.trophyFish.totalCaught > 0}
     <Collapsible.Root>
       <Collapsible.Trigger class="group flex items-center gap-0.5 pt-4">
-        <ChevronDown class="size-5 transition-all duration-300 group-data-[state=open]:-rotate-180" />
+        <ChevronDown class="size-5 transition-all duration-300 ease-out group-data-[state=open]:-rotate-180" />
         <SectionSubtitle class="my-0">Trophy Fish</SectionSubtitle>
       </Collapsible.Trigger>
       <Collapsible.Content class="mt-4 space-y-4">

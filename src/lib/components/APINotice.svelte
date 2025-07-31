@@ -5,6 +5,7 @@
   import X from "@lucide/svelte/icons/x";
   import { Dialog } from "bits-ui";
   import { getContext } from "svelte";
+  import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
 
@@ -64,7 +65,7 @@
       <Dialog.Overlay forceMount class="fixed inset-0 z-40 bg-black/80">
         {#snippet child({ props, open })}
           {#if open}
-            <div {...props} transition:fade></div>
+            <div {...props} transition:fade={{ duration: 300, easing: cubicOut }}></div>
           {/if}
         {/snippet}
       </Dialog.Overlay>

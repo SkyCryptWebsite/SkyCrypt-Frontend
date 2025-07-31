@@ -51,7 +51,7 @@
     }
   }}>
   <Collapsible.Trigger class="group flex items-center gap-0.5">
-    <ChevronDown class="size-5 transition-all duration-300 group-data-[state=open]:-rotate-180" />
+    <ChevronDown class="size-5 transition-all duration-300 ease-out group-data-[state=open]:-rotate-180" />
     <SectionSubtitle class="my-0">Garden</SectionSubtitle>
   </Collapsible.Trigger>
   <Collapsible.Content>
@@ -82,7 +82,7 @@
                   XP
                 </div>
               </div>
-              <div class="bg-skillbar data-[maxed=true]:bg-maxedbar h-full w-full flex-1 rounded-full transition-all duration-1000 ease-in-out" style={`transform: translateX(-${100 - parseFloat(calculatePercentage(garden.level.xpCurrent, hasMaxed ? garden.level.xpCurrent : garden.level.xpForNext))}%)`} data-maxed={hasMaxed}></div>
+              <div class="bg-skillbar data-[maxed=true]:bg-maxedbar h-full w-full flex-1 rounded-full transition-all duration-300 ease-out" style={`transform: translateX(-${100 - parseFloat(calculatePercentage(garden.level.xpCurrent, hasMaxed ? garden.level.xpCurrent : garden.level.xpForNext))}%)`} data-maxed={hasMaxed}></div>
             </Progress.Root>
           </AdditionStat>
           <AdditionStat text="Composter" data={Object.values(garden.composter).join(" / ")} asterisk={true} maxed={Object.values(garden.composter).every((value) => value === 25)}>
@@ -237,7 +237,7 @@
               </div>
             </div>
 
-            <div class="bg-skillbar data-[maxed=true]:bg-maxedbar h-full w-full flex-1 transition-all duration-1000 ease-in-out" style={`transform: translateX(-${100 - parseFloat(calculatePercentage(milestone.level.xpCurrent, hasMaxed ? milestone.level.xpCurrent : milestone.level.xpForNext))}%)`} data-maxed={hasMaxed}></div>
+            <div class="bg-skillbar data-[maxed=true]:bg-maxedbar h-full w-full flex-1 transition-all duration-300 ease-out" style={`transform: translateX(-${100 - parseFloat(calculatePercentage(milestone.level.xpCurrent, hasMaxed ? milestone.level.xpCurrent : milestone.level.xpForNext))}%)`} data-maxed={hasMaxed}></div>
           </Progress.Root>
         {/snippet}
       </Chip>

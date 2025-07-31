@@ -104,7 +104,7 @@
                 {/each}
               </div>
             </ScrollArea.Viewport>
-            <ScrollArea.Scrollbar orientation="horizontal" class="mt-2 flex h-2.5 w-full touch-none rounded-full transition-all select-none">
+            <ScrollArea.Scrollbar orientation="horizontal" class="mt-2 flex h-2.5 w-full touch-none rounded-full transition-all ease-out select-none">
               <ScrollArea.Thumb class="bg-icon flex rounded-full" />
             </ScrollArea.Scrollbar>
             <ScrollArea.Corner />

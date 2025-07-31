@@ -54,7 +54,7 @@
         </div>
       {/snippet}
 
-      <Button.Root href="https://minionah.com" target="_blank" class="bg-background/30 flex h-fit w-fit max-w-fit items-center gap-2 rounded-lg p-2 transition-all duration-300 hover:scale-105">
+      <Button.Root href="https://minionah.com" target="_blank" class="bg-background/30 flex h-fit w-fit max-w-fit items-center gap-2 rounded-lg p-2 transition-all duration-300 ease-out hover:scale-105">
         <Avatar.Root class="size-12 shrink-0">
           <Avatar.Image loading="lazy" src="/img/icons/minionah.avif" alt="MinionAH" class="aspect-square size-12" />
           <Avatar.Fallback class="bg-background/10 flex size-12 items-center justify-center rounded-lg font-semibold">MA</Avatar.Fallback>

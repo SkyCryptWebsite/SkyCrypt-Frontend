@@ -104,7 +104,7 @@
 
 {#if isHover.current}
   <Popover.Root>
-    <Popover.Trigger class="text-background/80 @md:bg-text/70 @md:hover:bg-text/80 @md:hover:text-background relative my-3 flex shrink items-center justify-center rounded-full text-sm font-semibold uppercase transition-all duration-100 @md:p-1 @md:px-2.5">
+    <Popover.Trigger class="text-background/80 @md:bg-text/70 @md:hover:bg-text/80 @md:hover:text-background relative my-3 flex shrink items-center justify-center rounded-full text-sm font-semibold uppercase transition-all duration-100 ease-out @md:p-1 @md:px-2.5">
       <Info class="fill-text stroke-header size-5 @md:hidden" />
       <span class="hidden @md:inline">About</span>
     </Popover.Trigger>
@@ -124,7 +124,7 @@
   </Popover.Root>
 {:else}
   <Drawer.Root shouldScaleBackground={true} setBackgroundColorOnScale={false}>
-    <Drawer.Trigger class="text-background/80 @md:bg-text/70 @md:hover:bg-text/80 @md:hover:text-background relative my-3 flex shrink items-center justify-center rounded-full text-sm font-semibold uppercase transition-all duration-100 @md:p-1 @md:px-2.5">
+    <Drawer.Trigger class="text-background/80 @md:bg-text/70 @md:hover:bg-text/80 @md:hover:text-background relative my-3 flex shrink items-center justify-center rounded-full text-sm font-semibold uppercase transition-all duration-100 ease-out @md:p-1 @md:px-2.5">
       <Info class="fill-text stroke-header size-5 @md:hidden" />
       <span class="hidden @md:inline">About</span>
     </Drawer.Trigger>

@@ -14,6 +14,7 @@
   import { tz } from "@date-fns/tz";
   import { formatDate, formatDistanceToNowStrict } from "date-fns";
   import { format } from "numerable";
+  import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
 
   const ctx = getDynamicCtx<() => SkillsV2 | undefined>(SectionName.SKILLS);
@@ -145,11 +146,11 @@
         <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
           {#each mining.hotm as item, index (index)}
             {#if item.display_name}
-              <div class="bg-text/[0.04] flex aspect-square items-center justify-center rounded-sm" in:fade|global={{ duration: 300, delay: 5 * (index + 1) }}>
+              <div class="bg-text/[0.04] flex aspect-square items-center justify-center rounded-sm" in:fade|global={{ duration: 300, delay: 5 * (index + 1), easing: cubicOut }}>
                 <Item piece={item} isInventory={true} />
               </div>
             {:else}
-              <div class="bg-text/[0.04] aspect-square rounded-sm" in:fade|global={{ duration: 300, delay: 5 * (index + 1) }}></div>
+              <div class="bg-text/[0.04] aspect-square rounded-sm" in:fade|global={{ duration: 300, delay: 5 * (index + 1), easing: cubicOut }}></div>
             {/if}
           {/each}
         </div>

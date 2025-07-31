@@ -10,6 +10,7 @@
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
   import { Collapsible } from "bits-ui";
   import { formatDistanceToNowStrict } from "date-fns";
+  import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
 
   const ctx = getDynamicCtx<() => SkillsV2 | undefined>(SectionName.SKILLS);
@@ -24,7 +25,7 @@
   {:else}
     <Collapsible.Root open>
       <Collapsible.Trigger class="group flex items-center gap-0.5">
-        <ChevronDown class="size-5 transition-all duration-300 group-data-[state=open]:-rotate-180" />
+        <ChevronDown class="size-5 transition-all duration-300 ease-out group-data-[state=open]:-rotate-180" />
         <SectionSubtitle class="my-0">Experiments</SectionSubtitle>
       </Collapsible.Trigger>
       <Collapsible.Content class="mt-4 flex flex-wrap gap-5">
@@ -32,7 +33,7 @@
           {@const enchantingStats = Object.entries(enchanting.data)}
           <ScrollItems>
             {#each enchantingStats as [_key, enchating], index (index)}
-              <div class="bg-background/30 flex min-w-80 flex-col items-center gap-1 space-y-5 rounded-lg" in:fade|global={{ duration: 300, delay: 25 * (index + 1) }} out:fade={{ duration: 300, delay: 5 * (enchantingStats.length - index) }}>
+              <div class="bg-background/30 flex min-w-80 flex-col items-center gap-1 space-y-5 rounded-lg" in:fade|global={{ duration: 300, delay: 25 * (index + 1), easing: cubicOut }} out:fade={{ duration: 300, delay: 5 * (enchantingStats.length - index), easing: cubicOut }}>
                 <div class="border-icon flex w-full items-center justify-center border-b-2 py-2 text-center font-semibold uppercase">
                   {enchating.name}
                 </div>

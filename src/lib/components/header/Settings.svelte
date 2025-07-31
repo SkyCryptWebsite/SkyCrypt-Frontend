@@ -27,7 +27,7 @@
   import { getContext, onMount } from "svelte";
   import { dndzone, SHADOW_ITEM_MARKER_PROPERTY_NAME } from "svelte-dnd-action";
   import { flip } from "svelte/animate";
-  import { cubicIn } from "svelte/easing";
+  import { cubicOut } from "svelte/easing";
   import { derived, get } from "svelte/store";
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
@@ -139,15 +139,15 @@
                 </p>
               </div>
             </div>
-            <Switch.Root id={pack.id} checked={!$disabledPacks.includes(pack.id)} class="data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30 peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors" onCheckedChange={() => disabledPacks.update((value) => (!value.includes(pack.id) ? [...new Set([...value, pack.id])] : value.filter((id) => id !== pack.id)))}>
-              <Switch.Thumb class="bg-text pointer-events-none block size-4 shrink-0 rounded-full transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
+            <Switch.Root id={pack.id} checked={!$disabledPacks.includes(pack.id)} class="data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30 peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out" onCheckedChange={() => disabledPacks.update((value) => (!value.includes(pack.id) ? [...new Set([...value, pack.id])] : value.filter((id) => id !== pack.id)))}>
+              <Switch.Thumb class="bg-text pointer-events-none block size-4 shrink-0 rounded-full transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
             </Switch.Root>
           </Label.Root>
         {/each}
       </div>
       {#if $hasPackConfigChanged}
         <Button.Root
-          class="bg-text/65 text-background/80 hover:bg-text/80 mt-4 w-full rounded-lg p-1.5 text-sm font-semibold uppercase transition-colors"
+          class="bg-text/65 text-background/80 hover:bg-text/80 mt-4 w-full rounded-lg p-1.5 text-sm font-semibold uppercase transition-colors ease-out"
           onclick={() => {
             document.cookie = `disabledPacks=${JSON.stringify($disabledPacks)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
             window.location.reload();
@@ -173,7 +173,7 @@
                 </p>
               </div>
             </div>
-            <RadioGroup.Item id={theme.id} value={theme.id} class="group inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors">
+            <RadioGroup.Item id={theme.id} value={theme.id} class="group inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out">
               <Check class="text-icon size-6 group-data-[state=unchecked]:invisible" />
             </RadioGroup.Item>
           </Label.Root>
@@ -191,11 +191,11 @@
         }}>
         {#each sectionOrder as section (section.id)}
           {@const normalizedName = section.name.replaceAll("_", " ")}
-          <div animate:flip={{ duration: 300 }} class="bg-text/[0.05] relative flex items-center gap-2 rounded-lg p-2 font-semibold">
+          <div animate:flip={{ duration: 300, easing: cubicOut }} class="bg-text/[0.05] relative flex items-center gap-2 rounded-lg p-2 font-semibold">
             <GripVertical class="text-text/60 size-5" />
             {normalizedName}
             {#if SHADOW_ITEM_MARKER_PROPERTY_NAME in section && section[SHADOW_ITEM_MARKER_PROPERTY_NAME]}
-              <div in:fade={{ duration: 300, easing: cubicIn }} class="bg-text/[0.05] visible absolute inset-0 flex animate-pulse items-center gap-2 rounded-lg p-2 font-semibold opacity-30">
+              <div in:fade={{ duration: 300, easing: cubicOut }} class="bg-text/[0.05] visible absolute inset-0 flex animate-pulse items-center gap-2 rounded-lg p-2 font-semibold opacity-30">
                 <GripVertical class="text-text/60 size-5" />
                 {normalizedName}
               </div>
@@ -205,7 +205,7 @@
       </div>
       {#if $differsFromDefault}
         <Button.Root
-          class="bg-text/65 text-background/80 hover:bg-text/80 mt-4 w-full rounded-lg p-1.5 text-sm font-semibold uppercase transition-colors"
+          class="bg-text/65 text-background/80 hover:bg-text/80 mt-4 w-full rounded-lg p-1.5 text-sm font-semibold uppercase transition-colors ease-out"
           onclick={() => {
             sectionOrderPreferences.set(defaultSectionOrder);
           }}>
@@ -227,8 +227,8 @@
                 <h4 class="text-text/90 font-semibold">Performance Mode</h4>
               </div>
             </div>
-            <Switch.Root id="performance" checked={$performanceMode} class="data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30 peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors" onCheckedChange={() => performanceMode.update((value) => !value)}>
-              <Switch.Thumb class="bg-text pointer-events-none block size-4 shrink-0 rounded-full transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
+            <Switch.Root id="performance" checked={$performanceMode} class="data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30 peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out" onCheckedChange={() => performanceMode.update((value) => !value)}>
+              <Switch.Thumb class="bg-text pointer-events-none block size-4 shrink-0 rounded-full transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
             </Switch.Root>
           </Label.Root>
 
@@ -239,8 +239,8 @@
                 <h4 class="text-text/90 font-semibold">Show Glint</h4>
               </div>
             </div>
-            <Switch.Root id="glint" checked={$showGlint} class="data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30 peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors" onCheckedChange={() => showGlint.update((value) => !value)}>
-              <Switch.Thumb class="bg-text pointer-events-none block size-4 shrink-0 rounded-full transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
+            <Switch.Root id="glint" checked={$showGlint} class="data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30 peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out" onCheckedChange={() => showGlint.update((value) => !value)}>
+              <Switch.Thumb class="bg-text pointer-events-none block size-4 shrink-0 rounded-full transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
             </Switch.Root>
           </Label.Root>
 
@@ -251,7 +251,7 @@
                 <h4 class="text-text/90 font-semibold">Keybind</h4>
               </div>
             </div>
-            <Button.Root class="bg-text/10 hover:bg-text/20 border-text/20 text-text/90 focus:ring-icon/50 flex h-8 min-w-8 items-center justify-center rounded-md border px-2 py-1 font-mono text-sm font-semibold transition-colors focus:ring-2 focus:outline-none" onclick={handleKeybindClick} onkeydown={handleKeybindKeydown} tabindex={0}>
+            <Button.Root class="bg-text/10 hover:bg-text/20 border-text/20 text-text/90 focus:ring-icon/50 flex h-8 min-w-8 items-center justify-center rounded-md border px-2 py-1 font-mono text-sm font-semibold transition-colors ease-out focus:ring-2 focus:outline-none" onclick={handleKeybindClick} onkeydown={handleKeybindKeydown} tabindex={0}>
               {#if isListening}
                 <span class="text-icon animate-pulse">Press a key</span>
               {:else}
@@ -276,11 +276,11 @@
             }}>
             {#each wikiOrder as wiki (wiki.id)}
               {@const normalizedName = wiki.name.replaceAll("_", " ")}
-              <div animate:flip={{ duration: 300 }} class="bg-text/[0.05] relative flex items-center gap-2 rounded-lg p-2 font-semibold">
+              <div animate:flip={{ duration: 300, easing: cubicOut }} class="bg-text/[0.05] relative flex items-center gap-2 rounded-lg p-2 font-semibold">
                 <GripVertical class="text-text/60 size-5" />
                 {normalizedName}
                 {#if SHADOW_ITEM_MARKER_PROPERTY_NAME in wiki && wiki[SHADOW_ITEM_MARKER_PROPERTY_NAME]}
-                  <div in:fade={{ duration: 300, easing: cubicIn }} class="bg-text/[0.05] visible absolute inset-0 flex animate-pulse items-center gap-2 rounded-lg p-2 font-semibold opacity-30">
+                  <div in:fade={{ duration: 300, easing: cubicOut }} class="bg-text/[0.05] visible absolute inset-0 flex animate-pulse items-center gap-2 rounded-lg p-2 font-semibold opacity-30">
                     <GripVertical class="text-text/60 size-5" />
                     {normalizedName}
                   </div>
@@ -290,7 +290,7 @@
           </div>
           {#if $differsFromDefault}
             <Button.Root
-              class="bg-text/65 text-background/80 hover:bg-text/80 mt-4 w-full rounded-lg p-1.5 text-sm font-semibold uppercase transition-colors"
+              class="bg-text/65 text-background/80 hover:bg-text/80 mt-4 w-full rounded-lg p-1.5 text-sm font-semibold uppercase transition-colors ease-out"
               onclick={() => {
                 sectionOrderPreferences.set(defaultSectionOrder);
               }}>
@@ -304,8 +304,8 @@
 {/snippet}
 
 {#snippet settingsButton(props: Record<string, unknown>)}
-  <button {...props} class="bg-background/20 text-text group absolute top-1/2 right-4 flex aspect-square shrink -translate-y-1/2 items-center justify-center gap-1 rounded-full px-2.5 py-1.5 text-sm font-semibold transition-all duration-100 @md:relative @md:top-0 @md:right-0 @md:my-1.5 @md:aspect-auto @md:translate-y-0">
-    <Cog class="size-5 transition-all duration-300 data-[is-open=true]:rotate-45" data-is-open={$settingsOpen} />
+  <button {...props} class="bg-background/20 text-text group absolute top-1/2 right-4 flex aspect-square shrink -translate-y-1/2 items-center justify-center gap-1 rounded-full px-2.5 py-1.5 text-sm font-semibold transition-all duration-100 ease-out @md:relative @md:top-0 @md:right-0 @md:my-1.5 @md:aspect-auto @md:translate-y-0">
+    <Cog class="size-5 transition-all duration-300 ease-out data-[is-open=true]:rotate-45" data-is-open={$settingsOpen} />
     <p class="hidden @md:block">Settings</p>
   </button>
 {/snippet}
