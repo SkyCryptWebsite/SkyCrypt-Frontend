@@ -14,7 +14,7 @@
       {@render children?.()}
     </div>
   </ScrollArea.Viewport>
-  <ScrollArea.Scrollbar orientation="horizontal" class="flex h-2.5 w-full touch-none rounded-full transition-all select-none md:hidden">
+  <ScrollArea.Scrollbar orientation="horizontal" class="flex h-2.5 w-full touch-none rounded-full transition-all ease-out select-none md:hidden">
     <ScrollArea.Thumb class="bg-icon flex rounded-full" />
   </ScrollArea.Scrollbar>
   <ScrollArea.Corner />

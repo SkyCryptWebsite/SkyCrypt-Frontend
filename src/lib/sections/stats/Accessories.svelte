@@ -204,7 +204,7 @@
           {#if accessories.missing.length > 0 || accessories.upgrades.length > 0}
             <Collapsible.Root>
               <Collapsible.Trigger class="group mb-4 flex items-center gap-0.5 pt-2">
-                <ChevronDown class="size-5 transition-all duration-300 group-data-[state=open]:-rotate-180" />
+                <ChevronDown class="size-5 transition-all duration-300 ease-out group-data-[state=open]:-rotate-180" />
                 <SectionSubtitle class="my-0">Missing Accessories</SectionSubtitle>
               </Collapsible.Trigger>
               <Collapsible.Content>

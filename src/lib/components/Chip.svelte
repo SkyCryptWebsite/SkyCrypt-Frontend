@@ -6,6 +6,7 @@
   import { Avatar, Tooltip } from "bits-ui";
   import { IsInViewport } from "runed";
   import { getContext, type Snippet } from "svelte";
+  import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
 
   type AnimationOptions =
@@ -53,7 +54,7 @@
 <Tooltip.Root>
   <Tooltip.Trigger class={cn("bg-background/30 flex w-full max-w-fit items-center gap-2 rounded-lg py-2", classNames)} onpointerdown={() => (open = !open)} onclick={() => content.set(tooltip)}>
     {#snippet child({ props })}
-      <div {...props} bind:this={targetNode} in:fade={{ duration: animationOptions.animate ? 300 : 0, delay: animationOptions.animate ? 25 * (animationOptions.index + 1) : 0 }} out:fade={{ duration: animationOptions.animate ? 300 : 0, delay: animationOptions.animate ? 25 * (animationOptions.amountOfItems - animationOptions.index) : 0 }}>
+      <div {...props} bind:this={targetNode} in:fade={{ duration: animationOptions.animate ? 300 : 0, delay: animationOptions.animate ? 25 * (animationOptions.index + 1) : 0, easing: cubicOut }} out:fade={{ duration: animationOptions.animate ? 300 : 0, delay: animationOptions.animate ? 25 * (animationOptions.amountOfItems - animationOptions.index) : 0, easing: cubicOut }}>
         <div class="flex items-center gap-2 px-2">
           {#if hasBeenInViewport}
             <Avatar.Root class="aspect-square size-12">

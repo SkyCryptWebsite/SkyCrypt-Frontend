@@ -3,9 +3,9 @@
   "name": "sky.lea.moe",
   "author": "LeaPhant",
   "schema": 2,
-  "enchanted_glint": "/img/enchanted-glint-legacy.png",
+  "enchanted_glint": "/img/enchanted-glint-legacy.avif",
   "images": {
-    "bg": "/img/themes/skylea/bg.webp"
+    "bg": "/img/themes/skylea/bg.avif"
   },
   "backgrounds": {
     "skillbar": { "type": "color", "color": "oklch(40.82% 0.1556 357.65)" }

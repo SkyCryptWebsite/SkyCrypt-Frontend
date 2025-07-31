@@ -64,7 +64,7 @@
   {#if Object.entries(farming.contests).find(([_, cropData]) => cropData.amount > 0)}
     <Collapsible.Root class="mt-5">
       <Collapsible.Trigger class="group flex items-center gap-0.5">
-        <ChevronDown class="size-5 transition-all duration-300 group-data-[state=open]:-rotate-180" />
+        <ChevronDown class="size-5 transition-all duration-300 ease-out group-data-[state=open]:-rotate-180" />
         <SectionSubtitle class="my-0">Farming Crops</SectionSubtitle>
       </Collapsible.Trigger>
       <Collapsible.Content class="mt-4 flex flex-wrap gap-4">
