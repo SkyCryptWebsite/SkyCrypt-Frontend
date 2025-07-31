@@ -11,7 +11,7 @@
 </script>
 
 <svelte:head>
-  <link rel="icon" href={isStatsPage ? `https://crafatar.com/avatars/${embedData.uuid}?size=32&overlay` : `https://visage.surgeplay.com/bust/${embedData.uuid}?y=-40`} sizes="32x32" type="image/png" />
+  <link rel="icon" href={isStatsPage ? `https://crafatar.com/avatars/${embedData.uuid}?size=32&overlay` : `https://vzge.me/bust/${embedData.uuid}?y=-40`} sizes="32x32" type="image/png" />
 </svelte:head>
 
 <SvelteSeo
@@ -27,7 +27,7 @@
     },
     images: [
       {
-        url: `https://visage.surgeplay.com/bust/${embedData.uuid}?y=-40`,
+        url: `https://vzge.me/bust/${embedData.uuid}?y=-40`,
         width: 512,
         height: 512,
         alt: embedData.displayName
@@ -37,7 +37,7 @@
   }}
   twitter={{
     card: "summary",
-    image: `https://visage.surgeplay.com/bust/${embedData.uuid}?y=-40`,
+    image: `https://vzge.me/bust/${embedData.uuid}?y=-40`,
     imageAlt: embedData.displayName,
     title: getMetaTitle(embedData),
     description: getLongDescription(embedData)
