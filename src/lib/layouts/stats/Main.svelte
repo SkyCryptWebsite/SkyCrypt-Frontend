@@ -18,7 +18,8 @@
   import { recentSearches } from "$lib/stores/searches";
   import type { StatsV2 } from "$types/statsv2";
   import GripVertical from "@lucide/svelte/icons/grip-vertical";
-  import { Dialog } from "bits-ui";
+  import Image from "@lucide/svelte/icons/image";
+  import { Avatar, Dialog } from "bits-ui";
   import { Pane, PaneGroup, PaneResizer } from "paneforge";
   import { getContext, tick, untrack } from "svelte";
   import { cubicOut } from "svelte/easing";
@@ -130,7 +131,18 @@
           <div class="relative flex h-full items-center justify-center">
             <div class="fixed top-1/2 z-10 -translate-y-1/2">
               {#if !skinCollapsed}
-                {#if browser && innerWidth >= 1024}
+                {#if $performanceMode}
+                  <Avatar.Root>
+                    {#snippet child({ props })}
+                      <div transition:fade={{ duration: 300, easing: cubicOut }} {...props}>
+                        <Avatar.Image loading="lazy" src="https://vzge.me/full/832/{profile.uuid}.webp?no=shadow&y=-3" alt="{profile.username}'s avatar" class="max-h-[32rem] object-cover" />
+                        <Avatar.Fallback>
+                          <Image class="text-text size-24 object-cover" />
+                        </Avatar.Fallback>
+                      </div>
+                    {/snippet}
+                  </Avatar.Root>
+                {:else if browser && innerWidth >= 1024}
                   {#await import('$lib/components/Skin3D.svelte') then { default: Skin3D }}
                     <Skin3D class="h-full" />
                   {/await}

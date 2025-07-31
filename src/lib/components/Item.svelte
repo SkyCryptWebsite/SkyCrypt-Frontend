@@ -31,7 +31,7 @@
   const bgColor = $derived(getRarityClass(piece.rarity ?? ("common".toLowerCase() as string), "bg"));
   const recombobulated = $derived(showRecombobulated && (skyblockItem.recombobulated ?? false));
   const enchanted = $derived(skyblockItem?.texture_path?.includes("/api/leather/") ? false : skyblockItem.shiny);
-  const shine = $derived(enchanted || skyblockItem.shiny);
+  const shine = $derived(!$performanceMode && (enchanted || skyblockItem.shiny));
   const showNumbers = $derived(showCount && (skyblockItem.Count ?? 0) > 1);
 
   const isHover = getContext<IsHover>("isHover");
