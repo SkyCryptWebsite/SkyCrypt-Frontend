@@ -118,7 +118,7 @@
           order={0}
           onResize={(size) => {
             leftSize = size;
-            if (size < 10) {
+            if (size < 15) {
               leftPane.collapse();
               skinCollapsed = true;
             } else {
