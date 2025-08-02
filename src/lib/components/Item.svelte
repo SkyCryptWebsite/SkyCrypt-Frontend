@@ -2,7 +2,7 @@
   import ItemContent from "$lib/components/item/item-content.svelte";
   import type { IsHover } from "$lib/hooks/is-hover.svelte";
   import { RARITIES, RARITY_COLORS } from "$lib/shared/constants/items";
-  import { getRarityClass } from "$lib/shared/helper";
+  import { getRarityClass, shouldShine } from "$lib/shared/helper";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { itemContent, itemContentSpecial, showItem } from "$lib/stores/internal";
   import { performanceMode } from "$lib/stores/preferences";
@@ -31,7 +31,7 @@
   const bgColor = $derived(getRarityClass(piece.rarity ?? ("common".toLowerCase() as string), "bg"));
   const recombobulated = $derived(showRecombobulated && (skyblockItem.recombobulated ?? false));
   const enchanted = $derived(skyblockItem?.texture_path?.includes("/api/leather/") ? false : skyblockItem.shiny);
-  const shine = $derived(!$performanceMode && (enchanted || skyblockItem.shiny));
+  const shine = $derived(!$performanceMode && shouldShine(skyblockItem));
   const showNumbers = $derived(showCount && (skyblockItem.Count ?? 0) > 1);
 
   const isHover = getContext<IsHover>("isHover");
