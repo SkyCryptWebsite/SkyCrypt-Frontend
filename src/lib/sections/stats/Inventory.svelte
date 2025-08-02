@@ -5,8 +5,9 @@
   import Notice from "$lib/components/Notice.svelte";
   import Section from "$lib/components/Section.svelte";
   import { api, SectionName } from "$lib/shared/api";
-  import { renderLore } from "$lib/shared/helper";
+  import { renderLore, shouldShine } from "$lib/shared/helper";
   import { itemContentSpecial } from "$lib/stores/internal";
+  import { performanceMode } from "$lib/stores/preferences";
   import type { ProcessedSkyBlockItem } from "$types/stats";
   import type { InventoryV2 } from "$types/statsv2";
   import Image from "@lucide/svelte/icons/image";
@@ -259,12 +260,6 @@
     easing: cubicOut
   });
 
-  function shouldShine(item: ProcessedSkyBlockItem): boolean | undefined {
-    const enchanted = item.texture_path.includes("/api/leather/") ? false : item.shiny;
-    const shine = enchanted || item.shiny;
-    return shine;
-  }
-
   itemContentSpecial.subscribe((item) => {
     if (item) {
       if (openTab === "search" || openTab === "backpack" || openTab === "museum") {
@@ -360,7 +355,7 @@
     <Tabs.List>
       <ScrollArea.Root>
         <ScrollArea.Viewport class="border-icon border-b">
-          <div class="flex! h-full shrink-0 flex-nowrap items-center gap-3 px-4 whitespace-nowrap">
+          <div class="flex! h-full shrink-0 flex-nowrap items-center gap-3 whitespace-nowrap px-4">
             {#each tabs as tab (tab.id)}
               <Tabs.Trigger value={tab.id} class="group relative flex items-center justify-center gap-0.5 pb-2 text-xs uppercase">
                 <Avatar.Root class="size-8">
@@ -447,10 +442,10 @@
   {#if itemsFound}
     <p class="mx-auto w-fit leading-6">No items found.</p>
   {:else if debouncedSearchValue.current !== ""}
-    <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
+    <div class="@md:gap-1.5 @xl:gap-2 grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5">
       {#each searchedItems as item, index (index)}
         {#if item}
-          <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={shouldShine(item)}>
+          <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={!$performanceMode && shouldShine(item)}>
             {@render itemSnippet(item)}
           </div>
         {:else}
@@ -463,14 +458,14 @@
 
 {#snippet multipleInventorySection()}
   <Tabs.Root value={tab.id}>
-    <Tabs.List class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
+    <Tabs.List class="@md:gap-1.5 @xl:gap-2 grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5">
       {#if tab?.items?.length}
         {#each tab.items as item, index (index)}
           <Tabs.Trigger value={item.texture_path ? index.toString() : "undefined"} class="group">
             {#snippet child({ props })}
               <div {...props}>
                 {#if item.texture_path}
-                  <div class="group-data-[state=active]:bg-text/10 group-data-[state=inactive]:bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={shouldShine(item)}>
+                  <div class="group-data-[state=active]:bg-text/10 group-data-[state=inactive]:bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={!$performanceMode && shouldShine(item)}>
                     {@render itemSnippet(item)}
                   </div>
                 {:else}
@@ -485,7 +480,7 @@
     {#if tab?.items?.length}
       {#each tab.items as item, index (index)}
         <Tabs.Content value={index.toString()}>
-          <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
+          <div class="@md:gap-1.5 @xl:gap-2 grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5">
             {#if item?.containsItems}
               {#each item.containsItems as containedItem, index2 (index2)}
                 {#if index2 > 0}
@@ -495,7 +490,7 @@
                 {/if}
                 <Tabs.Content value={index.toString()}>
                   {#if containedItem.texture_path}
-                    <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={shouldShine(item)}>
+                    <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={!$performanceMode && shouldShine(item)}>
                       {@render itemSnippet(containedItem)}
                     </div>
                   {:else}
@@ -505,7 +500,7 @@
               {/each}
             {/if}
           </div>
-          <div class="grid place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
+          <div class="@md:gap-1.5 @xl:gap-2 grid place-content-center gap-1 pt-5">
             <div class="pt-5">
               {#if item?.lore}
                 {#each item?.lore as lore, index (index)}
@@ -522,7 +517,7 @@
 
 {#snippet inventorySection()}
   {#if tab?.items?.length}
-    <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
+    <div class="@md:gap-1.5 @xl:gap-2 grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5">
       {#each tab.items as item, index (index)}
         {#if index > 0}
           {#if index % tab.gap === 0}
@@ -530,7 +525,7 @@
           {/if}
         {/if}
         {#if item.texture_path}
-          <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={shouldShine(item)}>
+          <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={!$performanceMode && shouldShine(item)}>
             {#if tab.id === "inventory"}
               {@render itemSnippet({ ...item, rarity: item.rarity ?? "uncommon" } as ProcessedSkyBlockItem)}
             {:else}

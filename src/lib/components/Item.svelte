@@ -2,7 +2,7 @@
   import ItemContent from "$lib/components/item/item-content.svelte";
   import type { IsHover } from "$lib/hooks/is-hover.svelte";
   import { RARITIES, RARITY_COLORS } from "$lib/shared/constants/rarities";
-  import { getRarityClass } from "$lib/shared/helper";
+  import { getRarityClass, shouldShine } from "$lib/shared/helper";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { itemContent, itemContentSpecial, showItem } from "$lib/stores/internal";
   import { performanceMode } from "$lib/stores/preferences";
@@ -31,7 +31,7 @@
   const bgColor = $derived(getRarityClass(piece.rarity ?? ("common".toLowerCase() as string), "bg"));
   const recombobulated = $derived(showRecombobulated && (skyblockItem.recombobulated ?? false));
   const enchanted = $derived(skyblockItem?.texture_path?.includes("/api/leather/") ? false : skyblockItem.shiny);
-  const shine = $derived(enchanted || skyblockItem.shiny);
+  const shine = $derived(!$performanceMode && shouldShine(skyblockItem));
   const showNumbers = $derived(showCount && (skyblockItem.Count ?? 0) > 1);
 
   const isHover = getContext<IsHover>("isHover");
@@ -73,11 +73,11 @@
         {/if}
 
         {#if recombobulated && !isInventory}
-          <div class="absolute -top-3 -right-3 z-10 size-6 rotate-45 bg-(--color)" style="--color: var(--§{RARITY_COLORS[RARITIES[RARITIES.indexOf(piece.rarity ?? 'common') - 1]]})"></div>
+          <div class="bg-(--color) absolute -right-3 -top-3 z-10 size-6 rotate-45" style="--color: var(--§{RARITY_COLORS[RARITIES[RARITIES.indexOf(piece.rarity ?? 'common') - 1]]})"></div>
         {/if}
 
         {#if showNumbers}
-          <div class="absolute right-0.5 bottom-0.5 text-sm font-semibold text-white text-shadow-[.1em_.1em_.1em_#000] sm:text-2xl">
+          <div class="text-shadow-[.1em_.1em_.1em_#000] absolute bottom-0.5 right-0.5 text-sm font-semibold text-white sm:text-2xl">
             {skyblockItem.Count}
           </div>
         {/if}
@@ -86,7 +86,7 @@
   </Tooltip.Trigger>
   {#if isHover.current && inViewport.current}
     <Tooltip.Portal>
-      <Tooltip.Content forceMount={inViewport.current} class="bg-background-lore font-icomoon z-50 flex max-h-[calc(96vh-3rem)] max-w-lg flex-col overflow-clip rounded-lg select-text" sideOffset={8} side="right" align="center">
+      <Tooltip.Content forceMount={inViewport.current} class="bg-background-lore font-icomoon z-50 flex max-h-[calc(96vh-3rem)] max-w-lg select-text flex-col overflow-clip rounded-lg" sideOffset={8} side="right" align="center">
         {#snippet child({ wrapperProps, props, open })}
           {#if open}
             <div {...wrapperProps}>
