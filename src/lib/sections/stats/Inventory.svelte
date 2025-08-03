@@ -4,7 +4,7 @@
   import Notice from "$lib/components/Notice.svelte";
   import Section from "$lib/components/Section.svelte";
   import { api } from "$lib/shared/api";
-  import { renderLore } from "$lib/shared/helper";
+  import { renderLore, shouldShine } from "$lib/shared/helper";
   import { itemContentSpecial } from "$lib/stores/internal";
   import { performanceMode } from "$lib/stores/preferences";
   import type { ProcessedSkyBlockItem } from "$types/stats";
@@ -14,6 +14,7 @@
   import { createQuery } from "@tanstack/svelte-query";
   import { Avatar, ScrollArea, Tabs } from "bits-ui";
   import { Debounced } from "runed";
+  import { untrack } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { crossfade, fade } from "svelte/transition";
 
@@ -260,12 +261,6 @@
     easing: cubicOut
   });
 
-  function shouldShine(item: ProcessedSkyBlockItem): boolean | undefined {
-    const enchanted = item.texture_path.includes("/api/leather/") ? false : item.shiny;
-    const shine = !$performanceMode && (enchanted || item.shiny);
-    return shine;
-  }
-
   itemContentSpecial.subscribe((item) => {
     if (item) {
       if (openTab === "search" || openTab === "backpack" || openTab === "museum") {
@@ -350,8 +345,12 @@
   });
 
   $effect(() => {
-    if (debouncedSearchValue.current && debouncedSearchValue.current !== "" && openTab === "search" && !debouncedSearchValue.pending) {
-      $searchQuery.refetch();
+    if (debouncedSearchValue.current && debouncedSearchValue.current !== "" && openTab === "search") {
+      untrack(() => {
+        if (!debouncedSearchValue.pending) {
+          $searchQuery.refetch();
+        }
+      });
     }
   });
 </script>
@@ -451,7 +450,7 @@
     <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
       {#each searchedItems as item, index (index)}
         {#if item}
-          <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={shouldShine(item)}>
+          <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={!$performanceMode && shouldShine(item)}>
             {@render itemSnippet(item)}
           </div>
         {:else}
@@ -471,7 +470,7 @@
             {#snippet child({ props })}
               <div {...props}>
                 {#if item.texture_path}
-                  <div class="group-data-[state=active]:bg-text/10 group-data-[state=inactive]:bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={shouldShine(item)}>
+                  <div class="group-data-[state=active]:bg-text/10 group-data-[state=inactive]:bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={!$performanceMode && shouldShine(item)}>
                     {@render itemSnippet(item)}
                   </div>
                 {:else}
@@ -496,7 +495,7 @@
                 {/if}
                 <Tabs.Content value={index.toString()}>
                   {#if containedItem.texture_path}
-                    <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={shouldShine(item)}>
+                    <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={!$performanceMode && shouldShine(item)}>
                       {@render itemSnippet(containedItem)}
                     </div>
                   {:else}
@@ -531,7 +530,7 @@
           {/if}
         {/if}
         {#if item.texture_path}
-          <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={shouldShine(item)}>
+          <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={!$performanceMode && shouldShine(item)}>
             {#if tab.id === "inventory"}
               {@render itemSnippet({ ...item, rarity: item.rarity ?? "uncommon" } as ProcessedSkyBlockItem)}
             {:else}
