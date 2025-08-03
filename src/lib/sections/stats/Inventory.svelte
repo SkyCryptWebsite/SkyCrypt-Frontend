@@ -15,6 +15,7 @@
   import { createQuery } from "@tanstack/svelte-query";
   import { Avatar, ScrollArea, Tabs } from "bits-ui";
   import { Debounced } from "runed";
+  import { untrack } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { crossfade, fade } from "svelte/transition";
 
@@ -344,8 +345,12 @@
   });
 
   $effect(() => {
-    if (debouncedSearchValue.current && debouncedSearchValue.current !== "" && openTab === "search" && !debouncedSearchValue.pending) {
-      $searchQuery.refetch();
+    if (debouncedSearchValue.current && debouncedSearchValue.current !== "" && openTab === "search") {
+      untrack(() => {
+        if (!debouncedSearchValue.pending) {
+          $searchQuery.refetch();
+        }
+      });
     }
   });
 </script>
