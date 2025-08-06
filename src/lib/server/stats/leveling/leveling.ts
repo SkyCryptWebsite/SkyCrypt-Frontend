@@ -135,7 +135,7 @@ export function getSkillLevelCaps(userProfile: Member, player: Player | null) {
   return {
     farming: 50 + (userProfile.jacobs_contest?.perks?.farming_level_cap || 0),
     taming: 50 + (userProfile.pets_data?.pet_care?.pet_types_sacrificed?.length || 0),
-    runecrafting: player?.newPackageRank ? 25 : 3
+    runecrafting: (player?.newPackageRank ?? "NONE") !== "NONE" ? 25 : 3
   };
 }
 
