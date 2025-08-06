@@ -140,7 +140,7 @@
                       <li>
                         <span style="color: var(--§{RARITY_COLORS[accessories.magicalPower.hegemony.rarity]}">Hegemony Artifact: </span>
                         =
-                        <span style="color: var(--§6)"> +{accessories.magicalPower.hegemony} MP</span>
+                        <span style="color: var(--§6)"> +{accessories.magicalPower.hegemony.amount} MP</span>
                       </li>
                     {/if}
                   </ul>
