@@ -223,3 +223,57 @@ export function formatXPTable(xpTable: number[]) {
 
   return output;
 }
+
+export function getKey(key: string): string | number {
+  const intKey = Number(key);
+
+  if (!isNaN(intKey)) {
+    return intKey;
+  }
+
+  return key;
+}
+
+export function hasPath<T extends object>(obj: T, ...keys: (string | number)[]): boolean {
+  if (obj == null) {
+    return false;
+  }
+
+  let loc: unknown = obj;
+
+  for (let i = 0; i < keys.length; i++) {
+    if (typeof loc === "object" && loc !== null) {
+      loc = (loc as Record<string, unknown>)[getKey(keys[i] as string)];
+    } else {
+      return false;
+    }
+
+    if (loc === undefined) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+export function getPath<T extends object, K = unknown>(obj: T, ...keys: (string | number)[]): K | undefined {
+  if (obj == null) {
+    return undefined;
+  }
+
+  let loc: unknown = obj;
+
+  for (let i = 0; i < keys.length; i++) {
+    if (typeof loc === "object" && loc !== null) {
+      loc = (loc as Record<string, unknown>)[getKey(keys[i] as string)];
+    } else {
+      return undefined;
+    }
+
+    if (loc === undefined) {
+      return undefined;
+    }
+  }
+
+  return loc as K;
+}
