@@ -18,15 +18,17 @@
     {#snippet text()}
       <div>
         {#each Object.entries(misc.claimed_items) as [item, time], index (index)}
-          <AdditionStat
-            text={item.replaceAll("_", " ")}
-            data={formatDistanceToNowStrict(time, {
-              addSuffix: true,
-              in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone)
-            })}
-            asterisk={true}>
-            {formatDate(time, "'Claimed on' dd MMMM yyyy 'at' HH:mm", { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) })}
-          </AdditionStat>
+          {#if time}
+            <AdditionStat
+              text={item.replaceAll("_", " ")}
+              data={formatDistanceToNowStrict(time, {
+                addSuffix: true,
+                in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone)
+              })}
+              asterisk={true}>
+              {formatDate(time, "'Claimed on' dd MMMM yyyy 'at' HH:mm", { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) })}
+            </AdditionStat>
+          {/if}
         {/each}
       </div>
     {/snippet}

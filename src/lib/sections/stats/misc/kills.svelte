@@ -10,6 +10,9 @@
 
   const ctx = getDynamicCtx<() => MiscV2[SectionName.MISC] | undefined>(SectionName.MISC);
   const misc = $derived(ctx?.data?.());
+
+  const sortedKills = $derived(misc?.kills?.kills ? [...misc.kills.kills].sort((a, b) => b.amount - a.amount) : []);
+  const sortedDeaths = $derived(misc?.kills?.deaths ? [...misc.kills.deaths].sort((a, b) => b.amount - a.amount) : []);
 </script>
 
 {#if misc && misc.kills != null}
@@ -26,8 +29,8 @@
           <VirtualList height={320} width="100%" itemCount={misc.kills.kills.length} itemSize={misc.kills.kills.length > 0 ? 20 : 0} scrollDirection="vertical">
             <div slot="item" let:index let:style {style} class="px-4 font-semibold whitespace-nowrap">
               <div class="text-text/60 inline-block capitalize">#{index + 1}</div>
-              <div class="text-text inline-block">{misc.kills.kills[index].name}</div>
-              <div class="text-text/60 inline-block">: {format(misc.kills.kills[index].amount)}</div>
+              <div class="text-text inline-block">{sortedKills[index].name}</div>
+              <div class="text-text/60 inline-block">: {format(sortedKills[index].amount)}</div>
             </div>
           </VirtualList>
         </div>
@@ -36,8 +39,8 @@
           <VirtualList height={320} width="100%" itemCount={misc.kills.deaths.length} itemSize={misc.kills.deaths.length > 0 ? 20 : 0} scrollDirection="vertical">
             <div slot="item" let:index let:style {style} class="px-4 font-semibold whitespace-nowrap">
               <div class="text-text/60 inline-block capitalize">#{index + 1}</div>
-              <div class="text-text inline-block">{misc.kills.deaths[index].name}</div>
-              <div class="text-text/60 inline-block">: {format(misc.kills.deaths[index].amount)}</div>
+              <div class="text-text inline-block">{sortedDeaths[index].name}</div>
+              <div class="text-text/60 inline-block">: {format(sortedDeaths[index].amount)}</div>
             </div>
           </VirtualList>
         </div>

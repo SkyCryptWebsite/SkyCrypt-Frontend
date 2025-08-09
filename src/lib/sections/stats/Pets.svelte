@@ -51,7 +51,7 @@
         {#snippet text()}
           <div>
             <AdditionStat text="Unique Pets" data={`${pets.amount} / ${pets.total}`} maxed={pets.amount === pets.total} />
-            <AdditionStat text="Unique Pet Skins" data={`${pets.amountSkins} / ${pets.totalSkins}`} maxed={pets.amountSkins === pets.totalSkins} />
+            <AdditionStat text="Unique Pet Skins" data={`${pets.amountSkins}`} />
             {#if pets.petScore != null}
               <AdditionStat text="Pet Score" data={`${pets.petScore.amount} (+${pets.petScore.stats.magic_find} MF) `} asterisk={true}>
                 <div class="max-w-xs space-y-6 font-bold">

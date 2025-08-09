@@ -158,52 +158,54 @@
     </div>
   {/if}
 
-  <SectionSubtitle class="mt-5">Glacite Tunnels</SectionSubtitle>
-  <div class="space-y-0.5">
-    <AdditionStat text="Fossil Dust" data={mining.glaciteTunnels.fossilDust.toString()} />
-    <AdditionStat text="Mineshafts Entered" data={mining.glaciteTunnels.mineshaftsEntered.toString()} />
-    <Items class="flex-col" subtitle="Fossils">
-      <AdditionStat text="Fossils Found" data={mining.glaciteTunnels.fossils.found} maxed={mining.glaciteTunnels.fossils.found === mining.glaciteTunnels.fossils.max} />
-      <ScrollItems>
-        {#each mining.glaciteTunnels.fossils.fossils as fossil, index (index)}
-          {@const hasFound = fossil.found}
-          <Chip image={{ src: fossil.texture_path }} class={cn("h-fit w-fit", { "opacity-50": !hasFound })}>
-            <div class={cn("flex flex-col")}>
-              <div class="font-bold whitespace-nowrap">
-                {fossil.name}
-              </div>
-            </div>
-            {#snippet tooltip()}
-              <div class="text-sm font-bold">
-                <span class="text-text">{fossil.found ? "Found" : "Not Found"}</span>
-              </div>
-            {/snippet}
-          </Chip>
-        {/each}
-      </ScrollItems>
-    </Items>
-
-    <Items class="flex-col" subtitle="Corpses">
-      <AdditionStat text="Corpses Found" data={mining.glaciteTunnels.corpses.found} maxed={mining.glaciteTunnels.corpses.found === mining.glaciteTunnels.corpses.max} />
-
-      <ScrollItems>
-        {#each mining.glaciteTunnels.corpses.corpses as corpse, index (index)}
-          {@const hasUnlocked = corpse.amount}
-          <Chip image={{ src: corpse.texture_path }} class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked })}>
-            <div class="flex flex-col">
-              <div class="font-bold whitespace-nowrap">
-                <span class="opacity-60">{corpse.name}</span>
-                <div class="text-sm">
-                  <span class="opacity-60">Amount:</span>
-                  <span class="text-text">{format(corpse.amount)}</span>
+  {#if mining.glaciteTunnels.fossilDust > 0}
+    <SectionSubtitle class="mt-5">Glacite Tunnels</SectionSubtitle>
+    <div class="space-y-0.5">
+      <AdditionStat text="Fossil Dust" data={mining.glaciteTunnels.fossilDust.toString()} />
+      <AdditionStat text="Mineshafts Entered" data={mining.glaciteTunnels.mineshaftsEntered.toString()} />
+      <Items class="flex-col" subtitle="Fossils">
+        <AdditionStat text="Fossils Found" data={mining.glaciteTunnels.fossils.found} maxed={mining.glaciteTunnels.fossils.found === mining.glaciteTunnels.fossils.max} />
+        <ScrollItems>
+          {#each mining.glaciteTunnels.fossils.fossils as fossil, index (index)}
+            {@const hasFound = fossil.found}
+            <Chip image={{ src: fossil.texture_path }} class={cn("h-fit w-fit", { "opacity-50": !hasFound })}>
+              <div class={cn("flex flex-col")}>
+                <div class="font-bold whitespace-nowrap">
+                  {fossil.name}
                 </div>
               </div>
-            </div>
-          </Chip>
-        {/each}
-      </ScrollItems>
-    </Items>
-  </div>
+              {#snippet tooltip()}
+                <div class="text-sm font-bold">
+                  <span class="text-text">{fossil.found ? "Found" : "Not Found"}</span>
+                </div>
+              {/snippet}
+            </Chip>
+          {/each}
+        </ScrollItems>
+      </Items>
+
+      <Items class="flex-col" subtitle="Corpses">
+        <AdditionStat text="Corpses Found" data={mining.glaciteTunnels.corpses.found} maxed={mining.glaciteTunnels.corpses.found === mining.glaciteTunnels.corpses.max} />
+
+        <ScrollItems>
+          {#each mining.glaciteTunnels.corpses.corpses as corpse, index (index)}
+            {@const hasUnlocked = corpse.amount}
+            <Chip image={{ src: corpse.texture_path }} class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked })}>
+              <div class="flex flex-col">
+                <div class="font-bold whitespace-nowrap">
+                  <span class="opacity-60">{corpse.name}</span>
+                  <div class="text-sm">
+                    <span class="opacity-60">Amount:</span>
+                    <span class="text-text">{format(corpse.amount)}</span>
+                  </div>
+                </div>
+              </div>
+            </Chip>
+          {/each}
+        </ScrollItems>
+      </Items>
+    </div>
+  {/if}
 
   <SectionSubtitle class="mt-5">Forge</SectionSubtitle>
   <div class="space-y-1">
