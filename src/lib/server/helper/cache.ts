@@ -1,6 +1,8 @@
 import { base } from "$app/paths";
+import type { ResourcePack } from "$types/custom-resources";
 import fs from "fs-extra";
 import path from "path";
+import { getFileHash } from "./hashes";
 
 export function getFolderPath() {
   return path.resolve(base);
@@ -41,4 +43,45 @@ export function getCacheFilePath(dirPath: string, type: string, name: string, fo
   }
 
   return path.resolve(dirPath, `${subdirs.join("/")}/${type}_${name}.${format}`);
+}
+
+const RESOURCE_PACK_FOLDER = path.resolve(base, "static", "resourcepacks");
+
+export async function loadPackConfigs(): Promise<ResourcePack[]> {
+  const resourcePacks: ResourcePack[] = [];
+
+  const resolvedDir = path.resolve(RESOURCE_PACK_FOLDER);
+  const stat = await fs.stat(resolvedDir);
+  if (!stat.isDirectory()) {
+    console.warn(`Path is not a directory: ${resolvedDir}`);
+    return resourcePacks;
+  }
+
+  const files = await fs.readdir(RESOURCE_PACK_FOLDER, { withFileTypes: true });
+
+  for (const packOrFile of files) {
+    if (!packOrFile.isDirectory()) {
+      continue;
+    }
+
+    const pack = packOrFile.name;
+    const basePath = path.resolve(RESOURCE_PACK_FOLDER, pack);
+
+    try {
+      const configPath = path.resolve(basePath, "config.json");
+
+      const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+      config.hash = await getFileHash(configPath);
+
+      resourcePacks.push({
+        base_path: basePath,
+        config,
+        textures: []
+      });
+    } catch {
+      console.info("Couldn't find config for resource pack", pack);
+    }
+  }
+
+  return resourcePacks;
 }
