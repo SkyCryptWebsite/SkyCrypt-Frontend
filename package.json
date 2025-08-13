@@ -119,6 +119,9 @@
       "sharp",
       "JSON",
       "svelte-preprocess"
-    ]
+    ],
+    "overrides": {
+      "zod": "4.0.10"
+    }
   }
 }
