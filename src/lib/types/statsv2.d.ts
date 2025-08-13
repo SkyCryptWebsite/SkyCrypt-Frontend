@@ -538,7 +538,12 @@ export type PetProcessedSkyBlockItem = {
   texture_pack: string;
 };
 
-export type NetworthV2 = NetworthResult;
+export type NetworthV2 = {
+  networth: {
+    nonCosmetic: NetworthResult;
+    normal: NetworthResult;
+  };
+};
 
 export type PlayerStatsInputv2 = {
   skyblock_level?: number;
