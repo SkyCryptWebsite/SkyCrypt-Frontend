@@ -1,6 +1,6 @@
 import { MAX_ENCHANTS } from "$lib/shared/constants/enchantments";
 import { RARITY_COLORS } from "$lib/shared/constants/items";
-import type { ProcessedItem } from "$types/global";
+import type { ProcessedItem, ProcessedSkyBlockItem } from "$types/global";
 import { tz } from "@date-fns/tz";
 import { format } from "date-fns";
 import prettyMilliseconds from "pretty-ms";
@@ -262,4 +262,9 @@ export function calculatePercentage(value: number, total: number, decimal: numbe
   return Math.floor((value / total) * 100)
     .toFixed(decimal)
     .replace(/\.0+$/, "");
+}
+
+export function shouldShine(item: ProcessedSkyBlockItem): boolean | undefined {
+  const enchanted = item.texture_path.includes("/api/leather/") ? false : item.shiny;
+  return enchanted || item.shiny;
 }

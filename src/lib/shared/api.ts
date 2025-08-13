@@ -1,7 +1,7 @@
 import { api_token } from "$lib/stores/internal";
 import type { Garden } from "$types/processed/profile/garden";
 import type { ProcessedSkyBlockItem } from "$types/stats";
-import type { AccessoriesV2, BestiaryV2, CollectionsV2, CrimsonIsleV2, DungeonsV2, EmbedV2, EnchantingV2, FarmingV2, FishingV2, GearV2, InventoryV2, InventoryV2All, MiningV2, MinionsV2, MiscV2, NetworthV2, PetsV2, PlayerStatsV2, RiftV2, SkillsV2, SlayerV2 } from "$types/statsv2";
+import type { AccessoriesV2, BestiaryV2, CollectionsV2, CrimsonIsleV2, DungeonsV2, GearV2, InventoryV2, InventoryV2All, MinionsV2, MiscV2, NetworthV2, PetsV2, PlayerStatsV2, RiftV2, SkillsV2, SlayerV2 } from "$types/statsv2";
 import ky from "ky";
 import { get } from "svelte/store";
 
@@ -11,20 +11,10 @@ const customKy = ky.create({
       (error) => {
         const { request, response } = error;
         let kind;
-
-        switch (request.url) {
-          case "/api/v2/item/":
-            kind = "Item";
-            break;
-          case "/api/v2/inventory/":
-            kind = "Inventory";
-            break;
-          case "/api/v2/garden/":
-            kind = "Garden";
-            break;
-          default:
-            kind = "section";
-        }
+        if (request.url.includes("item/")) kind = "Item";
+        else if (request.url.includes("inventory/")) kind = "Inventory";
+        else if (request.url.includes("garden/")) kind = "Garden";
+        else kind = "section";
 
         if (!response.ok && response.status !== 500) {
           error.message = `${response.status} - Failed to fetch ${kind ? kind + " " : ""} - ${response.statusText}`;
@@ -39,9 +29,6 @@ export enum SectionName {
   NETWORTH = "networth",
   SKILLS = "skills",
   GEAR = "gear",
-  MINING = "mining",
-  FARMING = "farming",
-  FISHING = "fishing",
   SLAYER = "slayer",
   DUNGEONS = "dungeons",
   MINIONS = "minions",
@@ -50,12 +37,10 @@ export enum SectionName {
   CRIMSON_ISLE = "crimson_isle",
   RIFT = "rift",
   MISC = "misc",
-  ENCHANTING = "enchanting",
   ACCESSORIES = "accessories",
   PETS = "pets",
   INVENTORY = "inventory",
-  STATS = "playerStats",
-  EMBED = "embed"
+  STATS = "playerStats"
 }
 
 // Type mapping for section names to their corresponding types
@@ -63,9 +48,6 @@ type SectionTypeMap = {
   [SectionName.NETWORTH]: NetworthV2;
   [SectionName.SKILLS]: SkillsV2;
   [SectionName.GEAR]: GearV2;
-  [SectionName.MINING]: MiningV2;
-  [SectionName.FARMING]: FarmingV2;
-  [SectionName.FISHING]: FishingV2;
   [SectionName.SLAYER]: SlayerV2;
   [SectionName.DUNGEONS]: DungeonsV2;
   [SectionName.MINIONS]: MinionsV2;
@@ -74,12 +56,10 @@ type SectionTypeMap = {
   [SectionName.CRIMSON_ISLE]: CrimsonIsleV2;
   [SectionName.RIFT]: RiftV2;
   [SectionName.MISC]: MiscV2;
-  [SectionName.ENCHANTING]: EnchantingV2;
   [SectionName.ACCESSORIES]: AccessoriesV2;
   [SectionName.PETS]: PetsV2;
   [SectionName.INVENTORY]: InventoryV2;
   [SectionName.STATS]: PlayerStatsV2;
-  [SectionName.EMBED]: EmbedV2;
 };
 
 // Client-side token refresh function
@@ -191,7 +171,7 @@ export const api = () => {
       })();
     },
     getGarden: async (profile: string): Promise<Garden> => {
-      const data = await extendedCustomKy(`/api/garden/${profile}`).json<Garden & { message?: string }>();
+      const data = await extendedCustomKy(`/api/v2/garden/${profile}`).json<Garden & { message?: string }>();
       if (data.message) {
         throw new Error(data.message);
       }

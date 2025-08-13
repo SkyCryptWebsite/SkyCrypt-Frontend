@@ -39,9 +39,17 @@
 
   {#if type === "error"}
     {#if error && error.message}
-      <p class="text-center">
-        {error.message}
-      </p>
+      {#if error.message === "Authentication token has expired"}
+        <p class="text-center">Your authentication token has expired. Please <Button.Root onpointerdown={() => window.location.reload()} class="underline">refresh the page</Button.Root> to generate a new one</p>
+        <p class="text-center">
+          If that doesn't work, please go to <Button.Root href="https://time.is" class="underline">time.is</Button.Root>
+          and check if your time is exact and set your time correctly if it isn't.
+        </p>
+      {:else}
+        <p class="text-center">
+          {error.message}
+        </p>
+      {/if}
     {/if}
 
     <p class="text-center">If applicable, please report this error on our <Button.Root target="_blank" href={PUBLIC_DISCORD_INVITE} class="underline">Discord</Button.Root></p>

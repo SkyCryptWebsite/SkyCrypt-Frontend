@@ -4,7 +4,7 @@
   "author": "SkyCrypt Team",
   "schema": 2,
   "images": {
-    "bg": "/img/bg.webp"
+    "bg": "/img/bg.avif"
   },
   "backgrounds": {
     "skillbar": { "type": "color", "color": "oklch(63.98% 0.1731 150.18)" },

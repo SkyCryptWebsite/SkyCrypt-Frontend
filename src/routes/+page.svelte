@@ -111,7 +111,7 @@
         {/if}
       </Field>
     </div>
-    <Button.Root type="submit" class="bg-icon dark:text-text mx-auto flex w-full max-w-fit items-center justify-center rounded-3xl px-6 py-3 text-base font-bold text-white uppercase transition-all duration-150 [text-shadow:0_0_3px_oklch(0%_0_0_/_50%)] hover:scale-[1.015] disabled:opacity-50" disabled={($formData.query.length > 0 && isTainted($tainted?.query) && $errors.query !== undefined) || $submitting}>
+    <Button.Root type="submit" class="bg-icon dark:text-text mx-auto flex w-full max-w-fit items-center justify-center rounded-3xl px-6 py-3 text-base font-bold text-white uppercase transition-all duration-150 ease-out [text-shadow:0_0_3px_oklch(0%_0_0_/_50%)] hover:scale-[1.015] disabled:opacity-50" disabled={($formData.query.length > 0 && isTainted($tainted?.query) && $errors.query !== undefined) || $submitting}>
       {#if $submitting}
         <LoaderCircle class="size-6 animate-spin" />
       {:else}
@@ -158,7 +158,7 @@
     </p>
   {/snippet}
 
-  <div class={cn("relative rounded-lg", { "transition-all duration-300 hover:scale-105": !options?.tip })}>
+  <div class={cn("relative rounded-lg", { "transition-all duration-300 ease-out hover:scale-105": !options?.tip })}>
     <Button.Root href={options?.tip ? "#" : `/stats/${user.id}`} class={cn("relative flex h-full min-w-0 items-center gap-4 rounded-lg p-5", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-[60%] dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
       <Avatar.Root class="bg-text/10 size-16 shrink-0 rounded-lg">
         <Avatar.Image loading="lazy" src={options?.tip ? "https://mc-heads.net/avatar/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40/64" : `https://crafatar.com/avatars/${user.id}?size=64&overlay`} alt={user.name} class="aspect-square size-16 rounded-lg " />
@@ -230,7 +230,7 @@
 {/snippet}
 
 {#snippet ctalink(href: string, text: { title: string; description: string }, img: { src: string; alt: string })}
-  <Button.Root {href} target="_blank" rel="noreferrer" class={cn("flex w-full items-center gap-4 rounded-lg p-4 transition-all duration-300 hover:scale-[1.05]", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-[60%] dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
+  <Button.Root {href} target="_blank" rel="noreferrer" class={cn("flex w-full items-center gap-4 rounded-lg p-4 transition-all duration-300 ease-out hover:scale-[1.05]", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-[60%] dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
     <Avatar.Root class="size-12 shrink-0 rounded-lg select-none">
       <Avatar.Image loading="lazy" src={img.src} alt={img.alt} class="pointer-events-none size-12 rounded-lg" />
       <Avatar.Fallback class="text-text/60 flex h-full items-center justify-center text-lg font-semibold uppercase">{img.alt.slice(0, 2)}</Avatar.Fallback>

@@ -21,7 +21,7 @@
         Please connect to the internet and try again.
       {/if}
     </p>
-    <Button.Root class="bg-link/80 text-text/80 flex w-fit items-center gap-2 rounded-full px-5 py-3 font-semibold uppercase transition-all duration-300 hover:scale-105" onclick={() => location.reload()}>
+    <Button.Root class="bg-link/80 text-text/80 flex w-fit items-center gap-2 rounded-full px-5 py-3 font-semibold uppercase transition-all duration-300 ease-out hover:scale-105" onclick={() => location.reload()}>
       <RefreshCw class="size-5" />
       <span class="uppercase">Try again</span>
     </Button.Root>
