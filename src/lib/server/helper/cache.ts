@@ -85,3 +85,21 @@ export async function loadPackConfigs(): Promise<ResourcePack[]> {
 
   return resourcePacks;
 }
+
+export async function getFiles(dir: string, fileList: string[]) {
+  const files = await fs.readdir(dir);
+
+  fileList = fileList || [];
+
+  for (const file of files) {
+    const fileStat = await fs.stat(path.resolve(dir, file));
+
+    if (fileStat.isDirectory()) {
+      fileList = await getFiles(path.resolve(dir, file), fileList);
+    } else {
+      fileList.push(path.resolve(dir, file));
+    }
+  }
+
+  return fileList;
+}
