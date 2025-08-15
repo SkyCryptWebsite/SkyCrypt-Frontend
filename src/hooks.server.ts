@@ -83,7 +83,7 @@ export const handle = sequence(sentryHandle(), async ({ event, resolve }) => {
 
   // Cross-Origin policies
   response.headers.set("Cross-Origin-Embedder-Policy", "unsafe-none");
-  response.headers.set("Cross-Origin-Opener-Policy", "same-origin");
+  response.headers.set("Cross-Origin-Opener-Policy", "unsafe-none");
   response.headers.set("Cross-Origin-Resource-Policy", "cross-origin");
 
   // Legacy XSS protection
