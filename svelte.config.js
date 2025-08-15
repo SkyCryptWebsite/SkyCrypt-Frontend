@@ -47,7 +47,7 @@ const config = {
         "img-src": ["self", "data:", "https://vzge.me", "https://crafatar.com", "https://mc-heads.net"],
         "connect-src": ["self", "https://crafatar.com"],
         "font-src": ["self", "https://fonts.gstatic.com"],
-        "frame-ancestors": "*"
+        "frame-ancestors": ["*"]
       }
     }
   },
