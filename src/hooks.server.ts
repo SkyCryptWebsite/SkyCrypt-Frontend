@@ -75,7 +75,6 @@ export const handle = sequence(sentryHandle(), async ({ event, resolve }) => {
   const response = await resolve(event);
 
   // Security headers
-  response.headers.set("X-Frame-Options", "SAMEORIGIN");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   response.headers.set("Permissions-Policy", "accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(), gyroscope=(), interest-cohort=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), sync-xhr=(), usb=(), xr-spatial-tracking=(), geolocation=()");
   response.headers.set("X-Content-Type-Options", "nosniff");
