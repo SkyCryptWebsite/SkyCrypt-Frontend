@@ -438,7 +438,7 @@ async function loadResourcePacks() {
 
                 const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data.buffer;
 
-                pngFrames.push(imageData);
+                pngFrames.push(imageData instanceof ArrayBuffer ? imageData : new ArrayBuffer(imageData.byteLength).constructor.prototype.slice.call(imageData));
                 pngDelays.push(frameTimeInterpolated);
               }
             } else {
@@ -450,7 +450,7 @@ async function loadResourcePacks() {
 
                 const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data.buffer;
 
-                pngFrames.push(imageData);
+                pngFrames.push(imageData instanceof ArrayBuffer ? imageData : new ArrayBuffer(imageData.byteLength).constructor.prototype.slice.call(imageData));
               }
             }
           }
