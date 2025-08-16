@@ -42,7 +42,7 @@
   {/if}
   {#if $query.isSuccess && $query.data && slayer}
     <div class="space-y-4">
-      {#if slayer.unlocked === false}
+      {#if slayer.totalSlayerExp === 0}
         <p class="space-x-0.5 leading-6">{profile.username} hasn't unlocked Slayers yet.</p>
       {:else}
         <div class="pt-4 pb-1.5">
