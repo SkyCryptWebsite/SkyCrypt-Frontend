@@ -109,10 +109,11 @@
 <svelte:window bind:innerWidth />
 
 <div class="@container/parent relative">
-  <PaneGroup direction="horizontal" autoSaveId="paneConfig" class="relative w-full !overflow-x-clip !overflow-y-visible">
+  <PaneGroup id="panes" direction="horizontal" autoSaveId="paneConfig" class="relative w-full !overflow-x-clip !overflow-y-visible">
     {#if innerWidth >= 1024}
       <div class="group/pane contents">
         <Pane
+          id="skinPane"
           defaultSize={defaultLeftPanel}
           collapsedSize={0}
           collapsible={true}
@@ -163,6 +164,7 @@
     {/if}
 
     <Pane
+      id="statsPane"
       defaultSize={defaultRightPanel}
       class="relative z-10 !overflow-x-clip !overflow-y-visible"
       order={1}
