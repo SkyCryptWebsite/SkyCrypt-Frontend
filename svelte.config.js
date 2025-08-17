@@ -46,8 +46,7 @@ const config = {
         "style-src": ["self", "unsafe-inline", "https://fonts.googleapis.com"],
         "img-src": ["self", "data:", "https://vzge.me", "https://crafatar.com", "https://mc-heads.net", "http://localhost:8080"],
         "connect-src": ["self", "https://crafatar.com", "http://localhost:8080"],
-        "font-src": ["self", "https://fonts.gstatic.com"],
-        "frame-ancestors": ["*"]
+        "font-src": ["self", "https://fonts.gstatic.com"]
       }
     }
   },
