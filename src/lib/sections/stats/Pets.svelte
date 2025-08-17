@@ -9,6 +9,7 @@
   import Items from "$lib/layouts/stats/Items.svelte";
   import { api, SectionName } from "$lib/shared/api";
   import { formatNumber, getRarityClass, renderLore, uniqBy } from "$lib/shared/helper";
+  import { animateObfuscatedText } from "$lib/shared/motd/obfuscated";
   import { cn } from "$lib/shared/utils";
   import type { PetsV2 } from "$types/statsv2";
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
@@ -82,7 +83,7 @@
                 <div class="flex items-center">
                   <Item piece={activePet} />
                   <div class="ml-4 flex flex-col justify-center">
-                    <h4 class={cn(getRarityClass(activePet.rarity ?? "common", "text"), "text-xl font-bold capitalize")}>{(activePet.rarity ?? "common").toLowerCase()} {@html renderLore(activePet.display_name.toLowerCase())}</h4>
+                    <h4 class={cn(getRarityClass(activePet.rarity ?? "common", "text"), "text-xl font-bold capitalize")} {@attach animateObfuscatedText}>{(activePet.rarity ?? "common").toLowerCase()} {@html renderLore(activePet.display_name.toLowerCase())}</h4>
                     <h4 class="text-text text-xl font-medium capitalize">Level {activePet.level}</h4>
                   </div>
                 </div>

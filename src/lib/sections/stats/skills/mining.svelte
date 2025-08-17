@@ -9,6 +9,7 @@
   import Items from "$lib/layouts/stats/Items.svelte";
   import { SectionName } from "$lib/shared/api";
   import { renderLore } from "$lib/shared/helper";
+  import { animateObfuscatedText } from "$lib/shared/motd/obfuscated";
   import { cn } from "$lib/shared/utils";
   import type { SkillsV2 } from "$types/statsv2";
   import { tz } from "@date-fns/tz";
@@ -31,7 +32,7 @@
       {#snippet text()}
         <div class="space-y-2">
           {#if highestPriorityMiningTool && highestPriorityMiningTool.display_name}
-            <p class="text-text/60 space-x-0.5 leading-6 font-bold capitalize">
+            <p class="text-text/60 space-x-0.5 leading-6 font-bold capitalize" {@attach animateObfuscatedText}>
               <span>Active Tool:</span>
               {@html renderLore(highestPriorityMiningTool.display_name)}
             </p>

@@ -6,6 +6,7 @@
   import Section from "$lib/components/Section.svelte";
   import { api, SectionName } from "$lib/shared/api";
   import { renderLore, shouldShine } from "$lib/shared/helper";
+  import { animateObfuscatedText } from "$lib/shared/motd/obfuscated";
   import { itemContentSpecial } from "$lib/stores/internal";
   import { performanceMode } from "$lib/stores/preferences";
   import type { ProcessedSkyBlockItem } from "$types/stats";
@@ -505,7 +506,7 @@
               {/each}
             {/if}
           </div>
-          <div class="grid place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
+          <div class="grid place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2" {@attach animateObfuscatedText}>
             <div class="pt-5">
               {#if item?.lore}
                 {#each item?.lore as lore, index (index)}
