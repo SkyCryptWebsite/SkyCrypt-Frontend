@@ -1,9 +1,10 @@
-import { MAX_ENCHANTS } from "$lib/shared/constants/enchantments";
-import { RARITY_COLORS } from "$lib/shared/constants/items";
-import type { ProcessedItem, ProcessedSkyBlockItem } from "$types/global";
+import { RARITY_COLORS } from "$lib/shared/constants/rarities";
+import { motdTextToHTML } from "$lib/shared/motd";
+import type { ProcessedSkyBlockItem } from "$types/global";
 import { tz } from "@date-fns/tz";
 import { format } from "date-fns";
 import prettyMilliseconds from "pretty-ms";
+
 export { prettyMilliseconds as formatTime };
 
 /**
@@ -50,115 +51,34 @@ export function getRarityClass(rarity: string, type: "bg" | "text"): string {
 }
 
 /**
- * Checks if a character is a color code
- * @param {string} code
- * @returns {code is ColorCode}
- */
-function isColorCode(code: string): code is ColorCode {
-  return /[0-9a-f]/.test(code);
-}
-
-/**
- * Checks if a character is a format code
- * @param {string} code
- * @returns {code is FormatCode}
- */
-function isFormatCode(code: string): code is FormatCode {
-  return /[k-o]/.test(code);
-}
-
-/**
  * Convert Minecraft lore to HTML
  * @param {string} text minecraft lore with color and formatting codes
+ * @param {boolean} formatTime whether to format timestamps in the lore
  * @returns {string} HTML
  */
-export function renderLore(text: string): string {
-  let output = "";
+export function renderLore(text: string, formatTime: boolean = true, index?: number): string {
+  let lore = motdTextToHTML({ motdString: text, index });
 
-  let color: ColorCode | null = null;
-  const formats: Set<FormatCode> = new Set();
+  if (formatTime) {
+    const timestampRegex = /{TIMESTAMP:(\d+)}/g;
+    const hasTimestamp = lore.match(timestampRegex);
 
-  const matches = text.match(/(§[0-9A-Fa-fk-orL])*[^§]*/g);
-  if (matches === null) return output;
-  for (let part of matches) {
-    formats.clear();
-    while (part.charAt(0) === "§") {
-      const code = part.charAt(1).toLowerCase();
+    if (hasTimestamp) {
+      const timestampValue = hasTimestamp[0];
+      const hasTimestampMatch = timestampValue.match(/{TIMESTAMP:(\d+)}/);
+      if (!hasTimestampMatch) return lore;
+      const timestampNumber = hasTimestampMatch[1];
 
-      if (isColorCode(code)) {
-        color = code;
-      } else if (isFormatCode(code)) {
-        formats.add(code);
-      } else if (code === "r") {
-        color = null;
-        formats.clear();
-      }
+      if (isNaN(parseInt(timestampNumber, 10))) return lore;
 
-      part = part.substring(2);
+      const formattedTime = format(parseInt(timestampNumber, 10), "MMM dd, yyyy, h:mm a", {
+        in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone)
+      });
+      lore = lore.replace(timestampRegex, formattedTime);
     }
-
-    if (part.length === 0 && output.endsWith("<br>") === false) {
-      output += "<br>";
-      continue;
-    }
-
-    output += "<span";
-    if (color !== null) {
-      if (color == "9" && MAX_ENCHANTS.has(part)) {
-        output += ` style='color: var(--§6)'`;
-      } else {
-        output += ` style='color: var(--§${color});'`;
-      }
-    }
-
-    if (formats.size > 0) {
-      output += ` class='${Array.from(formats, (x) => "§" + x).join(" ")}'`;
-    }
-
-    if (part.includes("{TIMESTAMP:")) {
-      const timestampMatch = part.match(/{TIMESTAMP:(\d+)}/);
-      if (timestampMatch) {
-        const formattedTime = format(parseInt(timestampMatch[1], 10), "MMM dd, yyyy, h:mm a", { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) });
-        part = part.replace(timestampMatch[0], formattedTime);
-      }
-    }
-
-    output += `>${part}</span>`;
   }
 
-  return output;
-}
-
-/**
- * Checks if an item is enchanted
- * @param {Item} item The item to check
- * @returns  {boolean} Whether the item is enchanted
- */
-export function isEnchanted(item: ProcessedItem): boolean {
-  // heads
-  if ([397].includes(item.id)) {
-    return false;
-  }
-
-  // enchanted book, bottle o' enchanting, nether star
-  if ([403, 384, 399].includes(item.id)) {
-    return true;
-  }
-
-  //potions with actual effects (not water bottles)
-  if (item.id === 373 && item.Damage !== 0) {
-    return true;
-  }
-
-  if ("tag" in item && (Array.isArray(item.tag.ench) || item.tag.ExtraAttributes?.enchantments)) {
-    return true;
-  }
-
-  if (item.glowing) {
-    return true;
-  }
-
-  return false;
+  return lore;
 }
 
 /**
@@ -178,43 +98,13 @@ export function removeFormatting(string: string): string {
  * @param {string} key - The key to determine uniqueness.
  * @returns {T[]} A new array with unique elements based on the specified key.
  */
-export function uniqBy<T>(arr: T[], key: string) {
+export function uniqBy<T>(arr: T[], key: string): T[] {
   const seen = new Set();
   return arr.filter((item) => {
     const k = (item as Record<string, unknown>)[key];
     return seen.has(k) ? false : seen.add(k);
   });
 }
-
-/**
- * Returns the username of a player with the specified UUID.
- * @param {string} uuid - The UUID of the player.
- * @returns {Promise<string>} The username of the player.
- */
-export const getUsername = async (uuid: string): Promise<string> => {
-  try {
-    const res = await fetch(`/api/username/${uuid}`);
-    const { username } = await res.json();
-    return username;
-  } catch {
-    return "???";
-  }
-};
-
-/**
- * Returns the UUID of a player with the specified username.
- * @param {string} username - The username of the player.
- * @returns {Promise<string>} The UUID of the player.
- */
-export const getUUID = async (username: string): Promise<string> => {
-  try {
-    const res = await fetch(`/api/uuid/${username}`);
-    const { uuid } = await res.json();
-    return uuid;
-  } catch {
-    return "???";
-  }
-};
 
 /**
  * Validates a URL and returns the path to the stats page

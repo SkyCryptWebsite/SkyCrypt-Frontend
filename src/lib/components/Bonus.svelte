@@ -19,7 +19,7 @@
   <p class={cn("text-text/60 my-4 space-x-0.5 leading-6 font-bold capitalize", classNames)}>
     <span>{title}</span>
     {#each statsData as [key, value], index (index)}
-      {@const displayKey = STAT_ALIASES[key] !== undefined ? STAT_ALIASES[key] : key}
+      {@const displayKey = (STAT_ALIASES[key] !== undefined ? STAT_ALIASES[key] : key).toLowerCase()}
       {#if STATS_DATA[displayKey]}
         <span class={STATS_DATA[displayKey].color}>
           {format(value)}{STATS_DATA[displayKey].suffix}

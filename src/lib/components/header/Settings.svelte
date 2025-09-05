@@ -8,7 +8,7 @@
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { settingsOpen, settingsTab } from "$lib/stores/internal";
   import { disabledPacks } from "$lib/stores/packs";
-  import { keybind, performanceMode, sectionOrderPreferences, showGlint } from "$lib/stores/preferences";
+  import { keybind, performanceMode, rainbowEnchantments, sectionOrderPreferences, showGlint } from "$lib/stores/preferences";
   import { theme as themeStore } from "$lib/stores/themes";
   import { wikiOrderPreferences } from "$lib/stores/wiki";
   import BookOpenText from "@lucide/svelte/icons/book-open-text";
@@ -20,6 +20,7 @@
   import ListOrdered from "@lucide/svelte/icons/list-ordered";
   import PackageOpen from "@lucide/svelte/icons/package-open";
   import PaintBucket from "@lucide/svelte/icons/paint-bucket";
+  import Rainbow from "@lucide/svelte/icons/rainbow";
   import Settings from "@lucide/svelte/icons/settings";
   import Settings2 from "@lucide/svelte/icons/settings-2";
   import Sparkle from "@lucide/svelte/icons/sparkle";
@@ -97,8 +98,18 @@
     }, 5000);
   }
 
+  function toggleRainbow() {
+    const show = get(rainbowEnchantments);
+    if (show) {
+      document.documentElement.dataset.rainbow = "true";
+    } else {
+      document.documentElement.dataset.rainbow = "false";
+    }
+  }
+
   onMount(() => {
     changeTheme($themeStore);
+    toggleRainbow();
   });
 </script>
 
@@ -122,7 +133,7 @@
         Misc
       </Tabs.Trigger>
     </Tabs.List>
-    <Tabs.Content value="packs">
+    <Tabs.Content value={SettingsTab.Packs}>
       <div class="flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto">
         {#each packConfigs as pack (pack.id)}
           <Label.Root for={pack.id} class="bg-text/[0.05] flex items-center justify-between gap-4 rounded-lg p-2">
@@ -234,12 +245,31 @@
 
           <Label.Root for="glint" class="bg-text/[0.05] flex items-center justify-between gap-4 rounded-lg p-2">
             <div class="flex items-center gap-2">
-              <Sparkle class="size-6 will-change-transform" />
+              <Sparkle class="size-6" />
               <div class="flex flex-col">
                 <h4 class="text-text/90 font-semibold">Show Glint</h4>
               </div>
             </div>
             <Switch.Root id="glint" checked={$showGlint} class="data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30 peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out" onCheckedChange={() => showGlint.update((value) => !value)}>
+              <Switch.Thumb class="bg-text pointer-events-none block size-4 shrink-0 rounded-full transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
+            </Switch.Root>
+          </Label.Root>
+
+          <Label.Root for="rainbow" class="bg-text/[0.05] flex items-center justify-between gap-4 rounded-lg p-2">
+            <div class="flex items-center gap-2">
+              <Rainbow class="size-6" />
+              <div class="flex flex-col">
+                <h4 class="text-text/90 font-semibold">Rainbow Colors</h4>
+              </div>
+            </div>
+            <Switch.Root
+              id="rainbow"
+              checked={$rainbowEnchantments}
+              class="data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30 peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out"
+              onCheckedChange={() => {
+                rainbowEnchantments.update((value) => !value);
+                toggleRainbow();
+              }}>
               <Switch.Thumb class="bg-text pointer-events-none block size-4 shrink-0 rounded-full transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
             </Switch.Root>
           </Label.Root>

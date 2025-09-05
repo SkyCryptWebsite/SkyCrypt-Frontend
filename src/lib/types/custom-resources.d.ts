@@ -83,12 +83,3 @@ export type OutputTexture = {
   debug: CustomResourcesDebugStats;
   skyblock_id: string;
 };
-
-interface ProgressInfo {
-  current: number;
-  total: number;
-  packName: string;
-  currentFile: string;
-  startTime: number;
-  errors: number;
-}

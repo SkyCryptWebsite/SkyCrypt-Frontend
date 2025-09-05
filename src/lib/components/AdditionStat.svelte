@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { IsHover } from "$lib/hooks/is-hover.svelte";
-  import { RARITY_COLORS } from "$lib/shared/constants/items";
+  import { RARITY_COLORS } from "$lib/shared/constants/rarities";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { content } from "$lib/stores/internal";
   import { Tooltip } from "bits-ui";

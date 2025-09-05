@@ -36,7 +36,7 @@
 
   const misc = $derived.by(() => {
     if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data;
+    return $query.data[SectionName.MISC];
   });
 
   setDynamicCtx(SectionName.MISC, () => misc);

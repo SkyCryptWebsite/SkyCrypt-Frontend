@@ -9,6 +9,7 @@
   import Garden from "$lib/sections/stats/farming/garden.svelte";
   import { SectionName } from "$lib/shared/api";
   import { formatNumber, renderLore } from "$lib/shared/helper";
+  import { animateObfuscatedText } from "$lib/shared/motd/obfuscated";
   import type { SkillsV2 } from "$types/statsv2";
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
   import { Collapsible } from "bits-ui";
@@ -24,24 +25,6 @@
 {#if farming}
   <div class="space-y-5">
     <div class="space-y-0.5">
-      <AdditionStat text="Farming Weight" data={formatNumber(farming.weight.totalWeight)} asterisk={true}>
-        <div class="space-y-5">
-          <div>
-            <h4 class="font-semibold text-white">Farming Weight</h4>
-            <p class="text-text/50 text-sm italic">Weight calculations by <a href="https://elitebot.dev/" target="_blank" class="text-icon underline">Elite</a></p>
-          </div>
-          <div>
-            {#each Object.entries(farming.weight.bonusSources) as [key, value], index (index)}
-              <AdditionStat text={key} data={formatNumber(value)} class="capitalize" />
-            {/each}
-          </div>
-          <div>
-            {#each farming.weight.crops as crop, index (index)}
-              <AdditionStat text={crop.name.toLowerCase().replace("_", " ")} data={formatNumber(crop.amount)} class="capitalize" />
-            {/each}
-          </div>
-        </div>
-      </AdditionStat>
       <AdditionStat text="Pelts" data={farming.pelts.toString()} />
       <AdditionStat text="Contests Attended" data={farming.contestsAttended.toString()} />
       <AdditionStat text="Unique Golds" data={farming.uniqueGolds.toString()} maxed={farming.uniqueGolds === 10} />
@@ -64,7 +47,7 @@
       {#snippet text()}
         <div class="space-y-2">
           {#if highestPriorityFarmingTool && highestPriorityFarmingTool.display_name}
-            <p class="text-text/60 space-x-0.5 leading-6 font-bold capitalize">
+            <p class="text-text/60 space-x-0.5 leading-6 font-bold capitalize" {@attach animateObfuscatedText}>
               <span>Active Tool:</span>
               {@html renderLore(highestPriorityFarmingTool.display_name)}
             </p>

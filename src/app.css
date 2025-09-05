@@ -33,6 +33,7 @@
   /* Animations */
   --animate-shine: shine 4s infinite;
   --animate-spin-slow: spin 3s linear infinite;
+  --animate-hue: hue-shift 4s linear infinite;
 
   @keyframes shine {
     0% {
@@ -41,6 +42,15 @@
     33%,
     100% {
       transform: translateY(-120%);
+    }
+  }
+
+  @keyframes hue-shift {
+    0% {
+      filter: hue-rotate(0deg);
+    }
+    100% {
+      filter: hue-rotate(360deg);
     }
   }
 
@@ -157,14 +167,6 @@
     color-scheme: dark;
   }
 
-  [data-tooltip-content] {
-    @apply text-sm text-pretty;
-  }
-
-  [data-arrow] {
-    @apply text-background-grey;
-  }
-
   ::-webkit-scrollbar {
     width: 10px;
   }
@@ -202,6 +204,18 @@
 
   .virtual-list-inner {
     @apply overflow-x-auto overflow-y-clip;
+  }
+
+  .lore-enchantment {
+    @apply group-data-[rainbow=true]/html:animate-hue group-data-[rainbow=false]/html:text-minecraft-6!;
+  }
+
+  [data-tooltip-content] {
+    @apply text-sm text-pretty;
+  }
+
+  [data-arrow] {
+    @apply text-background-grey;
   }
 }
 

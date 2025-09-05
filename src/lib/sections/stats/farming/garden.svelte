@@ -8,9 +8,10 @@
   import type { IsHover } from "$lib/hooks/is-hover.svelte";
   import { api } from "$lib/shared/api";
   import { calculatePercentage, formatNumber, getRarityClass, renderLore } from "$lib/shared/helper";
+  import { animateObfuscatedText } from "$lib/shared/motd/obfuscated";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { content } from "$lib/stores/internal";
-  import type { Garden } from "$types/processed/profile/garden";
+  import type { Garden as FullGarden } from "$types/processed/profile/garden";
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
   import Image from "@lucide/svelte/icons/image";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
@@ -18,6 +19,8 @@
   import { Avatar, Collapsible, Progress, Tooltip } from "bits-ui";
   import { format } from "numerable";
   import { getContext } from "svelte";
+
+  type Garden = FullGarden["garden"];
 
   const ctx = getProfileCtx();
   const profile = $derived(ctx.profile);
@@ -28,7 +31,7 @@
   let sectionOpen: boolean = $state(false);
   const queryEnabled = $derived(!gardenLocked && sectionOpen);
 
-  const query = createQuery<Garden>({
+  const query = createQuery<FullGarden>({
     queryKey: ["garden", profileUUID, profileId],
     queryFn: () => api().getGarden(profileUUID),
     enabled: queryEnabled
@@ -36,7 +39,7 @@
 
   const garden = $derived.by(() => {
     if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data;
+    return $query.data.garden;
   });
 
   const isHover = getContext<IsHover>("isHover");
@@ -149,7 +152,7 @@
     <div class="grid grid-cols-[repeat(5,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
       {#each garden.plot.layout as plot, index (index)}
         {#snippet tooltipContent()}
-          <p>{@html renderLore(plot.display_name)}</p>
+          <p {@attach animateObfuscatedText}>{@html renderLore(plot.display_name)}</p>
         {/snippet}
         <Tooltip.Root disableCloseOnTriggerClick={false}>
           <Tooltip.Trigger onclick={() => content.set(tooltipContent)}>

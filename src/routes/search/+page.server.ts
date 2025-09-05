@@ -1,3 +1,4 @@
+import { PUBLIC_API_URL } from "$env/static/public";
 import { fail, redirect } from "@sveltejs/kit";
 import ky from "ky";
 import { message, superValidate } from "sveltekit-superforms";
@@ -10,7 +11,7 @@ export const load = (async () => {
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {
-  default: async ({ request, url }) => {
+  default: async ({ request }) => {
     const form = await superValidate(request, zod(schema));
 
     if (!form.valid) {
@@ -21,7 +22,9 @@ export const actions: Actions = {
     }
 
     try {
-      const response = await ky(`${url.origin}/api/uuid/${form.data.query}`);
+      const response = await ky(`uuid/${form.data.query}`, {
+        prefixUrl: PUBLIC_API_URL
+      });
       if (response.status === 204 || response.status === 404 || response.status === 500) {
         return message(form, { type: "error", text: `No user with the name '${form.data.query}' was found` }, { status: 404 });
       }

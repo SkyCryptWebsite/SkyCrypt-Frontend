@@ -9,6 +9,7 @@
   import Items from "$lib/layouts/stats/Items.svelte";
   import { api, SectionName } from "$lib/shared/api";
   import { getRarityClass, renderLore } from "$lib/shared/helper";
+  import { animateObfuscatedText } from "$lib/shared/motd/obfuscated";
   import { cn } from "$lib/shared/utils";
   import type { GearV2 } from "$types/statsv2";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
@@ -29,7 +30,7 @@
 
   const gear = $derived.by(() => {
     if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data;
+    return $query.data[SectionName.GEAR];
   });
 
   const { armor, equipment, wardrobe, weapons } = $derived(gear!);
@@ -118,7 +119,7 @@
         {#snippet text()}
           <div>
             {#if weapons.highest_priority_weapon?.display_name}
-              <p class="font-bold">
+              <p class="font-bold" {@attach animateObfuscatedText}>
                 <span class="text-text/60">Active Weapon: </span>
                 {@html renderLore(weapons.highest_priority_weapon.display_name)}
               </p>

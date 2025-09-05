@@ -1,11 +1,12 @@
-import { fetchPlayer, getProfile, getUUID } from "$lib/server/lib";
-import { getMainStats } from "$lib/server/stats/main_stats.js";
+import { PUBLIC_API_URL } from "$env/static/public";
 import { generateDynamicKey, generateToken } from "$lib/server/token";
+import type { StatsV2 } from "$types/statsv2";
 import { encodeBase64 } from "@oslojs/encoding";
 import { error } from "@sveltejs/kit";
+import ky from "ky";
 import type { PageServerLoad } from "./$types";
 
-export const load = (async ({ params, cookies, getClientAddress, request, route }) => {
+export const load = (async ({ params, getClientAddress, request, route }) => {
   const { ign: paramPlayer, profile: paramProfile = null } = params;
   const ip = getClientAddress();
   const userAgent = request.headers.get("User-Agent");
@@ -16,12 +17,6 @@ export const load = (async ({ params, cookies, getClientAddress, request, route 
   if (!userAgent) {
     error(400, "User-Agent header not found");
   }
-
-  const uuid = await getUUID(paramPlayer, { cache: true });
-  const [profile, player] = await Promise.all([getProfile(uuid, paramProfile, { cache: true }), fetchPlayer(uuid, { cache: true })]);
-  const packs = JSON.parse(cookies.get("disabledPacks") || "[]");
-
-  const stats = getMainStats(profile.members[profile.uuid], profile, player, packs);
 
   // Generate dynamic key based on request context (includes time window)
   const dynamicKey = generateDynamicKey(ip, userAgent, routeId);
@@ -71,7 +66,14 @@ export const load = (async ({ params, cookies, getClientAddress, request, route 
   const shuffledObjects = Object.fromEntries(allObjects);
 
   return {
-    stats,
+    stats: ky(`stats/${paramPlayer}${paramProfile ? "/" + paramProfile : ""}`, {
+      prefixUrl: PUBLIC_API_URL,
+      headers: {
+        Authorization: `Bearer ${tokenData.token}`,
+        "X-Timestamp": tokenData.timestamp,
+        "X-Route": tokenData.route
+      }
+    }).json<{ stats: StatsV2 }>(),
     ...shuffledObjects
   };
 }) satisfies PageServerLoad;

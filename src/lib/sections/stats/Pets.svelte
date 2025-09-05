@@ -9,6 +9,7 @@
   import Items from "$lib/layouts/stats/Items.svelte";
   import { api, SectionName } from "$lib/shared/api";
   import { formatNumber, getRarityClass, renderLore, uniqBy } from "$lib/shared/helper";
+  import { animateObfuscatedText } from "$lib/shared/motd/obfuscated";
   import { cn } from "$lib/shared/utils";
   import type { PetsV2 } from "$types/statsv2";
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
@@ -30,7 +31,7 @@
 
   const pets = $derived.by(() => {
     if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data;
+    return $query.data[SectionName.PETS];
   });
 
   const activePet = $derived(pets?.pets.find((pet) => pet.active === true));
@@ -51,7 +52,7 @@
         {#snippet text()}
           <div>
             <AdditionStat text="Unique Pets" data={`${pets.amount} / ${pets.total}`} maxed={pets.amount === pets.total} />
-            <AdditionStat text="Unique Pet Skins" data={`${pets.amountSkins} / ${pets.totalSkins}`} maxed={pets.amountSkins === pets.totalSkins} />
+            <AdditionStat text="Unique Pet Skins" data={`${pets.amountSkins}`} />
             {#if pets.petScore != null}
               <AdditionStat text="Pet Score" data={`${pets.petScore.amount} (+${pets.petScore.stats.magic_find} MF) `} asterisk={true}>
                 <div class="max-w-xs space-y-6 font-bold">
@@ -82,7 +83,7 @@
                 <div class="flex items-center">
                   <Item piece={activePet} />
                   <div class="ml-4 flex flex-col justify-center">
-                    <h4 class={cn(getRarityClass(activePet.rarity ?? "common", "text"), "text-xl font-bold capitalize")}>{(activePet.rarity ?? "common").toLowerCase()} {@html renderLore(activePet.display_name.toLowerCase())}</h4>
+                    <h4 class={cn(getRarityClass(activePet.rarity ?? "common", "text"), "text-xl font-bold capitalize")} {@attach animateObfuscatedText}>{(activePet.rarity ?? "common").toLowerCase()} {@html renderLore(activePet.display_name.toLowerCase())}</h4>
                     <h4 class="text-text text-xl font-medium capitalize">Level {activePet.level}</h4>
                   </div>
                 </div>

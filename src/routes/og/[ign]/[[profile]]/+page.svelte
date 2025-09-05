@@ -1,15 +1,15 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import SEO from "$lib/components/SEO.svelte";
   import { cn } from "$lib/shared/utils";
   import { performanceMode } from "$lib/stores/preferences";
   import { Button } from "bits-ui";
-  import type { PageServerData } from "./$types";
 
-  const { data }: { data: PageServerData } = $props();
+  // TODO: Not implemented in GO yet
+  // const { data }: { data: PageServerData } = $props();
 </script>
 
-<SEO embedData={data.embed} />
+<!-- TODO: Not implemented in GO yet -->
+<!-- <SEO embedData={data.embed} /> -->
 
 <main class="flex h-screen w-full flex-col items-center justify-center">
   <div class={cn("flex w-full max-w-md flex-col items-center justify-center gap-3 rounded-lg p-6", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}>

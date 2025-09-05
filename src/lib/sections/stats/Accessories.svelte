@@ -8,7 +8,7 @@
   import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
   import Items from "$lib/layouts/stats/Items.svelte";
   import { api, SectionName } from "$lib/shared/api";
-  import { RARITY_COLORS } from "$lib/shared/constants/items";
+  import { RARITY_COLORS } from "$lib/shared/constants/rarities";
   import { STATS_DATA } from "$lib/shared/constants/stats";
   import * as helper from "$lib/shared/helper";
   import { calculatePercentage } from "$lib/shared/helper";
@@ -32,7 +32,7 @@
 
   const accessories = $derived.by(() => {
     if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data;
+    return $query.data[SectionName.ACCESSORIES];
   });
 </script>
 
@@ -140,7 +140,7 @@
                       <li>
                         <span style="color: var(--§{RARITY_COLORS[accessories.magicalPower.hegemony.rarity]}">Hegemony Artifact: </span>
                         =
-                        <span style="color: var(--§6)"> +{accessories.magicalPower.hegemony} MP</span>
+                        <span style="color: var(--§6)"> +{accessories.magicalPower.hegemony.amount} MP</span>
                       </li>
                     {/if}
                   </ul>

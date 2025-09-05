@@ -9,6 +9,7 @@
   import { createQuery } from "@tanstack/svelte-query";
   import { format as dateFormat, formatDistanceToNowStrict } from "date-fns";
   import { format as numberFormat } from "numerable";
+  import type { NetworthResult } from "skyhelper-networth";
 
   const ctx = getProfileCtx();
   const profile = $derived(ctx.profile);
@@ -22,7 +23,7 @@
 
   const networth = $derived.by(() => {
     if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data;
+    return $query.data.networth;
   });
 
   const defaultPatternDecimal: string = "0,0.##";
@@ -99,36 +100,41 @@
     <div class="text-text/60 my-0 flex items-center gap-1 font-bold">Networth: An error has occurred</div>
   {/if}
   {#if $query.isSuccess && $query.data && networth}
-    <AdditionStat text="Networth" data={formatNumber(networth.networth)} asterisk={true}>
-      <div class="max-w-xs space-y-2 font-bold">
-        <div>
-          <h3 class="text-text/85">Networth</h3>
-          <p class="text-text/80 font-medium italic">Networth calculations by SkyHelper.</p>
-        </div>
-        <div>
-          <ul class="[&_li]:text-text/85 [&_li_span]:text-text font-bold [&_li]:capitalize [&_li_span]:normal-case">
-            {#each Object.entries(networth.types) as [key, value], index (index)}
-              <li>
-                {key.replace(/_/g, " ")}:
-                <span>
-                  {formatNumber(value.total)}
-                </span>
-              </li>
-            {/each}
-          </ul>
-        </div>
-        <p class="text-text/85">
-          Unsoulbound Networth:
-          <span class="text-text">
-            {formatNumber(networth.unsoulboundNetworth)}
-          </span>
-          <br />
-          Total Networth:
-          <span class="text-text">
-            {numberFormat(networth.networth, defaultPattern)} ({formatNumber(networth.networth)})
-          </span>
-        </p>
-      </div>
-    </AdditionStat>
+    {@render NetworthSnippet(networth.normal, "Networth")}
+    {@render NetworthSnippet(networth.nonCosmetic, "Non-Cosmetic Networth")}
   {/if}
 </div>
+
+{#snippet NetworthSnippet(networth: NetworthResult, title: string = "Networth")}
+  <AdditionStat text={title} data={formatNumber(networth.networth)} asterisk={true}>
+    <div class="max-w-xs space-y-2 font-bold">
+      <div>
+        <h3 class="text-text/85">{title}</h3>
+        <p class="text-text/80 font-medium italic">{title} calculations by SkyHelper.</p>
+      </div>
+      <div>
+        <ul class="[&_li]:text-text/85 [&_li_span]:text-text font-bold [&_li]:capitalize [&_li_span]:normal-case">
+          {#each Object.entries(networth.types) as [key, value], index (index)}
+            <li>
+              {key.replace(/_/g, " ")}:
+              <span>
+                {formatNumber(value.total)}
+              </span>
+            </li>
+          {/each}
+        </ul>
+      </div>
+      <p class="text-text/85">
+        Unsoulbound {title}:
+        <span class="text-text">
+          {formatNumber(networth.unsoulboundNetworth)}
+        </span>
+        <br />
+        Total {title}:
+        <span class="text-text">
+          {numberFormat(networth.networth, defaultPattern)} ({formatNumber(networth.networth)})
+        </span>
+      </p>
+    </div>
+  </AdditionStat>
+{/snippet}

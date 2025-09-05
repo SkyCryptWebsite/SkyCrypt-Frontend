@@ -8,6 +8,7 @@
   import Items from "$lib/layouts/stats/Items.svelte";
   import { SectionName } from "$lib/shared/api";
   import { renderLore, titleCase } from "$lib/shared/helper";
+  import { animateObfuscatedText } from "$lib/shared/motd/obfuscated";
   import type { SkillsV2 } from "$types/statsv2";
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
   import Image from "@lucide/svelte/icons/image";
@@ -41,7 +42,7 @@
       {#snippet text()}
         <div class="space-y-2">
           {#if highestPriorityFishingTool && highestPriorityFishingTool.display_name}
-            <p class="text-text/60 space-x-0.5 leading-6 font-bold capitalize">
+            <p class="text-text/60 space-x-0.5 leading-6 font-bold capitalize" {@attach animateObfuscatedText}>
               <span>Active Rod:</span>
               {@html renderLore(highestPriorityFishingTool.display_name)}
             </p>
@@ -159,7 +160,9 @@
                   </div>
                 </div>
                 {#snippet tooltip()}
-                  {@html renderLore(trophyFish.description)}
+                  <div class="contents" {@attach animateObfuscatedText}>
+                    {@html renderLore(trophyFish.description)}
+                  </div>
                 {/snippet}
               </Chip>
             {/each}

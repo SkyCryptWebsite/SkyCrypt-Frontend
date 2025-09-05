@@ -1,10 +1,12 @@
 <script lang="ts">
   import { getProfileCtx } from "$ctx/profile.svelte";
+  import { PUBLIC_API_URL } from "$env/static/public";
   import Item from "$lib/components/Item.svelte";
   import Notice from "$lib/components/Notice.svelte";
   import Section from "$lib/components/Section.svelte";
-  import { api } from "$lib/shared/api";
+  import { api, SectionName } from "$lib/shared/api";
   import { renderLore, shouldShine } from "$lib/shared/helper";
+  import { animateObfuscatedText } from "$lib/shared/motd/obfuscated";
   import { itemContentSpecial } from "$lib/stores/internal";
   import { performanceMode } from "$lib/stores/preferences";
   import type { ProcessedSkyBlockItem } from "$types/stats";
@@ -21,7 +23,7 @@
   type Tabs = {
     id: string;
     icon: string;
-    items: InventoryV2;
+    items: InventoryV2["items"];
     loading: boolean;
     error: boolean;
     gap: number;
@@ -40,103 +42,103 @@
   const _inventories = ["backpack", "inventory", "enderchest", "armor", "equipment", "personal_vault", "wardrobe", "rift_inventory", "rift_enderchest", "rift_armor", "rift_equipment", "potion_bag", "talisman_bag", "fishing_bag", "quiver", "museum", "search"] as readonly string[]; // List of inventory types to be used in the tabs
 
   const backpackQuery = createQuery({
-    queryKey: ["inventory", uuid, profileId, "backpack"],
+    queryKey: [SectionName.INVENTORY, uuid, profileId, "backpack"],
     queryFn: () => api().getInventory(uuid, profileId, "backpack"),
     enabled: false
   });
 
   const inventoryQuery = createQuery({
-    queryKey: ["inventory", uuid, profileId, "inventory"],
+    queryKey: [SectionName.INVENTORY, uuid, profileId, "inventory"],
     queryFn: () => api().getInventory(uuid, profileId, "inventory"),
     enabled: true
   });
 
   const enderchestQuery = createQuery({
-    queryKey: ["inventory", uuid, profileId, "enderchest"],
+    queryKey: [SectionName.INVENTORY, uuid, profileId, "enderchest"],
     queryFn: () => api().getInventory(uuid, profileId, "enderchest"),
     enabled: false
   });
 
   const armorQuery = createQuery({
-    queryKey: ["inventory", uuid, profileId, "armor"],
+    queryKey: [SectionName.INVENTORY, uuid, profileId, "armor"],
     queryFn: () => api().getInventory(uuid, profileId, "armor"),
     enabled: false
   });
 
   const equipmentQuery = createQuery({
-    queryKey: ["inventory", uuid, profileId, "equipment"],
+    queryKey: [SectionName.INVENTORY, uuid, profileId, "equipment"],
     queryFn: () => api().getInventory(uuid, profileId, "equipment"),
     enabled: false
   });
 
   const personalVaultQuery = createQuery({
-    queryKey: ["inventory", uuid, profileId, "personal_vault"],
+    queryKey: [SectionName.INVENTORY, uuid, profileId, "personal_vault"],
     queryFn: () => api().getInventory(uuid, profileId, "personal_vault"),
     enabled: false
   });
 
   const wardrobeQuery = createQuery({
-    queryKey: ["inventory", uuid, profileId, "wardrobe"],
+    queryKey: [SectionName.INVENTORY, uuid, profileId, "wardrobe"],
     queryFn: () => api().getInventory(uuid, profileId, "wardrobe"),
     enabled: false
   });
 
   const riftInventoryQuery = createQuery({
-    queryKey: ["inventory", uuid, profileId, "rift_inventory"],
+    queryKey: [SectionName.INVENTORY, uuid, profileId, "rift_inventory"],
     queryFn: () => api().getInventory(uuid, profileId, "rift_inventory"),
     enabled: false
   });
 
   const riftEnderchestQuery = createQuery({
-    queryKey: ["inventory", uuid, profileId, "rift_enderchest"],
+    queryKey: [SectionName.INVENTORY, uuid, profileId, "rift_enderchest"],
     queryFn: () => api().getInventory(uuid, profileId, "rift_enderchest"),
     enabled: false
   });
 
   const riftArmorQuery = createQuery({
-    queryKey: ["inventory", uuid, profileId, "rift_armor"],
+    queryKey: [SectionName.INVENTORY, uuid, profileId, "rift_armor"],
     queryFn: () => api().getInventory(uuid, profileId, "rift_armor"),
     enabled: false
   });
 
   const riftEquipmentQuery = createQuery({
-    queryKey: ["inventory", uuid, profileId, "rift_equipment"],
+    queryKey: [SectionName.INVENTORY, uuid, profileId, "rift_equipment"],
     queryFn: () => api().getInventory(uuid, profileId, "rift_equipment"),
     enabled: false
   });
 
   const potionBagQuery = createQuery({
-    queryKey: ["inventory", uuid, profileId, "potion_bag"],
+    queryKey: [SectionName.INVENTORY, uuid, profileId, "potion_bag"],
     queryFn: () => api().getInventory(uuid, profileId, "potion_bag"),
     enabled: false
   });
 
   const talismanBagQuery = createQuery({
-    queryKey: ["inventory", uuid, profileId, "talisman_bag"],
+    queryKey: [SectionName.INVENTORY, uuid, profileId, "talisman_bag"],
     queryFn: () => api().getInventory(uuid, profileId, "talisman_bag"),
     enabled: false
   });
 
   const fishingBagQuery = createQuery({
-    queryKey: ["inventory", uuid, profileId, "fishing_bag"],
+    queryKey: [SectionName.INVENTORY, uuid, profileId, "fishing_bag"],
     queryFn: () => api().getInventory(uuid, profileId, "fishing_bag"),
     enabled: false
   });
 
   const quiverQuery = createQuery({
-    queryKey: ["inventory", uuid, profileId, "quiver"],
+    queryKey: [SectionName.INVENTORY, uuid, profileId, "quiver"],
     queryFn: () => api().getInventory(uuid, profileId, "quiver"),
     enabled: false
   });
 
   const museumQuery = createQuery({
-    queryKey: ["inventory", uuid, profileId, "museum"],
+    queryKey: [SectionName.INVENTORY, uuid, profileId, "museum"],
     queryFn: () => api().getInventory(uuid, profileId, "museum"),
     enabled: false
   });
 
   const searchQuery = createQuery({
-    queryKey: ["inventory", uuid, profileId, "search"],
+    queryKey: [SectionName.INVENTORY, uuid, profileId, "search"],
     queryFn: () => api().getInventory(uuid, profileId, "search", debouncedSearchValue.current),
     enabled: false
   });
@@ -147,95 +149,95 @@
     {
       id: "inventory",
       icon: `https://crafatar.com/renders/head/${profile.uuid}?overlay`,
-      items: $inventoryQuery.data ?? [],
+      items: $inventoryQuery.data?.items ?? [],
       loading: $inventoryQuery.isLoading,
       error: $inventoryQuery.isError,
       gap: 27
     },
     {
       id: "backpack",
-      icon: "/api/item/chest",
-      items: $backpackQuery.data ?? [],
+      icon: PUBLIC_API_URL + "item/CHEST",
+      items: $backpackQuery.data?.items ?? [],
       loading: $backpackQuery.isLoading,
       error: $backpackQuery.isError,
       gap: 45
     },
     {
       id: "enderchest",
-      icon: "/api/item/ender_chest",
-      items: $enderchestQuery.data ?? [],
+      icon: PUBLIC_API_URL + "item/ENDER_CHEST",
+      items: $enderchestQuery.data?.items ?? [],
       loading: $enderchestQuery.isLoading,
       error: $enderchestQuery.isError,
       gap: 45
     },
     {
       id: "personal_vault",
-      icon: "/api/head/f7aadff9ddc546fdcec6ed5919cc39dfa8d0c07ff4bc613a19f2e6d7f2593",
-      items: $personalVaultQuery.data ?? [],
+      icon: PUBLIC_API_URL + "head/f7aadff9ddc546fdcec6ed5919cc39dfa8d0c07ff4bc613a19f2e6d7f2593",
+      items: $personalVaultQuery.data?.items ?? [],
       loading: $personalVaultQuery.isLoading,
       error: $personalVaultQuery.isError,
       gap: 45
     },
     {
       id: "talisman_bag",
-      icon: "/api/head/961a918c0c49ba8d053e522cb91abc74689367b4d8aa06bfc1ba9154730985ff",
-      items: $talismanBagQuery.data ?? [],
+      icon: PUBLIC_API_URL + "head/961a918c0c49ba8d053e522cb91abc74689367b4d8aa06bfc1ba9154730985ff",
+      items: $talismanBagQuery.data?.items ?? [],
       loading: $talismanBagQuery.isLoading,
       error: $talismanBagQuery.isError,
       gap: 45
     },
     {
       id: "potion_bag",
-      icon: "/api/head/9f8b82427b260d0a61e6483fc3b2c35a585851e08a9a9df372548b4168cc817c",
-      items: $potionBagQuery.data ?? [],
+      icon: PUBLIC_API_URL + "head/9f8b82427b260d0a61e6483fc3b2c35a585851e08a9a9df372548b4168cc817c",
+      items: $potionBagQuery.data?.items ?? [],
       loading: $potionBagQuery.isLoading,
       error: $potionBagQuery.isError,
       gap: 45
     },
     {
       id: "fishing_bag",
-      icon: "/api/head/eb8e297df6b8dffcf135dba84ec792d420ad8ecb458d144288572a84603b1631",
-      items: $fishingBagQuery.data ?? [],
+      icon: PUBLIC_API_URL + "head/eb8e297df6b8dffcf135dba84ec792d420ad8ecb458d144288572a84603b1631",
+      items: $fishingBagQuery.data?.items ?? [],
       loading: $fishingBagQuery.isLoading,
       error: $fishingBagQuery.isError,
       gap: 45
     },
     {
       id: "quiver",
-      icon: "/api/head/4cb3acdc11ca747bf710e59f4c8e9b3d949fdd364c6869831ca878f0763d1787",
-      items: $quiverQuery.data ?? [],
+      icon: PUBLIC_API_URL + "head/4cb3acdc11ca747bf710e59f4c8e9b3d949fdd364c6869831ca878f0763d1787",
+      items: $quiverQuery.data?.items ?? [],
       loading: $quiverQuery.isLoading,
       error: $quiverQuery.isError,
       gap: 45
     },
     {
       id: "museum",
-      icon: "/api/head/438cf3f8e54afc3b3f91d20a49f324dca1486007fe545399055524c17941f4dc",
-      items: $museumQuery.data ?? [],
+      icon: PUBLIC_API_URL + "head/438cf3f8e54afc3b3f91d20a49f324dca1486007fe545399055524c17941f4dc",
+      items: $museumQuery.data?.items ?? [],
       loading: $museumQuery.isLoading,
       error: $museumQuery.isError,
       gap: 54
     },
     {
       id: "rift_inventory",
-      icon: "/api/head/445240fcf1a9796327dda5593985343af9121a7156bc76e3d6b341b02e6a6e52",
-      items: $riftInventoryQuery.data ?? [],
+      icon: PUBLIC_API_URL + "head/445240fcf1a9796327dda5593985343af9121a7156bc76e3d6b341b02e6a6e52",
+      items: $riftInventoryQuery.data?.items ?? [],
       loading: $riftInventoryQuery.isLoading,
       error: $riftInventoryQuery.isError,
       gap: 45
     },
     {
       id: "rift_enderchest",
-      icon: "/api/head/a6cc486c2be1cb9dfcb2e53dd9a3e9a883bfadb27cb956f1896d602b4067",
-      items: $riftEnderchestQuery.data ?? [],
+      icon: PUBLIC_API_URL + "head/a6cc486c2be1cb9dfcb2e53dd9a3e9a883bfadb27cb956f1896d602b4067",
+      items: $riftEnderchestQuery.data?.items ?? [],
       loading: $riftEnderchestQuery.isLoading,
       error: $riftEnderchestQuery.isError,
       gap: 45
     },
     {
       id: "search",
-      icon: "/api/item/EYE_OF_ENDER",
-      items: $searchQuery.data ?? [],
+      icon: PUBLIC_API_URL + "item/EYE_OF_ENDER",
+      items: $searchQuery.data?.items ?? [],
       loading: $searchQuery.isLoading,
       error: $searchQuery.isError,
       gap: 45
@@ -243,12 +245,11 @@
   ]);
 
   const searchedItems = $derived.by<ProcessedSkyBlockItem[] | []>(() => {
-    if (!$searchQuery.data) return [];
+    if (!$searchQuery.data?.items) return [];
     const search = debouncedSearchValue.current?.trim();
     if (!search) return [];
-    const searchedItemName = $searchQuery.data.filter((item) => item?.display_name?.toLowerCase().includes(search?.toLowerCase())).slice(0, 45);
+    const searchedItemName = $searchQuery.data.items.filter((item) => item?.display_name?.toLowerCase().includes(search?.toLowerCase())).slice(0, 45);
     if (searchedItemName.length === 0) return [];
-
     return searchedItemName;
   });
 
@@ -505,7 +506,7 @@
               {/each}
             {/if}
           </div>
-          <div class="grid place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
+          <div class="grid place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2" {@attach animateObfuscatedText}>
             <div class="pt-5">
               {#if item?.lore}
                 {#each item?.lore as lore, index (index)}

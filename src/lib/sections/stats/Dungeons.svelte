@@ -33,7 +33,7 @@
 
   const dungeons = $derived.by(() => {
     if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data;
+    return $query.data[SectionName.DUNGEONS];
   });
 
   function formatDuration(end: number) {
@@ -59,7 +59,7 @@
   {/if}
   {#if $query.isSuccess && $query.data && dungeons}
     <div class="space-y-4">
-      {#if dungeons.unlocked === false}
+      {#if dungeons.level.xp === 0}
         <p class="space-x-0.5 leading-6">{profile.username} hasn't unlocked Dungeons yet.</p>
       {:else if dungeons}
         <div class="flex flex-col flex-wrap justify-start gap-x-4 gap-y-2 pt-4 sm:flex-row">
