@@ -361,7 +361,7 @@
     <Tabs.List>
       <ScrollArea.Root>
         <ScrollArea.Viewport class="border-icon border-b">
-          <div class="flex! h-full shrink-0 flex-nowrap items-center gap-3 whitespace-nowrap px-4">
+          <div class="flex! h-full shrink-0 flex-nowrap items-center gap-3 px-4 whitespace-nowrap">
             {#each tabs as tab (tab.id)}
               <Tabs.Trigger value={tab.id} class="group relative flex items-center justify-center gap-0.5 pb-2 text-xs uppercase">
                 <Avatar.Root class="size-8">
@@ -448,7 +448,7 @@
   {#if itemsFound}
     <p class="mx-auto w-fit leading-6">No items found.</p>
   {:else if debouncedSearchValue.current !== ""}
-    <div class="@md:gap-1.5 @xl:gap-2 grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5">
+    <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
       {#each searchedItems as item, index (index)}
         {#if item}
           <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={!$performanceMode && shouldShine(item)}>
@@ -464,7 +464,7 @@
 
 {#snippet multipleInventorySection()}
   <Tabs.Root value={tab.id}>
-    <Tabs.List class="@md:gap-1.5 @xl:gap-2 grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5">
+    <Tabs.List class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
       {#if tab?.items?.length}
         {#each tab.items as item, index (index)}
           <Tabs.Trigger value={item.texture_path ? index.toString() : "undefined"} class="group">
@@ -486,7 +486,7 @@
     {#if tab?.items?.length}
       {#each tab.items as item, index (index)}
         <Tabs.Content value={index.toString()}>
-          <div class="@md:gap-1.5 @xl:gap-2 grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5">
+          <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
             {#if item?.containsItems}
               {#each item.containsItems as containedItem, index2 (index2)}
                 {#if index2 > 0}
@@ -506,7 +506,7 @@
               {/each}
             {/if}
           </div>
-          <div class="@md:gap-1.5 @xl:gap-2 grid place-content-center gap-1 pt-5" {@attach animateObfuscatedText}>
+          <div class="grid place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2" {@attach animateObfuscatedText}>
             <div class="pt-5">
               {#if item?.lore}
                 {#each item?.lore as lore, index (index)}
@@ -523,7 +523,7 @@
 
 {#snippet inventorySection()}
   {#if tab?.items?.length}
-    <div class="@md:gap-1.5 @xl:gap-2 grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5">
+    <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
       {#each tab.items as item, index (index)}
         {#if index > 0}
           {#if index % tab.gap === 0}
