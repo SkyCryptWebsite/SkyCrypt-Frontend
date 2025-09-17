@@ -42,7 +42,7 @@ const config = {
     csp: {
       mode: "auto",
       directives: {
-        "script-src": ["self"],
+        "script-src": ["self", "unsafe-inline"],
         "style-src": ["self", "unsafe-inline", "https://fonts.googleapis.com"],
         "img-src": ["self", "data:", "https://vzge.me", "https://crafatar.com", "https://mc-heads.net", "http://localhost:8080"],
         "connect-src": ["self", "https://crafatar.com", "http://localhost:8080"],

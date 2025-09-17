@@ -1,4 +1,4 @@
-import { PUBLIC_API_URL } from "$env/static/public";
+import { PUBLIC_SERVER_API_URL } from "$env/static/public";
 import ky from "ky";
 import type { PageServerLoad } from "./$types";
 import { Role } from "./enums";
@@ -7,7 +7,7 @@ export const load = (async () => {
   const getUsername = async (uuid: string): Promise<string> => {
     try {
       const { username } = await ky(`username/${uuid}`, {
-        prefixUrl: PUBLIC_API_URL
+        prefixUrl: PUBLIC_SERVER_API_URL
       }).json<{ username: string }>();
       return username;
     } catch (error) {
