@@ -1,4 +1,4 @@
-import { getClientApiUrl } from "$lib/client/api-config";
+import { PUBLIC_API_URL } from "$env/static/public";
 import { api_token } from "$lib/stores/internal";
 import type { Garden } from "$types/processed/profile/garden";
 import type { ProcessedSkyBlockItem } from "$types/stats";
@@ -116,7 +116,7 @@ export const api = () => {
   }
 
   const extendedCustomKy = customKy.extend({
-    prefixUrl: getClientApiUrl(),
+    prefixUrl: PUBLIC_API_URL,
     hooks: {
       beforeRequest: [
         async (request) => {

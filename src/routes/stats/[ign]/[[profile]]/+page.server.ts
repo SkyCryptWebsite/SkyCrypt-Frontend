@@ -1,4 +1,4 @@
-import { getServerApiUrl } from "$lib/server/api-config";
+import { PUBLIC_API_URL } from "$env/static/public";
 import { generateDynamicKey, generateToken } from "$lib/server/token";
 import type { StatsV2 } from "$types/statsv2";
 import { encodeBase64 } from "@oslojs/encoding";
@@ -67,7 +67,7 @@ export const load = (async ({ params, getClientAddress, request, route }) => {
 
   return {
     stats: ky(`stats/${paramPlayer}${paramProfile ? "/" + paramProfile : ""}`, {
-      prefixUrl: getServerApiUrl(),
+      prefixUrl: PUBLIC_API_URL,
       headers: {
         Authorization: `Bearer ${tokenData.token}`,
         "X-Timestamp": tokenData.timestamp,

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getProfileCtx } from "$ctx/profile.svelte";
-  import { getClientApiUrl } from "$lib/client/api-config";
+  import { PUBLIC_API_URL } from "$env/static/public";
   import Item from "$lib/components/Item.svelte";
   import Notice from "$lib/components/Notice.svelte";
   import Section from "$lib/components/Section.svelte";
@@ -19,8 +19,6 @@
   import { untrack } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { crossfade, fade } from "svelte/transition";
-
-  const apiUrl = getClientApiUrl();
 
   type Tabs = {
     id: string;
@@ -158,7 +156,7 @@
     },
     {
       id: "backpack",
-      icon: apiUrl + "item/CHEST",
+      icon: PUBLIC_API_URL + "item/CHEST",
       items: $backpackQuery.data?.items ?? [],
       loading: $backpackQuery.isLoading,
       error: $backpackQuery.isError,
@@ -166,7 +164,7 @@
     },
     {
       id: "enderchest",
-      icon: apiUrl + "item/ENDER_CHEST",
+      icon: PUBLIC_API_URL + "item/ENDER_CHEST",
       items: $enderchestQuery.data?.items ?? [],
       loading: $enderchestQuery.isLoading,
       error: $enderchestQuery.isError,
@@ -174,7 +172,7 @@
     },
     {
       id: "personal_vault",
-      icon: apiUrl + "head/f7aadff9ddc546fdcec6ed5919cc39dfa8d0c07ff4bc613a19f2e6d7f2593",
+      icon: PUBLIC_API_URL + "head/f7aadff9ddc546fdcec6ed5919cc39dfa8d0c07ff4bc613a19f2e6d7f2593",
       items: $personalVaultQuery.data?.items ?? [],
       loading: $personalVaultQuery.isLoading,
       error: $personalVaultQuery.isError,
@@ -182,7 +180,7 @@
     },
     {
       id: "talisman_bag",
-      icon: apiUrl + "head/961a918c0c49ba8d053e522cb91abc74689367b4d8aa06bfc1ba9154730985ff",
+      icon: PUBLIC_API_URL + "head/961a918c0c49ba8d053e522cb91abc74689367b4d8aa06bfc1ba9154730985ff",
       items: $talismanBagQuery.data?.items ?? [],
       loading: $talismanBagQuery.isLoading,
       error: $talismanBagQuery.isError,
@@ -190,7 +188,7 @@
     },
     {
       id: "potion_bag",
-      icon: apiUrl + "head/9f8b82427b260d0a61e6483fc3b2c35a585851e08a9a9df372548b4168cc817c",
+      icon: PUBLIC_API_URL + "head/9f8b82427b260d0a61e6483fc3b2c35a585851e08a9a9df372548b4168cc817c",
       items: $potionBagQuery.data?.items ?? [],
       loading: $potionBagQuery.isLoading,
       error: $potionBagQuery.isError,
@@ -198,7 +196,7 @@
     },
     {
       id: "fishing_bag",
-      icon: apiUrl + "head/eb8e297df6b8dffcf135dba84ec792d420ad8ecb458d144288572a84603b1631",
+      icon: PUBLIC_API_URL + "head/eb8e297df6b8dffcf135dba84ec792d420ad8ecb458d144288572a84603b1631",
       items: $fishingBagQuery.data?.items ?? [],
       loading: $fishingBagQuery.isLoading,
       error: $fishingBagQuery.isError,
@@ -206,7 +204,7 @@
     },
     {
       id: "quiver",
-      icon: apiUrl + "head/4cb3acdc11ca747bf710e59f4c8e9b3d949fdd364c6869831ca878f0763d1787",
+      icon: PUBLIC_API_URL + "head/4cb3acdc11ca747bf710e59f4c8e9b3d949fdd364c6869831ca878f0763d1787",
       items: $quiverQuery.data?.items ?? [],
       loading: $quiverQuery.isLoading,
       error: $quiverQuery.isError,
@@ -214,7 +212,7 @@
     },
     {
       id: "museum",
-      icon: apiUrl + "head/438cf3f8e54afc3b3f91d20a49f324dca1486007fe545399055524c17941f4dc",
+      icon: PUBLIC_API_URL + "head/438cf3f8e54afc3b3f91d20a49f324dca1486007fe545399055524c17941f4dc",
       items: $museumQuery.data?.items ?? [],
       loading: $museumQuery.isLoading,
       error: $museumQuery.isError,
@@ -222,7 +220,7 @@
     },
     {
       id: "rift_inventory",
-      icon: apiUrl + "head/445240fcf1a9796327dda5593985343af9121a7156bc76e3d6b341b02e6a6e52",
+      icon: PUBLIC_API_URL + "head/445240fcf1a9796327dda5593985343af9121a7156bc76e3d6b341b02e6a6e52",
       items: $riftInventoryQuery.data?.items ?? [],
       loading: $riftInventoryQuery.isLoading,
       error: $riftInventoryQuery.isError,
@@ -230,7 +228,7 @@
     },
     {
       id: "rift_enderchest",
-      icon: apiUrl + "head/a6cc486c2be1cb9dfcb2e53dd9a3e9a883bfadb27cb956f1896d602b4067",
+      icon: PUBLIC_API_URL + "head/a6cc486c2be1cb9dfcb2e53dd9a3e9a883bfadb27cb956f1896d602b4067",
       items: $riftEnderchestQuery.data?.items ?? [],
       loading: $riftEnderchestQuery.isLoading,
       error: $riftEnderchestQuery.isError,
@@ -238,7 +236,7 @@
     },
     {
       id: "search",
-      icon: apiUrl + "item/EYE_OF_ENDER",
+      icon: PUBLIC_API_URL + "item/EYE_OF_ENDER",
       items: $searchQuery.data?.items ?? [],
       loading: $searchQuery.isLoading,
       error: $searchQuery.isError,

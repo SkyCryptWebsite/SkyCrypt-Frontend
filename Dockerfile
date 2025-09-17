@@ -3,7 +3,6 @@ RUN npm install -g pnpm@10
 WORKDIR /app
 
 # Accept build arguments
-ARG PUBLIC_BASE_API_URL=http://localhost:8080/
 ARG PUBLIC_API_URL=http://localhost:8080/api/
 
 COPY package*.json .
@@ -18,7 +17,6 @@ RUN echo "ORIGIN=\"http://localhost:3000\"" > .env && \
     echo "PUBLIC_SENTRY_DSN=\"\"" >> .env && \
     echo "PUBLIC_SENTRY_HOST=\"\"" >> .env && \
     echo "PUBLIC_SENTRY_PROJECT_ID=\"\"" >> .env && \
-    echo "PUBLIC_BASE_API_URL=\"${PUBLIC_BASE_API_URL}\"" >> .env && \
     echo "PUBLIC_API_URL=\"${PUBLIC_API_URL}\"" >> .env
 
 COPY . .
