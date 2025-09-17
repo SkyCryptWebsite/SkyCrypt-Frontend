@@ -1,4 +1,4 @@
-import { PUBLIC_API_URL } from "$env/static/public";
+import { getClientApiUrl } from "$lib/client/api-config";
 import { api_token } from "$lib/stores/internal";
 import type { Garden } from "$types/processed/profile/garden";
 import type { ProcessedSkyBlockItem } from "$types/stats";
@@ -116,7 +116,7 @@ export const api = () => {
   }
 
   const extendedCustomKy = customKy.extend({
-    prefixUrl: PUBLIC_API_URL,
+    prefixUrl: getClientApiUrl(),
     hooks: {
       beforeRequest: [
         async (request) => {
@@ -159,6 +159,7 @@ export const api = () => {
       const data = await extendedCustomKy(`${sectionName}/${ign}${profile ? "/" + profile : ""}`).json<SectionTypeMap[T] & { message?: string }>();
 
       if (data.message) {
+        console.error(data.message);
         throw new Error(data.message);
       }
       return data;
@@ -168,6 +169,7 @@ export const api = () => {
       return (async () => {
         const data = await extendedCustomKy(`inventory/${ign}/${profile}${inventoryTab ? `/${inventoryTab}` : ""}${searchParam ? `/${encodeURIComponent(searchParam)}` : ""}`).json<(T extends string ? InventoryV2 : InventoryV2All) & { message?: string }>();
         if (data.message) {
+          console.error(data.message);
           throw new Error(data.message);
         }
         return data;
@@ -176,6 +178,7 @@ export const api = () => {
     getGarden: async (profile: string): Promise<Garden> => {
       const data = await extendedCustomKy(`garden/${profile}`).json<Garden & { message?: string }>();
       if (data.message) {
+        console.error(data.message);
         throw new Error(data.message);
       }
       return data;

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getProfileCtx } from "$ctx/profile.svelte";
-  import { PUBLIC_API_URL } from "$env/static/public";
+  import { getClientApiUrl } from "$lib/client/api-config";
   import Item from "$lib/components/Item.svelte";
   import Notice from "$lib/components/Notice.svelte";
   import Section from "$lib/components/Section.svelte";
@@ -19,6 +19,8 @@
   import { untrack } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { crossfade, fade } from "svelte/transition";
+
+  const apiUrl = getClientApiUrl();
 
   type Tabs = {
     id: string;
@@ -156,7 +158,7 @@
     },
     {
       id: "backpack",
-      icon: PUBLIC_API_URL + "item/CHEST",
+      icon: apiUrl + "item/CHEST",
       items: $backpackQuery.data?.items ?? [],
       loading: $backpackQuery.isLoading,
       error: $backpackQuery.isError,
@@ -164,7 +166,7 @@
     },
     {
       id: "enderchest",
-      icon: PUBLIC_API_URL + "item/ENDER_CHEST",
+      icon: apiUrl + "item/ENDER_CHEST",
       items: $enderchestQuery.data?.items ?? [],
       loading: $enderchestQuery.isLoading,
       error: $enderchestQuery.isError,
@@ -172,7 +174,7 @@
     },
     {
       id: "personal_vault",
-      icon: PUBLIC_API_URL + "head/f7aadff9ddc546fdcec6ed5919cc39dfa8d0c07ff4bc613a19f2e6d7f2593",
+      icon: apiUrl + "head/f7aadff9ddc546fdcec6ed5919cc39dfa8d0c07ff4bc613a19f2e6d7f2593",
       items: $personalVaultQuery.data?.items ?? [],
       loading: $personalVaultQuery.isLoading,
       error: $personalVaultQuery.isError,
@@ -180,7 +182,7 @@
     },
     {
       id: "talisman_bag",
-      icon: PUBLIC_API_URL + "head/961a918c0c49ba8d053e522cb91abc74689367b4d8aa06bfc1ba9154730985ff",
+      icon: apiUrl + "head/961a918c0c49ba8d053e522cb91abc74689367b4d8aa06bfc1ba9154730985ff",
       items: $talismanBagQuery.data?.items ?? [],
       loading: $talismanBagQuery.isLoading,
       error: $talismanBagQuery.isError,
@@ -188,7 +190,7 @@
     },
     {
       id: "potion_bag",
-      icon: PUBLIC_API_URL + "head/9f8b82427b260d0a61e6483fc3b2c35a585851e08a9a9df372548b4168cc817c",
+      icon: apiUrl + "head/9f8b82427b260d0a61e6483fc3b2c35a585851e08a9a9df372548b4168cc817c",
       items: $potionBagQuery.data?.items ?? [],
       loading: $potionBagQuery.isLoading,
       error: $potionBagQuery.isError,
@@ -196,7 +198,7 @@
     },
     {
       id: "fishing_bag",
-      icon: PUBLIC_API_URL + "head/eb8e297df6b8dffcf135dba84ec792d420ad8ecb458d144288572a84603b1631",
+      icon: apiUrl + "head/eb8e297df6b8dffcf135dba84ec792d420ad8ecb458d144288572a84603b1631",
       items: $fishingBagQuery.data?.items ?? [],
       loading: $fishingBagQuery.isLoading,
       error: $fishingBagQuery.isError,
@@ -204,7 +206,7 @@
     },
     {
       id: "quiver",
-      icon: PUBLIC_API_URL + "head/4cb3acdc11ca747bf710e59f4c8e9b3d949fdd364c6869831ca878f0763d1787",
+      icon: apiUrl + "head/4cb3acdc11ca747bf710e59f4c8e9b3d949fdd364c6869831ca878f0763d1787",
       items: $quiverQuery.data?.items ?? [],
       loading: $quiverQuery.isLoading,
       error: $quiverQuery.isError,
@@ -212,7 +214,7 @@
     },
     {
       id: "museum",
-      icon: PUBLIC_API_URL + "head/438cf3f8e54afc3b3f91d20a49f324dca1486007fe545399055524c17941f4dc",
+      icon: apiUrl + "head/438cf3f8e54afc3b3f91d20a49f324dca1486007fe545399055524c17941f4dc",
       items: $museumQuery.data?.items ?? [],
       loading: $museumQuery.isLoading,
       error: $museumQuery.isError,
@@ -220,7 +222,7 @@
     },
     {
       id: "rift_inventory",
-      icon: PUBLIC_API_URL + "head/445240fcf1a9796327dda5593985343af9121a7156bc76e3d6b341b02e6a6e52",
+      icon: apiUrl + "head/445240fcf1a9796327dda5593985343af9121a7156bc76e3d6b341b02e6a6e52",
       items: $riftInventoryQuery.data?.items ?? [],
       loading: $riftInventoryQuery.isLoading,
       error: $riftInventoryQuery.isError,
@@ -228,7 +230,7 @@
     },
     {
       id: "rift_enderchest",
-      icon: PUBLIC_API_URL + "head/a6cc486c2be1cb9dfcb2e53dd9a3e9a883bfadb27cb956f1896d602b4067",
+      icon: apiUrl + "head/a6cc486c2be1cb9dfcb2e53dd9a3e9a883bfadb27cb956f1896d602b4067",
       items: $riftEnderchestQuery.data?.items ?? [],
       loading: $riftEnderchestQuery.isLoading,
       error: $riftEnderchestQuery.isError,
@@ -236,7 +238,7 @@
     },
     {
       id: "search",
-      icon: PUBLIC_API_URL + "item/EYE_OF_ENDER",
+      icon: apiUrl + "item/EYE_OF_ENDER",
       items: $searchQuery.data?.items ?? [],
       loading: $searchQuery.isLoading,
       error: $searchQuery.isError,
@@ -361,7 +363,7 @@
     <Tabs.List>
       <ScrollArea.Root>
         <ScrollArea.Viewport class="border-icon border-b">
-          <div class="flex! h-full shrink-0 flex-nowrap items-center gap-3 px-4 whitespace-nowrap">
+          <div class="flex! h-full shrink-0 flex-nowrap items-center gap-3 whitespace-nowrap px-4">
             {#each tabs as tab (tab.id)}
               <Tabs.Trigger value={tab.id} class="group relative flex items-center justify-center gap-0.5 pb-2 text-xs uppercase">
                 <Avatar.Root class="size-8">
@@ -448,7 +450,7 @@
   {#if itemsFound}
     <p class="mx-auto w-fit leading-6">No items found.</p>
   {:else if debouncedSearchValue.current !== ""}
-    <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
+    <div class="@md:gap-1.5 @xl:gap-2 grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5">
       {#each searchedItems as item, index (index)}
         {#if item}
           <div class="bg-text/[0.04] data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={!$performanceMode && shouldShine(item)}>
@@ -464,7 +466,7 @@
 
 {#snippet multipleInventorySection()}
   <Tabs.Root value={tab.id}>
-    <Tabs.List class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
+    <Tabs.List class="@md:gap-1.5 @xl:gap-2 grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5">
       {#if tab?.items?.length}
         {#each tab.items as item, index (index)}
           <Tabs.Trigger value={item.texture_path ? index.toString() : "undefined"} class="group">
@@ -486,7 +488,7 @@
     {#if tab?.items?.length}
       {#each tab.items as item, index (index)}
         <Tabs.Content value={index.toString()}>
-          <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
+          <div class="@md:gap-1.5 @xl:gap-2 grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5">
             {#if item?.containsItems}
               {#each item.containsItems as containedItem, index2 (index2)}
                 {#if index2 > 0}
@@ -506,7 +508,7 @@
               {/each}
             {/if}
           </div>
-          <div class="grid place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2" {@attach animateObfuscatedText}>
+          <div class="@md:gap-1.5 @xl:gap-2 grid place-content-center gap-1 pt-5" {@attach animateObfuscatedText}>
             <div class="pt-5">
               {#if item?.lore}
                 {#each item?.lore as lore, index (index)}
@@ -523,7 +525,7 @@
 
 {#snippet inventorySection()}
   {#if tab?.items?.length}
-    <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
+    <div class="@md:gap-1.5 @xl:gap-2 grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5">
       {#each tab.items as item, index (index)}
         {#if index > 0}
           {#if index % tab.gap === 0}
