@@ -34,7 +34,7 @@ const config = {
       $ctx: "./src/context"
     },
     csrf: {
-      checkOrigin: true
+      checkOrigin: false
     },
     serviceWorker: {
       register: false
