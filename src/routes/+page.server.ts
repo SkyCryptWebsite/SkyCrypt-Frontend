@@ -8,13 +8,12 @@ const { PUBLIC_SERVER_API_URL } = env;
 export const load = (async () => {
   const getUsername = async (uuid: string): Promise<string> => {
     try {
-      console.error(`Fetching ${PUBLIC_SERVER_API_URL}username/${uuid}`);
       const { username } = await ky(`username/${uuid}`, {
         prefixUrl: PUBLIC_SERVER_API_URL
       }).json<{ username: string }>();
       return username;
     } catch (error) {
-      console.error("getUsername | ", error);
+      console.error(error);
       return "???";
     }
   };

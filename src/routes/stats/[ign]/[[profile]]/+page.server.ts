@@ -67,8 +67,6 @@ export const load = (async ({ params, getClientAddress, request, route }) => {
   // Convert back to object
   const shuffledObjects = Object.fromEntries(allObjects);
 
-  console.error(`Fetching ${PUBLIC_SERVER_API_URL}stats/${paramPlayer}${paramProfile ? "/" + paramProfile : ""} with token keyId ${dynamicKey} at position ${randomPosition} of ${allObjects.length}`);
-
   return {
     stats: ky(`stats/${paramPlayer}${paramProfile ? "/" + paramProfile : ""}`, {
       prefixUrl: PUBLIC_SERVER_API_URL,
