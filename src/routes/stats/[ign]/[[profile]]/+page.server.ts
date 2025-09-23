@@ -1,10 +1,12 @@
-import { PUBLIC_SERVER_API_URL } from "$env/dynamic/public";
+import { env } from "$env/dynamic/public";
 import { generateDynamicKey, generateToken } from "$lib/server/token";
 import type { StatsV2 } from "$types/statsv2";
 import { encodeBase64 } from "@oslojs/encoding";
 import { error } from "@sveltejs/kit";
 import ky from "ky";
 import type { PageServerLoad } from "./$types";
+
+const { PUBLIC_SERVER_API_URL } = env;
 
 export const load = (async ({ params, getClientAddress, request, route }) => {
   const { ign: paramPlayer, profile: paramProfile = null } = params;
@@ -18,7 +20,7 @@ export const load = (async ({ params, getClientAddress, request, route }) => {
     error(400, "User-Agent header not found");
   }
 
-  // Generate dynamic key based on request context (includes time window)
+  // Generate dynamic key based on request context (includes time window)Fetching
   const dynamicKey = generateDynamicKey(ip, userAgent, routeId);
   const tokenData = generateToken(ip, userAgent, routeId);
   const timeWindow = Math.floor(Date.now() / (5 * 60 * 1000)); // Same 5-minute interval
@@ -65,7 +67,7 @@ export const load = (async ({ params, getClientAddress, request, route }) => {
   // Convert back to object
   const shuffledObjects = Object.fromEntries(allObjects);
 
-  console.error(`Fetching ${PUBLIC_SERVER_API_URL}/stats/${paramPlayer}${paramProfile ? "/" + paramProfile : ""} with token keyId ${dynamicKey} at position ${randomPosition} of ${allObjects.length}`);
+  console.error(`Fetching ${PUBLIC_SERVER_API_URL}stats/${paramPlayer}${paramProfile ? "/" + paramProfile : ""} with token keyId ${dynamicKey} at position ${randomPosition} of ${allObjects.length}`);
 
   return {
     stats: ky(`stats/${paramPlayer}${paramProfile ? "/" + paramProfile : ""}`, {

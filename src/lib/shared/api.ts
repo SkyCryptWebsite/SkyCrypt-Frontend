@@ -1,10 +1,12 @@
-import { PUBLIC_API_URL } from "$env/dynamic/public";
+import { env } from "$env/dynamic/public";
 import { api_token } from "$lib/stores/internal";
 import type { Garden } from "$types/processed/profile/garden";
 import type { ProcessedSkyBlockItem } from "$types/stats";
 import type { AccessoriesV2, BestiaryV2, CollectionsV2, CrimsonIsleV2, DungeonsV2, GearV2, InventoryV2, InventoryV2All, MinionsV2, MiscV2, NetworthV2, PetsV2, PlayerStatsV2, RiftV2, SkillsV2, SlayerV2 } from "$types/statsv2";
 import ky from "ky";
 import { get } from "svelte/store";
+
+const { PUBLIC_API_URL } = env;
 
 const customKy = ky.create({
   hooks: {
