@@ -1,4 +1,4 @@
-import { PUBLIC_SERVER_API_URL } from "$env/static/public";
+import { PUBLIC_SERVER_API_URL } from "$env/dynamic/public";
 import { fail, redirect } from "@sveltejs/kit";
 import ky from "ky";
 import { message, superValidate } from "sveltekit-superforms";

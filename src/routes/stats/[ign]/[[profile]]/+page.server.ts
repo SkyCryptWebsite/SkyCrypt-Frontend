@@ -1,4 +1,4 @@
-import { PUBLIC_SERVER_API_URL } from "$env/static/public";
+import { PUBLIC_SERVER_API_URL } from "$env/dynamic/public";
 import { generateDynamicKey, generateToken } from "$lib/server/token";
 import type { StatsV2 } from "$types/statsv2";
 import { encodeBase64 } from "@oslojs/encoding";

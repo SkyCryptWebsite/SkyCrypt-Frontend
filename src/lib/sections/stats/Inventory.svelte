@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getProfileCtx } from "$ctx/profile.svelte";
-  import { PUBLIC_API_URL } from "$env/static/public";
+  import { PUBLIC_API_URL } from "$env/dynamic/public";
   import Item from "$lib/components/Item.svelte";
   import Notice from "$lib/components/Notice.svelte";
   import Section from "$lib/components/Section.svelte";
