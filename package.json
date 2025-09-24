@@ -52,7 +52,6 @@
     "pretty-ms": "^9.2.0",
     "runed": "^0.31.1",
     "skinview3d": "^3.4.1",
-    "skyhelper-networth": "^1.27.3",
     "svelte": "^5.37.1",
     "svelte-check": "^4.3.0",
     "svelte-dnd-action": "^0.9.64",
@@ -74,18 +73,10 @@
     "zod": "^4.0.10"
   },
   "dependencies": {
-    "@napi-rs/canvas": "^0.1.68",
-    "@napi-rs/canvas-linux-x64-gnu": "^0.1.74",
     "@rollup/rollup-linux-x64-gnu": "^4.45.1",
     "@sentry/sveltekit": "^10.0.0",
     "dotenv-cli": "^10.0.0",
-    "farming-weight": "^0.8.3",
-    "minecraft-data": "^3.85.0",
-    "mongodb": "^6.15.0",
-    "prismarine-nbt": "^2.7.0",
-    "redis": "^4.7.0",
-    "sharp": "^0.33.5",
-    "uuid": "^11.1.0"
+    "prismarine-nbt": "^2.7.0"
   },
   "engines": {
     "node": "^22",

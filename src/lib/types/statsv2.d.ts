@@ -1,5 +1,5 @@
 import type { SectionName } from "$lib/shared/api";
-import type { NetworthResult } from "skyhelper-networth";
+import type { NetworthResult } from "$types/networth-result";
 import type { ItemStats } from "./processed/profile/stats";
 import type { APISettings, BestiaryCategory, CatacombsData, CollectionCategory, ForgeItem, MinionCategory, MinionCategoryType, ProcessedExperimentationGame, ProcessedSkyBlockItem, Rank, Skill, Skills, SlayerInfo, TrophyFish } from "./stats";
 

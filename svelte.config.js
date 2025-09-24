@@ -14,9 +14,6 @@ const config = {
   // for more information about preprocessors
 
   preprocess: vitePreprocess({ script: true }),
-  ssr: {
-    noExternal: process.env.NODE_ENV === "production" ? ["@napi-rs/canvas"] : []
-  },
   optimizeDeps: {
     include: ["fs"]
   },

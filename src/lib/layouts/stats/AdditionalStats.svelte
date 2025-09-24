@@ -3,13 +3,13 @@
   import AdditionStat from "$lib/components/AdditionStat.svelte";
   import { api, SectionName } from "$lib/shared/api";
   import { calculatePercentage, formatNumber } from "$lib/shared/helper";
+  import type { NetworthResult } from "$types/networth-result";
   import type { NetworthV2 } from "$types/statsv2";
   import { tz } from "@date-fns/tz";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import { createQuery } from "@tanstack/svelte-query";
   import { format as dateFormat, formatDistanceToNowStrict } from "date-fns";
   import { format as numberFormat } from "numerable";
-  import type { NetworthResult } from "skyhelper-networth";
 
   const ctx = getProfileCtx();
   const profile = $derived(ctx.profile);
