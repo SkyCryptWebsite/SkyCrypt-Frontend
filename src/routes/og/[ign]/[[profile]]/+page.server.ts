@@ -11,10 +11,10 @@ export const load = (async ({ params }) => {
   try {
     const embedData = await ky(`embed/${paramPlayer}${paramProfile ? "/" + paramProfile : ""}`, {
       prefixUrl: PUBLIC_SERVER_API_URL
-    }).json<{ embed: EmbedV2 } | { message?: string }>();
+    }).json<{ embed: EmbedV2 } | { error?: string }>();
 
-    if ("message" in embedData && embedData.message) {
-      error(500, embedData.message);
+    if ("error" in embedData && embedData.error) {
+      error(500, embedData.error);
     }
 
     if ("embed" in embedData) {
