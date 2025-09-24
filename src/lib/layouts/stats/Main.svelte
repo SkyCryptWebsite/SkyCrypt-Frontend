@@ -1,6 +1,7 @@
 <script lang="ts">
   import { browser } from "$app/environment";
   import { replaceState } from "$app/navigation";
+  import { resolve } from "$app/paths";
   import { page } from "$app/state";
   import { setProfileCtx } from "$ctx/profile.svelte";
   import Item from "$lib/components/Item.svelte";
@@ -79,14 +80,18 @@
 
       // Update the URL to match the username and cute name
       if (current !== wanted) {
-        const newUrl = page.url.toString().replace(current, wanted);
-
         // Only proceed if not aborted
         if (!abortController.signal.aborted) {
           tick()
             .then(() => {
               if (!abortController.signal.aborted) {
-                replaceState(newUrl, page.state);
+                replaceState(
+                  resolve("/stats/[ign]/[[profile]]", {
+                    ign: username,
+                    profile: profile_cute_name || ""
+                  }),
+                  page.state
+                );
               }
             })
             .catch(() => {});

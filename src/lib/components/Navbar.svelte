@@ -9,7 +9,6 @@
   import ChevronRight from "@lucide/svelte/icons/chevron-right";
   import { Button, ScrollArea } from "bits-ui";
   import { onDestroy, onMount, tick, type Snippet } from "svelte";
-
   const { children }: { children?: Snippet } = $props();
 
   const ctx = getProfileCtx();
@@ -116,6 +115,8 @@
     if (navbarElement && $tabValue) {
       tick().then(() => {
         scrollToTab({ element: allLinks[$tabValue], smooth: true });
+        // eslint-disable-next-line
+        // eslint-disable-next-line svelte/no-navigation-without-resolve
         replaceState("#" + $tabValue, page.state);
       });
     }
