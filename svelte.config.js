@@ -31,7 +31,7 @@ const config = {
       $ctx: "./src/context"
     },
     csrf: {
-      checkOrigin: false
+      trustedOrigins: ["https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe", "http://localhost:5173", "http://localhost:4173", "http://localhost:3000", "http://localhost:8080"]
     },
     serviceWorker: {
       register: false
