@@ -161,7 +161,7 @@
   <div class={cn("relative rounded-lg", { "transition-all duration-300 ease-out hover:scale-105": !options?.tip })}>
     <Button.Root href={options?.tip ? "#" : `/stats/${user.id}`} class={cn("relative flex h-full min-w-0 items-center gap-4 rounded-lg p-5", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-[60%] dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
       <Avatar.Root class="bg-text/10 size-16 shrink-0 rounded-lg">
-        <Avatar.Image loading="lazy" src={options?.tip ? "https://mc-heads.net/avatar/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40/64" : `https://crafatar.com/avatars/${user.id}?size=64&overlay`} alt={user.name} class="aspect-square size-16 rounded-lg " />
+        <Avatar.Image loading="lazy" src={options?.tip ? "https://mc-heads.net/avatar/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40/64" : `https://crafatar.com/avatars/${user.id}?size=64&overlay`} alt={user.name} class="aspect-square size-16 rounded-lg [image-rendering:pixelated]" />
         <Avatar.Fallback class="text-text/60 flex h-full items-center justify-center text-lg font-semibold uppercase">
           {user.name.slice(0, 2)}
         </Avatar.Fallback>

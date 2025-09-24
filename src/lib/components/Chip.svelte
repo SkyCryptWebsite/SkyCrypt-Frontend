@@ -58,7 +58,7 @@
         <div class="flex items-center gap-2 px-2">
           {#if hasBeenInViewport}
             <Avatar.Root class="aspect-square size-12">
-              <Avatar.Image loading="lazy" src={image.src} class={cn("size-full object-contain", image.class)} />
+              <Avatar.Image loading="lazy" src={image.src} class={cn("size-full object-contain [image-rendering:pixelated]", image.class)} />
               <Avatar.Fallback>
                 <Image class="size-full" />
               </Avatar.Fallback>

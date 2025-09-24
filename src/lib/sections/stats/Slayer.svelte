@@ -54,7 +54,7 @@
               <div class="bg-background/30 relative flex min-w-[min(20.625rem,100vw)] flex-col items-center gap-1 space-y-5 overflow-hidden rounded-lg">
                 <div class="border-icon flex w-full items-center justify-center gap-1.5 border-b-2 py-2 text-center font-semibold uppercase">
                   <Avatar.Root>
-                    <Avatar.Image loading="lazy" src={value.texture} class="size-8 object-contain" />
+                    <Avatar.Image loading="lazy" src={value.texture} class="size-8 object-contain [image-rendering:pixelated]" />
                     <Avatar.Fallback>
                       <Image class="size-8" />
                     </Avatar.Fallback>

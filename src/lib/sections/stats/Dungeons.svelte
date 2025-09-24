@@ -116,7 +116,7 @@
           <div class="bg-background/30 flex min-w-80 basis-[calc((100%/3)-1.25rem)] flex-col gap-1 rounded-lg">
             <div class="border-icon flex w-full items-center justify-center gap-1.5 border-b-2 py-2 text-center font-semibold uppercase">
               <Avatar.Root>
-                <Avatar.Image loading="lazy" src={catacomb.texture} class="size-8 object-contain" />
+                <Avatar.Image loading="lazy" src={catacomb.texture} class="size-8 object-contain [image-rendering:pixelated]" />
                 <Avatar.Fallback>
                   <Image class="size-8" />
                 </Avatar.Fallback>

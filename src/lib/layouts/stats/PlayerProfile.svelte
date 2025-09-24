@@ -87,9 +87,9 @@
                     <div class="outline-icon group-hover:bg-text/20 group-hover:group-data-[removed=true]:bg-text/20 group-data-[removed=true]:bg-text/5 bg-text/10 flex w-full items-center justify-between gap-2 rounded-lg p-2 transition-colors duration-300 ease-out group-focus-visible:outline-1">
                       <div class="flex items-center gap-2 pr-4">
                         <Avatar.Root class="bg-text/10 size-8 shrink-0 rounded-sm">
-                          <Avatar.Image loading="lazy" src="https://crafatar.com/avatars/{member.uuid}?size=64&overlay" alt={member.username} class="aspect-square size-8 rounded-sm group-data-[removed=true]:grayscale-100" />
+                          <Avatar.Image loading="lazy" src="https://crafatar.com/avatars/{member.uuid}?size=64&overlay" alt={member.username} class="aspect-square size-8 rounded-sm [image-rendering:pixelated] group-data-[removed=true]:grayscale-100" />
                           <Avatar.Fallback class="text-text/60 flex h-full items-center justify-center text-lg font-semibold uppercase">
-                            <img loading="lazy" src="https://mc-heads.net/avatar/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40/64" alt="Steve" class="aspect-square size-8 rounded-sm group-data-[removed=true]:grayscale-100" />
+                            <img loading="lazy" src="https://mc-heads.net/avatar/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40/64" alt="Steve" class="aspect-square size-8 rounded-sm [image-rendering:pixelated] group-data-[removed=true]:grayscale-100" />
                           </Avatar.Fallback>
                         </Avatar.Root>
                         <span class="light:invert">
