@@ -24,7 +24,7 @@
 
   const stats = $derived.by(() => {
     if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data;
+    return $query.data.stats;
   });
 </script>
 

@@ -558,7 +558,9 @@ export type PlayerStatsInputv2 = {
   petScore?: ItemStats;
 };
 
-export type PlayerStatsV2 = Record<string, { base: number; total: number; [string: string]: number }>;
+export type PlayerStatsV2 = {
+  stats: Record<string, { base: number; total: number; [string: string]: number }>;
+};
 
 export type EmbedV2 = Pick<StatsV2, "displayName" | "username" | "uuid" | "profile_id" | "profile_cute_name" | "joined" | "game_mode"> & {
   skyblock_level: number;
