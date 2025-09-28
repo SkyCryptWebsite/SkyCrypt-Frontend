@@ -114,9 +114,9 @@
       </Items>
     {/if}
 
-    {#if weapons.weapons.length}
-      <Items subtitle="Weapons">
-        {#snippet text()}
+    <Items subtitle="Weapons">
+      {#snippet text()}
+        {#if weapons.weapons.length}
           <div>
             {#if weapons.highest_priority_weapon?.display_name}
               <p class="font-bold" {@attach animateObfuscatedText}>
@@ -125,16 +125,16 @@
               </p>
             {/if}
           </div>
-        {/snippet}
-
-        {#if weapons.weapons.length}
-          {#each weapons.weapons as weapon, index (index)}
-            <Item piece={weapon} />
-          {/each}
+        {:else}
+          <p class="space-x-0.5 leading-6">{profile.username} has no weapons</p>
         {/if}
-      </Items>
-    {:else}
-      <p class="space-x-0.5 leading-6">{profile.username} has no weapons</p>
-    {/if}
+      {/snippet}
+
+      {#if weapons.weapons.length}
+        {#each weapons.weapons as weapon, index (index)}
+          <Item piece={weapon} />
+        {/each}
+      {/if}
+    </Items>
   {/if}
 </Section>
