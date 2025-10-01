@@ -12,7 +12,7 @@ ENV NODE_LIBC=musl
 
 COPY package*.json .
 COPY pnpm-lock.yaml .
-RUN pnpm fetch --prod
+RUN pnpm fetch
 RUN pnpm install --frozen-lockfile
 RUN find node_modules -name "lightningcss*.node"
 COPY .env.example .env
