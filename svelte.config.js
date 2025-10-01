@@ -1,5 +1,6 @@
 import adapter from "@sveltejs/adapter-node";
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
+import * as child_process from "node:child_process";
 
 const forceRunesMode = (filename) => {
   if (filename.match(/[\\/\\]node_modules[\\/\\]/)) {
@@ -42,6 +43,12 @@ const config = {
         "connect-src": ["self", "https://crafatar.com", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe"],
         "font-src": ["self", "https://fonts.gstatic.com"]
       }
+    },
+    version: {
+      name: child_process.execSync("git rev-parse --short HEAD").toString().trim(),
+      pollInterval:
+        // in ms
+        1000 * 60 // 1 minute
     }
   },
   // Hide build warnings from node_modules

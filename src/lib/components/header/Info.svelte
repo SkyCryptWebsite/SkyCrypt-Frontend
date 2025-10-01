@@ -1,5 +1,6 @@
 <script lang="ts">
   import { env } from "$env/dynamic/public";
+  import { PUBLIC_COMMIT_HASH } from "$env/static/public";
   import type { IsHover } from "$lib/hooks/is-hover.svelte";
   import { flyAndScale } from "$lib/shared/utils";
   import Info from "@lucide/svelte/icons/info";
@@ -14,8 +15,9 @@
 
 {#snippet info()}
   <p class="my-4">SkyCrypt is a free, open-source stats viewer for Hypixel SkyBlock.</p>
+  <p>Currently running version <Button.Root class="text-link font-semibold" rel="noreferrer" href="https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/{PUBLIC_COMMIT_HASH}" target="_blank">{PUBLIC_COMMIT_HASH}</Button.Root>.</p>
   <p class="my-4">
-    You can report bugs, suggest features on <Button.Root class="text-link font-semibold" href={PUBLIC_DISCORD_INVITE} target="_blank" rel="noreferrer">Discord</Button.Root>, and/or contribute to the code on <Button.Root class="text-link font-semibold" href="https://github.com/SkyCryptWebsite/SkyCrypt-Frontend" target="_blank" rel="noreferrer">GitHub</Button.Root>. It would be much appreciated!
+    You can report bugs, suggest features on <Button.Root class="text-link font-semibold" href={PUBLIC_DISCORD_INVITE} target="_blank" rel="noreferrer">Discord</Button.Root>, and/or contribute to the code on <Button.Root class="text-link font-semibold" href="https://github.com/SkyCryptWebsite" target="_blank" rel="noreferrer">GitHub</Button.Root>. It would be much appreciated!
   </p>
   <p class="my-4">
     Join our community on <Button.Root class="text-link font-semibold" href={PUBLIC_DISCORD_INVITE} target="_blank" rel="noreferrer">Discord</Button.Root>!
@@ -84,8 +86,8 @@
       by <span class="text-text/70">Kaeso</span>
     </li>
     <li>
-      Networth: <Button.Root class="text-link font-semibold" rel="noreferrer" href="https://github.com/Altpapier/SkyHelper-Networth" target="_blank">SkyHelper Networth</Button.Root>
-      by <span class="text-text/70">SkyHelper</span>
+      Networth: <Button.Root class="text-link font-semibold" rel="noreferrer" href="https://github.com/SkyCryptWebsite/SkyHelper-Networth-Go" target="_blank">SkyHelper Networth</Button.Root>
+      ported to GO by <span class="text-text/70">DuckySoLucky</span>
     </li>
     <li>
       Player Heads: <Button.Root class="text-link font-semibold" rel="noreferrer" href="https://hypixel.net" target="_blank">SkyBlock</Button.Root>

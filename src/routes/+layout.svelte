@@ -1,7 +1,7 @@
 <script lang="ts">
   import { browser, dev } from "$app/environment";
   import { beforeNavigate } from "$app/navigation";
-  import { page } from "$app/state";
+  import { page, updated } from "$app/state";
   import Header from "$lib/components/header/Header.svelte";
   import { SettingsTab } from "$lib/components/header/types";
   import PerformanceMode from "$lib/components/PerformanceMode.svelte";
@@ -135,6 +135,12 @@
       loading = false;
       openCommand.set(false);
     }, 1000);
+  });
+
+  beforeNavigate(({ willUnload, to }) => {
+    if (updated.current && !willUnload && to?.url) {
+      location.href = to.url.href;
+    }
   });
 </script>
 
