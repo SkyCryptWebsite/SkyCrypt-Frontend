@@ -8,10 +8,13 @@ WORKDIR /app
 ARG PUBLIC_API_URL=http://localhost:8080/api/
 ARG PUBLIC_SERVER_API_URL=http://localhost:8080/api/
 
+ENV NODE_LIBC=musl
+
 COPY package*.json .
 COPY pnpm-lock.yaml .
 RUN pnpm fetch --prod
 RUN pnpm install --frozen-lockfile
+RUN find node_modules -name "lightningcss*.node"
 COPY .env.example .env
 
 # Create development .env with proper API URLs
