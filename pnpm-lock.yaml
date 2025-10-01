@@ -181,6 +181,9 @@ importers:
         specifier: 4.0.10
         version: 4.0.10
     optionalDependencies:
+      '@rollup/rollup-linux-x64-gnu':
+        specifier: ^4.52.3
+        version: 4.52.3
       lightningcss-linux-arm64-musl:
         specifier: ^1.30.2
         version: 1.30.2
