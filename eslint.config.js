@@ -3,6 +3,7 @@ import js from "@eslint/js";
 import pluginQuery from "@tanstack/eslint-plugin-query";
 import prettier from "eslint-config-prettier";
 import svelte from "eslint-plugin-svelte";
+import { defineConfig } from "eslint/config";
 import globals from "globals";
 import { fileURLToPath } from "node:url";
 import ts from "typescript-eslint";
@@ -11,7 +12,7 @@ import svelteConfig from "./svelte.config.js";
 const gitignorePath = fileURLToPath(new URL("./.gitignore", import.meta.url));
 
 /** @type { import("eslint").Linter.Config } */
-export default ts.config(
+export default defineConfig(
   includeIgnoreFile(gitignorePath),
   ...pluginQuery.configs["flat/recommended"],
   js.configs.recommended,
