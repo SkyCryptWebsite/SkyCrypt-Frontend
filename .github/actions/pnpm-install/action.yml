@@ -56,4 +56,3 @@ runs:
       working-directory: ${{ inputs.cwd }}
       env:
         HUSKY: "0"
-        NODE_LIBC: "musl"
