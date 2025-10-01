@@ -8,6 +8,7 @@ on:
 env:
   CONTAINER_REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  SHORT_SHA: $(git rev-parse --short ${{ github.sha }})
 
 jobs:
   analyze:
@@ -117,7 +118,7 @@ jobs:
           context: .
           push: true
           build-args: |
-            PUBLIC_COMMIT_HASH=${{ github.sha }}
+            PUBLIC_COMMIT_HASH=${{ env.SHORT_SHA }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
