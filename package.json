@@ -73,7 +73,6 @@
     "zod": "4.1.11"
   },
   "dependencies": {
-    "@rollup/rollup-linux-x64-gnu": "^4.52.3",
     "@sentry/sveltekit": "^10.17.0",
     "dotenv-cli": "^10.0.0",
     "prismarine-nbt": "^2.7.0"
