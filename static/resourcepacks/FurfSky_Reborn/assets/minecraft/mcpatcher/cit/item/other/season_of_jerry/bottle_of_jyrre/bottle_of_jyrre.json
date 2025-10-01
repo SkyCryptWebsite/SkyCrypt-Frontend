@@ -1,7 +1,0 @@
-{
-  "parent": "item/skyblock/item",
-  "textures": {
-        "layer0": "mcpatcher/cit/item/other/season_of_jerry/bottle_of_jyrre/bottle_of_jyrre",
-        "layer1": "mcpatcher/cit/item/other/season_of_jerry/bottle_of_jyrre/bottle_of_jyrre"
-  }
-}

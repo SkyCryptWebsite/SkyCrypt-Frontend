@@ -1,8 +1,0 @@
-{
-    "parent": "item/phq/tnt",
-    "textures": {
-        "bottom": "./tnt_bottom",
-        "top": "./tnt_top",
-        "side": "./tnt_side"
-    }
-}
