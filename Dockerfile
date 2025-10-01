@@ -1,4 +1,5 @@
 FROM node:22-alpine AS builder
+RUN apk add git
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
@@ -32,8 +33,6 @@ RUN pnpm run build
 RUN pnpm prune --production
 
 FROM node:22-alpine
-# git is used for managing submodules
-RUN apk add git
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable pnpm && corepack install -g pnpm@latest-10
