@@ -8,6 +8,8 @@ WORKDIR /app
 ARG PUBLIC_API_URL=http://localhost:8080/api/
 ARG PUBLIC_SERVER_API_URL=http://localhost:8080/api/
 
+RUN apk add --no-cache gcompat
+
 COPY package*.json .
 COPY pnpm-lock.yaml .
 RUN pnpm fetch --prod
