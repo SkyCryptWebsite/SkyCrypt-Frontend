@@ -1,5 +1,7 @@
-FROM node:22-alpine3.21 AS builder
-RUN npm install -g pnpm@10
+FROM node:22-alpine AS builder
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 WORKDIR /app
 
 # Accept build arguments
@@ -8,7 +10,8 @@ ARG PUBLIC_SERVER_API_URL=http://localhost:8080/api/
 
 COPY package*.json .
 COPY pnpm-lock.yaml .
-RUN pnpm install
+RUN pnpm fetch --prod
+RUN pnpm install --frozen-lockfile
 COPY .env.example .env
 
 # Create development .env with proper API URLs
@@ -24,14 +27,16 @@ RUN echo "ORIGIN=\"http://localhost:3000\"" > .env && \
 
 COPY . .
 
+RUN pnpm run prepare
 RUN pnpm run build
 RUN pnpm prune --production
 
-
-FROM node:22-alpine3.21
+FROM node:22-alpine
 # git is used for managing submodules
 RUN apk add git
-RUN npm install -g pnpm@10
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable pnpm && corepack install -g pnpm@latest-10
 WORKDIR /app
 
 COPY --from=builder /app/node_modules node_modules/
