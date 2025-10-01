@@ -146,7 +146,7 @@
                       })}
                       class="group flex items-center p-2 focus-visible:outline-0"
                       data-sveltekit-preload-code="viewport">
-                      <div class="group-hover:bg-text/20 outline-icon bg-text/10 light:invert w-full rounded-lg p-2 transition-colors duration-300 ease-out group-focus-visible:outline-1">
+                      <div class="group-hover:bg-text/20 outline-icon bg-text/10 w-full rounded-lg p-2 transition-colors duration-300 ease-out group-focus-visible:outline-1">
                         <span class="light:invert">
                           {otherProfile.cute_name}
                         </span>
