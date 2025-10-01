@@ -33,7 +33,7 @@
 
   const query = createQuery<FullGarden>(() => ({
     queryKey: ["garden", profileUUID, profileId],
-    queryFn: () => api().getGarden(profileUUID),
+    queryFn: () => api().getGarden(profileId),
     enabled: queryEnabled
   }));
 
