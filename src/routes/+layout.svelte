@@ -188,6 +188,12 @@
 
 <Header />
 
+{#if page.url.origin.includes("cupcake") || dev}
+  {#await import("$lib/components/BetaNotice.svelte") then { default: BetaNotice }}
+    <BetaNotice />
+  {/await}
+{/if}
+
 {#if browser && !$performanceMode}
   <PerformanceMode />
 {/if}
