@@ -26,14 +26,14 @@
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
 
-  const query = createQuery<RiftV2>({
+  const query = createQuery<RiftV2>(() => ({
     queryKey: [SectionName.RIFT, profileUUID, profileId],
     queryFn: () => api().getSection(SectionName.RIFT, profileUUID, profileId)
-  });
+  }));
 
   const rift = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data[SectionName.RIFT];
+    if (query.isPending || query.error || !query.data) return;
+    return query.data[SectionName.RIFT];
   });
 
   const equipment = $derived(rift?.equipment);
@@ -41,13 +41,13 @@
 </script>
 
 <Section id="Rift" {order}>
-  {#if $query.isPending}
+  {#if query.isPending}
     <LoaderCircle class="text-icon animate-spin" />
   {/if}
-  {#if $query.error}
-    <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
+  {#if query.error}
+    <Notice title="An unexpected error has occurred" type="error" error={query.error} />
   {/if}
-  {#if $query.isSuccess && $query.data && rift}
+  {#if query.isSuccess && query.data && rift}
     <Items class="flex-col">
       {#snippet text()}
         <div>

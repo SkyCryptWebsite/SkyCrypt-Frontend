@@ -29,27 +29,27 @@
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
 
-  const query = createQuery<MiscV2>({
+  const query = createQuery<MiscV2>(() => ({
     queryKey: [SectionName.MISC, profileUUID, profileId],
     queryFn: () => api().getSection(SectionName.MISC, profileUUID, profileId)
-  });
+  }));
 
   const misc = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data[SectionName.MISC];
+    if (query.isPending || query.error || !query.data) return;
+    return query.data[SectionName.MISC];
   });
 
   setDynamicCtx(SectionName.MISC, () => misc);
 </script>
 
 <Section id="Misc" {order}>
-  {#if $query.isPending}
+  {#if query.isPending}
     <LoaderCircle class="text-icon animate-spin" />
   {/if}
-  {#if $query.error}
-    <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
+  {#if query.error}
+    <Notice title="An unexpected error has occurred" type="error" error={query.error} />
   {/if}
-  {#if $query.isSuccess && $query.data && misc}
+  {#if query.isSuccess && query.data && misc}
     <Essence />
     <!-- TODO: Essence Shop -->
     <Kills />

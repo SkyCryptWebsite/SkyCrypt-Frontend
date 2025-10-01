@@ -23,25 +23,25 @@
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
 
-  const query = createQuery<CrimsonIsleV2>({
+  const query = createQuery<CrimsonIsleV2>(() => ({
     queryKey: [SectionName.CRIMSON_ISLE, profileUUID, profileId],
     queryFn: () => api().getSection(SectionName.CRIMSON_ISLE, profileUUID, profileId)
-  });
+  }));
 
   const isle = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data[SectionName.CRIMSON_ISLE];
+    if (query.isPending || query.error || !query.data) return;
+    return query.data[SectionName.CRIMSON_ISLE];
   });
 </script>
 
 <Section id="Crimson_Isle" {order}>
-  {#if $query.isPending}
+  {#if query.isPending}
     <LoaderCircle class="text-icon animate-spin" />
   {/if}
-  {#if $query.error}
-    <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
+  {#if query.error}
+    <Notice title="An unexpected error has occurred" type="error" error={query.error} />
   {/if}
-  {#if $query.isSuccess && $query.data && isle}
+  {#if query.isSuccess && query.data && isle}
     <Items class="flex-col">
       {#snippet text()}
         <div>

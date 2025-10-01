@@ -24,14 +24,14 @@
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
 
-  const query = createQuery<PetsV2>({
+  const query = createQuery<PetsV2>(() => ({
     queryKey: [SectionName.PETS, profileUUID, profileId],
     queryFn: () => api().getSection(SectionName.PETS, profileUUID, profileId)
-  });
+  }));
 
   const pets = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data[SectionName.PETS];
+    if (query.isPending || query.error || !query.data) return;
+    return query.data[SectionName.PETS];
   });
 
   const activePet = $derived(pets?.pets.find((pet) => pet.active === true));
@@ -40,13 +40,13 @@
 </script>
 
 <Section id="Pets" {order}>
-  {#if $query.isPending}
+  {#if query.isPending}
     <LoaderCircle class="text-icon animate-spin" />
   {/if}
-  {#if $query.error}
-    <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
+  {#if query.error}
+    <Notice title="An unexpected error has occurred" type="error" error={query.error} />
   {/if}
-  {#if $query.isSuccess && $query.data && pets}
+  {#if query.isSuccess && query.data && pets}
     {#if pets.pets?.length}
       <Items>
         {#snippet text()}

@@ -26,14 +26,14 @@
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
 
-  const query = createQuery<DungeonsV2>({
+  const query = createQuery<DungeonsV2>(() => ({
     queryKey: [SectionName.DUNGEONS, profileUUID, profileId],
     queryFn: () => api().getSection(SectionName.DUNGEONS, profileUUID, profileId)
-  });
+  }));
 
   const dungeons = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data[SectionName.DUNGEONS];
+    if (query.isPending || query.error || !query.data) return;
+    return query.data[SectionName.DUNGEONS];
   });
 
   function formatDuration(end: number) {
@@ -51,13 +51,13 @@
 </script>
 
 <Section id="Dungeons" {order}>
-  {#if $query.isPending}
+  {#if query.isPending}
     <LoaderCircle class="text-icon animate-spin" />
   {/if}
-  {#if $query.error}
-    <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
+  {#if query.error}
+    <Notice title="An unexpected error has occurred" type="error" error={query.error} />
   {/if}
-  {#if $query.isSuccess && $query.data && dungeons}
+  {#if query.isSuccess && query.data && dungeons}
     <div class="space-y-4">
       {#if dungeons.level.xp === 0}
         <p class="space-x-0.5 leading-6">{profile.username} hasn't unlocked Dungeons yet.</p>

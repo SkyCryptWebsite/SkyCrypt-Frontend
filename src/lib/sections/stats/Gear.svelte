@@ -23,33 +23,33 @@
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
 
-  const query = createQuery<GearV2>({
+  const query = createQuery<GearV2>(() => ({
     queryKey: [SectionName.GEAR, profileUUID, profileId],
     queryFn: () => api().getSection(SectionName.GEAR, profileUUID, profileId)
-  });
+  }));
 
   const gear = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data[SectionName.GEAR];
+    if (query.isPending || query.error || !query.data) return;
+    return query.data[SectionName.GEAR];
   });
 
   const { armor, equipment, wardrobe, weapons } = $derived(gear!);
   const firstWardrobeItems = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data || !wardrobe) return [];
+    if (query.isPending || query.error || !query.data || !wardrobe) return [];
     if (wardrobe.length === 0) return [];
     return wardrobe.map((wardrobeItems) => wardrobeItems.find((piece) => piece));
   });
 </script>
 
 <Section id="Gear" {order}>
-  {#if $query.isPending}
+  {#if query.isPending}
     <LoaderCircle class="text-icon animate-spin" />
   {/if}
-  {#if $query.error}
-    <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
+  {#if query.error}
+    <Notice title="An unexpected error has occurred" type="error" error={query.error} />
   {/if}
 
-  {#if $query.isSuccess && gear}
+  {#if query.isSuccess && gear}
     <Items subtitle="Armor">
       {#snippet text()}
         {#if armor.armor.length > 0 && !armor.armor.every((piece) => !piece.display_name)}

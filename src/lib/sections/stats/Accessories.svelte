@@ -25,25 +25,25 @@
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
 
-  const query = createQuery<AccessoriesV2>({
+  const query = createQuery<AccessoriesV2>(() => ({
     queryKey: [SectionName.ACCESSORIES, profileUUID, profileId],
     queryFn: () => api().getSection(SectionName.ACCESSORIES, profileUUID, profileId)
-  });
+  }));
 
   const accessories = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data[SectionName.ACCESSORIES];
+    if (query.isPending || query.error || !query.data) return;
+    return query.data[SectionName.ACCESSORIES];
   });
 </script>
 
 <Section id="Accessories" {order}>
-  {#if $query.isPending}
+  {#if query.isPending}
     <LoaderCircle class="text-icon animate-spin" />
   {/if}
-  {#if $query.error}
-    <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
+  {#if query.error}
+    <Notice title="An unexpected error has occurred" type="error" error={query.error} />
   {/if}
-  {#if $query.isSuccess && $query.data && accessories}
+  {#if query.isSuccess && query.data && accessories}
     {#if accessories.magicalPower?.total}
       <Items>
         {#snippet text()}

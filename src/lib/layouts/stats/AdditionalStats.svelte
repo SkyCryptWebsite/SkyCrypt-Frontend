@@ -16,14 +16,14 @@
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
 
-  const query = createQuery<NetworthV2>({
+  const query = createQuery<NetworthV2>(() => ({
     queryKey: [SectionName.NETWORTH, profileUUID, profileId],
     queryFn: () => api().getSection(SectionName.NETWORTH, profileUUID, profileId)
-  });
+  }));
 
   const networth = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data.networth;
+    if (query.isPending || query.error || !query.data) return;
+    return query.data.networth;
   });
 
   const defaultPatternDecimal: string = "0,0.##";
@@ -90,16 +90,16 @@
     {calculatePercentage(profile.fairySouls.found, profile.fairySouls.total)}% of fairy souls found.
   </AdditionStat>
 
-  {#if $query.isPending}
+  {#if query.isPending}
     <div class="text-text/60 my-0 flex items-center gap-1 font-bold">
       Networth:
       <LoaderCircle class="text-icon animate-spin" />
     </div>
   {/if}
-  {#if $query.error}
+  {#if query.error}
     <div class="text-text/60 my-0 flex items-center gap-1 font-bold">Networth: An error has occurred</div>
   {/if}
-  {#if $query.isSuccess && $query.data && networth}
+  {#if query.isSuccess && query.data && networth}
     {@render NetworthSnippet(networth.normal, "Networth")}
     {@render NetworthSnippet(networth.nonCosmetic, "Non-Cosmetic Networth")}
   {/if}

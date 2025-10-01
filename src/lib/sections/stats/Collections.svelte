@@ -21,25 +21,25 @@
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
 
-  const query = createQuery<CollectionsV2>({
+  const query = createQuery<CollectionsV2>(() => ({
     queryKey: [SectionName.COLLECTIONS, profileUUID, profileId],
     queryFn: () => api().getSection(SectionName.COLLECTIONS, profileUUID, profileId)
-  });
+  }));
 
   const collections = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data[SectionName.COLLECTIONS];
+    if (query.isPending || query.error || !query.data) return;
+    return query.data[SectionName.COLLECTIONS];
   });
 </script>
 
 <Section id="Collections" {order}>
-  {#if $query.isPending}
+  {#if query.isPending}
     <LoaderCircle class="text-icon animate-spin" />
   {/if}
-  {#if $query.error}
-    <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
+  {#if query.error}
+    <Notice title="An unexpected error has occurred" type="error" error={query.error} />
   {/if}
-  {#if $query.isSuccess && $query.data && collections}
+  {#if query.isSuccess && query.data && collections}
     <Items class="flex-col">
       {#snippet text()}
         <div>

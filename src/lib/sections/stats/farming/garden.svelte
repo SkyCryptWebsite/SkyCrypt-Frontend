@@ -31,15 +31,15 @@
   let sectionOpen: boolean = $state(false);
   const queryEnabled = $derived(!gardenLocked && sectionOpen);
 
-  const query = createQuery<FullGarden>({
+  const query = createQuery<FullGarden>(() => ({
     queryKey: ["garden", profileUUID, profileId],
     queryFn: () => api().getGarden(profileUUID),
     enabled: queryEnabled
-  });
+  }));
 
   const garden = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data.garden;
+    if (query.isPending || query.error || !query.data) return;
+    return query.data.garden;
   });
 
   const isHover = getContext<IsHover>("isHover");
@@ -49,8 +49,8 @@
   bind:open={sectionOpen}
   onOpenChange={(open) => {
     if (open) {
-      if ($query.isSuccess) return;
-      if (queryEnabled) $query.refetch();
+      if (query.isSuccess) return;
+      if (queryEnabled) query.refetch();
     }
   }}>
   <Collapsible.Trigger class="group flex items-center gap-0.5">
@@ -61,13 +61,13 @@
     {#if gardenLocked}
       <p>This player does not have the Garden unlocked.</p>
     {:else}
-      {#if $query.isPending}
+      {#if query.isPending}
         <LoaderCircle class="text-icon animate-spin" />
       {/if}
-      {#if $query.error}
-        <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
+      {#if query.error}
+        <Notice title="An unexpected error has occurred" type="error" error={query.error} />
       {/if}
-      {#if $query.isSuccess && $query.data && garden}
+      {#if query.isSuccess && query.data && garden}
         {@const hasMaxed = garden.level.maxed}
         <div class="mt-2">
           <AdditionStat text="Level" data="{garden.level.level} / {garden.level.maxLevel}" maxed={hasMaxed} asterisk={true}>

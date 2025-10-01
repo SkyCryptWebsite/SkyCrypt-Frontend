@@ -22,14 +22,14 @@
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
 
-  const query = createQuery<MinionsV2>({
+  const query = createQuery<MinionsV2>(() => ({
     queryKey: [SectionName.MINIONS, profileUUID, profileId],
     queryFn: () => api().getSection(SectionName.MINIONS, profileUUID, profileId)
-  });
+  }));
 
   const minions = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data[SectionName.MINIONS];
+    if (query.isPending || query.error || !query.data) return;
+    return query.data[SectionName.MINIONS];
   });
 
   const romanTiers = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
@@ -37,13 +37,13 @@
 </script>
 
 <Section id="Minions" {order}>
-  {#if $query.isPending}
+  {#if query.isPending}
     <LoaderCircle class="text-icon animate-spin" />
   {/if}
-  {#if $query.error}
-    <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
+  {#if query.error}
+    <Notice title="An unexpected error has occurred" type="error" error={query.error} />
   {/if}
-  {#if $query.isSuccess && $query.data && minions}
+  {#if query.isSuccess && query.data && minions}
     <Items class="flex-col">
       {#snippet text()}
         <div>

@@ -43,107 +43,107 @@
   // Use this for the actual inventory queries
   const _inventories = ["backpack", "inventory", "enderchest", "armor", "equipment", "personal_vault", "wardrobe", "rift_inventory", "rift_enderchest", "rift_armor", "rift_equipment", "potion_bag", "talisman_bag", "fishing_bag", "quiver", "museum", "search"] as readonly string[]; // List of inventory types to be used in the tabs
 
-  const backpackQuery = createQuery({
+  const backpackQuery = createQuery(() => ({
     queryKey: [SectionName.INVENTORY, uuid, profileId, "backpack"],
     queryFn: () => api().getInventory(uuid, profileId, "backpack"),
     enabled: false
-  });
+  }));
 
-  const inventoryQuery = createQuery({
+  const inventoryQuery = createQuery(() => ({
     queryKey: [SectionName.INVENTORY, uuid, profileId, "inventory"],
     queryFn: () => api().getInventory(uuid, profileId, "inventory"),
     enabled: true
-  });
+  }));
 
-  const enderchestQuery = createQuery({
+  const enderchestQuery = createQuery(() => ({
     queryKey: [SectionName.INVENTORY, uuid, profileId, "enderchest"],
     queryFn: () => api().getInventory(uuid, profileId, "enderchest"),
     enabled: false
-  });
+  }));
 
-  const armorQuery = createQuery({
+  const armorQuery = createQuery(() => ({
     queryKey: [SectionName.INVENTORY, uuid, profileId, "armor"],
     queryFn: () => api().getInventory(uuid, profileId, "armor"),
     enabled: false
-  });
+  }));
 
-  const equipmentQuery = createQuery({
+  const equipmentQuery = createQuery(() => ({
     queryKey: [SectionName.INVENTORY, uuid, profileId, "equipment"],
     queryFn: () => api().getInventory(uuid, profileId, "equipment"),
     enabled: false
-  });
+  }));
 
-  const personalVaultQuery = createQuery({
+  const personalVaultQuery = createQuery(() => ({
     queryKey: [SectionName.INVENTORY, uuid, profileId, "personal_vault"],
     queryFn: () => api().getInventory(uuid, profileId, "personal_vault"),
     enabled: false
-  });
+  }));
 
-  const wardrobeQuery = createQuery({
+  const wardrobeQuery = createQuery(() => ({
     queryKey: [SectionName.INVENTORY, uuid, profileId, "wardrobe"],
     queryFn: () => api().getInventory(uuid, profileId, "wardrobe"),
     enabled: false
-  });
+  }));
 
-  const riftInventoryQuery = createQuery({
+  const riftInventoryQuery = createQuery(() => ({
     queryKey: [SectionName.INVENTORY, uuid, profileId, "rift_inventory"],
     queryFn: () => api().getInventory(uuid, profileId, "rift_inventory"),
     enabled: false
-  });
+  }));
 
-  const riftEnderchestQuery = createQuery({
+  const riftEnderchestQuery = createQuery(() => ({
     queryKey: [SectionName.INVENTORY, uuid, profileId, "rift_enderchest"],
     queryFn: () => api().getInventory(uuid, profileId, "rift_enderchest"),
     enabled: false
-  });
+  }));
 
-  const riftArmorQuery = createQuery({
+  const riftArmorQuery = createQuery(() => ({
     queryKey: [SectionName.INVENTORY, uuid, profileId, "rift_armor"],
     queryFn: () => api().getInventory(uuid, profileId, "rift_armor"),
     enabled: false
-  });
+  }));
 
-  const riftEquipmentQuery = createQuery({
+  const riftEquipmentQuery = createQuery(() => ({
     queryKey: [SectionName.INVENTORY, uuid, profileId, "rift_equipment"],
     queryFn: () => api().getInventory(uuid, profileId, "rift_equipment"),
     enabled: false
-  });
+  }));
 
-  const potionBagQuery = createQuery({
+  const potionBagQuery = createQuery(() => ({
     queryKey: [SectionName.INVENTORY, uuid, profileId, "potion_bag"],
     queryFn: () => api().getInventory(uuid, profileId, "potion_bag"),
     enabled: false
-  });
+  }));
 
-  const talismanBagQuery = createQuery({
+  const talismanBagQuery = createQuery(() => ({
     queryKey: [SectionName.INVENTORY, uuid, profileId, "talisman_bag"],
     queryFn: () => api().getInventory(uuid, profileId, "talisman_bag"),
     enabled: false
-  });
+  }));
 
-  const fishingBagQuery = createQuery({
+  const fishingBagQuery = createQuery(() => ({
     queryKey: [SectionName.INVENTORY, uuid, profileId, "fishing_bag"],
     queryFn: () => api().getInventory(uuid, profileId, "fishing_bag"),
     enabled: false
-  });
+  }));
 
-  const quiverQuery = createQuery({
+  const quiverQuery = createQuery(() => ({
     queryKey: [SectionName.INVENTORY, uuid, profileId, "quiver"],
     queryFn: () => api().getInventory(uuid, profileId, "quiver"),
     enabled: false
-  });
+  }));
 
-  const museumQuery = createQuery({
+  const museumQuery = createQuery(() => ({
     queryKey: [SectionName.INVENTORY, uuid, profileId, "museum"],
     queryFn: () => api().getInventory(uuid, profileId, "museum"),
     enabled: false
-  });
+  }));
 
-  const searchQuery = createQuery({
+  const searchQuery = createQuery(() => ({
     queryKey: [SectionName.INVENTORY, uuid, profileId, "search"],
     queryFn: () => api().getInventory(uuid, profileId, "search", debouncedSearchValue.current),
     enabled: false
-  });
+  }));
 
   const debouncedSearchValue = $state(new Debounced(() => searchValue, 300));
 
@@ -151,111 +151,111 @@
     {
       id: "inventory",
       icon: `https://crafatar.com/renders/head/${profile.uuid}?overlay`,
-      items: $inventoryQuery.data?.items ?? [],
-      loading: $inventoryQuery.isLoading,
-      error: $inventoryQuery.isError,
+      items: inventoryQuery.data?.items ?? [],
+      loading: inventoryQuery.isLoading,
+      error: inventoryQuery.isError,
       gap: 27
     },
     {
       id: "backpack",
       icon: PUBLIC_SERVER_API_URL + "item/CHEST",
-      items: $backpackQuery.data?.items ?? [],
-      loading: $backpackQuery.isLoading,
-      error: $backpackQuery.isError,
+      items: backpackQuery.data?.items ?? [],
+      loading: backpackQuery.isLoading,
+      error: backpackQuery.isError,
       gap: 45
     },
     {
       id: "enderchest",
       icon: PUBLIC_SERVER_API_URL + "item/ENDER_CHEST",
-      items: $enderchestQuery.data?.items ?? [],
-      loading: $enderchestQuery.isLoading,
-      error: $enderchestQuery.isError,
+      items: enderchestQuery.data?.items ?? [],
+      loading: enderchestQuery.isLoading,
+      error: enderchestQuery.isError,
       gap: 45
     },
     {
       id: "personal_vault",
       icon: PUBLIC_SERVER_API_URL + "head/f7aadff9ddc546fdcec6ed5919cc39dfa8d0c07ff4bc613a19f2e6d7f2593",
-      items: $personalVaultQuery.data?.items ?? [],
-      loading: $personalVaultQuery.isLoading,
-      error: $personalVaultQuery.isError,
+      items: personalVaultQuery.data?.items ?? [],
+      loading: personalVaultQuery.isLoading,
+      error: personalVaultQuery.isError,
       gap: 45
     },
     {
       id: "talisman_bag",
       icon: PUBLIC_SERVER_API_URL + "head/961a918c0c49ba8d053e522cb91abc74689367b4d8aa06bfc1ba9154730985ff",
-      items: $talismanBagQuery.data?.items ?? [],
-      loading: $talismanBagQuery.isLoading,
-      error: $talismanBagQuery.isError,
+      items: talismanBagQuery.data?.items ?? [],
+      loading: talismanBagQuery.isLoading,
+      error: talismanBagQuery.isError,
       gap: 45
     },
     {
       id: "potion_bag",
       icon: PUBLIC_SERVER_API_URL + "head/9f8b82427b260d0a61e6483fc3b2c35a585851e08a9a9df372548b4168cc817c",
-      items: $potionBagQuery.data?.items ?? [],
-      loading: $potionBagQuery.isLoading,
-      error: $potionBagQuery.isError,
+      items: potionBagQuery.data?.items ?? [],
+      loading: potionBagQuery.isLoading,
+      error: potionBagQuery.isError,
       gap: 45
     },
     {
       id: "fishing_bag",
       icon: PUBLIC_SERVER_API_URL + "head/eb8e297df6b8dffcf135dba84ec792d420ad8ecb458d144288572a84603b1631",
-      items: $fishingBagQuery.data?.items ?? [],
-      loading: $fishingBagQuery.isLoading,
-      error: $fishingBagQuery.isError,
+      items: fishingBagQuery.data?.items ?? [],
+      loading: fishingBagQuery.isLoading,
+      error: fishingBagQuery.isError,
       gap: 45
     },
     {
       id: "quiver",
       icon: PUBLIC_SERVER_API_URL + "head/4cb3acdc11ca747bf710e59f4c8e9b3d949fdd364c6869831ca878f0763d1787",
-      items: $quiverQuery.data?.items ?? [],
-      loading: $quiverQuery.isLoading,
-      error: $quiverQuery.isError,
+      items: quiverQuery.data?.items ?? [],
+      loading: quiverQuery.isLoading,
+      error: quiverQuery.isError,
       gap: 45
     },
     {
       id: "museum",
       icon: PUBLIC_SERVER_API_URL + "head/438cf3f8e54afc3b3f91d20a49f324dca1486007fe545399055524c17941f4dc",
-      items: $museumQuery.data?.items ?? [],
-      loading: $museumQuery.isLoading,
-      error: $museumQuery.isError,
+      items: museumQuery.data?.items ?? [],
+      loading: museumQuery.isLoading,
+      error: museumQuery.isError,
       gap: 54
     },
     {
       id: "rift_inventory",
       icon: PUBLIC_SERVER_API_URL + "head/445240fcf1a9796327dda5593985343af9121a7156bc76e3d6b341b02e6a6e52",
-      items: $riftInventoryQuery.data?.items ?? [],
-      loading: $riftInventoryQuery.isLoading,
-      error: $riftInventoryQuery.isError,
+      items: riftInventoryQuery.data?.items ?? [],
+      loading: riftInventoryQuery.isLoading,
+      error: riftInventoryQuery.isError,
       gap: 45
     },
     {
       id: "rift_enderchest",
       icon: PUBLIC_SERVER_API_URL + "head/a6cc486c2be1cb9dfcb2e53dd9a3e9a883bfadb27cb956f1896d602b4067",
-      items: $riftEnderchestQuery.data?.items ?? [],
-      loading: $riftEnderchestQuery.isLoading,
-      error: $riftEnderchestQuery.isError,
+      items: riftEnderchestQuery.data?.items ?? [],
+      loading: riftEnderchestQuery.isLoading,
+      error: riftEnderchestQuery.isError,
       gap: 45
     },
     {
       id: "search",
       icon: PUBLIC_SERVER_API_URL + "item/EYE_OF_ENDER",
-      items: $searchQuery.data?.items ?? [],
-      loading: $searchQuery.isLoading,
-      error: $searchQuery.isError,
+      items: searchQuery.data?.items ?? [],
+      loading: searchQuery.isLoading,
+      error: searchQuery.isError,
       gap: 45
     }
   ]);
 
   const searchedItems = $derived.by<ProcessedSkyBlockItem[] | []>(() => {
-    if (!$searchQuery.data?.items) return [];
+    if (!searchQuery.data?.items) return [];
     const search = debouncedSearchValue.current?.trim();
     if (!search) return [];
-    const searchedItemName = $searchQuery.data.items.filter((item) => item?.display_name?.toLowerCase().includes(search?.toLowerCase())).slice(0, 45);
+    const searchedItemName = searchQuery.data.items.filter((item) => item?.display_name?.toLowerCase().includes(search?.toLowerCase())).slice(0, 45);
     if (searchedItemName.length === 0) return [];
     return searchedItemName;
   });
 
-  const itemsFound = $derived(!debouncedSearchValue.pending && !$searchQuery.isLoading && debouncedSearchValue.current && debouncedSearchValue.current !== "" && searchedItems.length === 0);
+  const itemsFound = $derived(!debouncedSearchValue.pending && !searchQuery.isLoading && debouncedSearchValue.current && debouncedSearchValue.current !== "" && searchedItems.length === 0);
 
   const tab = $derived<Tabs>(tabs?.find((t) => t.id === openTab) as Tabs);
 
@@ -276,73 +276,73 @@
   $effect.pre(() => {
     switch (openTab) {
       case "backpack":
-        if ($backpackQuery.isSuccess) return;
-        $backpackQuery.refetch();
+        if (backpackQuery.isSuccess) return;
+        backpackQuery.refetch();
         break;
       case "inventory":
-        if ($inventoryQuery.isSuccess) return;
-        $inventoryQuery.refetch();
+        if (inventoryQuery.isSuccess) return;
+        inventoryQuery.refetch();
         break;
       case "enderchest":
-        if ($enderchestQuery.isSuccess) return;
-        $enderchestQuery.refetch();
+        if (enderchestQuery.isSuccess) return;
+        enderchestQuery.refetch();
         break;
       case "armor":
-        if ($armorQuery.isSuccess) return;
-        $armorQuery.refetch();
+        if (armorQuery.isSuccess) return;
+        armorQuery.refetch();
         break;
       case "equipment":
-        if ($equipmentQuery.isSuccess) return;
-        $equipmentQuery.refetch();
+        if (equipmentQuery.isSuccess) return;
+        equipmentQuery.refetch();
         break;
       case "personal_vault":
-        if ($personalVaultQuery.isSuccess) return;
-        $personalVaultQuery.refetch();
+        if (personalVaultQuery.isSuccess) return;
+        personalVaultQuery.refetch();
         break;
       case "wardrobe":
-        if ($wardrobeQuery.isSuccess) return;
-        $wardrobeQuery.refetch();
+        if (wardrobeQuery.isSuccess) return;
+        wardrobeQuery.refetch();
         break;
       case "rift_inventory":
-        if ($riftInventoryQuery.isSuccess) return;
-        $riftInventoryQuery.refetch();
+        if (riftInventoryQuery.isSuccess) return;
+        riftInventoryQuery.refetch();
         break;
       case "rift_enderchest":
-        if ($riftEnderchestQuery.isSuccess) return;
-        $riftEnderchestQuery.refetch();
+        if (riftEnderchestQuery.isSuccess) return;
+        riftEnderchestQuery.refetch();
         break;
       case "rift_armor":
-        if ($riftArmorQuery.isSuccess) return;
-        $riftArmorQuery.refetch();
+        if (riftArmorQuery.isSuccess) return;
+        riftArmorQuery.refetch();
         break;
       case "rift_equipment":
-        if ($riftEquipmentQuery.isSuccess) return;
-        $riftEquipmentQuery.refetch();
+        if (riftEquipmentQuery.isSuccess) return;
+        riftEquipmentQuery.refetch();
         break;
       case "potion_bag":
-        if ($potionBagQuery.isSuccess) return;
-        $potionBagQuery.refetch();
+        if (potionBagQuery.isSuccess) return;
+        potionBagQuery.refetch();
         break;
       case "talisman_bag":
-        if ($talismanBagQuery.isSuccess) return;
-        $talismanBagQuery.refetch();
+        if (talismanBagQuery.isSuccess) return;
+        talismanBagQuery.refetch();
         break;
       case "fishing_bag":
-        if ($fishingBagQuery.isSuccess) return;
-        $fishingBagQuery.refetch();
+        if (fishingBagQuery.isSuccess) return;
+        fishingBagQuery.refetch();
         break;
       case "quiver":
-        if ($quiverQuery.isSuccess) return;
-        $quiverQuery.refetch();
+        if (quiverQuery.isSuccess) return;
+        quiverQuery.refetch();
         break;
       case "museum":
-        if ($museumQuery.isSuccess) return;
-        $museumQuery.refetch();
+        if (museumQuery.isSuccess) return;
+        museumQuery.refetch();
         break;
       case "search":
         break; // Search is handled separately
       default:
-        console.warn(`Unknown tab: ${openTab}`);
+        console.warn(`Unknown tab: {openTab}`);
         break;
     }
   });
@@ -351,7 +351,7 @@
     if (debouncedSearchValue.current && debouncedSearchValue.current !== "" && openTab === "search") {
       untrack(() => {
         if (!debouncedSearchValue.pending) {
-          $searchQuery.refetch();
+          searchQuery.refetch();
         }
       });
     }
@@ -440,10 +440,10 @@
     onkeydown={(e) => {
       e.stopPropagation();
     }} />
-  {#if debouncedSearchValue.pending || $searchQuery.isLoading}
+  {#if debouncedSearchValue.pending || searchQuery.isLoading}
     <LoaderCircle class="text-icon mx-auto mt-4 animate-spin" />
   {/if}
-  {#if $searchQuery.isError}
+  {#if searchQuery.isError}
     <Notice title="An unexpected error has occurred" type="error" />
   {/if}
 

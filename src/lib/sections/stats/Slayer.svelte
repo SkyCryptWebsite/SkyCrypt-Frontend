@@ -22,25 +22,25 @@
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
 
-  const query = createQuery<SlayerV2>({
+  const query = createQuery<SlayerV2>(() => ({
     queryKey: [SectionName.SLAYER, profileUUID, profileId],
     queryFn: () => api().getSection(SectionName.SLAYER, profileUUID, profileId)
-  });
+  }));
 
   const slayer = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data[SectionName.SLAYER];
+    if (query.isPending || query.error || !query.data) return;
+    return query.data[SectionName.SLAYER];
   });
 </script>
 
 <Section id="Slayer" {order}>
-  {#if $query.isPending}
+  {#if query.isPending}
     <LoaderCircle class="text-icon animate-spin" />
   {/if}
-  {#if $query.error}
-    <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
+  {#if query.error}
+    <Notice title="An unexpected error has occurred" type="error" error={query.error} />
   {/if}
-  {#if $query.isSuccess && $query.data && slayer}
+  {#if query.isSuccess && query.data && slayer}
     <div class="space-y-4">
       {#if slayer.totalSlayerExp === 0}
         <p class="space-x-0.5 leading-6">{profile.username} hasn't unlocked Slayers yet.</p>
