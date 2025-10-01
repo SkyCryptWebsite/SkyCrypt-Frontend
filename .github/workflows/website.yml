@@ -116,6 +116,8 @@ jobs:
         with:
           context: .
           push: true
+          build-args: |
+            PUBLIC_COMMIT_HASH=${{ github.sha }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
