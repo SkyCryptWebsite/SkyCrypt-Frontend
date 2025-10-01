@@ -51,7 +51,7 @@ type Inventory = {
   items?: Array<Item>;
 };
 
-export type Item = {
+type Item = {
   /**
    * The name of the item.
    */

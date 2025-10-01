@@ -28,20 +28,6 @@ export type StatsV2 = {
   apiSettings: APISettings;
 };
 
-export type ArmorV2 = {
-  armor: {
-    armor: ProcessedSkyBlockItem[];
-    stats: ItemStats;
-    set_name?: string;
-    set_rarity?: string;
-  };
-  equipment: {
-    equipment: ProcessedSkyBlockItem[];
-    stats: ItemStats;
-  };
-  wardrobe: ProcessedSkyBlockItem[][];
-};
-
 export type GearV2 = {
   [SectionName.GEAR]: {
     armor: {
@@ -126,7 +112,7 @@ export type InventoryV2All = {
 
 export type InventoryV2 = { items: ProcessedSkyBlockItem[] };
 
-export type MiningV2 = {
+type MiningV2 = {
   level: Skill;
   peak_of_the_mountain: {
     level: number;
@@ -197,7 +183,7 @@ export type MiningV2 = {
   };
 };
 
-export type FarmingV2 = {
+type FarmingV2 = {
   uniqueGolds: number;
   copper: number;
   pelts: number;
@@ -223,7 +209,7 @@ export type FarmingV2 = {
   };
 };
 
-export type FishingV2 = {
+type FishingV2 = {
   itemsFished: number;
   treasure: number;
   treasureLarge: number;
@@ -510,7 +496,7 @@ export type MiscV2 = {
   };
 };
 
-export type EnchantingV2 = {
+type EnchantingV2 = {
   unlocked: boolean;
   data: {
     [string: string]: ProcessedExperimentationGame;
@@ -543,19 +529,6 @@ export type NetworthV2 = {
     nonCosmetic: NetworthResult;
     normal: NetworthResult;
   };
-};
-
-export type PlayerStatsInputv2 = {
-  skyblock_level?: number;
-  armor?: ItemStats;
-  equipment?: ItemStats;
-  skills?: Record<string, Skill>;
-  pets?: ItemStats;
-  slayers?: ItemStats;
-  bestiary?: number;
-  accessories?: ItemStats;
-  dungeons?: number;
-  petScore?: ItemStats;
 };
 
 export type PlayerStatsV2 = {
