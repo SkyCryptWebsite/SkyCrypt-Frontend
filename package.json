@@ -86,38 +86,14 @@
     "bun": "forbidden, use pnpm instead"
   },
   "pnpm": {
-    "supportedArchitectures": {
-      "os": [
-        "linux",
-        "win32",
-        "darwin"
-      ],
-      "cpu": [
-        "x64",
-        "arm64"
-      ],
-      "libc": [
-        "musl",
-        "gnu",
-        "msvc"
-      ]
-    },
     "onlyBuiltDependencies": [
       "@sentry/cli",
       "@tailwindcss/oxide",
       "esbuild",
-      "sharp",
-      "JSON",
       "svelte-preprocess"
     ],
     "overrides": {
       "zod": "4.0.10"
     }
-  },
-  "optionalDependencies": {
-    "lightningcss-linux-arm64-musl": "^1.30.2",
-    "lightningcss-linux-x64-gnu": "^1.30.2",
-    "lightningcss-linux-x64-musl": "^1.30.2",
-    "@rollup/rollup-linux-x64-gnu": "^4.52.3"
   }
 }
