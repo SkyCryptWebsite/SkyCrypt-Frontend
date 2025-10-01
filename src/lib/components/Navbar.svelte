@@ -115,7 +115,6 @@
     if (navbarElement && $tabValue) {
       tick().then(() => {
         scrollToTab({ element: allLinks[$tabValue], smooth: true });
-        // eslint-disable-next-line
         // eslint-disable-next-line svelte/no-navigation-without-resolve
         replaceState("#" + $tabValue, page.state);
       });
