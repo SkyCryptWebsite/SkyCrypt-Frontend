@@ -90,6 +90,8 @@ jobs:
     permissions:
       packages: write
       contents: read
+      id-token: write
+      attestations: write
 
     steps:
       - name: Git checkout
@@ -109,9 +111,17 @@ jobs:
           images: ${{ env.CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Build and Push
+        id: push
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Attest Build Provenance
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-name: ${{ env.CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
