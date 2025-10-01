@@ -4,7 +4,15 @@
     <img alt="SkyCrypt 🍣" height="96px" src="static/img/logo.avif">
   </picture>
 </p>
-<h1 align="center">A Hypixel Skyblock Profile Viewer v2</h1>
+<h1 align="center">A Hypixel Skyblock Profile Viewer</h1>
+
+<p align='center'>
+  <a href="https://www.patreon.com/shiiyu"><img alt="Sponsor" src="https://img.shields.io/badge/sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white" /></a>
+  &nbsp;
+  <a href="https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/stargazers"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/SkyCryptWebsite/SkyCrypt-Frontend?style=for-the-badge" /></a>
+  &nbsp;
+  <a href="https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/actions/workflows/website.yml"><img alt="GitHub Repo stars" src="https://img.shields.io/github/actions/workflow/status/SkyCryptWebsite/SkyCrypt-Frontend/website.yml?branch=prod&style=for-the-badge" /></a>
+</p>
 
 This is the new version of [SkyCrypt](https://github.com/SkyCryptWebsite/SkyCrypt), a website that provides information about the game Hypixel SkyBlock. This version is built from the ground up to replace the original SkyCrypt for a more modern and maintainable codebase.
 
@@ -13,7 +21,7 @@ Originally inspired by [LeaPhant's skyblock-stats](https://github.com/LeaPhant/s
 **Website**: https://sky.shiiyu.moe \
 **Development Website**: https://cupcake.shiiyu.moe
 
-[![CI/CD](https://github.com/SkyCryptWebsite/SkyCryptv2/actions/workflows/website.yml/badge.svg)](https://github.com/SkyCryptWebsite/SkyCryptv2/actions/workflows/website.yml)
+**Backend**: [SkyCrypt-Backend](https://github.com/SkyCryptWebsite/SkyCrypt-Backend)
 
 <h2 align="center">Screenshot</h1>
 
