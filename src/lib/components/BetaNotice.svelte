@@ -22,7 +22,7 @@
                   <h2 class="mb-2 text-lg font-bold">Beta Notice</h2>
                   <p class="mb-2">You're currently on the SkyCrypt development site (cupcake) This version contains the latest features and updates, but it may also have bugs or incomplete functionalities.</p>
                   <p class="mb-2">
-                    Please use this site with caution and report any issues you encounter. For the stable version of SkyCrypt (sky), please visit <a href="https://skycrypt.com" class="text-link underline">sky.shiiyu.com</a>.
+                    Please use this site with caution and report any issues you encounter. For the stable version of SkyCrypt (sky), please visit <a href="https://sky.shiiyu.moe" class="text-link underline">sky.shiiyu.moe</a>.
                   </p>
                 </div>
               </div>
