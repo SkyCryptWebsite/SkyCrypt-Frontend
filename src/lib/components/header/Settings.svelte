@@ -135,7 +135,17 @@
       </Tabs.Trigger>
     </Tabs.List>
     <Tabs.Content value={SettingsTab.Packs}>
-      <div class="flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto">
+      <div class="flex items-start gap-2 rounded-lg p-2 font-semibold">
+        <PackageOpen class="size-5 h-lh shrink-0" />
+        <div>
+          <h4>Packs</h4>
+          <div class="space-y-2">
+            <p class="text-text/60">Resource packs change the textures of items, mobs and other elements in SkyCrypt.</p>
+            <p class="text-text/60">You can enable or disable as many packs as you want, but there preference order can't be changed.</p>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto">
         {#each packConfigs as pack (pack.id)}
           <Label.Root for={pack.id} class="bg-text/[0.05] flex items-center justify-between gap-4 rounded-lg p-2">
             <div class="flex items-center gap-2">
@@ -169,7 +179,15 @@
       {/if}
     </Tabs.Content>
     <Tabs.Content value={SettingsTab.Themes}>
-      <RadioGroup.Root class="flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto" bind:value={$themeStore} onValueChange={changeTheme}>
+      <div class="flex items-start gap-2 rounded-lg p-2 font-semibold">
+        <PaintBucket class="size-5 h-lh shrink-0" />
+        <div>
+          <h4>Themes</h4>
+
+          <p class="text-text/60">Themes change the colors of SkyCrypt.</p>
+        </div>
+      </div>
+      <RadioGroup.Root class="mt-4 flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto" bind:value={$themeStore} onValueChange={changeTheme}>
         {#each themes as theme (theme.id)}
           <Label.Root for={theme.id} class="bg-text/[0.05] flex items-center justify-between gap-4 rounded-lg p-2">
             <div class="flex items-center gap-2">
@@ -193,8 +211,16 @@
       </RadioGroup.Root>
     </Tabs.Content>
     <Tabs.Content value={SettingsTab.Order}>
+      <div class="flex items-start gap-2 rounded-lg p-2 font-semibold">
+        <ListOrdered class="size-5 h-lh shrink-0" />
+        <div>
+          <h4>Order</h4>
+
+          <p class="text-text/60">Drag and drop the sections to reorder them as you like.</p>
+        </div>
+      </div>
       <div
-        class="flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto"
+        class="mt-4 flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto"
         use:dndzone={{ items: sectionOrder, flipDurationMs: 300, dropTargetStyle: {} }}
         onconsider={(e) => (sectionOrder = e.detail.items)}
         onfinalize={(e) => {
