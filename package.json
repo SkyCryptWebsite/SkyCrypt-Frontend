@@ -11,7 +11,7 @@
     "preview:dev": "dotenv -e .env.development -- vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "runbuild": "node ./build/index.js",
+    "runbuild": "node ./build",
     "test": "vitest",
     "lint": "prettier --check . && eslint . && pnpm check",
     "format": "prettier --write .",
