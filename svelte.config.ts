@@ -1,15 +1,15 @@
 import adapter from "@sveltejs/adapter-node";
+import { type Config } from "@sveltejs/kit";
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
-const forceRunesMode = (filename) => {
+const forceRunesMode = (filename: string) => {
   if (filename.match(/[\\/\\]node_modules[\\/\\]/)) {
     return false;
   }
   return true;
 };
 
-/** @type {import('@sveltejs/kit').Config} */
-const config = {
+const config: Config = {
   // Consult https://kit.svelte.dev/docs/integrations#preprocessors
   // for more information about preprocessors
 
@@ -49,7 +49,7 @@ const config = {
   },
   // Hide build warnings from node_modules
   onwarn: (warning, handler) => {
-    if (warning.filename.includes("node_modules")) return;
+    if (warning.filename?.includes("node_modules")) return;
     handler(warning);
   },
   vitePlugin: {

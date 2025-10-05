@@ -11,7 +11,6 @@ import svelteConfig from "./svelte.config.js";
 
 const gitignorePath = fileURLToPath(new URL("./.gitignore", import.meta.url));
 
-/** @type { import("eslint").Linter.Config } */
 export default defineConfig(
   includeIgnoreFile(gitignorePath),
   ...pluginQuery.configs["flat/recommended"],
