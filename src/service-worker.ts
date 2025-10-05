@@ -10,7 +10,7 @@
 // Only necessary if you have an import from `$env/static/public`
 /// <reference types="../.svelte-kit/ambient.d.ts" />
 
-import { build, files, version } from "$service-worker";
+import { build, files, prerendered, version } from "$service-worker";
 
 // This gives `self` the correct types
 const self = globalThis.self as unknown as ServiceWorkerGlobalScope;
@@ -20,7 +20,8 @@ const CACHE = `cache-${version}`;
 
 const ASSETS = [
   ...build, // the app itself
-  ...files // everything in `static`
+  ...files, // everything in `static`
+  ...prerendered // everything prerendered
 ];
 
 self.addEventListener("install", (event) => {
