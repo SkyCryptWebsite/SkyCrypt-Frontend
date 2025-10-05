@@ -38,6 +38,7 @@
     "bits-ui": "^2.11.4",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "dotenv-cli": "^10.0.0",
     "eslint": "^9.37.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-svelte": "^3.12.4",
@@ -73,9 +74,7 @@
     "zod": "^4.1.11"
   },
   "dependencies": {
-    "@sentry/sveltekit": "^10.17.0",
-    "dotenv-cli": "^10.0.0",
-    "prismarine-nbt": "^2.7.0"
+    "@sentry/sveltekit": "^10.17.0"
   },
   "engines": {
     "node": "^22",
