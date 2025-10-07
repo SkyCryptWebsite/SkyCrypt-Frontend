@@ -37,11 +37,12 @@ export default function motdTextToHTML(...args: [{ motdString: string; breakLine
   let shouldRainbowEnchantedCheck = false;
 
   codeSplit.forEach((item: string, index: number) => {
-    const motdStringToLowerCase = item.toLowerCase();
-
+    const isColorCode = Object.hasOwn(colorCodes, motdStringToLowerCase);
+    const isFormattingCode = Object.hasOwn(extras, motdStringToLowerCase);
     // Check if current item is a color code (§a, §b, etc.)
-    if (Object.hasOwn(colorCodes, motdStringToLowerCase)) {
-      colorVar = colorCodes[motdStringToLowerCase];
+    if (isColorCode) {
+      // Colors reset formatting, formatting codes dont reset anything
+      classList = [];
 
       switch (motdStringToLowerCase) {
         // §f (white) acts as a reset for all formatting except color
@@ -58,7 +59,7 @@ export default function motdTextToHTML(...args: [{ motdString: string; breakLine
       }
     }
     // Check if current item is a formatting code (§l bold, §o italic, etc.) or reset (§r)
-    else if (Object.hasOwn(extras, motdStringToLowerCase)) {
+    else if (isFormattingCode) {
       if (motdStringToLowerCase === "§r") {
         // §r resets everything - color and formatting
         colorVar = undefined;
