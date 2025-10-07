@@ -6,7 +6,7 @@
   import Section from "$lib/components/Section.svelte";
   import { api, SectionName } from "$lib/shared/api";
   import { renderLore, shouldShine } from "$lib/shared/helper";
-  import { animateObfuscatedText } from "$lib/shared/motd/obfuscated";
+  import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
   import { itemContentSpecial } from "$lib/stores/internal";
   import { performanceMode } from "$lib/stores/preferences";
   import type { ProcessedSkyBlockItem } from "$types/stats";

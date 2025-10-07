@@ -1,5 +1,5 @@
 import { RARITY_COLORS } from "$lib/shared/constants/rarities";
-import { motdTextToHTML } from "$lib/shared/motd";
+import { mcTextToHTML } from "$lib/shared/mc-text";
 import type { ProcessedSkyBlockItem } from "$types/global";
 import { tz } from "@date-fns/tz";
 import { format } from "date-fns";
@@ -57,7 +57,7 @@ export function getRarityClass(rarity: string, type: "bg" | "text"): string {
  * @returns {string} HTML
  */
 export function renderLore(text: string, formatTime: boolean = true, index?: number): string {
-  let lore = motdTextToHTML({ motdString: text, index });
+  let lore = mcTextToHTML({ mcString: text, index });
 
   if (formatTime) {
     const timestampRegex = /{TIMESTAMP:(\d+)}/g;

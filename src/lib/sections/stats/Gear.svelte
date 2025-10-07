@@ -9,7 +9,7 @@
   import Items from "$lib/layouts/stats/Items.svelte";
   import { api, SectionName } from "$lib/shared/api";
   import { getRarityClass, renderLore } from "$lib/shared/helper";
-  import { animateObfuscatedText } from "$lib/shared/motd/obfuscated";
+  import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
   import { cn } from "$lib/shared/utils";
   import type { GearV2 } from "$types/statsv2";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";

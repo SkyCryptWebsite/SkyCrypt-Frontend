@@ -8,7 +8,7 @@
   import Items from "$lib/layouts/stats/Items.svelte";
   import { SectionName } from "$lib/shared/api";
   import { renderLore, titleCase } from "$lib/shared/helper";
-  import { animateObfuscatedText } from "$lib/shared/motd/obfuscated";
+  import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
   import type { SkillsV2 } from "$types/statsv2";
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
   import Image from "@lucide/svelte/icons/image";

@@ -2,7 +2,7 @@
   import ContainedItem from "$lib/components/ContainedItem.svelte";
   import { packConfigs } from "$lib/shared/constants/packs";
   import { getRarityClass, removeFormatting, renderLore } from "$lib/shared/helper";
-  import { animateObfuscatedText } from "$lib/shared/motd/obfuscated";
+  import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
   import { cn } from "$lib/shared/utils";
   import { wikiOrderPreferences } from "$lib/stores/wiki";
   import type { ProcessedSkyBlockItem } from "$types/stats";

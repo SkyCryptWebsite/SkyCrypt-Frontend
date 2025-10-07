@@ -8,7 +8,7 @@
   import type { IsHover } from "$lib/hooks/is-hover.svelte";
   import { api } from "$lib/shared/api";
   import { calculatePercentage, formatNumber, getRarityClass, renderLore } from "$lib/shared/helper";
-  import { animateObfuscatedText } from "$lib/shared/motd/obfuscated";
+  import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { content } from "$lib/stores/internal";
   import type { Garden as FullGarden } from "$types/processed/profile/garden";

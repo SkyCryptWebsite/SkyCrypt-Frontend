@@ -9,7 +9,7 @@
   import Garden from "$lib/sections/stats/farming/garden.svelte";
   import { SectionName } from "$lib/shared/api";
   import { formatNumber, renderLore } from "$lib/shared/helper";
-  import { animateObfuscatedText } from "$lib/shared/motd/obfuscated";
+  import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
   import type { SkillsV2 } from "$types/statsv2";
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
   import { Collapsible } from "bits-ui";

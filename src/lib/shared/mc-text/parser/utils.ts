@@ -37,7 +37,11 @@ export function htmlStringFormatting(text: string): string {
       .replace(/\n/g, "<br/>")
       // Replace spaces with non-breaking spaces
       // This fixes issues with text decoration like strikethrough not applying correctly as spaces are invisible characters, so we need to replace them with their HTML entity which will make them visible and allow text decoration to apply correctly
-      .replace(/ /g, "&nbsp;")
+      .replace(
+        / /g,
+        // \u00A0 is &nsbp;
+        "\u00A0"
+      )
   );
 }
 

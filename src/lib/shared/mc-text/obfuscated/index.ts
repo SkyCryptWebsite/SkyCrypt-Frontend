@@ -1,4 +1,4 @@
-import { randomRange } from "$lib/shared/motd/parser/utils";
+import { randomRange } from "$lib/shared/mc-text/parser/utils";
 import type { Attachment } from "svelte/attachments";
 import { MediaQuery } from "svelte/reactivity";
 

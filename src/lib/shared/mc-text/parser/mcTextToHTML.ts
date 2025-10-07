@@ -1,9 +1,9 @@
 import { MAX_ENCHANTS } from "$lib/shared/constants/enchantments";
-import { colorCodes, extras } from "$lib/shared/motd/parser/styleLibrary";
-import { BASE_FORMATTING_CODE_REGEX, htmlStringFormatting } from "$lib/shared/motd/parser/utils";
+import { colorCodes, extras, type ColorCodes, type FormattingCodes } from "$lib/shared/mc-text/parser/styleLibrary";
+import { BASE_FORMATTING_CODE_REGEX, htmlStringFormatting } from "$lib/shared/mc-text/parser/utils";
 
 /**
- * Convert motd text to html.
+ * Convert Minecraft text to html.
  *
  * This function parses Minecraft-style formatting codes (like §a, §l, §r) and converts them
  * to HTML with appropriate CSS classes and inline styles. It handles:
@@ -13,17 +13,17 @@ import { BASE_FORMATTING_CODE_REGEX, htmlStringFormatting } from "$lib/shared/mo
  * - Special rainbow enchantment animation for max-level enchants with blue color
  * - Animation delays for the rainbow effect based on the index parameter
  *
- * @param motdString The motd string to convert. (e.g. "§aHello §bWorld")
+ * @param mcString The Minecraft text string to convert. (e.g. "§aHello §bWorld")
  * @param breakLine Whether to add a line break at the end of the string.
  * @param index Optional index for animation delay calculation
  * @returns The HTML to render.
  */
-export default function motdTextToHTML(...args: [{ motdString: string; breakLine?: boolean; index?: number }]): string {
-  const [{ motdString, breakLine = true, index: loreIndex }] = args;
+export default function mcTextToHTML(...args: [{ mcString: string; breakLine?: boolean; index?: number }]): string {
+  const [{ mcString, breakLine = true, index: loreIndex }] = args;
 
-  // Split the motd string by formatting codes (§a, §b, etc.) and filter out empty strings
+  // Split the mc text string by formatting codes (§a, §b, etc.) and filter out empty strings
   // This creates an array where formatting codes and text alternate
-  const codeSplit: string[] = motdString.split(BASE_FORMATTING_CODE_REGEX).filter((item) => item !== "");
+  const codeSplit: string[] = mcString.split(BASE_FORMATTING_CODE_REGEX).filter((item) => item !== "");
 
   // Track current CSS classes to apply (bold, italic, etc.)
   let classList: string[] = [];
@@ -37,14 +37,17 @@ export default function motdTextToHTML(...args: [{ motdString: string; breakLine
   let shouldRainbowEnchantedCheck = false;
 
   codeSplit.forEach((item: string, index: number) => {
-    const isColorCode = Object.hasOwn(colorCodes, motdStringToLowerCase);
-    const isFormattingCode = Object.hasOwn(extras, motdStringToLowerCase);
+    const mcTextStringToLowerCase = item.toLowerCase();
+    const isColorCode = Object.hasOwn(colorCodes, mcTextStringToLowerCase);
+    const isFormattingCode = Object.hasOwn(extras, mcTextStringToLowerCase);
     // Check if current item is a color code (§a, §b, etc.)
     if (isColorCode) {
       // Colors reset formatting, formatting codes dont reset anything
       classList = [];
 
-      switch (motdStringToLowerCase) {
+      colorVar = colorCodes[mcTextStringToLowerCase as ColorCodes];
+
+      switch (mcTextStringToLowerCase) {
         // §f (white) acts as a reset for all formatting except color
         case "§f":
           classList = [];
@@ -60,13 +63,13 @@ export default function motdTextToHTML(...args: [{ motdString: string; breakLine
     }
     // Check if current item is a formatting code (§l bold, §o italic, etc.) or reset (§r)
     else if (isFormattingCode) {
-      if (motdStringToLowerCase === "§r") {
+      if (mcTextStringToLowerCase === "§r") {
         // §r resets everything - color and formatting
         colorVar = undefined;
-        classList = [];
+        classList = extras[mcTextStringToLowerCase as FormattingCodes];
       } else {
         // Apply formatting styles (bold, italic, underline, etc.)
-        classList = extras[motdStringToLowerCase];
+        classList.push(...extras[mcTextStringToLowerCase as FormattingCodes]);
       }
     }
     // Current item is actual text content, not a formatting code
