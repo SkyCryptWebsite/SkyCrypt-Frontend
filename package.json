@@ -12,10 +12,12 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "runbuild": "node ./build",
-    "test": "vitest",
+    "test": "vitest --ui && pnpm run test:unit -- --run",
+    "test:ui": "pnpm run test:unit -- --ui",
     "lint": "prettier --check . && eslint . && pnpm check",
     "format": "prettier --write .",
-    "prepare": "svelte-kit sync || echo ''"
+    "prepare": "svelte-kit sync || echo ''",
+    "test:unit": "vitest"
   },
   "devDependencies": {
     "@date-fns/tz": "^1.4.1",
@@ -35,6 +37,8 @@
     "@types/node": "^24.6.2",
     "@types/relaxed-json": "^1.0.4",
     "@types/upng-js": "^2.1.5",
+    "@vitest/browser": "^3.2.4",
+    "@vitest/ui": "^3.2.4",
     "bits-ui": "^2.11.4",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
@@ -47,6 +51,7 @@
     "ky": "^1.11.0",
     "numerable": "^0.3.15",
     "paneforge": "^1.0.2",
+    "playwright": "^1.55.1",
     "prettier": "^3.6.2",
     "prettier-plugin-svelte": "^3.4.0",
     "prettier-plugin-tailwindcss": "^0.6.14",
@@ -71,6 +76,9 @@
     "vaul-svelte": "1.0.0-next.7",
     "vite": "npm:rolldown-vite@latest",
     "vite-plugin-devtools-json": "^1.0.0",
+    "vitest": "^3.2.4",
+    "vitest-browser-svelte": "^1.1.0",
+    "webdriverio": "^9.20.0",
     "zod": "^4.1.11"
   },
   "dependencies": {
