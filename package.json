@@ -23,7 +23,7 @@
     "@date-fns/tz": "^1.4.1",
     "@eslint/compat": "^1.4.0",
     "@eslint/js": "^9.37.0",
-    "@lucide/svelte": "^0.544.0",
+    "@lucide/svelte": "^0.545.0",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
     "@sveltejs/adapter-node": "^5.3.3",
@@ -34,7 +34,7 @@
     "@tanstack/svelte-query": "^6.0.0",
     "@tanstack/svelte-query-devtools": "^6.0.0",
     "@types/eslint": "^9.6.1",
-    "@types/node": "^24.6.2",
+    "@types/node": "^24.7.0",
     "@types/relaxed-json": "^1.0.4",
     "@types/upng-js": "^2.1.5",
     "@vitest/browser": "^3.2.4",
@@ -72,14 +72,14 @@
     "tailwindcss": "^4.1.14",
     "tslib": "^2.8.1",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.45.0",
+    "typescript-eslint": "^8.46.0",
     "vaul-svelte": "1.0.0-next.7",
     "vite": "npm:rolldown-vite@latest",
     "vite-plugin-devtools-json": "^1.0.0",
     "vitest": "^3.2.4",
     "vitest-browser-svelte": "^1.1.0",
     "webdriverio": "^9.20.0",
-    "zod": "^4.1.11"
+    "zod": "^4.1.12"
   },
   "dependencies": {
     "@sentry/sveltekit": "^10.17.0"
