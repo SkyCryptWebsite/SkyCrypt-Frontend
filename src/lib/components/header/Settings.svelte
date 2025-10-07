@@ -319,7 +319,7 @@
             <div class="flex items-start gap-2">
               <Rainbow class="size-6 h-lh shrink-0" />
               <div class="flex flex-col">
-                <h4 class="text-text/90 font-semibold">Rainbow Colors</h4>
+                <h4 class="text-text/90 group-data-[rainbow=true]/html:chroma-gradient font-semibold">Rainbow Colors</h4>
                 <p class="text-text/60">Enable rainbow colors animation for maxed enchants on items.</p>
               </div>
             </div>
