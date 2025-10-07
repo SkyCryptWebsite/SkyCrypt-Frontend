@@ -367,7 +367,7 @@
             {#each tabs as tab (tab.id)}
               <Tabs.Trigger value={tab.id} class="group relative flex items-center justify-center gap-0.5 pb-2 text-xs uppercase">
                 <Avatar.Root class="size-8">
-                  <Avatar.Image loading="lazy" src={tab.icon} class="size-8 object-contain [image-rendering:pixelated]" />
+                  <Avatar.Image loading="lazy" src={tab.icon} class="size-8 object-contain" />
                   <Avatar.Fallback>
                     <Image class="size-8" />
                   </Avatar.Fallback>
