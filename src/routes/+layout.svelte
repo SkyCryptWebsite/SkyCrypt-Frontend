@@ -192,8 +192,6 @@
     }
   }} />
 
-<Header />
-
 {#if page.url.origin.includes("cupcake") || dev}
   {#await import("$lib/components/BetaNotice.svelte") then { default: BetaNotice }}
     <BetaNotice />
@@ -207,6 +205,8 @@
 <div class="pointer-events-none fixed inset-0 z-[-1] h-dvh w-screen [background-image:var(--bg-url)] bg-cover bg-scroll bg-center bg-no-repeat"></div>
 
 <QueryClientProvider client={data.queryClient}>
+  <Header />
+
   <Tooltip.Provider delayDuration={0}>
     {@render children()}
   </Tooltip.Provider>

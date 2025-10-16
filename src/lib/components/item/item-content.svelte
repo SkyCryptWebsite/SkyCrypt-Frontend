@@ -1,10 +1,10 @@
 <script lang="ts">
   import ContainedItem from "$lib/components/ContainedItem.svelte";
-  import { packConfigs } from "$lib/shared/constants/packs";
   import { getRarityClass, removeFormatting, renderLore } from "$lib/shared/helper";
   import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
   import { cn } from "$lib/shared/utils";
   import { wikiOrderPreferences } from "$lib/stores/wiki";
+  import { getPacks } from "$routes/packs.remote";
   import type { ProcessedSkyBlockItem } from "$types/stats";
   import type { PetProcessedSkyBlockItem } from "$types/statsv2";
   import Image from "@lucide/svelte/icons/image";
@@ -19,6 +19,7 @@
   };
 
   let { piece, isDrawer }: Props = $props();
+  const packs = getPacks();
 
   const skyblockItem = $derived(piece);
   const itemName = $derived(piece?.display_name);
@@ -27,7 +28,7 @@
   const bgColor = $derived(getRarityClass(piece?.rarity ?? ("common".toLowerCase() as string), "bg"));
   const enchanted = $derived(skyblockItem?.texture_path?.includes("/api/leather/") ? false : skyblockItem && "shiny" in skyblockItem ? skyblockItem.shiny : false);
   const hasColor = $derived(skyblockItem?.lore?.some((lore) => lore.includes("Color:")) ?? false);
-  const packData = $derived(packConfigs.find((pack) => pack.id === skyblockItem?.texture_pack));
+  const packData = $derived(packs.current?.resourcepacks.find((pack) => pack.id === skyblockItem?.texture_pack));
 
   // Get the wiki link for the itemf
   export const wikiInfo = derivedStore<typeof wikiOrderPreferences, { url: string; name: string } | undefined>(wikiOrderPreferences, ($wikiOrderPreferences) => {
@@ -120,11 +121,11 @@
       {/if}
       <div class="mt-4 flex w-full flex-nowrap gap-4">
         {#if packData}
-          <Button.Root href={packData.link} target="_blank">
+          <Button.Root href={packData.url} target="_blank">
             <div class="bg-text/[0.05] hover:bg-text/[0.08] flex items-center justify-between gap-4 rounded-[0.625rem] p-2 transition-colors ease-out">
               <div class="flex items-center gap-2">
                 <Avatar.Root class="shrink-0 select-none">
-                  <Avatar.Image loading="lazy" src="/resourcepacks/{packData.folder}/pack.png" alt={packData.name} class="pointer-events-none aspect-square size-10 h-full rounded-lg select-none [image-rendering:pixelated]" />
+                  <Avatar.Image loading="lazy" src={packData.icon} alt={packData.name} class="pointer-events-none aspect-square size-10 h-full rounded-lg select-none [image-rendering:pixelated]" />
                   <Avatar.Fallback class="bg-icon/90 flex size-10 items-center justify-center rounded-lg text-center font-semibold uppercase">
                     {packData.name.slice(0, 2)}
                   </Avatar.Fallback>
