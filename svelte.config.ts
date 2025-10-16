@@ -14,8 +14,16 @@ const config: Config = {
   // for more information about preprocessors
 
   preprocess: vitePreprocess(),
+  compilerOptions: {
+    experimental: {
+      async: true
+    }
+  },
 
   kit: {
+    experimental: {
+      remoteFunctions: true
+    },
     // adapter-auto only supports some environments, see https://kit.svelte.dev/docs/adapter-auto for a list.
     // If your environment is not supported, or you settled on a specific environment, switch out the adapter.
     // See https://kit.svelte.dev/docs/adapters for more information about adapters.
@@ -25,7 +33,8 @@ const config: Config = {
       $types: "./src/lib/types",
       $db: "./src/db",
       $constants: "./src/lib/server/constants",
-      $ctx: "./src/context"
+      $ctx: "./src/context",
+      $routes: "./src/routes"
     },
     csrf: {
       trustedOrigins: ["https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe", "http://localhost:5173", "http://localhost:4173", "http://localhost:3000", "http://localhost:8080"]
