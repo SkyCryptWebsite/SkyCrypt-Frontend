@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from "$app/state";
   import HeaderInfo from "$lib/components/header/Info.svelte";
-  import Settings from "$lib/components/header/Settings.svelte";
+  import Settings from "$lib/components/header/settings";
   import { openCommand } from "$lib/stores/internal";
   import { keybind } from "$lib/stores/preferences";
   import Search from "@lucide/svelte/icons/search";
