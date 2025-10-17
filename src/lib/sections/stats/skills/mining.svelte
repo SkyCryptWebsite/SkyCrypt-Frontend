@@ -71,7 +71,7 @@
         </span>
       </h3>
     </AdditionStat>
-    <AdditionStat text="Crystal Nucleus" data={`Completed ${mining.crystalHollows.nucleusRuns} ${mining.crystalHollows.nucleusRuns > 1 ? "times" : "time"}`} asterisk={true}>
+    <AdditionStat text="Crystal Nucleus" data={`Completed ${mining.crystalHollows.nucleusRuns} ${mining.crystalHollows.nucleusRuns !== 1 ? "times" : "time"}`} asterisk={true}>
       {@const placableCrystals = ["jade", "amber", "amethyst", "sapphire", "topaz"]}
       <h3 class="text-text/85 text-sm font-bold">Crystals:</h3>
       <ul class="mt-0.5 space-y-0.5 text-sm font-bold">
