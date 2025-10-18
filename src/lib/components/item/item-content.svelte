@@ -65,7 +65,7 @@
       </Avatar.Fallback>
     </Avatar.Root>
 
-    <p class="data-[multicolor=true]:bg-background-lore data-[multicolor=false]:text-text relative text-center text-base font-semibold text-wrap uppercase data-[multicolor=true]:rounded-full data-[multicolor=true]:px-2 data-[multicolor=true]:py-1 sm:text-lg" data-multicolor={isMulticolor}>
+    <p class="data-[multicolor=true]:bg-background-lore data-[multicolor=false]:text-text relative min-w-0 text-center text-base font-semibold break-words uppercase data-[multicolor=true]:rounded-full data-[multicolor=true]:px-2 data-[multicolor=true]:py-1 sm:text-lg" data-multicolor={isMulticolor}>
       {@html isMulticolor ? itemNameHtml : removeFormatting(itemNameHtml)}
     </p>
   </div>
