@@ -23,7 +23,7 @@
   let { piece, isInventory, showCount, showRecombobulated = true }: Props = $props();
   let targetNode = $state<HTMLButtonElement | null>(null);
   let hasBeenInViewport = $state(false);
-  let open = $state(false);
+  let tooltipOpen = $state(false);
   let loadingStatus = $state<AvatarImageLoadingStatus>(null!);
 
   const inViewport = new IsInViewport(() => targetNode, { rootMargin: "200px 0px", threshold: 0 });
@@ -43,7 +43,7 @@
   });
 </script>
 
-<Tooltip.Root bind:open disableHoverableContent={true} ignoreNonKeyboardFocus={true} disabled={!inViewport.current} delayDuration={100}>
+<Tooltip.Root bind:open={tooltipOpen} disableHoverableContent={true} ignoreNonKeyboardFocus={true} disabled={!inViewport.current} delayDuration={300}>
   <Tooltip.Trigger
     class={cn(`nice-colors-dark relative flex aspect-square items-center justify-center overflow-clip `, isInventory ? "size-6 p-0 sm:size-16" : `size-18 p-2 ${bgColor}`, { shine: shine && !isInventory }, { "rounded-lg": !isInventory }, $performanceMode ? "" : "transition-all duration-150 ease-out hover:scale-110 active:scale-110")}
     bind:ref={targetNode}
@@ -86,7 +86,7 @@
   </Tooltip.Trigger>
   {#if isHover.current && inViewport.current}
     <Tooltip.Portal>
-      <Tooltip.Content forceMount={inViewport.current} class="bg-background-lore font-icomoon z-50 flex max-h-[calc(96vh-3rem)] max-w-lg flex-col overflow-clip rounded-lg select-text" sideOffset={8} side="right" align="center">
+      <Tooltip.Content forceMount={inViewport.current} class="bg-background-lore font-icomoon z-50 flex max-h-[calc(96vh-3rem)] flex-col overflow-clip rounded-lg select-text" sideOffset={8} side="right" align="center" collisionPadding={8}>
         {#snippet child({ wrapperProps, props, open })}
           {#if open}
             <div {...wrapperProps}>

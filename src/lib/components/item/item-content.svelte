@@ -56,7 +56,7 @@
   });
 </script>
 
-<div class="conents" {@attach animateObfuscatedText}>
+<div class="contents" {@attach animateObfuscatedText}>
   <div class={cn(`nice-colors-dark flex flex-nowrap items-center justify-center gap-4 p-5`, { "rounded-t-[10px]": isDrawer }, bgColor)}>
     <Avatar.Root class="shrink-0 px-2">
       <Avatar.Image loading="lazy" src={piece?.texture_path} alt={piece?.display_name} class="data-[enchanted=true]:enchanted h-auto w-8 flex-none shrink-0 overflow-hidden [image-rendering:pixelated]" data-enchanted={enchanted} />
