@@ -31,8 +31,9 @@ RUN corepack enable pnpm && corepack install -g pnpm@latest-10
 
 WORKDIR /app
 
-COPY --from=builder /app/node_modules node_modules/
 COPY --from=builder /app/build build/
+COPY --from=builder /app/node_modules node_modules/
+COPY --from=builder /app/static static/
 COPY package.json .
 COPY pnpm-lock.yaml .
 
