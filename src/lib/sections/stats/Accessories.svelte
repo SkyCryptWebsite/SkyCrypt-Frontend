@@ -8,7 +8,7 @@
   import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
   import Items from "$lib/layouts/stats/Items.svelte";
   import { api, SectionName } from "$lib/shared/api";
-  import { RARITY_COLORS } from "$lib/shared/constants/items";
+  import { RARITY_COLORS } from "$lib/shared/constants/rarities";
   import { STATS_DATA } from "$lib/shared/constants/stats";
   import * as helper from "$lib/shared/helper";
   import { calculatePercentage } from "$lib/shared/helper";
@@ -25,25 +25,25 @@
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
 
-  const query = createQuery<AccessoriesV2>({
+  const query = createQuery<AccessoriesV2>(() => ({
     queryKey: [SectionName.ACCESSORIES, profileUUID, profileId],
     queryFn: () => api().getSection(SectionName.ACCESSORIES, profileUUID, profileId)
-  });
+  }));
 
   const accessories = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data;
+    if (query.isPending || query.error || !query.data) return;
+    return query.data[SectionName.ACCESSORIES];
   });
 </script>
 
 <Section id="Accessories" {order}>
-  {#if $query.isPending}
+  {#if query.isPending}
     <LoaderCircle class="text-icon animate-spin" />
   {/if}
-  {#if $query.error}
-    <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
+  {#if query.error}
+    <Notice title="An unexpected error has occurred" type="error" error={query.error} />
   {/if}
-  {#if $query.isSuccess && $query.data && accessories}
+  {#if query.isSuccess && query.data && accessories}
     {#if accessories.magicalPower?.total}
       <Items>
         {#snippet text()}
@@ -140,7 +140,7 @@
                       <li>
                         <span style="color: var(--§{RARITY_COLORS[accessories.magicalPower.hegemony.rarity]}">Hegemony Artifact: </span>
                         =
-                        <span style="color: var(--§6)"> +{accessories.magicalPower.hegemony} MP</span>
+                        <span style="color: var(--§6)"> +{accessories.magicalPower.hegemony.amount} MP</span>
                       </li>
                     {/if}
                   </ul>

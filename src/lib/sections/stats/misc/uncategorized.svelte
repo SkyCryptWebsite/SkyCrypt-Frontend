@@ -7,7 +7,7 @@
   import type { MiscV2 } from "$types/statsv2";
   import { format } from "numerable";
 
-  const ctx = getDynamicCtx<() => MiscV2 | undefined>(SectionName.MISC);
+  const ctx = getDynamicCtx<() => MiscV2[SectionName.MISC] | undefined>(SectionName.MISC);
   const misc = $derived(ctx?.data?.());
 </script>
 
@@ -18,7 +18,7 @@
       <div>
         <AdditionStat text="Soulflow" data={format(misc.uncategorized.soulflow as number, "0.00a")} />
         <AdditionStat text="Bank Cooldown" data={misc.uncategorized.personal_bank as number} maxed={misc.uncategorized.personal_bank === "None"} />
-        <AdditionStat text="Teleporter Pill Consumed" data={misc.uncategorized.teleporter_pill_consumed ? "Yes" : "No"} maxed={misc.uncategorized.teleporter_pill_consumed !== undefined} />
+        <AdditionStat text="Teleporter Pill Consumed" data={misc.uncategorized.teleporter_pill_consumed ? "Yes" : "No"} maxed={misc.uncategorized.teleporter_pill_consumed === true} />
         <AdditionStat text="Metaphysical Serum" data={misc.uncategorized.metaphysical_serum as number} maxed={misc.uncategorized.metaphysical_serum === 3} />
         <AdditionStat text="Reaper Peppers Eaten" data={misc.uncategorized.reaper_peppers_eaten as number} maxed={misc.uncategorized.reaper_peppers_eaten === 5} />
         <AdditionStat text="McGrubber Burger" data={misc.uncategorized.mcgrubber_burger as number} maxed={misc.uncategorized.mcgrubber_burger === 5} />

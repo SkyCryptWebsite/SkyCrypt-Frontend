@@ -8,7 +8,7 @@
   import { tz } from "@date-fns/tz";
   import { formatDate, formatDistanceToNowStrict } from "date-fns";
 
-  const ctx = getDynamicCtx<() => MiscV2 | undefined>(SectionName.MISC);
+  const ctx = getDynamicCtx<() => MiscV2[SectionName.MISC] | undefined>(SectionName.MISC);
   const misc = $derived(ctx?.data?.());
 </script>
 
@@ -18,15 +18,17 @@
     {#snippet text()}
       <div>
         {#each Object.entries(misc.claimed_items) as [item, time], index (index)}
-          <AdditionStat
-            text={item.replaceAll("_", " ")}
-            data={formatDistanceToNowStrict(time, {
-              addSuffix: true,
-              in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone)
-            })}
-            asterisk={true}>
-            {formatDate(time, "'Claimed on' dd MMMM yyyy 'at' HH:mm", { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) })}
-          </AdditionStat>
+          {#if time}
+            <AdditionStat
+              text={item.replaceAll("_", " ")}
+              data={formatDistanceToNowStrict(time, {
+                addSuffix: true,
+                in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone)
+              })}
+              asterisk={true}>
+              {formatDate(time, "'Claimed on' dd MMMM yyyy 'at' HH:mm", { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) })}
+            </AdditionStat>
+          {/if}
         {/each}
       </div>
     {/snippet}

@@ -8,9 +8,10 @@
   import type { IsHover } from "$lib/hooks/is-hover.svelte";
   import { api } from "$lib/shared/api";
   import { calculatePercentage, formatNumber, getRarityClass, renderLore } from "$lib/shared/helper";
+  import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { content } from "$lib/stores/internal";
-  import type { Garden } from "$types/processed/profile/garden";
+  import type { Garden as FullGarden } from "$types/processed/profile/garden";
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
   import Image from "@lucide/svelte/icons/image";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
@@ -18,6 +19,8 @@
   import { Avatar, Collapsible, Progress, Tooltip } from "bits-ui";
   import { format } from "numerable";
   import { getContext } from "svelte";
+
+  type Garden = FullGarden["garden"];
 
   const ctx = getProfileCtx();
   const profile = $derived(ctx.profile);
@@ -28,15 +31,15 @@
   let sectionOpen: boolean = $state(false);
   const queryEnabled = $derived(!gardenLocked && sectionOpen);
 
-  const query = createQuery<Garden>({
+  const query = createQuery<FullGarden>(() => ({
     queryKey: ["garden", profileUUID, profileId],
-    queryFn: () => api().getGarden(profileUUID),
+    queryFn: () => api().getGarden(profileId),
     enabled: queryEnabled
-  });
+  }));
 
   const garden = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data;
+    if (query.isPending || query.error || !query.data) return;
+    return query.data.garden;
   });
 
   const isHover = getContext<IsHover>("isHover");
@@ -46,8 +49,8 @@
   bind:open={sectionOpen}
   onOpenChange={(open) => {
     if (open) {
-      if ($query.isSuccess) return;
-      if (queryEnabled) $query.refetch();
+      if (query.isSuccess) return;
+      if (queryEnabled) query.refetch();
     }
   }}>
   <Collapsible.Trigger class="group flex items-center gap-0.5">
@@ -58,13 +61,13 @@
     {#if gardenLocked}
       <p>This player does not have the Garden unlocked.</p>
     {:else}
-      {#if $query.isPending}
+      {#if query.isPending}
         <LoaderCircle class="text-icon animate-spin" />
       {/if}
-      {#if $query.error}
-        <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
+      {#if query.error}
+        <Notice title="An unexpected error has occurred" type="error" error={query.error} />
       {/if}
-      {#if $query.isSuccess && $query.data && garden}
+      {#if query.isSuccess && query.data && garden}
         {@const hasMaxed = garden.level.maxed}
         <div class="mt-2">
           <AdditionStat text="Level" data="{garden.level.level} / {garden.level.maxLevel}" maxed={hasMaxed} asterisk={true}>
@@ -149,7 +152,7 @@
     <div class="grid grid-cols-[repeat(5,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
       {#each garden.plot.layout as plot, index (index)}
         {#snippet tooltipContent()}
-          <p>{@html renderLore(plot.display_name)}</p>
+          <p {@attach animateObfuscatedText}>{@html renderLore(plot.display_name)}</p>
         {/snippet}
         <Tooltip.Root disableCloseOnTriggerClick={false}>
           <Tooltip.Trigger onclick={() => content.set(tooltipContent)}>

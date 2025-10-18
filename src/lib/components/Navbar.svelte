@@ -9,7 +9,6 @@
   import ChevronRight from "@lucide/svelte/icons/chevron-right";
   import { Button, ScrollArea } from "bits-ui";
   import { onDestroy, onMount, tick, type Snippet } from "svelte";
-
   const { children }: { children?: Snippet } = $props();
 
   const ctx = getProfileCtx();
@@ -88,10 +87,21 @@
       console.warn("Navbar element is not defined");
       return;
     }
-    observer = new IntersectionObserver(([e]) => (pinned = e.intersectionRatio < 1), {
-      threshold: [1],
-      rootMargin: `-${parseInt(window.getComputedStyle(navbarElement).getPropertyValue("top")) + 1}px 0px` // shrink the viewport to element top value +1px to trigger observer when element has reach it's sticky position
-    });
+
+    const topValue = parseInt(window.getComputedStyle(navbarElement).getPropertyValue("top"));
+
+    observer = new IntersectionObserver(
+      ([e]) => {
+        // Check if the element has reached its sticky position by comparing
+        // its actual top position to the CSS top value
+        const hasReachedStickyPosition = e.boundingClientRect.top <= topValue;
+        pinned = hasReachedStickyPosition && e.intersectionRatio < 1;
+      },
+      {
+        threshold: [1],
+        rootMargin: `-${topValue + 1}px 0px` // shrink the viewport to element top value +1px to trigger observer when element has reach it's sticky position
+      }
+    );
 
     observer.observe(navbarElement);
   }
@@ -116,6 +126,7 @@
     if (navbarElement && $tabValue) {
       tick().then(() => {
         scrollToTab({ element: allLinks[$tabValue], smooth: true });
+        // eslint-disable-next-line svelte/no-navigation-without-resolve
         replaceState("#" + $tabValue, page.state);
       });
     }

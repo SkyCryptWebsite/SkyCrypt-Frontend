@@ -77,8 +77,8 @@
     </div>
   </div>
 {:then stats}
-  {#if stats}
-    <Main data={stats} />
+  {#if stats.stats}
+    <Main data={stats.stats} />
   {/if}
 {:catch e}
   <div class="flex h-screen items-center justify-center">

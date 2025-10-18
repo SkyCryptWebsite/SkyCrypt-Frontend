@@ -1,7 +1,7 @@
 <script lang="ts">
   import { browser, dev } from "$app/environment";
   import { beforeNavigate } from "$app/navigation";
-  import { page } from "$app/state";
+  import { page, updated } from "$app/state";
   import Header from "$lib/components/header/Header.svelte";
   import { SettingsTab } from "$lib/components/header/types";
   import PerformanceMode from "$lib/components/PerformanceMode.svelte";
@@ -136,6 +136,12 @@
       openCommand.set(false);
     }, 1000);
   });
+
+  beforeNavigate(({ willUnload, to }) => {
+    if (updated.current && !willUnload && to?.url) {
+      location.href = to.url.href;
+    }
+  });
 </script>
 
 <svelte:document onkeydown={handleKeydown} />
@@ -186,7 +192,11 @@
     }
   }} />
 
-<Header />
+{#if page.url.origin.includes("cupcake") || dev}
+  {#await import("$lib/components/BetaNotice.svelte") then { default: BetaNotice }}
+    <BetaNotice />
+  {/await}
+{/if}
 
 {#if browser && !$performanceMode}
   <PerformanceMode />
@@ -195,6 +205,8 @@
 <div class="pointer-events-none fixed inset-0 z-[-1] h-dvh w-screen [background-image:var(--bg-url)] bg-cover bg-scroll bg-center bg-no-repeat"></div>
 
 <QueryClientProvider client={data.queryClient}>
+  <Header />
+
   <Tooltip.Provider delayDuration={0}>
     {@render children()}
   </Tooltip.Provider>
@@ -307,7 +319,7 @@
                 {#if !ign || recentSearch.ign !== ign}
                   <Command.LinkItem value={recentSearch.ign} href="/stats/{recentSearch.ign}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[recentSearch.ign, "profile", "player", "favorite", "favorites"]}>
                     <Avatar.Root class="bg-text/10 size-4 shrink-0">
-                      <Avatar.Image loading="lazy" src={recentSearch.uuid ? `https://crafatar.com/avatars/${recentSearch.uuid}?size=64&overlay` : "https://mc-heads.net/avatar/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40/64"} alt={recentSearch.ign} class="aspect-square size-4 " />
+                      <Avatar.Image loading="lazy" src={recentSearch.uuid ? `https://crafatar.com/avatars/${recentSearch.uuid}?size=64&overlay` : "https://mc-heads.net/avatar/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40/64"} alt={recentSearch.ign} class="aspect-square size-4 [image-rendering:pixelated]" />
                       <Avatar.Fallback class="text-text/60 flex h-full items-center justify-center text-lg font-semibold uppercase">
                         {recentSearch.ign.slice(0, 2)}
                       </Avatar.Fallback>
@@ -328,7 +340,7 @@
                 {#if !ign || favorite.ign !== ign}
                   <Command.LinkItem value={favorite.ign} href="/stats/{favorite.ign}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[favorite.ign, favorite.uuid, "profile", "player", "favorite", "favorites"]}>
                     <Avatar.Root class="bg-text/10 size-4 shrink-0">
-                      <Avatar.Image loading="lazy" src={`https://crafatar.com/avatars/${favorite.uuid}?size=64&overlay`} alt={favorite.ign} class="aspect-square size-4 " />
+                      <Avatar.Image loading="lazy" src={`https://crafatar.com/avatars/${favorite.uuid}?size=64&overlay`} alt={favorite.ign} class="aspect-square size-4 [image-rendering:pixelated]" />
                       <Avatar.Fallback class="text-text/60 flex h-full items-center justify-center text-lg font-semibold uppercase">
                         {favorite.ign.slice(0, 2)}
                       </Avatar.Fallback>

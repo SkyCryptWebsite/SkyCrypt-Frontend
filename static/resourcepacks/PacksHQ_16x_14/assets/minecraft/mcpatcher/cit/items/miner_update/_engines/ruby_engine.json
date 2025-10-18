@@ -1,6 +1,0 @@
-{
-	"parent": "item/phq/engine",
-	"textures": {
-		"base": "./ruby_engine.png"
-	}
-}

@@ -1,6 +1,0 @@
-{
-	"parent": "item/phq/engine",
-	"textures": {
-		"base": "./mithril_engine.png"
-	}
-}

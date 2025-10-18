@@ -9,6 +9,7 @@
   import Items from "$lib/layouts/stats/Items.svelte";
   import { api, SectionName } from "$lib/shared/api";
   import { getRarityClass, renderLore } from "$lib/shared/helper";
+  import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
   import { cn } from "$lib/shared/utils";
   import type { GearV2 } from "$types/statsv2";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
@@ -22,33 +23,33 @@
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
 
-  const query = createQuery<GearV2>({
+  const query = createQuery<GearV2>(() => ({
     queryKey: [SectionName.GEAR, profileUUID, profileId],
     queryFn: () => api().getSection(SectionName.GEAR, profileUUID, profileId)
-  });
+  }));
 
   const gear = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data;
+    if (query.isPending || query.error || !query.data) return;
+    return query.data[SectionName.GEAR];
   });
 
   const { armor, equipment, wardrobe, weapons } = $derived(gear!);
   const firstWardrobeItems = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data || !wardrobe) return [];
+    if (query.isPending || query.error || !query.data || !wardrobe) return [];
     if (wardrobe.length === 0) return [];
     return wardrobe.map((wardrobeItems) => wardrobeItems.find((piece) => piece));
   });
 </script>
 
 <Section id="Gear" {order}>
-  {#if $query.isPending}
+  {#if query.isPending}
     <LoaderCircle class="text-icon animate-spin" />
   {/if}
-  {#if $query.error}
-    <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
+  {#if query.error}
+    <Notice title="An unexpected error has occurred" type="error" error={query.error} />
   {/if}
 
-  {#if $query.isSuccess && gear}
+  {#if query.isSuccess && gear}
     <Items subtitle="Armor">
       {#snippet text()}
         {#if armor.armor.length > 0 && !armor.armor.every((piece) => !piece.display_name)}
@@ -113,27 +114,27 @@
       </Items>
     {/if}
 
-    {#if weapons.weapons.length}
-      <Items subtitle="Weapons">
-        {#snippet text()}
+    <Items subtitle="Weapons">
+      {#snippet text()}
+        {#if weapons.weapons.length}
           <div>
             {#if weapons.highest_priority_weapon?.display_name}
-              <p class="font-bold">
+              <p class="font-bold" {@attach animateObfuscatedText}>
                 <span class="text-text/60">Active Weapon: </span>
                 {@html renderLore(weapons.highest_priority_weapon.display_name)}
               </p>
             {/if}
           </div>
-        {/snippet}
-
-        {#if weapons.weapons.length}
-          {#each weapons.weapons as weapon, index (index)}
-            <Item piece={weapon} />
-          {/each}
+        {:else}
+          <p class="space-x-0.5 leading-6">{profile.username} has no weapons</p>
         {/if}
-      </Items>
-    {:else}
-      <p class="space-x-0.5 leading-6">{profile.username} has no weapons</p>
-    {/if}
+      {/snippet}
+
+      {#if weapons.weapons.length}
+        {#each weapons.weapons as weapon, index (index)}
+          <Item piece={weapon} />
+        {/each}
+      {/if}
+    </Items>
   {/if}
 </Section>

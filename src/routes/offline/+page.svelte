@@ -1,13 +1,14 @@
 <script lang="ts">
   import { dev } from "$app/environment";
   import { goto } from "$app/navigation";
+  import { resolve } from "$app/paths";
   import { cn } from "$lib/shared/utils";
   import { performanceMode } from "$lib/stores/preferences";
   import RefreshCw from "@lucide/svelte/icons/refresh-cw";
   import { Button } from "bits-ui";
 
   if (navigator.onLine && !dev) {
-    goto("/");
+    goto(resolve("/"));
   }
 </script>
 

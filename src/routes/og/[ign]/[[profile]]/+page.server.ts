@@ -1,28 +1,31 @@
-import { REDIS } from "$lib/server/db/redis.js";
-import { getProfile, getUUID } from "$lib/server/lib.js";
-import { isUUID } from "$params/uuid.js";
+import { env } from "$env/dynamic/public";
 import type { EmbedV2 } from "$types/statsv2";
 import { error } from "@sveltejs/kit";
+import ky from "ky";
 import type { PageServerLoad } from "./$types";
+const { PUBLIC_SERVER_API_URL } = env;
 
 export const load = (async ({ params }) => {
   const { ign: paramPlayer, profile: paramProfile = null } = params;
 
-  const uuid = await getUUID(paramPlayer, { cache: true });
-  const profileId = !paramProfile || !isUUID(paramProfile) ? (await getProfile(uuid, paramProfile, { cache: true })).profile_id : paramProfile;
+  try {
+    const embedData = await ky(`embed/${paramPlayer}${paramProfile ? "/" + paramProfile : ""}`, {
+      prefixUrl: PUBLIC_SERVER_API_URL
+    }).json<{ embed: EmbedV2 } | { error?: string }>();
 
-  const data = await REDIS.get(`embed_data:${uuid}:${profileId}`);
-  if (!data) {
-    error(404, "Embed data not found");
+    if ("error" in embedData && embedData.error) {
+      error(500, embedData.error);
+    }
+
+    if ("embed" in embedData) {
+      return {
+        embed: embedData.embed
+      };
+    }
+
+    error(500, "Invalid response format");
+  } catch (err) {
+    console.error("Error fetching embed data:", err);
+    error(500, "Failed to fetch embed data");
   }
-
-  const embedData = JSON.parse(data) as EmbedV2 & { message?: string };
-
-  if (embedData.message) {
-    error(500, embedData.message);
-  }
-
-  return {
-    embed: embedData as EmbedV2
-  };
 }) satisfies PageServerLoad;

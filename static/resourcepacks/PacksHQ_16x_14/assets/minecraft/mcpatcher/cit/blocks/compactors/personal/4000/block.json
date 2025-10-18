@@ -1,8 +1,0 @@
-{
-    "parent": "item/phq/orientable",
-    "textures": {
-        "top": "./block_top",
-        "front": "./block_front",
-        "side": "./block_side"
-    }
-}

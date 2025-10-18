@@ -16,15 +16,15 @@
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
 
-  const query = createQuery<PlayerStatsV2>({
+  const query = createQuery<PlayerStatsV2>(() => ({
     queryKey: [SectionName.STATS, profileUUID, profileId],
     queryFn: () => api().getSection(SectionName.STATS, profileUUID, profileId),
     enabled: false
-  });
+  }));
 
   const stats = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data;
+    if (query.isPending || query.error || !query.data) return;
+    return query.data.stats;
   });
 </script>
 
@@ -32,16 +32,16 @@
   <Collapsible.Root
     bind:open={openState}
     onOpenChange={(open) => {
-      if (open && !$query.isFetched) {
-        $query.refetch();
+      if (open && !query.isFetched) {
+        query.refetch();
       }
     }}>
     <Collapsible.Content forceMount={true} class="columns-[12.5rem]">
       {#snippet child({ props, open })}
-        {#if open && $query.error}
-          <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
+        {#if open && query.error}
+          <Notice title="An unexpected error has occurred" type="error" error={query.error} />
         {/if}
-        {#if open && $query.isSuccess && $query.data && stats}
+        {#if open && query.isSuccess && query.data && stats}
           <div {...props} transition:slide={{ duration: 300, easing: cubicOut, axis: "y" }}>
             {#each Object.entries(stats) as [statName, statData], index (index)}
               {#if statData.total > 0}
@@ -53,7 +53,7 @@
       {/snippet}
     </Collapsible.Content>
     <Collapsible.Trigger class="bg-text/10 mx-auto mt-3.5 w-full rounded-full p-2.5 text-xs font-semibold uppercase">
-      {#if $query.isLoading}
+      {#if query.isLoading}
         <LoaderCircle class="text-icon mx-auto animate-spin" />
       {:else}
         {openState ? "Hide Stats" : "Show Stats"}

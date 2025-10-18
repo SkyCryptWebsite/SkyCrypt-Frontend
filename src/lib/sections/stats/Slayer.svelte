@@ -22,27 +22,27 @@
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
 
-  const query = createQuery<SlayerV2>({
+  const query = createQuery<SlayerV2>(() => ({
     queryKey: [SectionName.SLAYER, profileUUID, profileId],
     queryFn: () => api().getSection(SectionName.SLAYER, profileUUID, profileId)
-  });
+  }));
 
   const slayer = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data;
+    if (query.isPending || query.error || !query.data) return;
+    return query.data[SectionName.SLAYER];
   });
 </script>
 
 <Section id="Slayer" {order}>
-  {#if $query.isPending}
+  {#if query.isPending}
     <LoaderCircle class="text-icon animate-spin" />
   {/if}
-  {#if $query.error}
-    <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
+  {#if query.error}
+    <Notice title="An unexpected error has occurred" type="error" error={query.error} />
   {/if}
-  {#if $query.isSuccess && $query.data && slayer}
+  {#if query.isSuccess && query.data && slayer}
     <div class="space-y-4">
-      {#if slayer.unlocked === false}
+      {#if slayer.totalSlayerExp === 0}
         <p class="space-x-0.5 leading-6">{profile.username} hasn't unlocked Slayers yet.</p>
       {:else}
         <div class="pt-4 pb-1.5">
@@ -54,7 +54,7 @@
               <div class="bg-background/30 relative flex min-w-[min(20.625rem,100vw)] flex-col items-center gap-1 space-y-5 overflow-hidden rounded-lg">
                 <div class="border-icon flex w-full items-center justify-center gap-1.5 border-b-2 py-2 text-center font-semibold uppercase">
                   <Avatar.Root>
-                    <Avatar.Image loading="lazy" src={value.texture} class="size-8 object-contain" />
+                    <Avatar.Image loading="lazy" src={value.texture} class="size-8 object-contain [image-rendering:pixelated]" />
                     <Avatar.Fallback>
                       <Image class="size-8" />
                     </Avatar.Fallback>

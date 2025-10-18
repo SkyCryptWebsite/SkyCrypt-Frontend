@@ -33,6 +33,7 @@
   /* Animations */
   --animate-shine: shine 4s infinite;
   --animate-spin-slow: spin 3s linear infinite;
+  --animate-chroma: chroma-bg 40000s linear infinite;
 
   @keyframes shine {
     0% {
@@ -41,6 +42,16 @@
     33%,
     100% {
       transform: translateY(-120%);
+    }
+  }
+
+  @keyframes chroma-bg {
+    from {
+      background-position-x: 0;
+    }
+
+    to {
+      background-position-x: 999999px;
     }
   }
 
@@ -157,14 +168,6 @@
     color-scheme: dark;
   }
 
-  [data-tooltip-content] {
-    @apply text-sm text-pretty;
-  }
-
-  [data-arrow] {
-    @apply text-background-grey;
-  }
-
   ::-webkit-scrollbar {
     width: 10px;
   }
@@ -202,6 +205,18 @@
 
   .virtual-list-inner {
     @apply overflow-x-auto overflow-y-clip;
+  }
+
+  .lore-enchantment {
+    @apply group-data-[rainbow=true]/html:chroma-gradient group-data-[rainbow=false]/html:text-minecraft-6!;
+  }
+
+  [data-tooltip-content] {
+    @apply text-sm text-pretty;
+  }
+
+  [data-arrow] {
+    @apply text-background-grey;
   }
 }
 
@@ -304,4 +319,9 @@
   --§d: oklch(0.74 0.23 336.42);
   --§e: oklch(0.94 0.16 109.12);
   --§f: oklch(1 0 0);
+}
+
+@utility chroma-gradient {
+  @apply animate-chroma relative bg-size-[8.875rem_8.875rem] bg-clip-text bg-origin-padding !text-transparent;
+  background-image: repeating-linear-gradient(-45deg, oklch(62.8% 0.258 29.2), oklch(77.2% 0.174 64.6), oklch(93.1% 0.229 123), oklch(87% 0.29 142), oklch(87.2% 0.255 148), oklch(90.5% 0.155 195), oklch(56.3% 0.241 261), oklch(46.6% 0.304 271), oklch(62.7% 0.307 316), oklch(65.3% 0.268 355), oklch(62.8% 0.258 29.2) 100px);
 }

@@ -7,6 +7,7 @@ export const sectionOrderPreferences = persisted<SectionID[]>("sectionOrderPrefe
 export const performanceMode = persisted<boolean>("performanceMode", false);
 export const keybind = persisted<string>("keybind", "/");
 export const showGlint = persisted<boolean>("showGlint", true);
+export const rainbowEnchantments = persisted<boolean>("rainbowEnchantments", false);
 
 // Check for invalid section order and reset if found
 if (browser) {

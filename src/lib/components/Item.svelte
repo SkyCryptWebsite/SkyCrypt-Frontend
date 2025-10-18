@@ -1,7 +1,7 @@
 <script lang="ts">
   import ItemContent from "$lib/components/item/item-content.svelte";
   import type { IsHover } from "$lib/hooks/is-hover.svelte";
-  import { RARITIES, RARITY_COLORS } from "$lib/shared/constants/items";
+  import { RARITIES, RARITY_COLORS } from "$lib/shared/constants/rarities";
   import { getRarityClass, shouldShine } from "$lib/shared/helper";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { itemContent, itemContentSpecial, showItem } from "$lib/stores/internal";

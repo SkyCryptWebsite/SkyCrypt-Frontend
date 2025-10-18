@@ -1,9 +1,12 @@
+import { env } from "$env/dynamic/public";
 import { api_token } from "$lib/stores/internal";
 import type { Garden } from "$types/processed/profile/garden";
 import type { ProcessedSkyBlockItem } from "$types/stats";
 import type { AccessoriesV2, BestiaryV2, CollectionsV2, CrimsonIsleV2, DungeonsV2, GearV2, InventoryV2, InventoryV2All, MinionsV2, MiscV2, NetworthV2, PetsV2, PlayerStatsV2, RiftV2, SkillsV2, SlayerV2 } from "$types/statsv2";
 import ky from "ky";
 import { get } from "svelte/store";
+
+const { PUBLIC_API_URL } = env;
 
 const customKy = ky.create({
   hooks: {
@@ -115,6 +118,7 @@ export const api = () => {
   }
 
   const extendedCustomKy = customKy.extend({
+    prefixUrl: PUBLIC_API_URL,
     hooks: {
       beforeRequest: [
         async (request) => {
@@ -146,7 +150,7 @@ export const api = () => {
 
   return {
     getItem: async (itemUUID: string): Promise<ProcessedSkyBlockItem> => {
-      const data = await extendedCustomKy(`/api/v2/item/${itemUUID}`).json<ProcessedSkyBlockItem & { message?: string }>();
+      const data = await extendedCustomKy(`item/${itemUUID}`).json<ProcessedSkyBlockItem & { message?: string }>();
 
       if (data.message) {
         throw new Error(data.message);
@@ -154,8 +158,10 @@ export const api = () => {
       return data;
     },
     getSection: async <T extends keyof SectionTypeMap>(sectionName: T, ign: string, profile?: string): Promise<SectionTypeMap[T]> => {
-      const data = await extendedCustomKy(`/api/v2/${sectionName}/${ign}${profile ? "/" + profile : ""}`).json<SectionTypeMap[T] & { message?: string }>();
+      const data = await extendedCustomKy(`${sectionName}/${ign}${profile ? "/" + profile : ""}`).json<SectionTypeMap[T] & { message?: string }>();
+
       if (data.message) {
+        console.error(data.message);
         throw new Error(data.message);
       }
       return data;
@@ -163,16 +169,18 @@ export const api = () => {
     // Generic inventory function - returns InventoryV2 if tab specified, InventoryV2All if not
     getInventory: <T extends string | undefined = undefined>(ign: string, profile: string, inventoryTab?: T, searchParam?: string): Promise<T extends string ? InventoryV2 : InventoryV2All> => {
       return (async () => {
-        const data = await extendedCustomKy(`/api/v2/inventory/${ign}/${profile}${inventoryTab ? `/${inventoryTab}` : ""}${searchParam ? `/${encodeURIComponent(searchParam)}` : ""}`).json<(T extends string ? InventoryV2 : InventoryV2All) & { message?: string }>();
+        const data = await extendedCustomKy(`inventory/${ign}/${profile}${inventoryTab ? `/${inventoryTab}` : ""}${searchParam ? `/${encodeURIComponent(searchParam)}` : ""}`).json<(T extends string ? InventoryV2 : InventoryV2All) & { message?: string }>();
         if (data.message) {
+          console.error(data.message);
           throw new Error(data.message);
         }
         return data;
       })();
     },
     getGarden: async (profile: string): Promise<Garden> => {
-      const data = await extendedCustomKy(`/api/v2/garden/${profile}`).json<Garden & { message?: string }>();
+      const data = await extendedCustomKy(`garden/${profile}`).json<Garden & { message?: string }>();
       if (data.message) {
+        console.error(data.message);
         throw new Error(data.message);
       }
       return data;

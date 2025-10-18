@@ -51,7 +51,7 @@ runs:
         cache: "pnpm"
 
     - name: Install dependencies
-      run: pnpm install --frozen-lockfile
+      run: pnpm fetch && pnpm install --frozen-lockfile
       shell: bash
       working-directory: ${{ inputs.cwd }}
       env:

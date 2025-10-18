@@ -1,13 +1,19 @@
+import { env } from "$env/dynamic/public";
 import ky from "ky";
 import type { PageServerLoad } from "./$types";
 import { Role } from "./enums";
 
-export const load = (async ({ url }) => {
+const { PUBLIC_SERVER_API_URL } = env;
+
+export const load = (async () => {
   const getUsername = async (uuid: string): Promise<string> => {
     try {
-      const { username } = await ky(`${url.origin}/api/username/${uuid}`).json<{ username: string }>();
+      const { username } = await ky(`username/${uuid}`, {
+        prefixUrl: PUBLIC_SERVER_API_URL
+      }).json<{ username: string }>();
       return username;
-    } catch {
+    } catch (error) {
+      console.error(error);
       return "???";
     }
   };

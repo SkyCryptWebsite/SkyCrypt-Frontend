@@ -1,5 +1,5 @@
 import { validateURL } from "$lib/shared/helper";
-import { z } from "zod/mini";
+import { z } from "zod/v4-mini";
 
 export const schema = z.object({
   query: z.string().check(

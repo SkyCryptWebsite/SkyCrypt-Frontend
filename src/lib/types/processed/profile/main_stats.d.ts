@@ -1,4 +1,4 @@
-import type { NetworthResult } from "skyhelper-networth";
+import type { NetworthResult } from "$types/networth-result";
 
 export type MainStats = {
   joined: number;

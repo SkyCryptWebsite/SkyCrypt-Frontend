@@ -90,10 +90,16 @@ jobs:
     permissions:
       packages: write
       contents: read
+      id-token: write
+      attestations: write
 
     steps:
       - name: Git checkout
         uses: actions/checkout@v4
+
+      - name: Assign short SHA
+        id: short_sha
+        run: echo "hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Registry login
         uses: docker/login-action@v3
@@ -109,9 +115,19 @@ jobs:
           images: ${{ env.CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Build and Push
+        id: push
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
+          build-args: |
+            PUBLIC_COMMIT_HASH=${{ steps.short_sha.outputs.hash }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Attest Build Provenance
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-name: ${{ env.CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true

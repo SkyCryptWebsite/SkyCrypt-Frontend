@@ -26,14 +26,14 @@
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
 
-  const query = createQuery<DungeonsV2>({
+  const query = createQuery<DungeonsV2>(() => ({
     queryKey: [SectionName.DUNGEONS, profileUUID, profileId],
     queryFn: () => api().getSection(SectionName.DUNGEONS, profileUUID, profileId)
-  });
+  }));
 
   const dungeons = $derived.by(() => {
-    if ($query.isPending || $query.error || !$query.data) return;
-    return $query.data;
+    if (query.isPending || query.error || !query.data) return;
+    return query.data[SectionName.DUNGEONS];
   });
 
   function formatDuration(end: number) {
@@ -51,15 +51,15 @@
 </script>
 
 <Section id="Dungeons" {order}>
-  {#if $query.isPending}
+  {#if query.isPending}
     <LoaderCircle class="text-icon animate-spin" />
   {/if}
-  {#if $query.error}
-    <Notice title="An unexpected error has occurred" type="error" error={$query.error} />
+  {#if query.error}
+    <Notice title="An unexpected error has occurred" type="error" error={query.error} />
   {/if}
-  {#if $query.isSuccess && $query.data && dungeons}
+  {#if query.isSuccess && query.data && dungeons}
     <div class="space-y-4">
-      {#if dungeons.unlocked === false}
+      {#if dungeons.level.xp === 0}
         <p class="space-x-0.5 leading-6">{profile.username} hasn't unlocked Dungeons yet.</p>
       {:else if dungeons}
         <div class="flex flex-col flex-wrap justify-start gap-x-4 gap-y-2 pt-4 sm:flex-row">
@@ -116,7 +116,7 @@
           <div class="bg-background/30 flex min-w-80 basis-[calc((100%/3)-1.25rem)] flex-col gap-1 rounded-lg">
             <div class="border-icon flex w-full items-center justify-center gap-1.5 border-b-2 py-2 text-center font-semibold uppercase">
               <Avatar.Root>
-                <Avatar.Image loading="lazy" src={catacomb.texture} class="size-8 object-contain" />
+                <Avatar.Image loading="lazy" src={catacomb.texture} class="size-8 object-contain [image-rendering:pixelated]" />
                 <Avatar.Fallback>
                   <Image class="size-8" />
                 </Avatar.Fallback>
