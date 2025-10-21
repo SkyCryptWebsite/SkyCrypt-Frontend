@@ -1,15 +1,12 @@
 <script lang="ts">
-  import { getDynamicCtx } from "$ctx/dynamic.svelte";
+  import { getMiscContext } from "$ctx";
   import AdditionStat from "$lib/components/AdditionStat.svelte";
   import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
   import Items from "$lib/layouts/stats/Items.svelte";
-  import { SectionName } from "$lib/shared/api";
   import { formatTime } from "$lib/shared/helper";
-  import type { MiscV2 } from "$types/statsv2";
   import { format } from "numerable";
-  const ctx = getDynamicCtx<() => MiscV2[SectionName.MISC] | undefined>(SectionName.MISC);
 
-  const misc = $derived(ctx?.data?.());
+  const misc = $derived(getMiscContext());
   const dragons = $derived(misc?.dragons);
 </script>
 

@@ -1,25 +1,24 @@
 <script lang="ts">
-  import { getDynamicCtx } from "$ctx/dynamic.svelte";
+  import { getMiscContext } from "$ctx";
   import AdditionStat from "$lib/components/AdditionStat.svelte";
   import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
   import Items from "$lib/layouts/stats/Items.svelte";
-  import { SectionName } from "$lib/shared/api";
-  import type { MiscV2 } from "$types/statsv2";
   import { format } from "numerable";
 
-  const ctx = getDynamicCtx<() => MiscV2[SectionName.MISC] | undefined>(SectionName.MISC);
-  const misc = $derived(ctx?.data?.());
+  const misc = $derived(getMiscContext());
 </script>
 
 {#if misc && misc.damage != null}
   <SectionSubtitle class="uppercase!">Damage</SectionSubtitle>
   <Items>
     {#snippet text()}
-      <div>
-        {#each Object.entries(misc.damage) as [text, data], index (index)}
-          <AdditionStat text={text.replaceAll("_", " ")} data={format(data.toFixed(3))} />
-        {/each}
-      </div>
+      {#if misc.damage}
+        <div>
+          {#each Object.entries(misc.damage) as [text, data], index (index)}
+            <AdditionStat text={text.replaceAll("_", " ")} data={format(data.toFixed(3))} />
+          {/each}
+        </div>
+      {/if}
     {/snippet}
   </Items>
 {/if}

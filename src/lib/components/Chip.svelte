@@ -1,11 +1,11 @@
 <script lang="ts">
-  import type { IsHover } from "$lib/hooks/is-hover.svelte";
+  import { getHoverContext } from "$ctx";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { content } from "$lib/stores/internal";
   import Image from "@lucide/svelte/icons/image";
   import { Avatar, Tooltip } from "bits-ui";
   import { IsInViewport } from "runed";
-  import { getContext, type Snippet } from "svelte";
+  import { type Snippet } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
 
@@ -42,7 +42,7 @@
   let open = $state(false);
 
   const inViewport = new IsInViewport(() => targetNode, { rootMargin: "200px 0px", threshold: 0 });
-  const isHover = getContext<IsHover>("isHover");
+  const isHover = getHoverContext();
 
   $effect(() => {
     if (inViewport.current && !hasBeenInViewport) {

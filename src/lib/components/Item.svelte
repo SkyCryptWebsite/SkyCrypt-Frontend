@@ -1,20 +1,18 @@
 <script lang="ts">
+  import { getHoverContext } from "$ctx";
   import ItemContent from "$lib/components/item/item-content.svelte";
-  import type { IsHover } from "$lib/hooks/is-hover.svelte";
+  import type { ModelsStrippedItem } from "$lib/shared/api/orval-generated";
   import { RARITIES, RARITY_COLORS } from "$lib/shared/constants/rarities";
   import { getRarityClass, shouldShine } from "$lib/shared/helper";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { itemContent, itemContentSpecial, showItem } from "$lib/stores/internal";
   import { performanceMode } from "$lib/stores/preferences";
-  import type { ProcessedSkyBlockItem } from "$types/stats";
-  import type { PetProcessedSkyBlockItem } from "$types/statsv2";
   import ImageOff from "@lucide/svelte/icons/image-off";
   import { Avatar, Tooltip, type AvatarImageLoadingStatus } from "bits-ui";
   import { IsInViewport } from "runed";
-  import { getContext } from "svelte";
 
   type Props = {
-    piece: ProcessedSkyBlockItem | PetProcessedSkyBlockItem;
+    piece: ModelsStrippedItem;
     isInventory?: boolean;
     showCount?: boolean;
     showRecombobulated?: boolean;
@@ -27,14 +25,14 @@
   let loadingStatus = $state<AvatarImageLoadingStatus>(null!);
 
   const inViewport = new IsInViewport(() => targetNode, { rootMargin: "200px 0px", threshold: 0 });
-  const skyblockItem = $derived(piece as ProcessedSkyBlockItem);
+  const skyblockItem = $derived(piece);
   const bgColor = $derived(getRarityClass(piece.rarity ?? ("common".toLowerCase() as string), "bg"));
   const recombobulated = $derived(showRecombobulated && (skyblockItem.recombobulated ?? false));
   const enchanted = $derived(skyblockItem?.texture_path?.includes("/api/leather/") ? false : skyblockItem.shiny);
   const shine = $derived(!$performanceMode && shouldShine(skyblockItem));
   const showNumbers = $derived(showCount && (skyblockItem.Count ?? 0) > 1);
 
-  const isHover = getContext<IsHover>("isHover");
+  const isHover = getHoverContext();
 
   $effect(() => {
     if (inViewport.current && !hasBeenInViewport) {

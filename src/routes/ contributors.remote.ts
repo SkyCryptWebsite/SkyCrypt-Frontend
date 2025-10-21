@@ -1,11 +1,11 @@
+import { prerender } from "$app/server";
 import { env } from "$env/dynamic/public";
 import ky from "ky";
-import type { PageServerLoad } from "./$types";
 import { Role } from "./enums";
 
 const { PUBLIC_SERVER_API_URL } = env;
 
-export const load = (async () => {
+export const getContributors = prerender(async () => {
   const getUsername = async (uuid: string): Promise<string> => {
     try {
       const { username } = await ky(`username/${uuid}`, {
@@ -42,7 +42,5 @@ export const load = (async () => {
     }));
   };
 
-  return {
-    contributors: contributors()
-  };
-}) satisfies PageServerLoad;
+  return contributors();
+});

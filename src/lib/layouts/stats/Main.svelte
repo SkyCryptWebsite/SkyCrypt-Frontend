@@ -3,33 +3,32 @@
   import { replaceState } from "$app/navigation";
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
-  import { setProfileCtx } from "$ctx/profile.svelte";
+  import { getHoverContext, setProfileContext } from "$ctx";
   import Item from "$lib/components/Item.svelte";
   import ItemContent from "$lib/components/item/item-content.svelte";
   import Navbar from "$lib/components/Navbar.svelte";
-  import { IsHover } from "$lib/hooks/is-hover.svelte";
   import AdditionalStats from "$lib/layouts/stats/AdditionalStats.svelte";
   import PlayerProfile from "$lib/layouts/stats/PlayerProfile.svelte";
   import Skills from "$lib/layouts/stats/Skills.svelte";
   import Stats from "$lib/layouts/stats/Stats.svelte";
   import Sections from "$lib/sections/Sections.svelte";
+  import type { ModelsStatsOutput } from "$lib/shared/api/orval-generated";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { itemContent, itemContentSpecial, showItem } from "$lib/stores/internal";
   import { performanceMode, showGlint } from "$lib/stores/preferences";
   import { recentSearches } from "$lib/stores/searches";
-  import type { StatsV2 } from "$types/statsv2";
   import GripVertical from "@lucide/svelte/icons/grip-vertical";
   import Image from "@lucide/svelte/icons/image";
   import { Avatar, Dialog } from "bits-ui";
   import { Pane, PaneGroup, PaneResizer } from "paneforge";
-  import { getContext, tick, untrack } from "svelte";
+  import { tick, untrack } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
 
-  const { data: ctx }: { data: StatsV2 } = $props();
+  const { data: ctx }: { data: ModelsStatsOutput } = $props();
 
-  const isHover = getContext<IsHover>("isHover");
+  const isHover = getHoverContext();
 
   const profile = $derived(ctx);
 
@@ -42,12 +41,12 @@
   let defaultRightPanel = $derived(Math.ceil((700 / innerWidth) * 100));
 
   // Initialize the profile context
-  setProfileCtx(ctx);
+  setProfileContext(ctx);
 
   // Update the profile context when the data changes
   $effect(() => {
     const abortController = new AbortController();
-    setProfileCtx(ctx);
+    // setProfileContext(ctx);
 
     recentSearches.update((searches) => {
       if (!ctx) return searches;
@@ -70,7 +69,7 @@
     });
 
     untrack(() => {
-      if (!(ctx as StatsV2)) return;
+      if (!(ctx as ModelsStatsOutput)) return;
 
       const { username, profile_cute_name } = ctx;
       if (!username) return;
@@ -288,11 +287,11 @@
             {/if}
           {/if}
           {#if containedItem.texture_path}
-            <div class="bg-text/[0.04] flex aspect-square items-center justify-center rounded-sm" onclick={() => itemContentSpecial.set(undefined)} role="none">
+            <div class="bg-text/4 flex aspect-square items-center justify-center rounded-sm" onclick={() => itemContentSpecial.set(undefined)} role="none">
               <Item piece={containedItem} isInventory={true} showRecombobulated={false} showCount={true} />
             </div>
           {:else}
-            <div class="bg-text/[0.04] aspect-square rounded-sm"></div>
+            <div class="bg-text/4 aspect-square rounded-sm"></div>
           {/if}
         {/each}
       {/if}

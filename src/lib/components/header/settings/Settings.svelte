@@ -1,10 +1,10 @@
 <script lang="ts">
+  import { getHoverContext } from "$ctx";
   import Misc, { toggleRainbow } from "$lib/components/header/settings/Misc.svelte";
   import Order from "$lib/components/header/settings/Order.svelte";
   import Packs from "$lib/components/header/settings/Packs.svelte";
   import Themes, { changeTheme } from "$lib/components/header/settings/Themes.svelte";
   import { SettingsTab } from "$lib/components/header/types";
-  import type { IsHover } from "$lib/hooks/is-hover.svelte";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { settingsOpen, settingsTab } from "$lib/stores/internal";
   import { performanceMode } from "$lib/stores/preferences";
@@ -15,12 +15,12 @@
   import PaintBucket from "@lucide/svelte/icons/paint-bucket";
   import Settings from "@lucide/svelte/icons/settings";
   import { Dialog, Tabs } from "bits-ui";
-  import { getContext, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
 
-  const isHover = getContext<IsHover>("isHover");
+  const isHover = getHoverContext();
 
   onMount(() => {
     changeTheme($themeStore);

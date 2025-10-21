@@ -1,7 +1,7 @@
 <script lang="ts">
   import { replaceState } from "$app/navigation";
   import { page } from "$app/state";
-  import { getProfileCtx } from "$ctx/profile.svelte";
+  import { getProfileContext } from "$ctx";
   import type { SectionName } from "$lib/sections/types";
   import { tabValue } from "$lib/stores/internal";
   import { sectionOrderPreferences } from "$lib/stores/preferences";
@@ -11,10 +11,9 @@
   import { onDestroy, onMount, tick, type Snippet } from "svelte";
   const { children }: { children?: Snippet } = $props();
 
-  const ctx = getProfileCtx();
-  const profile = $derived(ctx.profile);
+  const profile = $derived(getProfileContext());
 
-  const apiSettings = $derived(Object.entries(profile.apiSettings).filter(([_, value]) => !value));
+  const apiSettings = $derived(Object.entries(profile.apiSettings ?? {}).filter(([_, value]) => !value));
   const disabledApiSettings: string[] = $derived(apiSettings.map(([key]) => key));
 
   const filteredSectionOrderPreferences = $derived(

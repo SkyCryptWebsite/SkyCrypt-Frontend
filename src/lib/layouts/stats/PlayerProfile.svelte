@@ -1,8 +1,7 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
-  import { getProfileCtx } from "$ctx/profile.svelte";
+  import { getHoverContext, getProfileContext } from "$ctx";
   import ApiNotice from "$lib/components/APINotice.svelte";
-  import { IsHover } from "$lib/hooks/is-hover.svelte";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { favorites } from "$lib/stores/favorites";
   import { performanceMode } from "$lib/stores/preferences";
@@ -14,7 +13,6 @@
   import Star from "@lucide/svelte/icons/star";
   import TriangleAlert from "@lucide/svelte/icons/triangle-alert";
   import { Avatar, Button, Popover, Tooltip } from "bits-ui";
-  import { getContext } from "svelte";
   import { toast } from "svelte-sonner";
 
   let toastId: string | number = $state(0);
@@ -27,11 +25,10 @@
   let noticeRef = $state<HTMLElement>(null!);
   let ignRef = $state<HTMLElement>(null!);
 
-  const ctx = getProfileCtx();
-  const profile = $derived(ctx.profile);
-  const isHover = getContext<IsHover>("isHover");
+  const profile = $derived(getProfileContext());
+  const isHover = getHoverContext();
 
-  const apiSettings = $derived(Object.entries(profile.apiSettings).filter(([_, value]) => !value));
+  const apiSettings = $derived(Object.entries(profile.apiSettings ?? {}).filter(([_, value]) => !value));
 
   const iconMapper: Record<string, string> = {
     TWITTER: "x-twitter.svg",
@@ -54,11 +51,11 @@
   Stats for
   <Popover.Root bind:open={ignOpen}>
     <Popover.Trigger
-      disabled={!profile.members.length}
+      disabled={!profile.members?.length}
       class="bg-text/10 inline-flex items-center rounded-full py-2 pr-4 pl-2 align-middle text-xl font-semibold whitespace-nowrap sm:text-3xl"
       bind:ref={ignRef}
       onpointerenter={() => {
-        if (!profile.members.length) return;
+        if (!profile.members?.length) return;
         if (!isHover.current) return;
         profileOpen = false;
         ignOpen = true;
@@ -86,7 +83,7 @@
                 {#if member.username !== profile.username}
                   <a
                     href={resolve("/stats/[ign]/[[profile]]", {
-                      ign: member.username,
+                      ign: member.username ?? "",
                       profile: profile.profile_cute_name
                     })}
                     class="group flex min-w-(--bits-dropdown-menu-anchor-width) items-center p-2 focus-visible:outline-0"
@@ -118,19 +115,19 @@
     </Popover.Content>
   </Popover.Root>
   on
-  <div class="bg-text/10 relative inline-flex items-center gap-2 rounded-full px-2 py-1 align-middle text-xl font-semibold data-[warning=true]:border-2 data-[warning=true]:border-yellow-500/20 sm:text-3xl" data-warning={!!apiSettings.length} bind:this={noticeRef}>
+  <div class="bg-text/10 relative inline-flex items-center gap-2 rounded-full px-2 py-1 align-middle text-xl font-semibold data-[warning=true]:border-2 data-[warning=true]:border-yellow-500/20 sm:text-3xl" data-warning={apiSettings.length != null} bind:this={noticeRef}>
     <Popover.Root bind:open={profileOpen}>
       <Popover.Trigger
-        disabled={!profile.profiles.length}
+        disabled={!profile.profiles?.length}
         onpointerenter={() => {
-          if (!profile.profiles.length) return;
+          if (!profile.profiles?.length) return;
           if (!isHover.current) return;
           ignOpen = false;
           profileOpen = true;
         }}
         class="rounded-full px-2 py-1">
         {profile.profile_cute_name}
-        {@render profileIcon(profile.game_mode)}
+        {@render profileIcon(profile.game_mode ?? "")}
       </Popover.Trigger>
       <Popover.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", $performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={noticeRef} strategy="absolute">
         {#snippet child({ wrapperProps, props, open })}
@@ -141,7 +138,7 @@
                   {#if otherProfile.profile_id !== profile.profile_id}
                     <a
                       href={resolve("/stats/[ign]/[[profile]]", {
-                        ign: profile.username,
+                        ign: profile.username ?? "",
                         profile: otherProfile.cute_name
                       })}
                       class="group flex items-center p-2 focus-visible:outline-0"
@@ -150,7 +147,7 @@
                         <span class="light:invert">
                           {otherProfile.cute_name}
                         </span>
-                        {@render profileIcon(otherProfile.game_mode)}
+                        {@render profileIcon(otherProfile.game_mode ?? "")}
                       </div>
                     </a>
                   {/if}
@@ -192,7 +189,7 @@
       class="bg-icon/90 hover:bg-icon aspect-square rounded-full p-2 transition-opacity duration-150 ease-out"
       onclick={() => {
         if (!$favorites.some((fav) => fav.uuid === profile.uuid)) {
-          favorites.set([...$favorites, { uuid: profile.uuid, ign: profile.username }]);
+          favorites.set([...$favorites, { uuid: profile.uuid ?? "", ign: profile.username ?? "" }]);
           toast.dismiss(toastId);
           toastId = toast.success(`Added ${profile.username} to your favorites!`);
         } else {
@@ -252,33 +249,35 @@
     class="bg-icon/90 hover:bg-icon hidden items-center justify-center gap-1.5 rounded-full px-2 py-1 font-semibold transition-opacity duration-150 ease-out data-[visible=true]:flex"
     data-visible={showMore}
     onclick={() => {
-      copyToClipboard(profile.uuid);
+      copyToClipboard(profile.uuid ?? "");
     }}>
     Copy UUID
   </Button.Root>
 
-  {#each Object.entries(profile.social) as [key, value], index (index)}
-    {#if key === "DISCORD"}
-      <Button.Root class="bg-icon/90 hover:bg-icon hidden items-center justify-center gap-1.5 rounded-full px-2 py-1 font-semibold transition-opacity duration-150 ease-out data-[visible=true]:flex" data-visible={showMore} onclick={() => copyToClipboard(value)}>
-        <Avatar.Root>
-          <Avatar.Image loading="lazy" src="/img/icons/{iconMapper[key]}" alt="{profile.username}'s {key.toLocaleLowerCase()}" class="size-4 text-white" />
-          <Avatar.Fallback>
-            {profile.username.slice(0, 2)}
-          </Avatar.Fallback>
-        </Avatar.Root>
-        {value}
-      </Button.Root>
-    {:else}
-      <Button.Root href={value} target="_blank" class="bg-icon/90 hover:bg-icon hidden aspect-square items-center justify-center gap-1.5 rounded-full px-2 py-1 font-semibold transition-opacity duration-150 ease-out data-[visible=true]:flex" data-visible={showMore}>
-        <Avatar.Root>
-          <Avatar.Image loading="lazy" src="/img/icons/{iconMapper[key]}" alt="{profile.username}'s {key.toLocaleLowerCase()}" class="size-4 text-white" />
-          <Avatar.Fallback>
-            {profile.username.slice(0, 2)}
-          </Avatar.Fallback>
-        </Avatar.Root>
-      </Button.Root>
-    {/if}
-  {/each}
+  {#if profile.social}
+    {#each Object.entries(profile.social) as [key, value], index (index)}
+      {#if key === "DISCORD"}
+        <Button.Root class="bg-icon/90 hover:bg-icon hidden items-center justify-center gap-1.5 rounded-full px-2 py-1 font-semibold transition-opacity duration-150 ease-out data-[visible=true]:flex" data-visible={showMore} onclick={() => copyToClipboard(value)}>
+          <Avatar.Root>
+            <Avatar.Image loading="lazy" src="/img/icons/{iconMapper[key]}" alt="{profile.username}'s {key.toLocaleLowerCase()}" class="size-4 text-white" />
+            <Avatar.Fallback>
+              {profile.username?.slice(0, 2)}
+            </Avatar.Fallback>
+          </Avatar.Root>
+          {value}
+        </Button.Root>
+      {:else}
+        <Button.Root href={value} target="_blank" class="bg-icon/90 hover:bg-icon hidden aspect-square items-center justify-center gap-1.5 rounded-full px-2 py-1 font-semibold transition-opacity duration-150 ease-out data-[visible=true]:flex" data-visible={showMore}>
+          <Avatar.Root>
+            <Avatar.Image loading="lazy" src="/img/icons/{iconMapper[key]}" alt="{profile.username}'s {key.toLocaleLowerCase()}" class="size-4 text-white" />
+            <Avatar.Fallback>
+              {profile.username?.slice(0, 2)}
+            </Avatar.Fallback>
+          </Avatar.Root>
+        </Button.Root>
+      {/if}
+    {/each}
+  {/if}
 
   <Button.Root class="bg-icon/90 hover:bg-icon rounded-full p-2 transition-opacity duration-150 ease-out" onclick={() => (showMore = !showMore)}>
     {#if showMore}

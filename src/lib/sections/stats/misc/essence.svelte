@@ -1,15 +1,12 @@
 <script lang="ts">
-  import { getDynamicCtx } from "$ctx/dynamic.svelte";
+  import { getMiscContext } from "$ctx";
   import Chip from "$lib/components/Chip.svelte";
   import ScrollItems from "$lib/components/scroll-items.svelte";
   import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
-  import { SectionName } from "$lib/shared/api";
   import { cn } from "$lib/shared/utils";
-  import type { MiscV2 } from "$types/statsv2";
   import { format } from "numerable";
 
-  const ctx = getDynamicCtx<() => MiscV2[SectionName.MISC] | undefined>(SectionName.MISC);
-  const misc = $derived(ctx?.data?.());
+  const misc = $derived(getMiscContext());
 </script>
 
 {#if misc && misc.essence != null}
@@ -18,7 +15,7 @@
     <ScrollItems>
       {#each misc.essence as essence, index (index)}
         {@const hasUnlocked = essence.amount}
-        <Chip image={{ src: essence.texture }} class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked })}>
+        <Chip image={{ src: essence.texture ?? "" }} class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked })}>
           <div class={cn("flex flex-col")}>
             <div class="font-bold whitespace-nowrap">
               <span class="opacity-60">{essence.name}</span>

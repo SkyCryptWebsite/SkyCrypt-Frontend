@@ -65,11 +65,11 @@
     }}>
     {#each sectionOrder as section (section.id)}
       {@const normalizedName = section.name.replaceAll("_", " ")}
-      <div animate:flip={{ duration: 300, easing: cubicOut }} class="bg-text/[0.05] relative flex items-center gap-2 rounded-lg p-2 font-semibold">
+      <div animate:flip={{ duration: 300, easing: cubicOut }} class="bg-text/5 relative flex items-center gap-2 rounded-lg p-2 font-semibold">
         <GripVertical class="text-text/60 size-5" />
         {normalizedName}
         {#if SHADOW_ITEM_MARKER_PROPERTY_NAME in section && section[SHADOW_ITEM_MARKER_PROPERTY_NAME]}
-          <div in:fade={{ duration: 300, easing: cubicOut }} class="bg-text/[0.05] visible absolute inset-0 flex animate-pulse items-center gap-2 rounded-lg p-2 font-semibold opacity-30">
+          <div in:fade={{ duration: 300, easing: cubicOut }} class="bg-text/5 visible absolute inset-0 flex animate-pulse items-center gap-2 rounded-lg p-2 font-semibold opacity-30">
             <GripVertical class="text-text/60 size-5" />
             {normalizedName}
           </div>

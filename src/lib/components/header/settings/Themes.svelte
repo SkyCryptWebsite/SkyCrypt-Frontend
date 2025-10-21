@@ -42,7 +42,7 @@
   </div>
   <RadioGroup.Root class="mt-4 flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto" bind:value={$themeStore} onValueChange={changeTheme}>
     {#each themes as theme (theme.id)}
-      <Label.Root for={theme.id} class="bg-text/[0.05] flex items-center justify-between gap-4 rounded-lg p-2">
+      <Label.Root for={theme.id} class="bg-text/5 flex items-center justify-between gap-4 rounded-lg p-2">
         <div class="flex items-center gap-2">
           <Avatar.Root class="shrink-0 select-none">
             <Avatar.Image loading="lazy" src={`/api/themes/${btoa(theme["colors"]!.logo)}${theme.light ? "/true" : ""}/logo.svg`} alt={theme.name} class="pointer-events-none aspect-square size-10 h-full rounded-lg select-none"></Avatar.Image>

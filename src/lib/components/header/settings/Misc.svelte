@@ -68,7 +68,7 @@
 
 <Tabs.Content value={SettingsTab.Misc} class="space-y-6">
   <div class="flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto">
-    <div class="bg-text/[0.05] space-y-4 rounded-lg p-4">
+    <div class="bg-text/5 space-y-4 rounded-lg p-4">
       <div class="flex items-start gap-2 rounded-lg p-2 font-semibold">
         <Settings2 class="size-5 h-lh shrink-0" />
         <div>
@@ -79,7 +79,7 @@
           </div>
         </div>
       </div>
-      <Label.Root for="performance" class="bg-text/[0.05] flex items-center justify-between gap-4 rounded-lg p-2">
+      <Label.Root for="performance" class="bg-text/5 flex items-center justify-between gap-4 rounded-lg p-2">
         <div class="flex items-start gap-2">
           <Fan class="data-[performance=false]:animate-spin-slow size-6 h-lh shrink-0 will-change-transform data-[performance=true]:animate-spin" data-performance={$performanceMode} />
           <div class="flex flex-col">
@@ -117,7 +117,7 @@
         </Switch.Root>
       </Label.Root>
 
-      <Label.Root for="glint" class="bg-text/[0.05] flex items-center justify-between gap-4 rounded-lg p-2">
+      <Label.Root for="glint" class="bg-text/5 flex items-center justify-between gap-4 rounded-lg p-2">
         <div class="flex items-start gap-2">
           <Sparkle class="size-6 h-lh shrink-0" />
           <div class="flex flex-col">
@@ -130,7 +130,7 @@
         </Switch.Root>
       </Label.Root>
 
-      <Label.Root for="rainbow" class="bg-text/[0.05] flex items-center justify-between gap-4 rounded-lg p-2">
+      <Label.Root for="rainbow" class="bg-text/5 flex items-center justify-between gap-4 rounded-lg p-2">
         <div class="flex items-start gap-2">
           <Rainbow class="size-6 h-lh shrink-0" />
           <div class="flex flex-col">
@@ -150,7 +150,7 @@
         </Switch.Root>
       </Label.Root>
 
-      <div class="bg-text/[0.05] flex items-center justify-between gap-4 rounded-lg p-2">
+      <div class="bg-text/5 flex items-center justify-between gap-4 rounded-lg p-2">
         <div class="flex items-start gap-2">
           <Keyboard class="size-6 h-lh shrink-0" />
           <div class="flex flex-col">
@@ -168,7 +168,7 @@
       </div>
     </div>
     <Separator.Root class="bg-icon/30 shrink-0 data-[orientation=horizontal]:h-0.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-0.5" />
-    <div class="bg-text/[0.05] space-y-4 rounded-lg p-4">
+    <div class="bg-text/5 space-y-4 rounded-lg p-4">
       <div class="flex items-start gap-2 rounded-lg p-2 font-semibold">
         <BookOpenText class="size-5 h-lh shrink-0" />
         <div class="">
@@ -189,14 +189,14 @@
         }}>
         {#each wikiOrder as wiki (wiki.id)}
           {@const normalizedName = wiki.name.replaceAll("_", " ")}
-          <div animate:flip={{ duration: 300, easing: cubicOut }} class="bg-text/[0.05] relative flex items-center gap-2 rounded-lg p-2 font-semibold">
+          <div animate:flip={{ duration: 300, easing: cubicOut }} class="bg-text/5 relative flex items-center gap-2 rounded-lg p-2 font-semibold">
             <GripVertical class="text-text/60 size-5 shrink-0" />
             <div class="flex flex-col">
               {normalizedName}
               <Button.Root href={wiki.link} target="_blank" class="text-link/60 underline">{new URL(wiki.link).hostname}</Button.Root>
             </div>
             {#if SHADOW_ITEM_MARKER_PROPERTY_NAME in wiki && wiki[SHADOW_ITEM_MARKER_PROPERTY_NAME]}
-              <div in:fade={{ duration: 300, easing: cubicOut }} class="bg-text/[0.05] visible absolute inset-0 flex animate-pulse items-center gap-2 rounded-lg p-2 font-semibold opacity-30">
+              <div in:fade={{ duration: 300, easing: cubicOut }} class="bg-text/5 visible absolute inset-0 flex animate-pulse items-center gap-2 rounded-lg p-2 font-semibold opacity-30">
                 <GripVertical class="text-text/60 size-5 shrink-0" />
                 <div class="flex flex-col">
                   {normalizedName}

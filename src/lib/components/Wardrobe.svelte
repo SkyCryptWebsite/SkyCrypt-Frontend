@@ -1,9 +1,9 @@
 <script lang="ts">
   import EmptyEquipment from "$lib/components/EmptyEquipment.svelte";
   import Item from "$lib/components/Item.svelte";
-  import type { ProcessedSkyBlockItem } from "$types/stats";
+  import type { ModelsStrippedItem } from "$lib/shared/api/orval-generated";
 
-  const { wardrobeItems }: { wardrobeItems: ProcessedSkyBlockItem[] } = $props();
+  const { wardrobeItems }: { wardrobeItems: ModelsStrippedItem[] } = $props();
 </script>
 
 <div class="mt-2 flex flex-col gap-2">

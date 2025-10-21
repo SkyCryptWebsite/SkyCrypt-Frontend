@@ -1,10 +1,10 @@
 <script lang="ts">
-  import type { IsHover } from "$lib/hooks/is-hover.svelte";
+  import { getHoverContext } from "$ctx";
   import { RARITY_COLORS } from "$lib/shared/constants/rarities";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { content } from "$lib/stores/internal";
   import { Tooltip } from "bits-ui";
-  import { getContext, type Snippet } from "svelte";
+  import { type Snippet } from "svelte";
 
   type Props = {
     text: string;
@@ -25,7 +25,7 @@
   let open = $state(false);
   let asteriskRef = $state<HTMLElement | null>(null);
 
-  const isHover = getContext<IsHover>("isHover");
+  const isHover = getHoverContext();
 </script>
 
 <Tooltip.Root bind:open>

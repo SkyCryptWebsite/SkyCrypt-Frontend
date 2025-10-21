@@ -1,11 +1,11 @@
 <script lang="ts">
+  import type { ModelsStrippedItem } from "$lib/shared/api/orval-generated";
   import { cn } from "$lib/shared/utils";
   import { performanceMode } from "$lib/stores/preferences";
-  import type { ProcessedSkyBlockItem } from "$types/stats";
   import Image from "@lucide/svelte/icons/image";
   import { Avatar } from "bits-ui";
 
-  let { piece, isInventory }: { piece: ProcessedSkyBlockItem; isInventory?: boolean } = $props();
+  let { piece, isInventory }: { piece: ModelsStrippedItem; isInventory?: boolean } = $props();
 </script>
 
 <div class="relative flex aspect-square items-center justify-center overflow-clip p-0">

@@ -1,14 +1,13 @@
 <script lang="ts">
+  import { getHoverContext } from "$ctx";
   import { env } from "$env/dynamic/public";
   import { PUBLIC_COMMIT_HASH } from "$env/static/public";
-  import type { IsHover } from "$lib/hooks/is-hover.svelte";
   import { flyAndScale } from "$lib/shared/utils";
   import Info from "@lucide/svelte/icons/info";
   import { Button, Popover } from "bits-ui";
-  import { getContext } from "svelte";
   import { Drawer } from "vaul-svelte";
 
-  const isHover = getContext<IsHover>("isHover");
+  const isHover = getHoverContext();
 
   const { PUBLIC_DISCORD_INVITE, PUBLIC_PATREON } = env;
 </script>

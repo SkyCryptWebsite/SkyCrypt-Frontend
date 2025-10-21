@@ -1,11 +1,10 @@
 <script lang="ts">
-  import type { IsHover } from "$lib/hooks/is-hover.svelte";
+  import { getHoverContext } from "$ctx";
   import { STATS_DATA } from "$lib/shared/constants/stats";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { content } from "$lib/stores/internal";
   import { Tooltip } from "bits-ui";
   import { format } from "numerable";
-  import { getContext } from "svelte";
 
   type Props = {
     stat: string;
@@ -21,7 +20,7 @@
   let open = $state(false);
   let iconRef = $state<HTMLElement | null>(null);
 
-  const isHover = getContext<IsHover>("isHover");
+  const isHover = getHoverContext();
 </script>
 
 <div>

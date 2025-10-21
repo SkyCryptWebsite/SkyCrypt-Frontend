@@ -4,43 +4,11 @@
   import Notice from "$lib/components/Notice.svelte";
   import Main from "$lib/layouts/stats/Main.svelte";
   import type { SectionName } from "$lib/sections/types";
+  import { getProfileStats } from "$lib/shared/api/skycrypt-api.remote";
   import { cn } from "$lib/shared/utils";
-  import { api_token, openCommand, tabValue } from "$lib/stores/internal";
+  import { openCommand, tabValue } from "$lib/stores/internal";
   import { performanceMode, sectionOrderPreferences } from "$lib/stores/preferences";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
-  import { decodeBase64 } from "@oslojs/encoding";
-  import type { PageServerData } from "./$types";
-
-  const { data }: { data: PageServerData } = $props();
-
-  // Find the API token by looking for a value that contains keyId matching its key
-  // Now with time-based keys, we need to be more robust in our search
-  const apiTokenEntry = Object.entries(data).find(([encodedKey, encodedValue]) => {
-    try {
-      const decodedKey = new TextDecoder().decode(decodeBase64(encodedKey));
-      const decodedValue = JSON.parse(new TextDecoder().decode(decodeBase64(encodedValue as unknown as string)));
-
-      // Check if this token's keyId matches the current key
-      // The keyId should exactly match the decoded key since the server sets it
-      return decodedValue.keyId === decodedKey;
-    } catch {
-      return false;
-    }
-  });
-
-  if (!apiTokenEntry) {
-    throw new Error("API token not found in server data.");
-  }
-
-  const decoded = decodeBase64(apiTokenEntry[1] as unknown as string);
-  if (!decoded) {
-    throw new Error("Invalid API token provided.");
-  }
-
-  const tokenData = JSON.parse(new TextDecoder().decode(decoded));
-  // Remove metadata from token data before setting it
-  const { keyId, timeWindow, ...apiTokenData } = tokenData;
-  api_token.set(apiTokenData);
 
   $effect.pre(() => {
     const hash = page.url.hash;
@@ -67,21 +35,21 @@
   });
 </script>
 
-{#await data.stats}
-  <div class="flex h-screen items-center justify-center">
-    <div class={cn("bg-text/[0.05] rounded-lg p-6", $performanceMode ? "bg-background-grey" : "backdrop-blur-sm")}>
-      <div class="flex items-center gap-2">
-        <LoaderCircle class="text-text/60 size-5 animate-spin" />
-        <span class="text-text/80 font-semibold">Loading profile...</span>
+<svelte:boundary>
+  {#snippet pending()}
+    <div class="flex h-screen items-center justify-center">
+      <div class={cn("bg-text/5 rounded-lg p-6", $performanceMode ? "bg-background-grey" : "backdrop-blur-sm")}>
+        <div class="flex items-center gap-2">
+          <LoaderCircle class="text-text/60 size-5 animate-spin" />
+          <span class="text-text/80 font-semibold">Loading profile...</span>
+        </div>
       </div>
     </div>
-  </div>
-{:then stats}
-  {#if stats.stats}
-    <Main data={stats.stats} />
-  {/if}
-{:catch e}
-  <div class="flex h-screen items-center justify-center">
-    <Notice title="An unexpected error has occurred" type="error" error={e} />
-  </div>
-{/await}
+  {/snippet}
+  <Main data={await getProfileStats({ uuid: page.params.ign ?? "", profileId: page.params.profile ?? "" })} />
+  {#snippet failed(err, reset)}
+    <div class="flex h-screen items-center justify-center">
+      <Notice title="An unexpected error has occurred" type="error" error={err} retry={reset} />
+    </div>
+  {/snippet}
+</svelte:boundary>

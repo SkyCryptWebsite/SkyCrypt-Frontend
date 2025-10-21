@@ -1,6 +1,6 @@
+import type { ModelsStrippedItem } from "$lib/shared/api/orval-generated";
 import { RARITY_COLORS } from "$lib/shared/constants/rarities";
 import { mcTextToHTML } from "$lib/shared/mc-text";
-import type { ProcessedSkyBlockItem } from "$types/global";
 import { tz } from "@date-fns/tz";
 import { format } from "date-fns";
 import prettyMilliseconds from "pretty-ms";
@@ -154,7 +154,7 @@ export function calculatePercentage(value: number, total: number, decimal: numbe
     .replace(/\.0+$/, "");
 }
 
-export function shouldShine(item: ProcessedSkyBlockItem): boolean | undefined {
-  const enchanted = item.texture_path.includes("/api/leather/") ? false : item.shiny;
+export function shouldShine(item: ModelsStrippedItem): boolean | undefined {
+  const enchanted = item.texture_path?.includes("/api/leather/") ? false : item.shiny;
   return enchanted || item.shiny;
 }

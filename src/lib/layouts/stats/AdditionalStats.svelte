@@ -1,60 +1,62 @@
 <script lang="ts">
-  import { getProfileCtx } from "$ctx/profile.svelte";
+  import { getHoverContext, getProfileContext } from "$ctx";
   import AdditionStat from "$lib/components/AdditionStat.svelte";
-  import { api, SectionName } from "$lib/shared/api";
+  import { type SkycryptSrcModelsNetworthResult } from "$lib/shared/api/orval-generated";
+  import { getNetworth } from "$lib/shared/api/skycrypt-api.remote";
   import { calculatePercentage, formatNumber } from "$lib/shared/helper";
-  import type { NetworthResult } from "$types/networth-result";
-  import type { NetworthV2 } from "$types/statsv2";
+  import { cn, flyAndScale } from "$lib/shared/utils";
+  import { performanceMode } from "$lib/stores/preferences";
   import { tz } from "@date-fns/tz";
+  import CircleX from "@lucide/svelte/icons/circle-x";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
-  import { createQuery } from "@tanstack/svelte-query";
+  import { isHttpError } from "@sveltejs/kit";
+  import { Button, Popover } from "bits-ui";
   import { format as dateFormat, formatDistanceToNowStrict } from "date-fns";
   import { format as numberFormat } from "numerable";
 
-  const ctx = getProfileCtx();
-  const profile = $derived(ctx.profile);
+  const profile = $derived(getProfileContext());
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
 
-  const query = createQuery<NetworthV2>(() => ({
-    queryKey: [SectionName.NETWORTH, profileUUID, profileId],
-    queryFn: () => api().getSection(SectionName.NETWORTH, profileUUID, profileId)
-  }));
-
-  const networth = $derived.by(() => {
-    if (query.isPending || query.error || !query.data) return;
-    return query.data.networth;
-  });
-
   const defaultPatternDecimal: string = "0,0.##";
   const defaultPattern: string = "0,0";
+
+  const isHover = getHoverContext();
+
+  let networthOpen = $state<boolean>(false);
 </script>
 
 <div class="additional-stats flex flex-col gap-2 @md:flex-row @md:flex-wrap">
-  <AdditionStat text="Joined" data={formatDistanceToNowStrict(profile.joined, { addSuffix: true, in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) })} asterisk={true}>
-    Joined on {dateFormat(profile.joined, "dd MMMM yyyy 'at' HH:mm", { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) })}
-  </AdditionStat>
-  <AdditionStat text="Purse" data={`${formatNumber(profile.purse)} Coins`} />
-  <AdditionStat text="Bank Account" data={`${formatNumber(profile.bank + profile.personalBank)} Coins`} asterisk={profile.bank && profile.personalBank ? true : false}>
-    <div>
-      <h3 class="text-text/85 font-bold">
-        Bank:
-        <span class="text-text">
-          {formatNumber(profile.bank)}
-        </span>
-      </h3>
-      {#if profile.personalBank}
+  {#if profile.joined != null}
+    <AdditionStat text="Joined" data={formatDistanceToNowStrict(profile.joined, { addSuffix: true, in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) })} asterisk={true}>
+      Joined on {dateFormat(profile.joined, "dd MMMM yyyy 'at' HH:mm", { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) })}
+    </AdditionStat>
+  {/if}
+  {#if profile.purse != null}
+    <AdditionStat text="Purse" data={`${formatNumber(profile.purse)} Coins`} />
+  {/if}
+  {#if profile.bank != null && profile.personalBank != null}
+    <AdditionStat text="Bank Account" data={`${formatNumber(profile.bank + profile.personalBank)} Coins`} asterisk={profile.bank && profile.personalBank ? true : false}>
+      <div>
         <h3 class="text-text/85 font-bold">
-          Personal Bank:
+          Bank:
           <span class="text-text">
-            {formatNumber(profile.personalBank)}
+            {formatNumber(profile.bank)}
           </span>
         </h3>
-      {/if}
-    </div>
-  </AdditionStat>
+        {#if profile.personalBank}
+          <h3 class="text-text/85 font-bold">
+            Personal Bank:
+            <span class="text-text">
+              {formatNumber(profile.personalBank)}
+            </span>
+          </h3>
+        {/if}
+      </div>
+    </AdditionStat>
+  {/if}
   {#if profile.skills?.averageSkillLevel}
-    <AdditionStat text="Average Skill Level" data={profile.skills?.averageSkillLevel.toFixed(2)} asterisk={true}>
+    <AdditionStat text="Average Skill Level" data={profile.skills.averageSkillLevel.toFixed(2)} asterisk={true}>
       <div class="max-w-xs space-y-2">
         <div>
           <h3 class="text-text/85 font-bold">
@@ -65,15 +67,17 @@
           </h3>
           <p class="text-text/80 font-medium">Total XP gained in all skills except Social and Runecrafting.</p>
         </div>
-        <div>
-          <h3 class="text-text/85 font-bold">
-            Average Level:
-            <span class="text-text">
-              {profile.skills.averageSkillLevelWithProgress.toFixed(2)}
-            </span>
-          </h3>
-          <p class="text-text/80 font-medium">Average skill level over all skills except Social and Runecrafting, includes progress to next level.</p>
-        </div>
+        {#if profile.skills.averageSkillLevelWithProgress != null}
+          <div>
+            <h3 class="text-text/85 font-bold">
+              Average Level:
+              <span class="text-text">
+                {profile.skills.averageSkillLevelWithProgress.toFixed(2)}
+              </span>
+            </h3>
+            <p class="text-text/80 font-medium">Average skill level over all skills except Social and Runecrafting, includes progress to next level.</p>
+          </div>
+        {/if}
         <div>
           <h3 class="text-text/85 font-bold">
             Average Level without progress:
@@ -86,27 +90,61 @@
       </div>
     </AdditionStat>
   {/if}
-  <AdditionStat text="Fairy Souls" data={`${profile.fairySouls.found} / ${profile.fairySouls.total}`} maxed={profile.fairySouls.found >= profile.fairySouls.total} asterisk={true}>
-    {calculatePercentage(profile.fairySouls.found, profile.fairySouls.total)}% of fairy souls found.
-  </AdditionStat>
+  {#if profile.fairySouls}
+    <AdditionStat text="Fairy Souls" data={`${profile.fairySouls.found} / ${profile.fairySouls.total}`} maxed={(profile.fairySouls.found ?? 0) >= (profile.fairySouls.total ?? 0)} asterisk={true}>
+      {calculatePercentage(profile.fairySouls.found ?? 0, profile.fairySouls.total ?? 0)}% of fairy souls found.
+    </AdditionStat>
+  {/if}
 
-  {#if query.isPending}
-    <div class="text-text/60 my-0 flex items-center gap-1 font-bold">
-      Networth:
-      <LoaderCircle class="text-icon animate-spin" />
-    </div>
-  {/if}
-  {#if query.error}
-    <div class="text-text/60 my-0 flex items-center gap-1 font-bold">Networth: An error has occurred</div>
-  {/if}
-  {#if query.isSuccess && query.data && networth}
-    {@render NetworthSnippet(networth.normal, "Networth")}
-    {@render NetworthSnippet(networth.nonCosmetic, "Non-Cosmetic Networth")}
-  {/if}
+  <svelte:boundary>
+    {#snippet pending()}
+      <div class="text-text/60 my-0 flex items-center gap-1 font-bold">
+        Networth:
+        <LoaderCircle class="text-icon animate-spin" />
+      </div>
+    {/snippet}
+
+    {#snippet failed(err, retry)}
+      <div class="text-text/60 my-0 flex items-center gap-1 font-bold">
+        <Popover.Root bind:open={networthOpen}>
+          <Popover.Trigger
+            class="flex items-center gap-1"
+            onpointerenter={() => {
+              if (!isHover.current) return;
+              networthOpen = true;
+            }}>
+            <CircleX class="text-minecraft-c size-4 h-lh" /> Networth:
+          </Popover.Trigger>
+          {#if isHttpError(err)}
+            <Popover.Content forceMount class={cn("z-50 overflow-hidden rounded-lg p-4 font-semibold", $performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} strategy="absolute">
+              {#snippet child({ wrapperProps, props, open })}
+                {#if open}
+                  <div {...wrapperProps}>
+                    <div {...props} transition:flyAndScale>
+                      {err.body.message}
+                    </div>
+                  </div>
+                {/if}
+              {/snippet}
+            </Popover.Content>
+          {/if}
+        </Popover.Root>
+        <Button.Root onclick={retry} class="text-icon hover:text-icon/80">Retry</Button.Root>
+      </div>
+    {/snippet}
+    {@const networthData = await getNetworth({ uuid: profileUUID!, profileId: profileId! })}
+
+    {#if networthData.normal}
+      {@render NetworthSnippet(networthData.normal, "Networth")}
+    {/if}
+    {#if networthData.nonCosmetic}
+      {@render NetworthSnippet(networthData.nonCosmetic, "Non-Cosmetic Networth")}
+    {/if}
+  </svelte:boundary>
 </div>
 
-{#snippet NetworthSnippet(networth: NetworthResult, title: string = "Networth")}
-  <AdditionStat text={title} data={formatNumber(networth.networth)} asterisk={true}>
+{#snippet NetworthSnippet(networth: SkycryptSrcModelsNetworthResult, title: string = "Networth")}
+  <AdditionStat text={title} data={formatNumber(networth.networth ?? 0)} asterisk={true}>
     <div class="max-w-xs space-y-2 font-bold">
       <div>
         <h3 class="text-text/85">{title}</h3>
@@ -114,11 +152,11 @@
       </div>
       <div>
         <ul class="[&_li]:text-text/85 [&_li_span]:text-text font-bold [&_li]:capitalize [&_li_span]:normal-case">
-          {#each Object.entries(networth.types) as [key, value], index (index)}
+          {#each Object.entries(networth.types ?? {}) as [key, value], index (index)}
             <li>
               {key.replace(/_/g, " ")}:
               <span>
-                {formatNumber(value.total)}
+                {formatNumber(value.total ?? 0)}
               </span>
             </li>
           {/each}
@@ -127,12 +165,12 @@
       <p class="text-text/85">
         Unsoulbound {title}:
         <span class="text-text">
-          {formatNumber(networth.unsoulboundNetworth)}
+          {formatNumber(networth.unsoulboundNetworth ?? 0)}
         </span>
         <br />
         Total {title}:
         <span class="text-text">
-          {numberFormat(networth.networth, defaultPattern)} ({formatNumber(networth.networth)})
+          {numberFormat(networth.networth, defaultPattern)} ({formatNumber(networth.networth ?? 0)})
         </span>
       </p>
     </div>

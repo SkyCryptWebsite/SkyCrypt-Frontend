@@ -1,60 +1,43 @@
 <script lang="ts">
-  import { getProfileCtx } from "$ctx/profile.svelte";
+  import { getProfileContext } from "$ctx";
   import AdditionStat from "$lib/components/AdditionStat.svelte";
   import Bonus from "$lib/components/Bonus.svelte";
   import Item from "$lib/components/Item.svelte";
-  import Notice from "$lib/components/Notice.svelte";
   import Section from "$lib/components/Section.svelte";
   import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
   import Items from "$lib/layouts/stats/Items.svelte";
-  import { api, SectionName } from "$lib/shared/api";
+  import { getPetsSection } from "$lib/shared/api/skycrypt-api.remote";
   import { formatNumber, getRarityClass, renderLore, uniqBy } from "$lib/shared/helper";
   import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
   import { cn } from "$lib/shared/utils";
-  import type { PetsV2 } from "$types/statsv2";
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
-  import LoaderCircle from "@lucide/svelte/icons/loader-circle";
-  import { createQuery } from "@tanstack/svelte-query";
   import { Collapsible } from "bits-ui";
 
   let { order }: { order: number } = $props();
 
-  const ctx = getProfileCtx();
-  const profile = $derived(ctx.profile);
+  const profile = $derived(getProfileContext());
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
 
-  const query = createQuery<PetsV2>(() => ({
-    queryKey: [SectionName.PETS, profileUUID, profileId],
-    queryFn: () => api().getSection(SectionName.PETS, profileUUID, profileId)
-  }));
+  const pets = $derived(await getPetsSection({ uuid: profileUUID!, profileId: profileId! }));
 
-  const pets = $derived.by(() => {
-    if (query.isPending || query.error || !query.data) return;
-    return query.data[SectionName.PETS];
-  });
-
-  const activePet = $derived(pets?.pets.find((pet) => pet.active === true));
+  const activePet = $derived(pets?.pets?.find((pet) => pet.active === true));
   const uniquePets = $derived(uniqBy(pets?.pets ?? [], "type"));
-  const otherPets = $derived(pets?.pets.filter((pet) => !uniquePets.includes(pet)));
+  const otherPets = $derived(pets?.pets?.filter((pet) => !uniquePets.includes(pet)));
 </script>
 
 <Section id="Pets" {order}>
-  {#if query.isPending}
-    <LoaderCircle class="text-icon animate-spin" />
-  {/if}
-  {#if query.error}
-    <Notice title="An unexpected error has occurred" type="error" error={query.error} />
-  {/if}
-  {#if query.isSuccess && query.data && pets}
+  {#if pets}
     {#if pets.pets?.length}
       <Items>
         {#snippet text()}
           <div>
-            <AdditionStat text="Unique Pets" data={`${pets.amount} / ${pets.total}`} maxed={pets.amount === pets.total} />
-            <AdditionStat text="Unique Pet Skins" data={`${pets.amountSkins}`} />
+            <AdditionStat text="Unique Pets" data="{pets.amount} / {pets.total}" maxed={pets.amount === pets.total} />
+            {#if pets.amountSkins}
+              <AdditionStat text="Unique Pet Skins" data={pets.amountSkins} />
+            {/if}
             {#if pets.petScore != null}
-              <AdditionStat text="Pet Score" data={`${pets.petScore.amount} (+${pets.petScore.stats.magic_find} MF) `} asterisk={true}>
+              <AdditionStat text="Pet Score" data={`${pets.petScore.amount} (+${pets.petScore.stats?.magic_find} MF) `} asterisk={true}>
                 <div class="max-w-xs space-y-6 font-bold">
                   <h3 class="text-text/85">Pet score is calculated based on how many unique pets you have and the rarity of these pets.</h3>
                   <h3 class="text-text/85">You gain an additional score for each max level pet you have!</h3>
@@ -71,8 +54,12 @@
                 </div>
               </AdditionStat>
             {/if}
-            <AdditionStat text="Total Candies Used" data={pets.totalCandyUsed} maxed={pets.totalCandyUsed === 0} />
-            <AdditionStat text="Total Pet XP" data={formatNumber(pets.totalPetExp)} />
+            {#if pets.totalCandyUsed != null}
+              <AdditionStat text="Total Candies Used" data={pets.totalCandyUsed} maxed={pets.totalCandyUsed === 0} />
+            {/if}
+            {#if pets.totalPetExp != null}
+              <AdditionStat text="Total Pet XP" data={formatNumber(pets.totalPetExp)} />
+            {/if}
           </div>
         {/snippet}
         <div class="mb-4">
@@ -83,7 +70,7 @@
                 <div class="flex items-center">
                   <Item piece={activePet} />
                   <div class="ml-4 flex flex-col justify-center">
-                    <h4 class={cn(getRarityClass(activePet.rarity ?? "common", "text"), "text-xl font-bold capitalize")} {@attach animateObfuscatedText}>{(activePet.rarity ?? "common").toLowerCase()} {@html renderLore(activePet.display_name.toLowerCase())}</h4>
+                    <h4 class={cn(getRarityClass(activePet.rarity ?? "common", "text"), "text-xl font-bold capitalize")} {@attach animateObfuscatedText}>{(activePet.rarity ?? "common").toLowerCase()} {@html renderLore((activePet.display_name ?? "").toLowerCase())}</h4>
                     <h4 class="text-text text-xl font-medium capitalize">Level {activePet.level}</h4>
                   </div>
                 </div>
@@ -138,7 +125,7 @@
             </Collapsible.Root>
           {/if}
 
-          {#if pets.missing.length > 0}
+          {#if pets.missing && pets.missing.length > 0}
             <Collapsible.Root>
               <Collapsible.Trigger class="group flex items-center gap-0.5 pt-5">
                 <ChevronDown class="size-5 transition-all duration-300 ease-out group-data-[state=open]:-rotate-180" />

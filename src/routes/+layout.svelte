@@ -2,6 +2,7 @@
   import { browser, dev } from "$app/environment";
   import { beforeNavigate } from "$app/navigation";
   import { page, updated } from "$app/state";
+  import { setHoverContext, setMobileContext, setPacksContext } from "$ctx";
   import Header from "$lib/components/header/Header.svelte";
   import { SettingsTab } from "$lib/components/header/types";
   import PerformanceMode from "$lib/components/PerformanceMode.svelte";
@@ -26,10 +27,9 @@
   import Sparkle from "@lucide/svelte/icons/sparkle";
   import Wifi from "@lucide/svelte/icons/wifi";
   import WifiOff from "@lucide/svelte/icons/wifi-off";
-  import { QueryClientProvider } from "@tanstack/svelte-query";
   import { Avatar, Button, Command, computeCommandScore, Dialog, Tooltip } from "bits-ui";
   import { Control, Field } from "formsnap";
-  import { onMount, setContext, type Snippet } from "svelte";
+  import { onMount, type Snippet } from "svelte";
   import SvelteSeo from "svelte-seo";
   import { toast, Toaster, type ToasterProps } from "svelte-sonner";
   import { cubicOut } from "svelte/easing";
@@ -113,8 +113,9 @@
     settingsOpen.set(true);
   }
 
-  setContext("isMobile", isMobile);
-  setContext("isHover", isHover);
+  setMobileContext(isMobile);
+  setHoverContext(isHover);
+  setPacksContext(data.packs);
 
   themeStore.subscribe((newTheme) => theme.set(themes.find((theme) => theme.id === newTheme)?.light ? "light" : "dark"));
 
@@ -204,18 +205,11 @@
 
 <div class="pointer-events-none fixed inset-0 z-[-1] h-dvh w-screen [background-image:var(--bg-url)] bg-cover bg-scroll bg-center bg-no-repeat"></div>
 
-<QueryClientProvider client={data.queryClient}>
-  <Header />
+<Header />
 
-  <Tooltip.Provider delayDuration={0}>
-    {@render children()}
-  </Tooltip.Provider>
-  {#if dev}
-    {#await import("@tanstack/svelte-query-devtools") then { SvelteQueryDevtools }}
-      <SvelteQueryDevtools />
-    {/await}
-  {/if}
-</QueryClientProvider>
+<Tooltip.Provider delayDuration={0}>
+  {@render children()}
+</Tooltip.Provider>
 
 <Dialog.Root bind:open={$openCommand}>
   <Dialog.Portal>
@@ -301,7 +295,7 @@
         }} />
     </div>
 
-    <Command.List class="max-h-[30rem] overflow-x-hidden overflow-y-auto px-2 pb-2">
+    <Command.List class="max-h-120 overflow-x-hidden overflow-y-auto px-2 pb-2">
       <Command.Viewport>
         <Command.Empty class="text-muted-foreground flex w-full items-center justify-center pt-8 pb-6 text-sm">
           {#if $message && $message.type === "error"}

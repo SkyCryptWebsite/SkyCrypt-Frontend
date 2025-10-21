@@ -1,8 +1,8 @@
 <script lang="ts">
+  import type { ModelsSkill } from "$lib/shared/api/orval-generated";
   import { calculatePercentage, formatNumber } from "$lib/shared/helper";
   import { cn } from "$lib/shared/utils";
   import { performanceMode } from "$lib/stores/preferences";
-  import type { Skill } from "$lib/types/global";
   import BarChartHorizontal from "@lucide/svelte/icons/bar-chart-horizontal";
   import { Avatar, Progress } from "bits-ui";
   import { format } from "numerable";
@@ -10,7 +10,7 @@
 
   type Props = {
     skill: string;
-    skillData: Skill;
+    skillData: ModelsSkill;
     apiEnabled?: boolean;
     class?: string | null | undefined;
   };
@@ -44,18 +44,18 @@
           {#if $isHovered && !isMaxed}
             {format(skillData.xpCurrent, "0,0")} / {format(skillData.xpForNext)}
           {:else if !isMaxed}
-            {formatNumber(skillData.xpCurrent)} / {formatNumber(skillData.xpForNext)}
+            {formatNumber(skillData.xpCurrent ?? 0)} / {formatNumber(skillData.xpForNext ?? 0)}
           {/if}
 
           {#if $isHovered && isMaxed}
             {format(skillData.xpCurrent, "0,0")}
           {:else if isMaxed}
-            {formatNumber(skillData.xpCurrent)}
+            {formatNumber(skillData.xpCurrent ?? 0)}
           {/if}
           XP
         </div>
       </div>
     {/if}
-    <div class={cn("h-full w-full flex-1 rounded-full transition-all duration-300 ease-out group-data-[maxed=false]:[background:var(--skillbar)] group-data-[maxed=true]:[background:var(--maxedbar)]", apiEnabled ? "" : "bg-gray-500")} style={`transform: translateX(-${100 - parseFloat(calculatePercentage(skillData.xpCurrent, isMaxed ? skillData.xpCurrent : skillData.xpForNext))}%)`}></div>
+    <div class={cn("h-full w-full flex-1 rounded-full transition-all duration-300 ease-out group-data-[maxed=false]:[background:var(--skillbar)] group-data-[maxed=true]:[background:var(--maxedbar)]", apiEnabled ? "" : "bg-gray-500")} style={`transform: translateX(-${100 - parseFloat(calculatePercentage(skillData.xpCurrent ?? 0, isMaxed ? (skillData.xpCurrent ?? 0) : (skillData.xpForNext ?? 0)))}%)`}></div>
   </Progress.Root>
 </div>
