@@ -40,7 +40,13 @@
       <p class="text-text/60">Themes change the colors of SkyCrypt.</p>
     </div>
   </div>
-  <RadioGroup.Root class="mt-4 flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto" bind:value={$themeStore} onValueChange={changeTheme}>
+  <RadioGroup.Root
+    class="mt-4 flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto"
+    bind:value={$themeStore}
+    onValueChange={(v) => {
+      if (!document.startViewTransition) changeTheme(v);
+      document.startViewTransition(() => changeTheme(v));
+    }}>
     {#each themes as theme (theme.id)}
       <Label.Root for={theme.id} class="flex items-center justify-between gap-4 rounded-lg bg-text/5 p-2">
         <div class="flex items-center gap-2">

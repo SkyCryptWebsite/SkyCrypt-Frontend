@@ -196,6 +196,31 @@
     color: var(--color-text);
     text-shadow: var(--txt-shadow);
   }
+
+  ::view-transition-group(root) {
+    animation-duration: 0.7s;
+    animation-timing-function: ease-out;
+  }
+
+  ::view-transition-new(root) {
+    animation-name: reveal;
+    animation-fill-mode: both;
+  }
+
+  ::view-transition-old(root) {
+    animation: none;
+    animation-fill-mode: both;
+    z-index: -1;
+  }
+
+  @keyframes reveal {
+    from {
+      clip-path: polygon(50% -71%, -50% 71%, -50% 71%, 50% -71%);
+    }
+    to {
+      clip-path: polygon(50% -71%, -50% 71%, 50% 171%, 171% 50%);
+    }
+  }
 }
 
 @layer components {
