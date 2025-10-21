@@ -1,7 +1,9 @@
 import { getRequestEvent } from "$app/server";
-import { env } from "$env/dynamic/public";
+import { env as envPrivate } from "$env/dynamic/private";
+import { env as envPublic } from "$env/dynamic/public";
 
-const { PUBLIC_SERVER_API_URL } = env;
+const { PUBLIC_SERVER_API_URL } = envPublic;
+const { SERVER_API_TOKEN } = envPrivate;
 
 // NOTE: Supports cases where `content-type` is other than `json`
 const getBody = <T>(c: Response | Request): Promise<T> => {
@@ -29,7 +31,8 @@ const getHeaders = (headers?: HeadersInit): HeadersInit => {
     const { request } = getRequestEvent();
     return {
       ...headers,
-      ...request.headers
+      ...request.headers,
+      "X-API-Token": SERVER_API_TOKEN
     };
   } catch {
     return {
