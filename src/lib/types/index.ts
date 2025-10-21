@@ -1,20 +1,3 @@
-export type StatsData = {
-  [key: string]: {
-    name: string;
-    nameLore: string;
-    nameShort?: string;
-    nameTiny: string;
-    symbol: string;
-    suffix?: string;
-    color: string;
-    percent?: boolean;
-  };
-};
-
-export type ItemStats = {
-  [key in StatName]?: number;
-};
-
 // Enum for different API endpoint names
 export enum APIEndpointName {
   NETWORTH = "Networth",
@@ -37,3 +20,5 @@ export enum APIEndpointName {
   EMBED = "Embed Data",
   RESOURCEPACK = "Resource Pack"
 }
+
+export * from "./types.d";
