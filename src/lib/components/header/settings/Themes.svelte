@@ -23,6 +23,7 @@
 
 <script lang="ts">
   import { SettingsTab } from "$lib/components/header/types";
+  import { getThemeIcons } from "$lib/shared/api/themes.remote";
   import type { Theme } from "$lib/shared/constants/themes";
   import themes from "$lib/shared/constants/themes";
   import { theme as themeStore } from "$lib/stores/themes";
@@ -48,10 +49,12 @@
       document.startViewTransition(() => changeTheme(v));
     }}>
     {#each themes as theme (theme.id)}
+      {@const iconSvg = await getThemeIcons({ color: theme["colors"]!.logo, invert: theme.light })}
+      {@const iconDataUrl = `data:image/svg+xml;base64,${btoa(iconSvg)}`}
       <Label.Root for={theme.id} class="flex items-center justify-between gap-4 rounded-lg bg-text/5 p-2">
         <div class="flex items-center gap-2">
           <Avatar.Root class="shrink-0 select-none">
-            <Avatar.Image loading="lazy" src={`/api/themes/${btoa(theme["colors"]!.logo)}${theme.light ? "/true" : ""}/logo.svg`} alt={theme.name} class="pointer-events-none aspect-square size-10 h-full rounded-lg select-none"></Avatar.Image>
+            <Avatar.Image loading="lazy" src={iconDataUrl} alt={theme.name} class="pointer-events-none aspect-square size-10 h-full rounded-lg select-none"></Avatar.Image>
             <Avatar.Fallback class="flex items-center rounded-lg text-center font-semibold uppercase">{theme.name.slice(0, 2)}</Avatar.Fallback>
           </Avatar.Root>
           <div class="flex flex-col">
