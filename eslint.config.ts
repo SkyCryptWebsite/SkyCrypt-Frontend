@@ -1,6 +1,5 @@
 import { includeIgnoreFile } from "@eslint/compat";
 import js from "@eslint/js";
-import pluginQuery from "@tanstack/eslint-plugin-query";
 import prettier from "eslint-config-prettier";
 import svelte from "eslint-plugin-svelte";
 import { defineConfig } from "eslint/config";
@@ -13,14 +12,22 @@ const gitignorePath = fileURLToPath(new URL("./.gitignore", import.meta.url));
 
 export default defineConfig(
   includeIgnoreFile(gitignorePath),
-  ...pluginQuery.configs["flat/recommended"],
   js.configs.recommended,
   ...ts.configs.recommended,
   ...svelte.configs.recommended,
-  ...svelte.configs.prettier,
   prettier,
+  ...svelte.configs.prettier,
   {
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node
+      }
+    },
     rules: {
+      // typescript-eslint strongly recommend that you do not use the no-undef lint rule on TypeScript projects.
+      // see: https://typescript-eslint.io/troubleshooting/faqs/eslint/#i-get-errors-from-the-no-undef-rule-about-global-variables-not-being-defined-even-though-there-are-no-typescript-errors
+      "no-undef": "off",
       "@typescript-eslint/no-unused-vars": [
         "error",
         {
@@ -33,19 +40,7 @@ export default defineConfig(
           ignoreRestSiblings: true
         }
       ],
-      "svelte/no-at-html-tags": "off",
       "no-console": ["error", { allow: ["info", "warn", "dir", "timeLog", "assert", "clear", "count", "countReset", "group", "groupEnd", "table", "dirxml", "error", "groupCollapsed", "Console", "profile", "profileEnd", "timeStamp", "context"] }]
-    }
-  },
-  {
-    languageOptions: {
-      ecmaVersion: 2022,
-      sourceType: "module",
-      globals: {
-        ...globals.browser,
-        ...globals.es2017,
-        ...globals.node
-      }
     }
   },
   {
@@ -64,10 +59,9 @@ export default defineConfig(
         // explicitly specifying it ensures better compatibility and functionality.
         svelteConfig
       }
-    }
-  },
-  {
+    },
     rules: {
+      "svelte/no-at-html-tags": "off",
       "svelte/no-useless-mustaches": "off"
     }
   },

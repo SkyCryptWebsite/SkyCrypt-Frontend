@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "dotenv -e .env.development -- vite dev",
+    "dev": "vite dev",
     "build": "vite build",
     "build:dev": "dotenv -e .env.development -- vite build",
     "preview": "vite preview",
@@ -30,7 +30,6 @@
     "@sveltejs/kit": "^2.47.2",
     "@sveltejs/vite-plugin-svelte": "^6.2.1",
     "@tailwindcss/vite": "^4.1.15",
-    "@tanstack/eslint-plugin-query": "^5.91.2",
     "@types/eslint": "^9.6.1",
     "@types/node": "^24.9.1",
     "@types/relaxed-json": "^1.0.4",
