@@ -14,7 +14,7 @@
   const isHover = getHoverContext();
 </script>
 
-<div class="bg-background/30 mx-auto w-full max-w-lg overflow-clip rounded-lg">
+<div class="mx-auto w-full max-w-lg overflow-clip rounded-lg bg-background/30">
   <div class="bg-icon py-1 text-center text-xl font-semibold uppercase">Notice</div>
   <div class="p-5 text-center text-base font-medium text-pretty">
     <p>
@@ -71,7 +71,7 @@
           {#if open}
             <div {...props} transition:flyAndScale>
               {@render video()}
-              <Dialog.Close class="text-text/80 absolute top-6 right-6 p-2">
+              <Dialog.Close class="absolute top-6 right-6 p-2 text-text/80">
                 <X class="size-6" />
               </Dialog.Close>
             </div>

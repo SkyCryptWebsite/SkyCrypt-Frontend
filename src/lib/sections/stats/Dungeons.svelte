@@ -64,18 +64,18 @@
                   {#if dungeons.classes.totalClassExp != null}
                     <div>
                       <h3 class="text-text/85">Total Class XP: {format(dungeons.classes.totalClassExp.toFixed(2))}</h3>
-                      <p class="text-text/80 font-medium italic">Total Class XP gained in Catacombs.</p>
+                      <p class="font-medium text-text/80 italic">Total Class XP gained in Catacombs.</p>
                     </div>
                   {/if}
                   {#if dungeons.classes.classAverageWithProgress != null}
                     <div>
                       <h3 class="text-text/85">Average Level: {format(dungeons.classes.classAverageWithProgress.toFixed(2))}</h3>
-                      <p class="text-text/80 font-medium italic">Average class level, includes progress to next level.</p>
+                      <p class="font-medium text-text/80 italic">Average class level, includes progress to next level.</p>
                     </div>
                   {/if}
                   <div>
                     <h3 class="text-text/85">Average Level without progress: {format(dungeons.classes.classAverage.toFixed(2))}</h3>
-                    <p class="text-text/80 font-medium italic">Average class level without including partial level progress.</p>
+                    <p class="font-medium text-text/80 italic">Average class level without including partial level progress.</p>
                   </div>
                 </div>
               </AdditionStat>
@@ -93,14 +93,14 @@
         </div>
         <Section id="Catacombs">
           {#snippet subtitle()}
-            <h4 class="text-text/90 my-5 text-xl font-semibold capitalize">Catacombs</h4>
+            <h4 class="my-5 text-xl font-semibold text-text/90 capitalize">Catacombs</h4>
           {/snippet}
           {@render cataCard(dungeons.catacombs)}
         </Section>
 
         <Section id="Master_Catacombs">
           {#snippet subtitle()}
-            <h4 class="text-text/90 my-5 text-xl font-semibold capitalize">Master Catacombs</h4>
+            <h4 class="my-5 text-xl font-semibold text-text/90 capitalize">Master Catacombs</h4>
           {/snippet}
           {@render cataCard(dungeons.master_catacombs, true)}
         </Section>
@@ -115,8 +115,8 @@
       {#each catacombs as catacomb, index (index)}
         {#if catacomb.stats}
           {#if catacomb.stats.tier_completions != null && catacomb.stats.tier_completions > 0}
-            <div class="bg-background/30 flex min-w-80 basis-[calc((100%/3)-1.25rem)] flex-col gap-1 rounded-lg">
-              <div class="border-icon flex w-full items-center justify-center gap-1.5 border-b-2 py-2 text-center font-semibold uppercase">
+            <div class="flex min-w-80 basis-[calc((100%/3)-1.25rem)] flex-col gap-1 rounded-lg bg-background/30">
+              <div class="flex w-full items-center justify-center gap-1.5 border-b-2 border-icon py-2 text-center font-semibold uppercase">
                 <Avatar.Root>
                   <Avatar.Image loading="lazy" src={catacomb.texture} class="size-8 object-contain [image-rendering:pixelated]" />
                   <Avatar.Fallback>

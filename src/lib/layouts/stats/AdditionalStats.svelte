@@ -38,14 +38,14 @@
   {#if profile.bank != null && profile.personalBank != null}
     <AdditionStat text="Bank Account" data={`${formatNumber(profile.bank + profile.personalBank)} Coins`} asterisk={profile.bank && profile.personalBank ? true : false}>
       <div>
-        <h3 class="text-text/85 font-bold">
+        <h3 class="font-bold text-text/85">
           Bank:
           <span class="text-text">
             {formatNumber(profile.bank)}
           </span>
         </h3>
         {#if profile.personalBank}
-          <h3 class="text-text/85 font-bold">
+          <h3 class="font-bold text-text/85">
             Personal Bank:
             <span class="text-text">
               {formatNumber(profile.personalBank)}
@@ -59,33 +59,33 @@
     <AdditionStat text="Average Skill Level" data={profile.skills.averageSkillLevel.toFixed(2)} asterisk={true}>
       <div class="max-w-xs space-y-2">
         <div>
-          <h3 class="text-text/85 font-bold">
+          <h3 class="font-bold text-text/85">
             Total Skill XP:
             <span class="text-text">
               {numberFormat(profile.skills.totalSkillXp, defaultPattern)}
             </span>
           </h3>
-          <p class="text-text/80 font-medium">Total XP gained in all skills except Social and Runecrafting.</p>
+          <p class="font-medium text-text/80">Total XP gained in all skills except Social and Runecrafting.</p>
         </div>
         {#if profile.skills.averageSkillLevelWithProgress != null}
           <div>
-            <h3 class="text-text/85 font-bold">
+            <h3 class="font-bold text-text/85">
               Average Level:
               <span class="text-text">
                 {profile.skills.averageSkillLevelWithProgress.toFixed(2)}
               </span>
             </h3>
-            <p class="text-text/80 font-medium">Average skill level over all skills except Social and Runecrafting, includes progress to next level.</p>
+            <p class="font-medium text-text/80">Average skill level over all skills except Social and Runecrafting, includes progress to next level.</p>
           </div>
         {/if}
         <div>
-          <h3 class="text-text/85 font-bold">
+          <h3 class="font-bold text-text/85">
             Average Level without progress:
             <span class="text-text">
               {numberFormat(profile.skills.averageSkillLevel, defaultPatternDecimal)}
             </span>
           </h3>
-          <p class="text-text/80 font-medium">Average skill level without including partial level progress.</p>
+          <p class="font-medium text-text/80">Average skill level without including partial level progress.</p>
         </div>
       </div>
     </AdditionStat>
@@ -98,14 +98,14 @@
 
   <svelte:boundary>
     {#snippet pending()}
-      <div class="text-text/60 my-0 flex items-center gap-1 font-bold">
+      <div class="my-0 flex items-center gap-1 font-bold text-text/60">
         Networth:
-        <LoaderCircle class="text-icon animate-spin" />
+        <LoaderCircle class="animate-spin text-icon" />
       </div>
     {/snippet}
 
     {#snippet failed(err, retry)}
-      <div class="text-text/60 my-0 flex items-center gap-1 font-bold">
+      <div class="my-0 flex items-center gap-1 font-bold text-text/60">
         <Popover.Root bind:open={networthOpen}>
           <Popover.Trigger
             class="flex items-center gap-1"
@@ -113,7 +113,7 @@
               if (!isHover.current) return;
               networthOpen = true;
             }}>
-            <CircleX class="text-minecraft-c size-4 h-lh" /> Networth:
+            <CircleX class="size-4 h-lh text-minecraft-c" /> Networth:
           </Popover.Trigger>
           {#if isHttpError(err)}
             <Popover.Content forceMount class={cn("z-50 overflow-hidden rounded-lg p-4 font-semibold", $performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} strategy="absolute">
@@ -148,10 +148,10 @@
     <div class="max-w-xs space-y-2 font-bold">
       <div>
         <h3 class="text-text/85">{title}</h3>
-        <p class="text-text/80 font-medium italic">{title} calculations by SkyHelper.</p>
+        <p class="font-medium text-text/80 italic">{title} calculations by SkyHelper.</p>
       </div>
       <div>
-        <ul class="[&_li]:text-text/85 [&_li_span]:text-text font-bold [&_li]:capitalize [&_li_span]:normal-case">
+        <ul class="font-bold [&_li]:text-text/85 [&_li]:capitalize [&_li_span]:text-text [&_li_span]:normal-case">
           {#each Object.entries(networth.types ?? {}) as [key, value], index (index)}
             <li>
               {key.replace(/_/g, " ")}:

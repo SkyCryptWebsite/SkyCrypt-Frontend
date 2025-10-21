@@ -41,16 +41,16 @@
         </div>
       {/snippet}
 
-      <Button.Root href="https://minionah.com" target="_blank" class="bg-background/30 flex h-fit w-fit max-w-fit items-center gap-2 rounded-lg p-2 transition-all duration-300 ease-out hover:scale-105">
+      <Button.Root href="https://minionah.com" target="_blank" class="flex h-fit w-fit max-w-fit items-center gap-2 rounded-lg bg-background/30 p-2 transition-all duration-300 ease-out hover:scale-105">
         <Avatar.Root class="size-12 shrink-0">
           <Avatar.Image loading="lazy" src="/img/icons/minionah.avif" alt="MinionAH" class="aspect-square size-12" />
-          <Avatar.Fallback class="bg-background/10 flex size-12 items-center justify-center rounded-lg font-semibold">MA</Avatar.Fallback>
+          <Avatar.Fallback class="flex size-12 items-center justify-center rounded-lg bg-background/10 font-semibold">MA</Avatar.Fallback>
         </Avatar.Root>
         <div>
-          <h6 class="text-text font-bold text-pretty">Looking for a place to trade minions?</h6>
-          <span class="text-text/60 relative block w-fit text-left font-semibold">
-            Check out <h5 class="text-link inline underline">MinionAH</h5>
-            <ExternalLink class="text-link absolute top-0 -right-3 size-3" />
+          <h6 class="font-bold text-pretty text-text">Looking for a place to trade minions?</h6>
+          <span class="relative block w-fit text-left font-semibold text-text/60">
+            Check out <h5 class="inline text-link underline">MinionAH</h5>
+            <ExternalLink class="absolute top-0 -right-3 size-3 text-link" />
           </span>
         </div>
       </Button.Root>

@@ -42,22 +42,22 @@
   </div>
   <RadioGroup.Root class="mt-4 flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto" bind:value={$themeStore} onValueChange={changeTheme}>
     {#each themes as theme (theme.id)}
-      <Label.Root for={theme.id} class="bg-text/5 flex items-center justify-between gap-4 rounded-lg p-2">
+      <Label.Root for={theme.id} class="flex items-center justify-between gap-4 rounded-lg bg-text/5 p-2">
         <div class="flex items-center gap-2">
           <Avatar.Root class="shrink-0 select-none">
             <Avatar.Image loading="lazy" src={`/api/themes/${btoa(theme["colors"]!.logo)}${theme.light ? "/true" : ""}/logo.svg`} alt={theme.name} class="pointer-events-none aspect-square size-10 h-full rounded-lg select-none"></Avatar.Image>
             <Avatar.Fallback class="flex items-center rounded-lg text-center font-semibold uppercase">{theme.name.slice(0, 2)}</Avatar.Fallback>
           </Avatar.Root>
           <div class="flex flex-col">
-            <h4 class="text-text/90 font-semibold">{theme.name}</h4>
-            <p class="text-text/60 overflow-hidden font-normal text-ellipsis whitespace-nowrap">
+            <h4 class="font-semibold text-text/90">{theme.name}</h4>
+            <p class="overflow-hidden font-normal text-ellipsis whitespace-nowrap text-text/60">
               by
               <span class="text-text/80">{theme.author}</span>
             </p>
           </div>
         </div>
         <RadioGroup.Item id={theme.id} value={theme.id} class="group inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out">
-          <Check class="text-icon size-6 group-data-[state=unchecked]:invisible" />
+          <Check class="size-6 text-icon group-data-[state=unchecked]:invisible" />
         </RadioGroup.Item>
       </Label.Root>
     {/each}

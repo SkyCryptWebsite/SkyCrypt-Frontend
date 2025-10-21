@@ -54,7 +54,7 @@
       {#snippet text()}
         <div class="space-y-2">
           {#if highestPriorityFarmingTool && highestPriorityFarmingTool.display_name}
-            <p class="text-text/60 space-x-0.5 leading-6 font-bold capitalize" {@attach animateObfuscatedText}>
+            <p class="space-x-0.5 leading-6 font-bold text-text/60 capitalize" {@attach animateObfuscatedText}>
               <span>Active Tool:</span>
               {@html renderLore(highestPriorityFarmingTool.display_name)}
             </p>
@@ -82,7 +82,7 @@
             {#each crops as [_, cropData], index (index)}
               <Chip image={{ src: cropData.texture ?? "" }} animationOptions={{ animate: true, amountOfItems: crops.length, index: index }}>
                 <div class="flex flex-col gap-0.5 whitespace-nowrap">
-                  <h4 class="data-[maxed=true]:text-maxed text-lg font-semibold" data-maxed={cropData.maxed}>{cropData.name}</h4>
+                  <h4 class="text-lg font-semibold data-[maxed=true]:text-maxed" data-maxed={cropData.maxed}>{cropData.name}</h4>
                   {#if cropData.collected != null}
                     <AdditionStat text="Personal Best" data={formatNumber(cropData.collected)} />
                   {/if}

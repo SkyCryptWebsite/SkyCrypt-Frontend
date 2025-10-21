@@ -30,8 +30,8 @@
           {@const enchantingStats = Object.entries(enchanting.data)}
           <ScrollItems>
             {#each enchantingStats as [_key, enchating], index (index)}
-              <div class="bg-background/30 flex min-w-80 flex-col items-center gap-1 space-y-5 rounded-lg" in:fade|global={{ duration: 300, delay: 25 * (index + 1), easing: cubicOut }} out:fade={{ duration: 300, delay: 5 * (enchantingStats.length - index), easing: cubicOut }}>
-                <div class="border-icon flex w-full items-center justify-center border-b-2 py-2 text-center font-semibold uppercase">
+              <div class="flex min-w-80 flex-col items-center gap-1 space-y-5 rounded-lg bg-background/30" in:fade|global={{ duration: 300, delay: 25 * (index + 1), easing: cubicOut }} out:fade={{ duration: 300, delay: 5 * (enchantingStats.length - index), easing: cubicOut }}>
+                <div class="flex w-full items-center justify-center border-b-2 border-icon py-2 text-center font-semibold uppercase">
                   {enchating.name}
                 </div>
                 {#if enchating.stats}
@@ -53,7 +53,7 @@
                       <Chip image={{ src: game.texture ?? "" }} class="w-full max-w-none">
                         <div class="flex flex-col">
                           <div class="flex flex-col gap-0.5">
-                            <h4 class="text-text/60 font-bold">{`${game.name}`}</h4>
+                            <h4 class="font-bold text-text/60">{`${game.name}`}</h4>
                           </div>
                           <div class="flex w-full flex-col gap-0.5">
                             {#if game.attempts}

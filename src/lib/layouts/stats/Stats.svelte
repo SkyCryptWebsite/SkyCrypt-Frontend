@@ -44,9 +44,9 @@
         {/if}
       {/snippet}
     </Collapsible.Content>
-    <Collapsible.Trigger class="bg-text/10 mx-auto mt-3.5 w-full rounded-full p-2.5 text-xs font-semibold uppercase">
+    <Collapsible.Trigger class="mx-auto mt-3.5 w-full rounded-full bg-text/10 p-2.5 text-xs font-semibold uppercase">
       {#if stats?.loading}
-        <LoaderCircle class="text-icon mx-auto animate-spin" />
+        <LoaderCircle class="mx-auto animate-spin text-icon" />
       {:else}
         {openState ? "Hide Stats" : "Show Stats"}
       {/if}

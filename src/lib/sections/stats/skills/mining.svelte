@@ -29,7 +29,7 @@
       {#snippet text()}
         <div class="space-y-2">
           {#if highestPriorityMiningTool && highestPriorityMiningTool.display_name}
-            <p class="text-text/60 space-x-0.5 leading-6 font-bold capitalize" {@attach animateObfuscatedText}>
+            <p class="space-x-0.5 leading-6 font-bold text-text/60 capitalize" {@attach animateObfuscatedText}>
               <span>Active Tool:</span>
               {@html renderLore(highestPriorityMiningTool.display_name)}
             </p>
@@ -58,7 +58,7 @@
       {#if mining.crystalHollows.crystalHollowsLastAccess}
         <AdditionStat text="Crystal Hollows Pass" data={mining.crystalHollows.crystalHollowsLastAccess > Date.now() - 5 * 60 * 60 * 1000 ? "Purchased" : "Expired"} asterisk={true}>
           {@const passActive = mining.crystalHollows.crystalHollowsLastAccess > Date.now() - 5 * 60 * 60 * 1000}
-          <h3 class="text-text/85 font-bold">
+          <h3 class="font-bold text-text/85">
             Last purchased:
             <span class="text-text">
               {#if passActive}
@@ -80,13 +80,13 @@
 
       <AdditionStat text="Crystal Nucleus" data={`Completed ${mining.crystalHollows.nucleusRuns} ${mining.crystalHollows.nucleusRuns !== 1 ? "times" : "time"}`} asterisk={true}>
         {@const placableCrystals = ["jade", "amber", "amethyst", "sapphire", "topaz"]}
-        <h3 class="text-text/85 text-sm font-bold">Crystals:</h3>
+        <h3 class="text-sm font-bold text-text/85">Crystals:</h3>
         {#if mining.crystalHollows.progress}
           {#if mining.crystalHollows.progress.crystals}
             <ul class="mt-0.5 space-y-0.5 text-sm font-bold">
               {#each Object.entries(mining.crystalHollows.progress.crystals).filter(([crystalName, _crystalStatus]) => placableCrystals.includes(crystalName)) as [crystalName, crystalStatus], index (index)}
                 <li class="flex">
-                  <span class="text-text/85 flex-1 capitalize">
+                  <span class="flex-1 text-text/85 capitalize">
                     - {crystalName}:
                     <span class={cn("capitalize", crystalStatus === "PLACED" ? "text-minecraft-e" : crystalStatus === "FOUND" ? "text-minecraft-a" : "text-minecraft-c")}>
                       {crystalStatus.replace("_", " ").toLowerCase()}
@@ -96,11 +96,11 @@
               {/each}
             </ul>
 
-            <h3 class="text-text/85 mt-5 text-sm font-bold">Other Crystals:</h3>
+            <h3 class="mt-5 text-sm font-bold text-text/85">Other Crystals:</h3>
             <ul class="mt-0.5 space-y-0.5 text-sm font-bold">
               {#each Object.entries(mining.crystalHollows.progress.crystals).filter(([crystalName, _crystalStatus]) => !placableCrystals.includes(crystalName)) as [crystalName, crystalStatus], index (index)}
                 <li class="flex">
-                  <span class="text-text/85 flex-1 capitalize">
+                  <span class="flex-1 text-text/85 capitalize">
                     - {crystalName}:
                     <span class={cn("capitalize", crystalStatus === "FOUND" ? "text-minecraft-a" : "text-minecraft-c")}>
                       {crystalStatus.replace("_", " ").toLowerCase()}
@@ -112,7 +112,7 @@
           {/if}
 
           {#if mining.crystalHollows.progress.parts}
-            <h3 class="text-text/85 mt-5 text-sm font-bold">Precursor parts delivered:</h3>
+            <h3 class="mt-5 text-sm font-bold text-text/85">Precursor parts delivered:</h3>
             <ul class="mt-0.5 space-y-0.5 text-sm font-bold">
               {#each Object.entries(mining.crystalHollows.progress.parts) as [partName, partStatus], index (index)}
                 {@const delivered = partStatus === "DELIVERED"}
@@ -172,15 +172,15 @@
         <p class="text-text/80">Unfortunately, Hypixel broke the Heart of the Mountain API after the Foraging update.<br />So we are unable to display the Heart of the Mountain data, because it simply doesn't exist anymore.</p>
         <p class="text-text/80">We will add this back as soon as Hypixel fixes it.</p>
       </Notice>
-      <div class="bg-background/30 @container relative mb-0 rounded-lg p-5">
+      <div class="@container relative mb-0 rounded-lg bg-background/30 p-5">
         <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
           {#each mining.hotm as item, index (index)}
             {#if item.display_name}
-              <div class="bg-text/4 flex aspect-square items-center justify-center rounded-sm" in:fade|global={{ duration: 300, delay: 5 * (index + 1), easing: cubicOut }}>
+              <div class="flex aspect-square items-center justify-center rounded-sm bg-text/4" in:fade|global={{ duration: 300, delay: 5 * (index + 1), easing: cubicOut }}>
                 <Item piece={item} isInventory={true} />
               </div>
             {:else}
-              <div class="bg-text/4 aspect-square rounded-sm" in:fade|global={{ duration: 300, delay: 5 * (index + 1), easing: cubicOut }}></div>
+              <div class="aspect-square rounded-sm bg-text/4" in:fade|global={{ duration: 300, delay: 5 * (index + 1), easing: cubicOut }}></div>
             {/if}
           {/each}
         </div>

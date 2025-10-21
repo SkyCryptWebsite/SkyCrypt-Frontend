@@ -116,10 +116,10 @@
 </script>
 
 <Section id="Inventory" {order} class="min-h-[600px]">
-  <Tabs.Root bind:value={openTab} class="bg-background/30 @container relative mb-0 rounded-lg p-5 pt-4">
+  <Tabs.Root bind:value={openTab} class="@container relative mb-0 rounded-lg bg-background/30 p-5 pt-4">
     <Tabs.List>
       <ScrollArea.Root>
-        <ScrollArea.Viewport class="border-icon border-b">
+        <ScrollArea.Viewport class="border-b border-icon">
           <div class="flex! h-full shrink-0 flex-nowrap items-center gap-3 px-4 whitespace-nowrap">
             {#each tabs as tab (tab.id)}
               <Tabs.Trigger value={tab.id} class="group relative flex items-center justify-center gap-0.5 pb-2 text-xs uppercase">
@@ -131,9 +131,9 @@
                 </Avatar.Root>
                 {tab.id.replaceAll("_", " ")}
                 {#if openTab === tab.id}
-                  <div class="bg-icon absolute -bottom-1 h-2 w-full rounded-full" in:send={{ key: "active-tab" }} out:receive={{ key: "active-tab" }}></div>
+                  <div class="absolute -bottom-1 h-2 w-full rounded-full bg-icon" in:send={{ key: "active-tab" }} out:receive={{ key: "active-tab" }}></div>
                 {:else}
-                  <div class="bg-icon absolute -bottom-1 h-2 w-full rounded-full opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100" out:fade={{ duration: 300, easing: cubicOut }}></div>
+                  <div class="absolute -bottom-1 h-2 w-full rounded-full bg-icon opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100" out:fade={{ duration: 300, easing: cubicOut }}></div>
                 {/if}
               </Tabs.Trigger>
             {/each}
@@ -166,7 +166,7 @@
 {/snippet}
 
 {#snippet emptyItem()}
-  <div class="bg-text/4 aspect-square rounded-sm"></div>
+  <div class="aspect-square rounded-sm bg-text/4"></div>
 {/snippet}
 
 {#snippet gap()}
@@ -177,14 +177,14 @@
   <input
     type="search"
     placeholder="Search all inventories"
-    class="bg-text/10 text-text placeholder:text-text/80 mx-auto mt-4 block w-full max-w-52 rounded-lg px-2 py-2 font-normal focus-visible:outline-none"
+    class="mx-auto mt-4 block w-full max-w-52 rounded-lg bg-text/10 px-2 py-2 font-normal text-text placeholder:text-text/80 focus-visible:outline-none"
     bind:value={searchValue}
     onkeydown={(e) => {
       e.stopPropagation();
     }} />
   <svelte:boundary>
     {#snippet pending()}
-      <LoaderCircle class="text-icon mx-auto mt-4 animate-spin" />
+      <LoaderCircle class="mx-auto mt-4 animate-spin text-icon" />
     {/snippet}
     {#snippet failed(err, retry)}
       <Notice title="An unexpected error has occurred" type="error" error={err} {retry} />
@@ -198,7 +198,7 @@
         <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
           {#each items as item, index (index)}
             {#if item}
-              <div class="bg-text/4 data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={!$performanceMode && shouldShine(item)}>
+              <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!$performanceMode && shouldShine(item)}>
                 {@render itemSnippet(item)}
               </div>
             {:else}
@@ -216,7 +216,7 @@
     {@const items = await getInventorySection({ uuid: uuid!, profileId: profileId!, inventoryId: openTab })}
 
     {#snippet pending()}
-      <LoaderCircle class="text-icon mx-auto mt-4 animate-spin" />
+      <LoaderCircle class="mx-auto mt-4 animate-spin text-icon" />
     {/snippet}
     {#snippet failed(err, retry)}
       <Notice title="An unexpected error has occurred" type="error" error={err} {retry} />
@@ -230,7 +230,7 @@
               {#snippet child({ props })}
                 <div {...props}>
                   {#if item.texture_path}
-                    <div class="group-data-[state=active]:bg-text/10 group-data-[state=inactive]:bg-text/4 data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={!$performanceMode && shouldShine(item)}>
+                    <div class="relative flex aspect-square items-center justify-center rounded-sm group-data-[state=active]:bg-text/10 group-data-[state=inactive]:bg-text/4 data-[shine=true]:shine" data-shine={!$performanceMode && shouldShine(item)}>
                       {@render itemSnippet(item)}
                     </div>
                   {:else}
@@ -255,7 +255,7 @@
                   {/if}
                   <Tabs.Content value={index.toString()}>
                     {#if containedItem.texture_path}
-                      <div class="bg-text/4 data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={!$performanceMode && shouldShine(item)}>
+                      <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!$performanceMode && shouldShine(item)}>
                         {@render itemSnippet(containedItem)}
                       </div>
                     {:else}
@@ -285,7 +285,7 @@
   <svelte:boundary>
     {@const items = await getInventorySection({ uuid: uuid!, profileId: profileId!, inventoryId: openTab })}
     {#snippet pending()}
-      <LoaderCircle class="text-icon mx-auto mt-4 animate-spin" />
+      <LoaderCircle class="mx-auto mt-4 animate-spin text-icon" />
     {/snippet}
     {#snippet failed(err, retry)}
       <Notice title="An unexpected error has occurred" type="error" error={err} {retry} />
@@ -300,7 +300,7 @@
             {/if}
           {/if}
           {#if item.texture_path}
-            <div class="bg-text/4 data-[shine=true]:shine relative flex aspect-square items-center justify-center rounded-sm" data-shine={!$performanceMode && shouldShine(item)}>
+            <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!$performanceMode && shouldShine(item)}>
               {#if tab.id === "inventory"}
                 {@render itemSnippet({ ...item, rarity: item.rarity ?? "uncommon" } as ModelsStrippedItem)}
               {:else}

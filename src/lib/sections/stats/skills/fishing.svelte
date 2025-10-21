@@ -39,7 +39,7 @@
       {#snippet text()}
         <div class="space-y-2">
           {#if highestPriorityFishingTool && highestPriorityFishingTool.display_name}
-            <p class="text-text/60 space-x-0.5 leading-6 font-bold capitalize" {@attach animateObfuscatedText}>
+            <p class="space-x-0.5 leading-6 font-bold text-text/60 capitalize" {@attach animateObfuscatedText}>
               <span>Active Rod:</span>
               {@html renderLore(highestPriorityFishingTool.display_name)}
             </p>
@@ -65,8 +65,8 @@
           {@const seaCreatures = Object.entries(fishing.kills)}
           <ScrollItems>
             {#each seaCreatures as [_, seaCreature], index (index)}
-              <div class="bg-background/30 flex h-full max-h-56 flex-col rounded-lg p-2 whitespace-nowrap" in:fade|global={{ duration: 300, delay: 25 * (index + 1), easing: cubicOut }} out:fade={{ duration: 300, delay: 5 * (seaCreatures.length - index), easing: cubicOut }}>
-                <div class="border-icon flex h-12 items-center justify-center border-b-2 pb-2 text-center font-bold">
+              <div class="flex h-full max-h-56 flex-col rounded-lg bg-background/30 p-2 whitespace-nowrap" in:fade|global={{ duration: 300, delay: 25 * (index + 1), easing: cubicOut }} out:fade={{ duration: 300, delay: 5 * (seaCreatures.length - index), easing: cubicOut }}>
+                <div class="flex h-12 items-center justify-center border-b-2 border-icon pb-2 text-center font-bold">
                   {seaCreature.name}
                 </div>
                 <div class="mt-2 flex h-full w-full flex-col items-center justify-center gap-4">
@@ -141,7 +141,7 @@
               <Chip class="px-4 whitespace-nowrap" animationOptions={{ animate: true, amountOfItems: trophyFishes.length, index: index }} image={{ src: trophyFish.texture ?? "" }}>
                 <div class="flex flex-col">
                   <div class="flex flex-col gap-0.5">
-                    <h4 class="font-bold {highestTierColor}">{trophyFish.name} <span class="text-text/70 font-medium">x{format((trophyFish.bronze ?? 0) + (trophyFish.silver ?? 0) + (trophyFish.gold ?? 0) + (trophyFish.diamond ?? 0))}</span></h4>
+                    <h4 class="font-bold {highestTierColor}">{trophyFish.name} <span class="font-medium text-text/70">x{format((trophyFish.bronze ?? 0) + (trophyFish.silver ?? 0) + (trophyFish.gold ?? 0) + (trophyFish.diamond ?? 0))}</span></h4>
                   </div>
                   <div class="grid grid-cols-2 grid-rows-2">
                     <div class="flex items-center gap-1">

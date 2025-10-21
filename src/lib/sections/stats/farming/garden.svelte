@@ -37,7 +37,7 @@
     {:else}
       <svelte:boundary>
         {#snippet pending()}
-          <LoaderCircle class="text-icon animate-spin" />
+          <LoaderCircle class="animate-spin text-icon" />
         {/snippet}
         {#snippet failed(err, retry)}
           <Notice title="An unexpected error has occurred" type="error" error={err} {retry} />
@@ -47,26 +47,26 @@
           {@const hasMaxed = garden.level?.maxed ?? false}
           <div class="mt-2">
             <AdditionStat text="Level" data="{garden.level?.level} / {garden.level?.maxLevel}" maxed={hasMaxed} asterisk={true}>
-              <h3 class="text-text/85 font-bold">
+              <h3 class="font-bold text-text/85">
                 XP:
                 <span class="text-text">
                   {format(garden.level?.xp)}
                 </span>
               </h3>
-              <h3 class="text-text/85 font-bold">Progress to next level:</h3>
-              <Progress.Root value={garden.level?.xpCurrent} max={hasMaxed ? garden.level?.xpCurrent : garden.level?.xpForNext} class="bg-text/30 relative h-4 w-full overflow-hidden rounded-full">
+              <h3 class="font-bold text-text/85">Progress to next level:</h3>
+              <Progress.Root value={garden.level?.xpCurrent} max={hasMaxed ? garden.level?.xpCurrent : garden.level?.xpForNext} class="relative h-4 w-full overflow-hidden rounded-full bg-text/30">
                 <div class="absolute z-10 flex h-full w-full justify-center">
-                  <div class="shadow-background/50 txt-shadow text-xs font-semibold">
+                  <div class="text-xs font-semibold shadow-background/50 txt-shadow">
                     {formatNumber(garden.level?.xpCurrent ?? 0)} / {formatNumber(garden.level?.xpForNext ?? 0)}
                     XP
                   </div>
                 </div>
-                <div class="bg-skillbar data-[maxed=true]:bg-maxedbar h-full w-full flex-1 rounded-full transition-all duration-300 ease-out" style={`transform: translateX(-${100 - parseFloat(calculatePercentage(garden.level?.xpCurrent ?? 0, hasMaxed ? (garden.level?.xpCurrent ?? 0) : (garden.level?.xpForNext ?? 0)))}%)`} data-maxed={hasMaxed}></div>
+                <div class="h-full w-full flex-1 rounded-full bg-skillbar transition-all duration-300 ease-out data-[maxed=true]:bg-maxedbar" style={`transform: translateX(-${100 - parseFloat(calculatePercentage(garden.level?.xpCurrent ?? 0, hasMaxed ? (garden.level?.xpCurrent ?? 0) : (garden.level?.xpForNext ?? 0)))}%)`} data-maxed={hasMaxed}></div>
               </Progress.Root>
             </AdditionStat>
             <AdditionStat text="Composter" data={Object.values(garden.composter ?? {}).join(" / ")} asterisk={true} maxed={Object.values(garden.composter ?? {}).every((value) => value === 25)}>
               {#each Object.entries(garden.composter ?? {}) as [key, value], index (index)}
-                <h3 class="text-text/85 font-bold">
+                <h3 class="font-bold text-text/85">
                   <span class="capitalize">{key.replaceAll("_", " ")}</span>:
                   <span class="text-text">
                     {value}
@@ -76,7 +76,7 @@
             </AdditionStat>
             <AdditionStat text="Visitors" data={format(garden.visitors?.completed)} asterisk={true}>
               {#each Object.entries(garden.visitors?.visitors ?? {}) as [key, value], index (index)}
-                <h3 class="text-text/85 font-bold">
+                <h3 class="font-bold text-text/85">
                   <span class={cn("capitalize", getRarityClass(key, "text"))}>{key}</span>:
                   <span class="text-text">
                     {format(value.completed)}
@@ -86,7 +86,7 @@
             </AdditionStat>
             <AdditionStat text="Unique Visitors" data={garden.visitors?.uniqueVisitors ?? 0} asterisk={true}>
               {#each Object.entries(garden.visitors?.visitors ?? {}) as [key, value], index (index)}
-                <h3 class="text-text/85 font-bold">
+                <h3 class="font-bold text-text/85">
                   <span class={cn("capitalize", getRarityClass(key, "text"))}>{key}</span>:
                   <span class="text-text">
                     {format(value.unique)}
@@ -130,7 +130,7 @@
     {/if}
   </div>
   {#if garden.plot}
-    <div class="bg-background/30 @container relative mt-3 mb-0 rounded-lg p-5">
+    <div class="@container relative mt-3 mb-0 rounded-lg bg-background/30 p-5">
       <div class="grid grid-cols-[repeat(5,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
         {#each garden.plot.layout as plot, index (index)}
           {#snippet tooltipContent()}
@@ -140,7 +140,7 @@
           {/snippet}
           <Tooltip.Root disableCloseOnTriggerClick={false}>
             <Tooltip.Trigger onclick={() => content.set(tooltipContent)}>
-              <Avatar.Root class="bg-text/4 flex aspect-square items-center justify-center rounded-sm p-1">
+              <Avatar.Root class="flex aspect-square items-center justify-center rounded-sm bg-text/4 p-1">
                 <Avatar.Image src={plot.texture_path} class="h-auto w-14 select-none [image-rendering:pixelated]" />
                 <Avatar.Fallback>
                   <Image class="size-full" />
@@ -149,7 +149,7 @@
             </Tooltip.Trigger>
             <Tooltip.Portal>
               {#if isHover.current}
-                <Tooltip.Content forceMount class="bg-background-grey text-text/80 z-50 rounded-lg p-4 font-semibold" sideOffset={6} side="top" align="center">
+                <Tooltip.Content forceMount class="z-50 rounded-lg bg-background-grey p-4 font-semibold text-text/80" sideOffset={6} side="top" align="center">
                   {#snippet child({ wrapperProps, props, open })}
                     {#if open}
                       <div {...wrapperProps}>
@@ -222,13 +222,13 @@
           {#snippet progress()}
             <Progress.Root value={milestone.level?.xpCurrent} max={hasMaxed ? milestone.level?.xpCurrent : milestone.level?.xpForNext} class="relative h-4 w-full overflow-hidden ">
               <div class="absolute z-10 flex h-full w-full justify-center">
-                <div class="shadow-background/50 txt-shadow text-xs font-semibold">
+                <div class="text-xs font-semibold shadow-background/50 txt-shadow">
                   {formatNumber(milestone.level?.xpCurrent ?? 0)} / {formatNumber(milestone.level?.xpForNext ?? 0)}
                   XP
                 </div>
               </div>
 
-              <div class="bg-skillbar data-[maxed=true]:bg-maxedbar h-full w-full flex-1 transition-all duration-300 ease-out" style={`transform: translateX(-${100 - parseFloat(calculatePercentage(milestone.level?.xpCurrent ?? 0, hasMaxed ? (milestone.level?.xpCurrent ?? 0) : (milestone.level?.xpForNext ?? 0)))}%)`} data-maxed={hasMaxed}></div>
+              <div class="h-full w-full flex-1 bg-skillbar transition-all duration-300 ease-out data-[maxed=true]:bg-maxedbar" style={`transform: translateX(-${100 - parseFloat(calculatePercentage(milestone.level?.xpCurrent ?? 0, hasMaxed ? (milestone.level?.xpCurrent ?? 0) : (milestone.level?.xpForNext ?? 0)))}%)`} data-maxed={hasMaxed}></div>
             </Progress.Root>
           {/snippet}
         </Chip>

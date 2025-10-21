@@ -142,7 +142,7 @@
                       <div transition:fade={{ duration: 300, easing: cubicOut }} {...props}>
                         <Avatar.Image loading="lazy" src="https://vzge.me/full/832/{profile.uuid}.webp?no=shadow&y=-3" alt="{profile.username}'s avatar" class="max-h-[32rem] object-cover" />
                         <Avatar.Fallback>
-                          <Image class="text-text size-24 object-cover" />
+                          <Image class="size-24 object-cover text-text" />
                         </Avatar.Fallback>
                       </div>
                     {/snippet}
@@ -158,10 +158,10 @@
         </Pane>
 
         <PaneResizer class="fixed top-1/2 left-(--size) z-20 flex w-2 -translate-x-1 -translate-y-[calc(50%-1.5rem)] items-center justify-center rounded-xs opacity-30 transition-opacity duration-300 ease-out group-hover/pane:opacity-100" style="--size: {leftSize}%">
-          <div class="bg-icon absolute h-[50dvh] w-2 rounded-xs transition-[clip-path] duration-300 ease-out [clip-path:inset(50%_0_50%_0)] group-hover/pane:[clip-path:inset(0_0_0_0)]"></div>
+          <div class="absolute h-[50dvh] w-2 rounded-xs bg-icon transition-[clip-path] duration-300 ease-out [clip-path:inset(50%_0_50%_0)] group-hover/pane:[clip-path:inset(0_0_0_0)]"></div>
 
-          <div class="bg-background-grey group-hover/pane:bg-icon z-10 flex h-7 min-w-5 items-center justify-center rounded-sm transition-colors duration-300 ease-out">
-            <GripVertical class="text-text/80 size-4" />
+          <div class="z-10 flex h-7 min-w-5 items-center justify-center rounded-sm bg-background-grey transition-colors duration-300 ease-out group-hover/pane:bg-icon">
+            <GripVertical class="size-4 text-text/80" />
           </div>
         </PaneResizer>
       </div>
@@ -202,7 +202,7 @@
           {/if}
         {/snippet}
       </Dialog.Overlay>
-      <Dialog.Content forceMount class="bg-background-lore font-icomoon fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] max-w-[calc(100vw-2.5rem)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg select-text">
+      <Dialog.Content forceMount class="fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] max-w-[calc(100vw-2.5rem)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg bg-background-lore font-icomoon select-text">
         {#snippet child({ props, open })}
           {#if open}
             <div {...props} transition:flyAndScale>
@@ -228,7 +228,7 @@
           {/if}
         {/snippet}
       </Dialog.Overlay>
-      <Dialog.Content forceMount class="bg-background-lore font-icomoon fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] max-w-[calc(100vw-2.5rem)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg select-text">
+      <Dialog.Content forceMount class="fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] max-w-[calc(100vw-2.5rem)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg bg-background-lore font-icomoon select-text">
         {#snippet child({ props, open })}
           {#if open}
             <div {...props} transition:flyAndScale>
@@ -243,7 +243,7 @@
   <Drawer.Root bind:open={$showItem} shouldScaleBackground={true} setBackgroundColorOnScale={false}>
     <Drawer.Portal>
       <Drawer.Overlay class="fixed inset-0 z-40 bg-black/80" />
-      <Drawer.Content class="bg-background-lore fixed right-0 bottom-0 left-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px]">
+      <Drawer.Content class="fixed right-0 bottom-0 left-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px] bg-background-lore">
         <ItemContent piece={$itemContent!} isDrawer={true} />
       </Drawer.Content>
     </Drawer.Portal>
@@ -259,7 +259,7 @@
     }}>
     <Drawer.Portal>
       <Drawer.Overlay class="fixed inset-0 z-40 bg-black/80" />
-      <Drawer.Content class="bg-background-lore fixed right-0 bottom-0 left-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px]">
+      <Drawer.Content class="fixed right-0 bottom-0 left-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px] bg-background-lore">
         {@render containedItems()}
       </Drawer.Content>
     </Drawer.Portal>
@@ -269,9 +269,9 @@
 {#if $showGlint}
   <svg xmlns="http://www.w3.org/2000/svg" height="0" width="0" class="fixed">
     <filter id="enchanted-glint">
-      <feImage href="/img/enchanted-glint.avif" />
-      <feComposite in2="SourceGraphic" operator="in" />
-      <feBlend in="SourceGraphic" mode="screen" />
+      <feImage href="/img/enchanted-glint.avif"></feImage>
+      <feComposite in2="SourceGraphic" operator="in"></feComposite>
+      <feBlend in="SourceGraphic" mode="screen"></feBlend>
     </filter>
   </svg>
 {/if}
@@ -287,11 +287,11 @@
             {/if}
           {/if}
           {#if containedItem.texture_path}
-            <div class="bg-text/4 flex aspect-square items-center justify-center rounded-sm" onclick={() => itemContentSpecial.set(undefined)} role="none">
+            <div class="flex aspect-square items-center justify-center rounded-sm bg-text/4" onclick={() => itemContentSpecial.set(undefined)} role="none">
               <Item piece={containedItem} isInventory={true} showRecombobulated={false} showCount={true} />
             </div>
           {:else}
-            <div class="bg-text/4 aspect-square rounded-sm"></div>
+            <div class="aspect-square rounded-sm bg-text/4"></div>
           {/if}
         {/each}
       {/if}

@@ -52,7 +52,7 @@
 </script>
 
 <Tooltip.Root>
-  <Tooltip.Trigger class={cn("bg-background/30 flex w-full max-w-fit items-center gap-2 rounded-lg py-2", classNames)} onpointerdown={() => (open = !open)} onclick={() => content.set(tooltip)}>
+  <Tooltip.Trigger class={cn("flex w-full max-w-fit items-center gap-2 rounded-lg bg-background/30 py-2", classNames)} onpointerdown={() => (open = !open)} onclick={() => content.set(tooltip)}>
     {#snippet child({ props })}
       <div {...props} bind:this={targetNode} in:fade={{ duration: animationOptions.animate ? 300 : 0, delay: animationOptions.animate ? 25 * (animationOptions.index + 1) : 0, easing: cubicOut }} out:fade={{ duration: animationOptions.animate ? 300 : 0, delay: animationOptions.animate ? 25 * (animationOptions.amountOfItems - animationOptions.index) : 0, easing: cubicOut }}>
         <div class="flex items-center gap-2 px-2">
@@ -76,7 +76,7 @@
   </Tooltip.Trigger>
   <Tooltip.Portal>
     {#if tooltip && isHover.current}
-      <Tooltip.Content forceMount class="bg-background-grey z-50 rounded-lg p-4" sideOffset={6} side="top" align="center">
+      <Tooltip.Content forceMount class="z-50 rounded-lg bg-background-grey p-4" sideOffset={6} side="top" align="center">
         {#snippet child({ wrapperProps, props, open })}
           {#if open}
             <div {...wrapperProps}>

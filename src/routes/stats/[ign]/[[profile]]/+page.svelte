@@ -38,10 +38,10 @@
 <svelte:boundary>
   {#snippet pending()}
     <div class="flex h-screen items-center justify-center">
-      <div class={cn("bg-text/5 rounded-lg p-6", $performanceMode ? "bg-background-grey" : "backdrop-blur-sm")}>
+      <div class={cn("rounded-lg bg-text/5 p-6", $performanceMode ? "bg-background-grey" : "backdrop-blur-sm")}>
         <div class="flex items-center gap-2">
-          <LoaderCircle class="text-text/60 size-5 animate-spin" />
-          <span class="text-text/80 font-semibold">Loading profile...</span>
+          <LoaderCircle class="size-5 animate-spin text-text/60" />
+          <span class="font-semibold text-text/80">Loading profile...</span>
         </div>
       </div>
     </div>

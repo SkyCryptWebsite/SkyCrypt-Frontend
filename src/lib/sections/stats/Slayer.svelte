@@ -33,8 +33,8 @@
           <ScrollItems>
             {#each Object.entries(slayer.data) as [key, value], index (index)}
               {#if value.level && value.level.xp != null && value.level.xp > 0}
-                <div class="bg-background/30 relative flex min-w-[min(20.625rem,100vw)] flex-col items-center gap-1 space-y-5 overflow-hidden rounded-lg">
-                  <div class="border-icon flex w-full items-center justify-center gap-1.5 border-b-2 py-2 text-center font-semibold uppercase">
+                <div class="relative flex min-w-[min(20.625rem,100vw)] flex-col items-center gap-1 space-y-5 overflow-hidden rounded-lg bg-background/30">
+                  <div class="flex w-full items-center justify-center gap-1.5 border-b-2 border-icon py-2 text-center font-semibold uppercase">
                     <Avatar.Root>
                       <Avatar.Image loading="lazy" src={value.texture} class="size-8 object-contain [image-rendering:pixelated]" />
                       <Avatar.Fallback>
@@ -46,7 +46,7 @@
                   {#if value.kills}
                     <div class="flex h-full w-full flex-wrap gap-5 px-5 uppercase">
                       {#each Object.entries(value.kills) as [key, killValue], index (index)}
-                        <div class="text-text/60 flex flex-col items-center gap-1 text-sm font-bold">
+                        <div class="flex flex-col items-center gap-1 text-sm font-bold text-text/60">
                           <span>
                             {#if !isNaN(Number(key))}
                               Tier {["I", "II", "III", "IV", "V"][Number(key) - 1]}
@@ -62,13 +62,13 @@
                     </div>
                   {/if}
                   <div class="w-full">
-                    <p class="text-text/60 mb-2 w-full space-y-5 px-5 text-center font-semibold capitalize">
+                    <p class="mb-2 w-full space-y-5 px-5 text-center font-semibold text-text/60 capitalize">
                       {key} Level {value.level.level}
                     </p>
 
-                    <Progress.Root value={value.level.xp} max={value.level.xpForNext} class="bg-text/30 group h-4 w-full overflow-hidden" data-maxed={value.level.maxed}>
+                    <Progress.Root value={value.level.xp} max={value.level.xpForNext} class="group h-4 w-full overflow-hidden bg-text/30" data-maxed={value.level.maxed}>
                       <div class="absolute z-10 flex h-full w-full justify-center">
-                        <div class="shadow-background/50 txt-shadow text-xs font-semibold">
+                        <div class="text-xs font-semibold shadow-background/50 txt-shadow">
                           {#if value.level.maxed}
                             {format(value.level.xp)}
                           {:else}

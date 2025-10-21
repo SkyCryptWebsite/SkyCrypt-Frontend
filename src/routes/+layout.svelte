@@ -222,7 +222,7 @@
     </Dialog.Overlay>
     <Dialog.Content
       forceMount
-      class={cn("font-icomoon fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg select-text", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}
+      class={cn("fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg font-icomoon select-text", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}
       onOpenAutoFocus={(e) => {
         e.preventDefault();
         commandInput?.focus();
@@ -248,7 +248,7 @@
     }}>
     <Drawer.Portal>
       <Drawer.Overlay class="fixed inset-0 z-40 bg-black/80" />
-      <Drawer.Content class="bg-background-lore fixed right-0 bottom-0 left-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px]">
+      <Drawer.Content class="fixed right-0 bottom-0 left-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px] bg-background-lore">
         <div class="mx-auto w-full max-w-md overflow-auto p-6">
           {@render $content?.()}
         </div>
@@ -258,7 +258,7 @@
 {/if}
 
 {#snippet command()}
-  <form method="POST" action="/search" use:enhance class="bg-background/20 relative flex h-full w-4/5 items-center justify-start overflow-clip rounded-[1.125rem] @[38rem]:w-full">
+  <form method="POST" action="/search" use:enhance class="relative flex h-full w-4/5 items-center justify-start overflow-clip rounded-[1.125rem] bg-background/20 @[38rem]:w-full">
     <Field {form} name="query">
       <Control>
         {#snippet children({ props })}
@@ -267,9 +267,9 @@
       </Control>
     </Field>
   </form>
-  <Command.Root bind:value={commandValue} class="divide-icon/30 flex h-full w-full flex-col divide-y self-start overflow-hidden rounded-lg" filter={customFilter}>
+  <Command.Root bind:value={commandValue} class="flex h-full w-full flex-col divide-y divide-icon/30 self-start overflow-hidden rounded-lg" filter={customFilter}>
     <div class="flex h-12 items-center">
-      <Button.Root type="button" class="text-text flex aspect-square  h-full items-center justify-center" onclick={() => form.submit()}>
+      <Button.Root type="button" class="flex aspect-square h-full  items-center justify-center text-text" onclick={() => form.submit()}>
         {#if $formData.query.length > 0 && isTainted($tainted?.query) && $errors.query !== undefined}
           <CircleAlert class="size-4" />
         {:else if $submitting || loading}
@@ -279,7 +279,7 @@
         {/if}
       </Button.Root>
       <Command.Input
-        class="placeholder:text-text/50 text-text inline-flex h-12 w-full truncate rounded-tl-lg rounded-tr-lg pr-4 text-base transition-colors ease-out focus:ring-0 focus:outline-hidden"
+        class="inline-flex h-12 w-full truncate rounded-tl-lg rounded-tr-lg pr-4 text-base text-text transition-colors ease-out placeholder:text-text/50 focus:ring-0 focus:outline-hidden"
         placeholder="Search for something..."
         type="search"
         required
@@ -312,9 +312,9 @@
               {#each $recentSearches.slice(0, 5) as recentSearch, index (index)}
                 {#if !ign || recentSearch.ign !== ign}
                   <Command.LinkItem value={recentSearch.ign} href="/stats/{recentSearch.ign}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[recentSearch.ign, "profile", "player", "favorite", "favorites"]}>
-                    <Avatar.Root class="bg-text/10 size-4 shrink-0">
+                    <Avatar.Root class="size-4 shrink-0 bg-text/10">
                       <Avatar.Image loading="lazy" src={recentSearch.uuid ? `https://crafatar.com/avatars/${recentSearch.uuid}?size=64&overlay` : "https://mc-heads.net/avatar/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40/64"} alt={recentSearch.ign} class="aspect-square size-4 [image-rendering:pixelated]" />
-                      <Avatar.Fallback class="text-text/60 flex h-full items-center justify-center text-lg font-semibold uppercase">
+                      <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">
                         {recentSearch.ign.slice(0, 2)}
                       </Avatar.Fallback>
                     </Avatar.Root>
@@ -333,9 +333,9 @@
               {#each $favorites.slice(0, 5) as favorite, index (index)}
                 {#if !ign || favorite.ign !== ign}
                   <Command.LinkItem value={favorite.ign} href="/stats/{favorite.ign}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[favorite.ign, favorite.uuid, "profile", "player", "favorite", "favorites"]}>
-                    <Avatar.Root class="bg-text/10 size-4 shrink-0">
+                    <Avatar.Root class="size-4 shrink-0 bg-text/10">
                       <Avatar.Image loading="lazy" src={`https://crafatar.com/avatars/${favorite.uuid}?size=64&overlay`} alt={favorite.ign} class="aspect-square size-4 [image-rendering:pixelated]" />
-                      <Avatar.Fallback class="text-text/60 flex h-full items-center justify-center text-lg font-semibold uppercase">
+                      <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">
                         {favorite.ign.slice(0, 2)}
                       </Avatar.Fallback>
                     </Avatar.Root>
@@ -356,7 +356,7 @@
                 {#if $submitting || loading}
                   <LoaderCircle class="size-4 animate-spin" />
                 {:else}
-                  <Search class="text-text size-4" />
+                  <Search class="size-4 text-text" />
                 {/if}
                 {#if $message && $message.type === "error"}
                   {$message.text}
@@ -373,31 +373,31 @@
           <Command.GroupHeading class="text-muted-foreground px-3 pt-4 pb-2 text-xs">Settings</Command.GroupHeading>
           <Command.GroupItems>
             <Command.Item value="packs" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["packs", "change", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Packs)}>
-              <div class="bg-icon/80 rounded-lg p-1">
+              <div class="rounded-lg bg-icon/80 p-1">
                 <PackageOpen class="size-4" />
               </div>
               Change Packs
             </Command.Item>
             <Command.Item value="themes" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["themes", "change", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Themes)}>
-              <div class="bg-icon/80 rounded-lg p-1">
+              <div class="rounded-lg bg-icon/80 p-1">
                 <PaintBucket class="size-4" />
               </div>
               Change Theme
             </Command.Item>
             <Command.Item value="section-order" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["order", "change", "section", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Order)}>
-              <div class="bg-icon/80 rounded-lg p-1">
+              <div class="rounded-lg bg-icon/80 p-1">
                 <ListOrdered class="size-4" />
               </div>
               Change Section Order
             </Command.Item>
             <Command.Item value="wiki-order" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["order", "misc", "change", "wiki", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Misc)}>
-              <div class="bg-icon/80 rounded-lg p-1">
+              <div class="rounded-lg bg-icon/80 p-1">
                 <BookOpenText class="size-4" />
               </div>
               Change Wiki Order
             </Command.Item>
             <Command.Item value="keybind" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["keybind", "misc", "change", "command", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Misc)}>
-              <div class="bg-icon/80 rounded-lg p-1">
+              <div class="rounded-lg bg-icon/80 p-1">
                 <Keyboard class="size-4" />
               </div>
               Change Command Keybind
@@ -410,8 +410,8 @@
                 performanceMode.set(!$performanceMode);
                 closeCommand();
               }}>
-              <div class="bg-icon/80 rounded-lg p-1">
-                <Fan class="data-[performance=false]:animate-spin-slow size-4 will-change-transform data-[performance=true]:animate-spin" data-performance={$performanceMode} />
+              <div class="rounded-lg bg-icon/80 p-1">
+                <Fan class="size-4 will-change-transform data-[performance=false]:animate-spin-slow data-[performance=true]:animate-spin" data-performance={$performanceMode} />
               </div>
               Toggle Performance Mode
             </Command.Item>
@@ -423,7 +423,7 @@
                 showGlint.set(!$showGlint);
                 closeCommand();
               }}>
-              <div class="bg-icon/80 rounded-lg p-1">
+              <div class="rounded-lg bg-icon/80 p-1">
                 <Sparkle class="size-4" />
               </div>
               Toggle Glint

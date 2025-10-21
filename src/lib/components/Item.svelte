@@ -43,7 +43,7 @@
 
 <Tooltip.Root bind:open={tooltipOpen} disableHoverableContent={true} ignoreNonKeyboardFocus={true} disabled={!inViewport.current} delayDuration={300}>
   <Tooltip.Trigger
-    class={cn(`nice-colors-dark relative flex aspect-square items-center justify-center overflow-clip `, isInventory ? "size-6 p-0 sm:size-16" : `size-18 p-2 ${bgColor}`, { shine: shine && !isInventory }, { "rounded-lg": !isInventory }, $performanceMode ? "" : "transition-all duration-150 ease-out hover:scale-110 active:scale-110")}
+    class={cn(`relative flex aspect-square items-center justify-center overflow-clip nice-colors-dark `, isInventory ? "size-6 p-0 sm:size-16" : `size-18 p-2 ${bgColor}`, { shine: shine && !isInventory }, { "rounded-lg": !isInventory }, $performanceMode ? "" : "transition-all duration-150 ease-out hover:scale-110 active:scale-110")}
     bind:ref={targetNode}
     onclick={() => {
       if (skyblockItem.containsItems) {
@@ -57,7 +57,7 @@
       <div {...props}>
         {#if hasBeenInViewport}
           <Avatar.Root bind:loadingStatus>
-            <Avatar.Image loading="lazy" src={piece.texture_path} alt={piece.display_name} class={cn("data-[enchanted=true]:enchanted pointer-events-none aspect-square select-none [image-rendering:pixelated]", isInventory ? "size-6 sm:size-14" : "size-14")} data-enchanted={enchanted} />
+            <Avatar.Image loading="lazy" src={piece.texture_path} alt={piece.display_name} class={cn("pointer-events-none aspect-square select-none [image-rendering:pixelated] data-[enchanted=true]:enchanted", isInventory ? "size-6 sm:size-14" : "size-14")} data-enchanted={enchanted} />
             {#if loadingStatus === "loading"}
               {@render loadingState()}
             {:else}
@@ -84,7 +84,7 @@
   </Tooltip.Trigger>
   {#if isHover.current && inViewport.current}
     <Tooltip.Portal>
-      <Tooltip.Content forceMount={inViewport.current} class="bg-background-lore font-icomoon z-50 flex max-h-[calc(96vh-3rem)] flex-col overflow-clip rounded-lg select-text" sideOffset={8} side="right" align="center" collisionPadding={8}>
+      <Tooltip.Content forceMount={inViewport.current} class="z-50 flex max-h-[calc(96vh-3rem)] flex-col overflow-clip rounded-lg bg-background-lore font-icomoon select-text" sideOffset={8} side="right" align="center" collisionPadding={8}>
         {#snippet child({ wrapperProps, props, open })}
           {#if open}
             <div {...wrapperProps}>

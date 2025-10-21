@@ -43,11 +43,11 @@
                 <div class="max-w-xs space-y-2 font-bold">
                   <div>
                     <h3 class="text-text/85">Accessories Breakdown</h3>
-                    <p class="text-text/80 font-medium italic">From your accessory bag.</p>
+                    <p class="font-medium text-text/80 italic">From your accessory bag.</p>
                   </div>
                   {#if accessories.magicalPower.rarities}
                     <div>
-                      <ul class="[&_li]:text-text/85 [&_li_span]:text-text font-bold">
+                      <ul class="font-bold [&_li]:text-text/85 [&_li_span]:text-text">
                         <li>
                           <span style="color: var(--§6)">22 MP </span>
                           ×
@@ -109,7 +109,7 @@
                   {/if}
 
                   <div>
-                    <ul class="[&_li]:text-text/85 [&_li_span]:text-text font-bold">
+                    <ul class="font-bold [&_li]:text-text/85 [&_li_span]:text-text">
                       {#if accessories.magicalPower.abiphone != null && accessories.magicalPower.abiphone > 0}
                         <li>
                           <span style="color: var(--§{RARITY_COLORS['rare']})">Abicase: </span>
@@ -159,7 +159,7 @@
                 {/each}
               </Items>
               {#if accessories.enrichments != null}
-                <p class="text-text/60 space-x-0.5 leading-6 font-bold capitalize">
+                <p class="space-x-0.5 leading-6 font-bold text-text/60 capitalize">
                   <span>Enrichments: </span>
                   {#each Object.entries(accessories.enrichments) as [key, value], index (index)}
                     {#if key !== "missing" && STATS_DATA[key.toLowerCase()]}
@@ -192,7 +192,7 @@
               {/if}
             </div>
           {:else}
-            <p class="text-text/60 space-x-0.5 leading-6 font-bold">{profile.username} doesn't have any accessories.</p>
+            <p class="space-x-0.5 leading-6 font-bold text-text/60">{profile.username} doesn't have any accessories.</p>
           {/if}
           {#if (accessories.missing && accessories.missing.length > 0) || (accessories.upgrades && accessories.upgrades.length > 0)}
             <Collapsible.Root>

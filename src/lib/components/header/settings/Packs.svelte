@@ -25,23 +25,23 @@
   </div>
   <div class="mt-4 flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto">
     {#each getPacksContext() as pack (pack.id)}
-      <Label.Root for={pack.id} class="bg-text/5 flex items-center justify-between gap-4 rounded-lg p-2">
+      <Label.Root for={pack.id} class="flex items-center justify-between gap-4 rounded-lg bg-text/5 p-2">
         <div class="flex items-center gap-2">
           <Avatar.Root class="shrink-0 select-none">
             <Avatar.Image loading="lazy" src={pack.icon} alt={pack.name} class="pointer-events-none aspect-square size-10 h-full rounded-lg select-none [image-rendering:pixelated]" />
             <Avatar.Fallback class="flex items-center rounded-lg text-center font-semibold uppercase">{pack.name?.slice(0, 2)}</Avatar.Fallback>
           </Avatar.Root>
           <div class="flex flex-col">
-            <h4 class="text-text/90 font-semibold">{pack.name} <small>{pack.version}</small></h4>
-            <p class="text-text/60 overflow-hidden font-normal text-ellipsis whitespace-nowrap">
+            <h4 class="font-semibold text-text/90">{pack.name} <small>{pack.version}</small></h4>
+            <p class="overflow-hidden font-normal text-ellipsis whitespace-nowrap text-text/60">
               by
               <span class="text-text/80">{pack.author}</span>
             </p>
           </div>
         </div>
         {#if pack.id}
-          <Switch.Root id={pack.id} checked={!$disabledPacks.includes(pack.id)} class="data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30 peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out" onCheckedChange={() => disabledPacks.update((value) => (!value.includes(pack.id ?? "") ? [...new Set([...value, pack.id ?? ""])] : value.filter((id) => id !== (pack.id ?? ""))))}>
-            <Switch.Thumb class="bg-text pointer-events-none block size-4 shrink-0 rounded-full transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
+          <Switch.Root id={pack.id} checked={!$disabledPacks.includes(pack.id)} class="peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30" onCheckedChange={() => disabledPacks.update((value) => (!value.includes(pack.id ?? "") ? [...new Set([...value, pack.id ?? ""])] : value.filter((id) => id !== (pack.id ?? ""))))}>
+            <Switch.Thumb class="pointer-events-none block size-4 shrink-0 rounded-full bg-text transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
           </Switch.Root>
         {/if}
       </Label.Root>
@@ -49,7 +49,7 @@
   </div>
   {#if $hasPackConfigChanged}
     <Button.Root
-      class="bg-text/65 text-background/80 hover:bg-text/80 mt-4 w-full rounded-lg p-1.5 text-sm font-semibold uppercase transition-colors ease-out"
+      class="mt-4 w-full rounded-lg bg-text/65 p-1.5 text-sm font-semibold text-background/80 uppercase transition-colors ease-out hover:bg-text/80"
       onclick={() => {
         document.cookie = `disabledPacks=${JSON.stringify($disabledPacks)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
         window.location.reload();
