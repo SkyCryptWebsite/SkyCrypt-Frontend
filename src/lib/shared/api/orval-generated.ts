@@ -114,6 +114,7 @@ export type ModelsContestMedals = { [key: string]: number };
 export interface ModelsContest {
   amount?: number;
   collected?: number;
+  maxed?: boolean;
   medals?: ModelsContestMedals;
   name?: string;
   texture?: string;
@@ -226,15 +227,13 @@ export interface ModelsDungeonsOutput {
   stats?: ModelsDungeonStatsOutput;
 }
 
-export type ModelsEmbedDataNetworth = { [key: string]: number };
-
 export interface ModelsEmbedData {
   bank?: number;
   displayName?: string;
   dungeons?: ModelsEmbedDataDungeons;
   game_mode?: string;
   joined?: number;
-  networth?: ModelsEmbedDataNetworth;
+  networth?: ModelsEmbedNetworth;
   profile_cute_name?: string;
   profile_id?: string;
   purse?: number;
@@ -265,6 +264,11 @@ export type ModelsEmbedDataSlayersSlayers = { [key: string]: number };
 export interface ModelsEmbedDataSlayers {
   slayers?: ModelsEmbedDataSlayersSlayers;
   xp?: number;
+}
+
+export interface ModelsEmbedNetworth {
+  nonCosmetic?: number;
+  normal?: number;
 }
 
 export interface ModelsEnchantingGame {
@@ -455,9 +459,9 @@ export interface ModelsMiningOutput {
   glaciteTunnels?: ModelsGlaciteTunnels;
   hotm?: ModelsProcessedItem[];
   level?: ModelsSkill;
-  peak_of_the_mountain?: ModelsPeakOfTheMountain;
+  peakOfTheMountain?: ModelsPeakOfTheMountain;
   powder?: ModelsPowderOutput;
-  selected_pickaxe_ability?: string;
+  selectedPickaxeAbility?: string;
   tokens?: ModelsHotmTokens;
   tools?: ModelsSkillToolsResult;
 }
@@ -848,6 +852,17 @@ export interface ModelsSlayersOutput {
   totalSlayerExp?: number;
 }
 
+export interface ModelsSourceTab {
+  icon?: string;
+  name?: string;
+}
+
+export type ModelsStatsStats = { [key: string]: ModelsStatsInfo };
+
+export interface ModelsStats {
+  stats?: ModelsStatsStats;
+}
+
 export interface ModelsStatsInfo {
   [key: string]: number;
 }
@@ -886,6 +901,7 @@ export interface ModelsStrippedItem {
   recombobulated?: boolean;
   shiny?: boolean;
   source?: string;
+  sourceTab?: ModelsSourceTab;
   texture_pack?: string;
   texture_path?: string;
   wiki?: ModelsWikipediaLinks;
@@ -1097,8 +1113,6 @@ export interface SkycrypttypesTexture {
   Signature?: string;
   Value?: string;
 }
-
-export type GetApiPlayerStatsUuidProfileId200 = { [key: string]: ModelsStatsInfo };
 
 /**
  * Returns accessories for the given user and profile ID
@@ -1743,7 +1757,7 @@ export const getApiPetsUuidProfileId = async (uuid: string, profileId: string, o
  * @summary Get player stats of a specified player
  */
 export type getApiPlayerStatsUuidProfileIdResponse200 = {
-  data: GetApiPlayerStatsUuidProfileId200;
+  data: ModelsStats;
   status: 200;
 };
 

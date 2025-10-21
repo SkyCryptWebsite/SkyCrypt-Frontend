@@ -1,5 +1,5 @@
+import type { ModelsEmbedData } from "$lib/shared/api/orval-generated";
 import { formatNumber } from "$lib/shared/helper";
-import type { EmbedV2 } from "$types/statsv2";
 import { formatDistanceToNowStrict } from "date-fns";
 
 const skillEmojis = {
@@ -31,7 +31,7 @@ const slayerEmojis = {
   vampire: "🩸"
 } as Record<string, string>;
 
-function getLongDescription(embedData: EmbedV2) {
+function getLongDescription(embedData: ModelsEmbedData) {
   let output = "";
 
   if (embedData === undefined) {
@@ -42,11 +42,11 @@ function getLongDescription(embedData: EmbedV2) {
     output += `🌟 Skyblock Level: ${formatNumber(embedData.skyblock_level)}\n`;
   }
 
-  if (embedData.networth) {
-    output += `💸 Networth: ${formatNumber(embedData.networth)}\n`;
+  if (embedData.networth?.normal != null) {
+    output += `💸 Networth: ${formatNumber(embedData.networth.normal)}\n`;
   }
 
-  if (embedData.networth) {
+  if (embedData.purse) {
     output += `💰 Purse: ${formatNumber(embedData.purse)}\n`;
   }
 
@@ -60,8 +60,8 @@ function getLongDescription(embedData: EmbedV2) {
     ["farming", "mining", "combat", "foraging", "taming", "carpentry"],
     ["runecrafting", "social", "fishing", "enchanting", "alchemy"]
   ];
-  const skills = embedData.skills.skills;
-  if (skills && Object.keys(skills).length > 0) {
+  const skills = embedData.skills?.skills;
+  if (embedData.skills && skills && Object.keys(skills).length > 0) {
     output += `📚 Skills: ${embedData.skills.skillAverage}\n`;
 
     for (const skillGroup of sortedSkills) {
@@ -86,7 +86,7 @@ function getLongDescription(embedData: EmbedV2) {
       output += `🪦 Dungeons: ${classAverage}\n`;
     }
 
-    output += `${skillEmojis["dungeons"]} ${embedData.dungeons.dungoneering ?? 0} `;
+    output += `${skillEmojis["dungeons"]} ${embedData.dungeons.dungeoneering ?? 0} `;
     const classes = embedData.dungeons.classes;
     if (classes !== undefined) {
       for (const [dclass, data] of Object.entries(classes)) {
@@ -99,21 +99,23 @@ function getLongDescription(embedData: EmbedV2) {
 
   output += "\n";
 
-  if (embedData.slayers && embedData.slayers.xp > 0) {
+  if (embedData.slayers && embedData.slayers.xp != null && embedData.slayers.xp > 0) {
     output += `🤺 Slayer: ${formatNumber(embedData.slayers.xp)}\n`;
 
-    const slayerOrder = ["zombie", "spider", "wolf", "enderman", "vampire", "blaze"] as const;
-    for (const slayer of slayerOrder) {
-      if (!embedData.slayers.slayers[slayer]) {
-        continue;
-      }
+    if (embedData.slayers.slayers) {
+      const slayerOrder = ["zombie", "spider", "wolf", "enderman", "vampire", "blaze"] as const;
+      for (const slayer of slayerOrder) {
+        if (!embedData.slayers.slayers[slayer]) {
+          continue;
+        }
 
-      const slayerLevel = embedData.slayers.slayers[slayer];
-      if (!slayerLevel) {
-        continue;
-      }
+        const slayerLevel = embedData.slayers.slayers[slayer];
+        if (!slayerLevel) {
+          continue;
+        }
 
-      output += `${slayerEmojis[slayer]} ${slayerLevel} `;
+        output += `${slayerEmojis[slayer]} ${slayerLevel} `;
+      }
     }
 
     output += "\n";
@@ -122,7 +124,7 @@ function getLongDescription(embedData: EmbedV2) {
   return output;
 }
 
-function getMetaTitle(embedData: EmbedV2) {
+function getMetaTitle(embedData: ModelsEmbedData) {
   let metaTitle = embedData.displayName;
 
   switch (embedData.game_mode) {
@@ -146,24 +148,13 @@ function getMetaTitle(embedData: EmbedV2) {
   return metaTitle;
 }
 
-function getShortDescription(embedData: EmbedV2) {
+function getShortDescription(embedData: ModelsEmbedData) {
   let description = "";
 
   // Base
   if (embedData.joined) {
     description += `${embedData.displayName} has been playing SkyBlock for ${formatDistanceToNowStrict(embedData.joined)}`;
   }
-
-  // const highestRaritySword = profile.items?.weapons?.highest_priority_weapon?.display_name;
-
-  // // Armor set
-  // if (profile.items?.armor?.set_name !== undefined) {
-  //   if (highestRaritySword !== undefined) {
-  //     description += `, is wearing ${profile.items.armor.set_name}`;
-  //   } else {
-  //     description += `and is wearing ${profile.items.armor.set_name}`;
-  //   }
-  // }
 
   return description;
 }

@@ -6,7 +6,6 @@
   import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
   import { cn } from "$lib/shared/utils";
   import { wikiOrderPreferences } from "$lib/stores/wiki";
-  import type { ProcessedSkyBlockItem } from "$types/stats";
   import Image from "@lucide/svelte/icons/image";
   import Info from "@lucide/svelte/icons/info";
   import TriangleAlert from "@lucide/svelte/icons/triangle-alert";
@@ -31,7 +30,7 @@
 
   // Get the wiki link for the itemf
   export const wikiInfo = derivedStore<typeof wikiOrderPreferences, { url: string; name: string } | undefined>(wikiOrderPreferences, ($wikiOrderPreferences) => {
-    const wiki = skyblockItem?.wiki as unknown as ProcessedSkyBlockItem["wiki"];
+    const wiki = skyblockItem?.wiki;
     if (!wiki) return undefined;
 
     // Try to get the preferred wiki link first, then fall back to any available link
@@ -93,15 +92,14 @@
         </div>
       {/if}
 
-      <!-- TODO: Add sourceTab after being added to ModelsStrippedItem -->
-      <!-- {#if piece && "sourceTab" in piece && piece.sourceTab}
+      {#if piece && piece.sourceTab}
         <div class="mt-4">
           <div class="bg-text/5 hover:bg-text/8 flex items-center justify-between gap-4 rounded-[0.625rem] p-2 transition-colors ease-out">
             <div class="flex items-center gap-2">
               <Avatar.Root class="shrink-0 select-none">
                 <Avatar.Image loading="lazy" src={piece.sourceTab.icon} alt={piece.sourceTab.name} class="pointer-events-none aspect-square size-10 h-full rounded-lg select-none [image-rendering:pixelated]" />
                 <Avatar.Fallback class="bg-icon/90 flex size-10 items-center justify-center rounded-lg text-center font-semibold uppercase">
-                  {piece.sourceTab.name.slice(0, 2)}
+                  {piece.sourceTab.name?.slice(0, 2)}
                 </Avatar.Fallback>
               </Avatar.Root>
               <div class="text-link font-semibold">
@@ -110,7 +108,7 @@
             </div>
           </div>
         </div>
-      {/if} -->
+      {/if}
       {#if hasColor}
         <div class="bg-text/5 mt-4 flex max-w-72 items-center justify-start gap-4 rounded-[0.625rem] p-2 transition-colors ease-out">
           <div class="text-text/60 flex items-center gap-2">

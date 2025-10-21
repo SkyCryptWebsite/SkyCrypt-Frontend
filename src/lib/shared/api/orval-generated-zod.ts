@@ -29,6 +29,12 @@ export const getApiAccessoriesUuidProfileIdResponse = zod.object({
         recombobulated: zod.boolean().optional(),
         shiny: zod.boolean().optional(),
         source: zod.string().optional(),
+        sourceTab: zod
+          .object({
+            icon: zod.string().optional(),
+            name: zod.string().optional()
+          })
+          .optional(),
         texture_pack: zod.string().optional(),
         texture_path: zod.string().optional(),
         wiki: zod
@@ -76,6 +82,12 @@ export const getApiAccessoriesUuidProfileIdResponse = zod.object({
         recombobulated: zod.boolean().optional(),
         shiny: zod.boolean().optional(),
         source: zod.string().optional(),
+        sourceTab: zod
+          .object({
+            icon: zod.string().optional(),
+            name: zod.string().optional()
+          })
+          .optional(),
         texture_pack: zod.string().optional(),
         texture_path: zod.string().optional(),
         wiki: zod
@@ -105,6 +117,12 @@ export const getApiAccessoriesUuidProfileIdResponse = zod.object({
         recombobulated: zod.boolean().optional(),
         shiny: zod.boolean().optional(),
         source: zod.string().optional(),
+        sourceTab: zod
+          .object({
+            icon: zod.string().optional(),
+            name: zod.string().optional()
+          })
+          .optional(),
         texture_pack: zod.string().optional(),
         texture_path: zod.string().optional(),
         wiki: zod
@@ -439,7 +457,12 @@ export const getApiEmbedUuidProfileIdResponse = zod.object({
     .optional(),
   game_mode: zod.string().optional(),
   joined: zod.number().optional(),
-  networth: zod.record(zod.string(), zod.number()).optional(),
+  networth: zod
+    .object({
+      nonCosmetic: zod.number().optional(),
+      normal: zod.number().optional()
+    })
+    .optional(),
   profile_cute_name: zod.string().optional(),
   profile_id: zod.string().optional(),
   purse: zod.number().optional(),
@@ -718,6 +741,12 @@ export const getApiGearUuidProfileIdResponse = zod.object({
             recombobulated: zod.boolean().optional(),
             shiny: zod.boolean().optional(),
             source: zod.string().optional(),
+            sourceTab: zod
+              .object({
+                icon: zod.string().optional(),
+                name: zod.string().optional()
+              })
+              .optional(),
             texture_pack: zod.string().optional(),
             texture_path: zod.string().optional(),
             wiki: zod
@@ -748,6 +777,12 @@ export const getApiGearUuidProfileIdResponse = zod.object({
             recombobulated: zod.boolean().optional(),
             shiny: zod.boolean().optional(),
             source: zod.string().optional(),
+            sourceTab: zod
+              .object({
+                icon: zod.string().optional(),
+                name: zod.string().optional()
+              })
+              .optional(),
             texture_pack: zod.string().optional(),
             texture_path: zod.string().optional(),
             wiki: zod
@@ -775,6 +810,12 @@ export const getApiGearUuidProfileIdResponse = zod.object({
           recombobulated: zod.boolean().optional(),
           shiny: zod.boolean().optional(),
           source: zod.string().optional(),
+          sourceTab: zod
+            .object({
+              icon: zod.string().optional(),
+              name: zod.string().optional()
+            })
+            .optional(),
           texture_pack: zod.string().optional(),
           texture_path: zod.string().optional(),
           wiki: zod
@@ -800,6 +841,12 @@ export const getApiGearUuidProfileIdResponse = zod.object({
           recombobulated: zod.boolean().optional(),
           shiny: zod.boolean().optional(),
           source: zod.string().optional(),
+          sourceTab: zod
+            .object({
+              icon: zod.string().optional(),
+              name: zod.string().optional()
+            })
+            .optional(),
           texture_pack: zod.string().optional(),
           texture_path: zod.string().optional(),
           wiki: zod
@@ -822,6 +869,12 @@ export const getApiGearUuidProfileIdResponse = zod.object({
             recombobulated: zod.boolean().optional(),
             shiny: zod.boolean().optional(),
             source: zod.string().optional(),
+            sourceTab: zod
+              .object({
+                icon: zod.string().optional(),
+                name: zod.string().optional()
+              })
+              .optional(),
             texture_pack: zod.string().optional(),
             texture_path: zod.string().optional(),
             wiki: zod
@@ -868,6 +921,12 @@ export const getApiInventoryUuidProfileIdSearchSearchResponseItem = zod.object({
   recombobulated: zod.boolean().optional(),
   shiny: zod.boolean().optional(),
   source: zod.string().optional(),
+  sourceTab: zod
+    .object({
+      icon: zod.string().optional(),
+      name: zod.string().optional()
+    })
+    .optional(),
   texture_pack: zod.string().optional(),
   texture_path: zod.string().optional(),
   wiki: zod
@@ -900,6 +959,12 @@ export const getApiInventoryUuidProfileIdInventoryIdResponseItem = zod.object({
   recombobulated: zod.boolean().optional(),
   shiny: zod.boolean().optional(),
   source: zod.string().optional(),
+  sourceTab: zod
+    .object({
+      icon: zod.string().optional(),
+      name: zod.string().optional()
+    })
+    .optional(),
   texture_pack: zod.string().optional(),
   texture_path: zod.string().optional(),
   wiki: zod
@@ -1212,7 +1277,9 @@ export const getApiPlayerStatsUuidProfileIdParams = zod.object({
   profileId: zod.string().describe("Profile ID")
 });
 
-export const getApiPlayerStatsUuidProfileIdResponse = zod.record(zod.string(), zod.record(zod.string(), zod.number()));
+export const getApiPlayerStatsUuidProfileIdResponse = zod.object({
+  stats: zod.record(zod.string(), zod.record(zod.string(), zod.number())).optional()
+});
 
 /**
  * Returns a PNG image of a potion for the given type and color
@@ -1264,6 +1331,12 @@ export const getApiRiftUuidProfileIdResponse = zod.object({
             recombobulated: zod.boolean().optional(),
             shiny: zod.boolean().optional(),
             source: zod.string().optional(),
+            sourceTab: zod
+              .object({
+                icon: zod.string().optional(),
+                name: zod.string().optional()
+              })
+              .optional(),
             texture_pack: zod.string().optional(),
             texture_path: zod.string().optional(),
             wiki: zod
@@ -1306,6 +1379,12 @@ export const getApiRiftUuidProfileIdResponse = zod.object({
             recombobulated: zod.boolean().optional(),
             shiny: zod.boolean().optional(),
             source: zod.string().optional(),
+            sourceTab: zod
+              .object({
+                icon: zod.string().optional(),
+                name: zod.string().optional()
+              })
+              .optional(),
             texture_pack: zod.string().optional(),
             texture_path: zod.string().optional(),
             wiki: zod
@@ -1408,6 +1487,7 @@ export const getApiSkillsUuidProfileIdResponse = zod.object({
           zod.object({
             amount: zod.number().optional(),
             collected: zod.number().optional(),
+            maxed: zod.boolean().optional(),
             medals: zod.record(zod.string(), zod.number()).optional(),
             name: zod.string().optional(),
             texture: zod.string().optional()
@@ -1439,6 +1519,12 @@ export const getApiSkillsUuidProfileIdResponse = zod.object({
               recombobulated: zod.boolean().optional(),
               shiny: zod.boolean().optional(),
               source: zod.string().optional(),
+              sourceTab: zod
+                .object({
+                  icon: zod.string().optional(),
+                  name: zod.string().optional()
+                })
+                .optional(),
               texture_pack: zod.string().optional(),
               texture_path: zod.string().optional(),
               wiki: zod
@@ -1461,6 +1547,12 @@ export const getApiSkillsUuidProfileIdResponse = zod.object({
                 recombobulated: zod.boolean().optional(),
                 shiny: zod.boolean().optional(),
                 source: zod.string().optional(),
+                sourceTab: zod
+                  .object({
+                    icon: zod.string().optional(),
+                    name: zod.string().optional()
+                  })
+                  .optional(),
                 texture_pack: zod.string().optional(),
                 texture_path: zod.string().optional(),
                 wiki: zod
@@ -1506,6 +1598,12 @@ export const getApiSkillsUuidProfileIdResponse = zod.object({
               recombobulated: zod.boolean().optional(),
               shiny: zod.boolean().optional(),
               source: zod.string().optional(),
+              sourceTab: zod
+                .object({
+                  icon: zod.string().optional(),
+                  name: zod.string().optional()
+                })
+                .optional(),
               texture_pack: zod.string().optional(),
               texture_path: zod.string().optional(),
               wiki: zod
@@ -1528,6 +1626,12 @@ export const getApiSkillsUuidProfileIdResponse = zod.object({
                 recombobulated: zod.boolean().optional(),
                 shiny: zod.boolean().optional(),
                 source: zod.string().optional(),
+                sourceTab: zod
+                  .object({
+                    icon: zod.string().optional(),
+                    name: zod.string().optional()
+                  })
+                  .optional(),
                 texture_pack: zod.string().optional(),
                 texture_path: zod.string().optional(),
                 wiki: zod
@@ -1796,7 +1900,7 @@ export const getApiSkillsUuidProfileIdResponse = zod.object({
           xpForNext: zod.number().optional()
         })
         .optional(),
-      peak_of_the_mountain: zod
+      peakOfTheMountain: zod
         .object({
           level: zod.number().optional(),
           max_level: zod.number().optional()
@@ -1827,7 +1931,7 @@ export const getApiSkillsUuidProfileIdResponse = zod.object({
             .optional()
         })
         .optional(),
-      selected_pickaxe_ability: zod.string().optional(),
+      selectedPickaxeAbility: zod.string().optional(),
       tokens: zod
         .object({
           available: zod.number().optional(),
@@ -1848,6 +1952,12 @@ export const getApiSkillsUuidProfileIdResponse = zod.object({
               recombobulated: zod.boolean().optional(),
               shiny: zod.boolean().optional(),
               source: zod.string().optional(),
+              sourceTab: zod
+                .object({
+                  icon: zod.string().optional(),
+                  name: zod.string().optional()
+                })
+                .optional(),
               texture_pack: zod.string().optional(),
               texture_path: zod.string().optional(),
               wiki: zod
@@ -1870,6 +1980,12 @@ export const getApiSkillsUuidProfileIdResponse = zod.object({
                 recombobulated: zod.boolean().optional(),
                 shiny: zod.boolean().optional(),
                 source: zod.string().optional(),
+                sourceTab: zod
+                  .object({
+                    icon: zod.string().optional(),
+                    name: zod.string().optional()
+                  })
+                  .optional(),
                 texture_pack: zod.string().optional(),
                 texture_path: zod.string().optional(),
                 wiki: zod

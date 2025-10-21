@@ -1,7 +1,7 @@
 <script lang="ts">
   import { STAT_ALIASES, STATS_DATA } from "$lib/shared/constants/stats";
   import { cn } from "$lib/shared/utils";
-  import type { ItemStats } from "$types/processed/profile/stats";
+  import type { ItemStats } from "$types";
   import { format } from "numerable";
 
   type Props = {

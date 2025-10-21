@@ -1,6 +1,6 @@
 import { prerender, query } from "$app/server";
-import { getApiAccessoriesUuidProfileId, getApiBestiaryUuidProfileId, getApiCollectionsUuidProfileId, getApiCrimsonIsleUuidProfileId, getApiDungeonsUuidProfileId, getApiGardenProfileId, getApiGearUuidProfileId, getApiInventoryUuidProfileIdInventoryId, getApiInventoryUuidProfileIdSearchSearch, getApiMinionsUuidProfileId, getApiMiscUuidProfileId, getApiNetworthUuidProfileId, getApiPetsUuidProfileId, getApiPlayerStatsUuidProfileId, getApiResourcepacks, getApiRiftUuidProfileId, getApiSkillsUuidProfileId, getApiSlayerUuidProfileId, getApiStatsUuidProfileId, type ModelsProcessingError } from "$lib/shared/api/orval-generated";
-import { getApiAccessoriesUuidProfileIdParams, getApiBestiaryUuidProfileIdParams, getApiCollectionsUuidProfileIdParams, getApiCrimsonIsleUuidProfileIdParams, getApiDungeonsUuidProfileIdParams, getApiGardenProfileIdParams, getApiGearUuidProfileIdParams, getApiInventoryUuidProfileIdInventoryIdParams, getApiInventoryUuidProfileIdSearchSearchParams, getApiMinionsUuidProfileIdParams, getApiMiscUuidProfileIdParams, getApiNetworthUuidProfileIdParams, getApiPetsUuidProfileIdParams, getApiPlayerStatsUuidProfileIdParams, getApiRiftUuidProfileIdParams, getApiSkillsUuidProfileIdParams, getApiSlayerUuidProfileIdParams, getApiStatsUuidProfileIdParams } from "$lib/shared/api/orval-generated-zod";
+import { getApiAccessoriesUuidProfileId, getApiBestiaryUuidProfileId, getApiCollectionsUuidProfileId, getApiCrimsonIsleUuidProfileId, getApiDungeonsUuidProfileId, getApiEmbedUuidProfileId, getApiGardenProfileId, getApiGearUuidProfileId, getApiInventoryUuidProfileIdInventoryId, getApiInventoryUuidProfileIdSearchSearch, getApiMinionsUuidProfileId, getApiMiscUuidProfileId, getApiNetworthUuidProfileId, getApiPetsUuidProfileId, getApiPlayerStatsUuidProfileId, getApiResourcepacks, getApiRiftUuidProfileId, getApiSkillsUuidProfileId, getApiSlayerUuidProfileId, getApiStatsUuidProfileId, type ModelsProcessingError } from "$lib/shared/api/orval-generated";
+import { getApiAccessoriesUuidProfileIdParams, getApiBestiaryUuidProfileIdParams, getApiCollectionsUuidProfileIdParams, getApiCrimsonIsleUuidProfileIdParams, getApiDungeonsUuidProfileIdParams, getApiEmbedUuidProfileIdParams, getApiGardenProfileIdParams, getApiGearUuidProfileIdParams, getApiInventoryUuidProfileIdInventoryIdParams, getApiInventoryUuidProfileIdSearchSearchParams, getApiMinionsUuidProfileIdParams, getApiMiscUuidProfileIdParams, getApiNetworthUuidProfileIdParams, getApiPetsUuidProfileIdParams, getApiPlayerStatsUuidProfileIdParams, getApiRiftUuidProfileIdParams, getApiSkillsUuidProfileIdParams, getApiSlayerUuidProfileIdParams, getApiStatsUuidProfileIdParams } from "$lib/shared/api/orval-generated-zod";
 import { error, isHttpError } from "@sveltejs/kit";
 
 /**
@@ -126,6 +126,11 @@ export const getRiftSection = query(getApiRiftUuidProfileIdParams, async ({ uuid
 /** Fetch misc section data for a specific profile */
 export const getMiscSection = query(getApiMiscUuidProfileIdParams, async ({ uuid, profileId }) => {
   return fetchSection("misc", () => getApiMiscUuidProfileId(uuid, profileId));
+});
+
+/** Fetch embed data */
+export const getEmbedData = query(getApiEmbedUuidProfileIdParams, async ({ uuid, profileId }) => {
+  return fetchSection("embed", () => getApiEmbedUuidProfileId(uuid, profileId));
 });
 
 /** Fetch packs */

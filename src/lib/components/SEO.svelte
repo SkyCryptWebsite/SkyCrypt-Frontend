@@ -1,12 +1,12 @@
 <script lang="ts">
   import { page } from "$app/state";
+  import type { ModelsEmbedData } from "$lib/shared/api/orval-generated";
   import themes from "$lib/shared/constants/themes";
   import { getLongDescription, getMetaTitle, getShortDescription } from "$lib/shared/embedGenerator";
   import { theme as themeStore } from "$lib/stores/themes";
-  import type { EmbedV2 } from "$types/statsv2";
   import SvelteSeo from "svelte-seo";
 
-  const { embedData }: { embedData: EmbedV2 } = $props();
+  const { embedData }: { embedData: ModelsEmbedData } = $props();
   const isStatsPage = page.url.pathname.includes("/stats/");
 </script>
 

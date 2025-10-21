@@ -2,7 +2,7 @@
   import { getProfileContext } from "$ctx";
   import Notice from "$lib/components/Notice.svelte";
   import Stat from "$lib/components/Stat.svelte";
-  import type { RoutesNetworthResult } from "$lib/shared/api/orval-generated";
+  import type { ModelsStats } from "$lib/shared/api/orval-generated";
   import { getAdditionalStats } from "$lib/shared/api/skycrypt-api.remote";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import type { RemoteQuery } from "@sveltejs/kit";
@@ -15,7 +15,7 @@
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
 
-  let stats = $state<RemoteQuery<RoutesNetworthResult>>();
+  let stats = $state<RemoteQuery<ModelsStats>>();
 </script>
 
 <div class="stats flex flex-col">

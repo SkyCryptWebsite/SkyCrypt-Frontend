@@ -140,8 +140,8 @@
     {#if mining.tokens}
       <AdditionStat text="Token Of The Mountain" data={`${mining.tokens.spent}/${mining.tokens.total}`} />
     {/if}
-    {#if mining.peak_of_the_mountain}
-      <AdditionStat text="Peak Of The Mountain" data={`${mining.peak_of_the_mountain.level}/${mining.peak_of_the_mountain.max_level}`} maxed={mining.peak_of_the_mountain.level === mining.peak_of_the_mountain.max_level} />
+    {#if mining.peakOfTheMountain}
+      <AdditionStat text="Peak Of The Mountain" data={`${mining.peakOfTheMountain.level}/${mining.peakOfTheMountain.max_level}`} maxed={mining.peakOfTheMountain.level === mining.peakOfTheMountain.max_level} />
     {/if}
     {#if mining.powder}
       {#each Object.keys(mining.powder) as key, index (index)}
@@ -161,8 +161,8 @@
         {/if}
       {/each}
     {/if}
-    {#if mining.selected_pickaxe_ability}
-      <AdditionStat text="Pickaxe Ability" data={mining.selected_pickaxe_ability} />
+    {#if mining.selectedPickaxeAbility}
+      <AdditionStat text="Pickaxe Ability" data={mining.selectedPickaxeAbility} />
     {/if}
   </div>
 
