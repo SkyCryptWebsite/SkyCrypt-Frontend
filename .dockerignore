@@ -2,7 +2,6 @@ Dockerfile
 .dockerignore
 docker-compose.yml
 docker-compose*.yml
-NotEnoughUpdates-REPO
 .git
 .gitignore
 .gitattributes
