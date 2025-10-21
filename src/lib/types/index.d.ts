@@ -15,21 +15,25 @@ export type ItemStats = {
   [key in StatName]?: number;
 };
 
-// Enum for section names
-export enum SectionName {
-  NETWORTH = "networth",
-  SKILLS = "skills",
-  GEAR = "gear",
-  SLAYER = "slayer",
-  DUNGEONS = "dungeons",
-  MINIONS = "minions",
-  BESTIARY = "bestiary",
-  COLLECTIONS = "collections",
-  CRIMSON_ISLE = "crimson_isle",
-  RIFT = "rift",
-  MISC = "misc",
-  ACCESSORIES = "accessories",
-  PETS = "pets",
-  INVENTORY = "inventory",
-  STATS = "playerStats"
+// Enum for different API endpoint names
+export enum APIEndpointName {
+  NETWORTH = "Networth",
+  SKILLS = "Skills",
+  GEAR = "Gear",
+  SLAYER = "Slayer",
+  DUNGEONS = "Dungeons",
+  MINIONS = "Minions",
+  BESTIARY = "Bestiary",
+  COLLECTIONS = "Collections",
+  CRIMSON_ISLE = "Crimson Isle",
+  RIFT = "Rift",
+  MISC = "Misc",
+  ACCESSORIES = "Accessories",
+  PETS = "Pets",
+  INVENTORY = "Inventory",
+  STATS = "Player Stats",
+  PROFILE = "Profile Stats",
+  GARDEN = "Garden",
+  EMBED = "Embed Data",
+  RESOURCEPACK = "Resource Pack"
 }
