@@ -2,6 +2,7 @@
   import { getHoverContext } from "$ctx";
   import { env } from "$env/dynamic/public";
   import Notice from "$lib/components/Notice.svelte";
+  import { searchUser } from "$lib/shared/api/skycrypt-api.remote";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { favorites } from "$lib/stores/favorites";
   import { content } from "$lib/stores/internal";
@@ -12,28 +13,20 @@
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import Server from "@lucide/svelte/icons/server";
   import Star from "@lucide/svelte/icons/star";
+  import { isHttpError, type RemoteQuery } from "@sveltejs/kit";
   import { Avatar, Button, Tooltip } from "bits-ui";
-  import { Control, Field, FieldErrors, Label } from "formsnap";
   import { onMount } from "svelte";
-  import { superForm } from "sveltekit-superforms";
-  import { zod4Client as zodClient } from "sveltekit-superforms/adapters";
-  import type { PageData } from "./$types";
   import { Role } from "./enums";
   import { schema } from "./schema";
 
   const { PUBLIC_DISCORD_INVITE, PUBLIC_PATREON } = env;
 
-  let { data }: { data: PageData } = $props();
+  let searchQuery = $state<string>("");
+  const searchQueryValidated = $derived(schema.safeParse({ query: searchQuery }));
+
+  let searchUserRemoteFn = $state<RemoteQuery<never>>();
 
   const isHover = getHoverContext();
-
-  const form = superForm(data.searchForm, {
-    validators: zodClient(schema),
-    validationMethod: "oninput",
-    id: "searchForm"
-  });
-
-  const { form: formData, enhance, errors, tainted, submitting, isTainted, message } = form;
 
   const iconMapper: Record<Role, typeof CodeXml | typeof Server | typeof GitPullRequestArrow | typeof Star | string> = {
     [Role.MAINTAINER]: CodeXml,
@@ -93,34 +86,31 @@
 </script>
 
 <main class="@container mx-auto mt-[48px] flex min-h-screen max-w-272 flex-col justify-center gap-6 pt-5 pr-[max(1.25rem+env(safe-area-inset-right))] pb-[max(1.25rem+env(safe-area-inset-bottom))] pl-[max(1.25rem+env(safe-area-inset-left))]">
-  <form method="POST" action="/search" use:enhance class={cn("flex w-full flex-col justify-center gap-6 rounded-lg py-6 text-3xl", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
+  <div class={cn("flex w-full flex-col justify-center gap-6 rounded-lg py-6 text-3xl", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
     <div class="flex flex-col justify-center gap-2">
-      <Field {form} name="query">
-        <Control>
-          {#snippet children({ props })}
-            <div class="flex flex-col gap-6">
-              <Label class="m-1 w-full text-center font-semibold">Show SkyBlock stats for</Label>
-              <!-- svelte-ignore a11y_autofocus -->
-              <input {...props} type="search" required autofocus placeholder="Enter username" class="relative h-16 grow bg-text/10 text-center font-normal text-text placeholder:text-text/80 focus-visible:outline-hidden" bind:value={$formData.query} />
-            </div>
-          {/snippet}
-        </Control>
-        {#if $formData.query.length > 0 && isTainted($tainted?.query) && $errors.query !== undefined}
-          <FieldErrors class="text-center text-sm font-semibold text-text/80" />
-        {/if}
-        {#if $message && $message.type === "error"}
-          <div class="text-center text-sm font-semibold text-text/80">{$message.text}</div>
-        {/if}
-      </Field>
+      <div class="flex flex-col gap-6">
+        <label for="search" class="m-1 w-full text-center font-semibold">Show SkyBlock stats for</label>
+        <!-- svelte-ignore a11y_autofocus -->
+        <input id="search" type="search" required autofocus placeholder="Enter username" class="relative h-16 grow bg-text/10 text-center font-normal text-text placeholder:text-text/80 focus-visible:outline-hidden" bind:value={searchQuery} onchange={() => (searchUserRemoteFn = searchUser({ username: searchQuery }))} />
+      </div>
+
+      {#if !searchQueryValidated.success && searchQuery.length > 0}
+        <div class="text-center text-sm font-semibold text-text/80">
+          {searchQueryValidated.error.issues[0].message}
+        </div>
+      {/if}
+      {#if searchUserRemoteFn?.error}
+        <div class="text-center text-sm font-semibold text-text/80">{isHttpError(searchUserRemoteFn.error) ? searchUserRemoteFn.error.body.message : "Something went wrong"}</div>
+      {/if}
     </div>
-    <Button.Root type="submit" class="mx-auto flex w-full max-w-fit items-center justify-center rounded-3xl bg-icon px-6 py-3 text-base font-bold text-white uppercase transition-all duration-150 ease-out txt-shadow-[0_0_3px_oklch(0%_0_0/50%)] hover:scale-[1.015] disabled:opacity-50 dark:text-text" disabled={($formData.query.length > 0 && isTainted($tainted?.query) && $errors.query !== undefined) || $submitting}>
-      {#if $submitting}
+    <Button.Root class="mx-auto flex w-full max-w-fit items-center justify-center rounded-3xl bg-icon px-6 py-3 text-base font-bold text-white uppercase transition-all duration-150 ease-out txt-shadow-[0_0_3px_oklch(0%_0_0/50%)] hover:scale-[1.015] disabled:opacity-50 dark:text-text" disabled={searchQuery.length > 0 && !searchQueryValidated.success}>
+      {#if searchUserRemoteFn?.loading}
         <LoaderCircle class="size-6 animate-spin" />
       {:else}
         Show me
       {/if}
     </Button.Root>
-  </form>
+  </div>
 
   {#if selectedCta}
     {@render ctalink(selectedCta.href, selectedCta.text, selectedCta.img)}

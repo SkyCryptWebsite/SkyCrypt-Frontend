@@ -1,8 +1,8 @@
 import { prerender, query } from "$app/server";
-import { getApiAccessoriesUuidProfileId, getApiBestiaryUuidProfileId, getApiCollectionsUuidProfileId, getApiCrimsonIsleUuidProfileId, getApiDungeonsUuidProfileId, getApiEmbedUuidProfileId, getApiGardenProfileId, getApiGearUuidProfileId, getApiInventoryUuidProfileIdInventoryId, getApiInventoryUuidProfileIdSearchSearch, getApiMinionsUuidProfileId, getApiMiscUuidProfileId, getApiNetworthUuidProfileId, getApiPetsUuidProfileId, getApiPlayerStatsUuidProfileId, getApiResourcepacks, getApiRiftUuidProfileId, getApiSkillsUuidProfileId, getApiSlayerUuidProfileId, getApiStatsUuidProfileId, type ModelsProcessingError } from "$lib/shared/api/orval-generated";
-import { getApiAccessoriesUuidProfileIdParams, getApiBestiaryUuidProfileIdParams, getApiCollectionsUuidProfileIdParams, getApiCrimsonIsleUuidProfileIdParams, getApiDungeonsUuidProfileIdParams, getApiEmbedUuidProfileIdParams, getApiGardenProfileIdParams, getApiGearUuidProfileIdParams, getApiInventoryUuidProfileIdInventoryIdParams, getApiInventoryUuidProfileIdSearchSearchParams, getApiMinionsUuidProfileIdParams, getApiMiscUuidProfileIdParams, getApiNetworthUuidProfileIdParams, getApiPetsUuidProfileIdParams, getApiPlayerStatsUuidProfileIdParams, getApiRiftUuidProfileIdParams, getApiSkillsUuidProfileIdParams, getApiSlayerUuidProfileIdParams, getApiStatsUuidProfileIdParams } from "$lib/shared/api/orval-generated-zod";
+import { getApiAccessoriesUuidProfileId, getApiBestiaryUuidProfileId, getApiCollectionsUuidProfileId, getApiCrimsonIsleUuidProfileId, getApiDungeonsUuidProfileId, getApiEmbedUuidProfileId, getApiGardenProfileId, getApiGearUuidProfileId, getApiInventoryUuidProfileIdInventoryId, getApiInventoryUuidProfileIdSearchSearch, getApiMinionsUuidProfileId, getApiMiscUuidProfileId, getApiNetworthUuidProfileId, getApiPetsUuidProfileId, getApiPlayerStatsUuidProfileId, getApiResourcepacks, getApiRiftUuidProfileId, getApiSkillsUuidProfileId, getApiSlayerUuidProfileId, getApiStatsUuidProfileId, getApiUuidUsername, type ModelsProcessingError } from "$lib/shared/api/orval-generated";
+import { getApiAccessoriesUuidProfileIdParams, getApiBestiaryUuidProfileIdParams, getApiCollectionsUuidProfileIdParams, getApiCrimsonIsleUuidProfileIdParams, getApiDungeonsUuidProfileIdParams, getApiEmbedUuidProfileIdParams, getApiGardenProfileIdParams, getApiGearUuidProfileIdParams, getApiInventoryUuidProfileIdInventoryIdParams, getApiInventoryUuidProfileIdSearchSearchParams, getApiMinionsUuidProfileIdParams, getApiMiscUuidProfileIdParams, getApiNetworthUuidProfileIdParams, getApiPetsUuidProfileIdParams, getApiPlayerStatsUuidProfileIdParams, getApiRiftUuidProfileIdParams, getApiSkillsUuidProfileIdParams, getApiSlayerUuidProfileIdParams, getApiStatsUuidProfileIdParams, getApiUuidUsernameParams } from "$lib/shared/api/orval-generated-zod";
 import { APIEndpointName } from "$types";
-import { error, isHttpError } from "@sveltejs/kit";
+import { error, isHttpError, redirect } from "@sveltejs/kit";
 
 /**
  * Type helper to extract the success data type from an API response
@@ -132,6 +132,15 @@ export const getMiscSection = query(getApiMiscUuidProfileIdParams, async ({ uuid
 /** Fetch embed data */
 export const getEmbedData = query(getApiEmbedUuidProfileIdParams, async ({ uuid, profileId }) => {
   return fetchSection(APIEndpointName.EMBED, () => getApiEmbedUuidProfileId(uuid, profileId));
+});
+
+/** Search user */
+export const searchUser = query(getApiUuidUsernameParams, async ({ username }) => {
+  const response = await fetchSection(APIEndpointName.SEARCH, () => getApiUuidUsername(username));
+  if (response.uuid && response.username) {
+    redirect(303, `/stats/${response.username}`);
+  }
+  error(404, `No user with the name '${username}' was found`);
 });
 
 /** Fetch packs */

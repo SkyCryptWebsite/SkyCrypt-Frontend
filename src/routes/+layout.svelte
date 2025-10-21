@@ -1,13 +1,14 @@
 <script lang="ts">
   import { browser, dev } from "$app/environment";
   import { beforeNavigate } from "$app/navigation";
-  import { page, updated } from "$app/state";
-  import { setHoverContext, setMobileContext, setPacksContext } from "$ctx";
+  import { page } from "$app/state";
+  import { PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
   import Header from "$lib/components/header/Header.svelte";
   import { SettingsTab } from "$lib/components/header/types";
   import PerformanceMode from "$lib/components/PerformanceMode.svelte";
   import { IsHover } from "$lib/hooks/is-hover.svelte";
   import { IsMobile } from "$lib/hooks/is-mobile.svelte";
+  import { getPacks, searchUser } from "$lib/shared/api/skycrypt-api.remote";
   import themes from "$lib/shared/constants/themes";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { favorites } from "$lib/stores/favorites";
@@ -27,16 +28,14 @@
   import Sparkle from "@lucide/svelte/icons/sparkle";
   import Wifi from "@lucide/svelte/icons/wifi";
   import WifiOff from "@lucide/svelte/icons/wifi-off";
+  import { isHttpError, type RemoteQuery } from "@sveltejs/kit";
   import { Avatar, Button, Command, computeCommandScore, Dialog, Tooltip } from "bits-ui";
-  import { Control, Field } from "formsnap";
   import { onMount, type Snippet } from "svelte";
   import SvelteSeo from "svelte-seo";
   import { toast, Toaster, type ToasterProps } from "svelte-sonner";
   import { cubicOut } from "svelte/easing";
   import { writable } from "svelte/store";
   import { fade } from "svelte/transition";
-  import { superForm } from "sveltekit-superforms";
-  import { zod4Client as zodClient } from "sveltekit-superforms/adapters";
   import { Drawer } from "vaul-svelte";
   import "../app.css";
   import type { PageData } from "./$types";
@@ -50,18 +49,17 @@
   let loading = $state(false);
   let commandValue = $state(null!);
 
+  let searchQuery = $state<string>("");
+  const searchQueryValidated = $derived(schema.safeParse({ query: searchQuery }));
+
+  let searchUserRemoteFn = $state<RemoteQuery<never>>();
+
   const { ign } = page.params;
 
   const position = writable<ToasterProps["position"]>("bottom-right");
   const theme = writable<ToasterProps["theme"]>("dark");
   const noEmbedUrls = ["/og/", "/stats/"];
-
-  const form = superForm(data.searchForm, {
-    validators: zodClient(schema),
-    validationMethod: "oninput",
-    id: "searchFormCommand"
-  });
-  const { form: formData, enhance, errors, tainted, submitting, isTainted, message } = form;
+  const packs = new PacksContext();
 
   function updateOnlineStatus() {
     toast.dismiss(toastId);
@@ -104,7 +102,7 @@
   function closeCommand() {
     openCommand.set(false);
     commandValue = null!;
-    $formData.query = "";
+    searchQuery = "";
   }
 
   function handleSettingTab(tab: SettingsTab) {
@@ -115,7 +113,7 @@
 
   setMobileContext(isMobile);
   setHoverContext(isHover);
-  setPacksContext(data.packs);
+  setPacksContext(packs);
 
   themeStore.subscribe((newTheme) => theme.set(themes.find((theme) => theme.id === newTheme)?.light ? "light" : "dark"));
 
@@ -128,9 +126,9 @@
   beforeNavigate(({ type }) => {
     if (type === "leave" || type === "link") return;
     loading = true;
-    if ($errors.query) return;
-    if ($formData.query.trim() !== "") {
-      recentSearches.update((searches) => [...new Set([{ ign: $formData.query.trim() }, ...searches])].slice(0, 5));
+    if (!searchQueryValidated.success) return;
+    if (searchQuery.trim() !== "") {
+      recentSearches.update((searches) => [...new Set([{ ign: searchQuery.trim() }, ...searches])].slice(0, 5));
     }
     setTimeout(() => {
       loading = false;
@@ -139,9 +137,15 @@
   });
 
   beforeNavigate(({ willUnload, to }) => {
-    if (updated.current && !willUnload && to?.url) {
+    if (!willUnload && to?.url) {
       location.href = to.url.href;
     }
+  });
+
+  $effect(() => {
+    const packsDataRemoteFunction = getPacks();
+    const packsData = packsDataRemoteFunction.current;
+    if (packsData) packs.packs = packsData;
   });
 </script>
 
@@ -258,21 +262,20 @@
 {/if}
 
 {#snippet command()}
-  <form method="POST" action="/search" use:enhance class="relative flex h-full w-4/5 items-center justify-start overflow-clip rounded-[1.125rem] bg-background/20 @[38rem]:w-full">
-    <Field {form} name="query">
-      <Control>
-        {#snippet children({ props })}
-          <input {...props} type="search" required class="hidden" bind:value={$formData.query} />
-        {/snippet}
-      </Control>
-    </Field>
-  </form>
+  <div class="relative flex h-full w-4/5 items-center justify-start overflow-clip rounded-[1.125rem] bg-background/20 @[38rem]:w-full">
+    <input type="search" required class="hidden" bind:value={searchQuery} />
+  </div>
   <Command.Root bind:value={commandValue} class="flex h-full w-full flex-col divide-y divide-icon/30 self-start overflow-hidden rounded-lg" filter={customFilter}>
     <div class="flex h-12 items-center">
-      <Button.Root type="button" class="flex aspect-square h-full  items-center justify-center text-text" onclick={() => form.submit()}>
-        {#if $formData.query.length > 0 && isTainted($tainted?.query) && $errors.query !== undefined}
+      <Button.Root
+        type="button"
+        class="flex aspect-square h-full  items-center justify-center text-text"
+        onclick={() => {
+          searchUserRemoteFn = searchUser({ username: searchQuery });
+        }}>
+        {#if !searchQueryValidated.success && searchQuery.length > 0}
           <CircleAlert class="size-4" />
-        {:else if $submitting || loading}
+        {:else if searchUserRemoteFn?.loading || loading}
           <LoaderCircle class="size-4 animate-spin" />
         {:else}
           <Search class="size-4" />
@@ -283,14 +286,14 @@
         placeholder="Search for something..."
         type="search"
         required
-        bind:value={$formData.query}
+        bind:value={searchQuery}
         bind:ref={commandInput}
         onkeydown={(e) => {
           if (commandValue && commandValue !== "search") return;
           const k = e.key.toLowerCase();
           if (k === "enter" || k === "search") {
             e.preventDefault();
-            form.submit();
+            searchUserRemoteFn = searchUser({ username: searchQuery });
           }
         }} />
     </div>
@@ -298,8 +301,8 @@
     <Command.List class="max-h-120 overflow-x-hidden overflow-y-auto px-2 pb-2">
       <Command.Viewport>
         <Command.Empty class="text-muted-foreground flex w-full items-center justify-center pt-8 pb-6 text-sm">
-          {#if $message && $message.type === "error"}
-            {$message.text}
+          {#if searchUserRemoteFn?.error}
+            {isHttpError(searchUserRemoteFn.error) ? searchUserRemoteFn.error.body.message : "Something went wrong"}
           {:else}
             Press Enter to search
           {/if}
@@ -348,20 +351,27 @@
         {/if}
         <Command.Separator class="bg-foreground/5 h-px w-full" />
 
-        {#if $formData.query.length}
+        {#if searchQuery.length}
           <Command.Group>
             <Command.GroupHeading class="text-muted-foreground px-3 pt-4 pb-2 text-xs">Actions</Command.GroupHeading>
             <Command.GroupItems>
-              <Command.Item value="search" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[$formData.query, "search", "find", "profile"]} onSelect={() => form.submit()}>
-                {#if $submitting || loading}
+              <Command.Item
+                value="search"
+                class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}
+                keywords={[searchQuery, "search", "find", "profile"]}
+                onSelect={() => {
+                  searchUserRemoteFn = searchUser({ username: searchQuery });
+                }}>
+                {#if searchUserRemoteFn?.loading || loading}
                   <LoaderCircle class="size-4 animate-spin" />
                 {:else}
                   <Search class="size-4 text-text" />
                 {/if}
-                {#if $message && $message.type === "error"}
-                  {$message.text}
+
+                {#if searchUserRemoteFn?.error}
+                  {isHttpError(searchUserRemoteFn.error) ? searchUserRemoteFn.error.body.message : "Something went wrong"}
                 {:else}
-                  Search for {$formData.query}
+                  Search for {searchQuery}
                 {/if}
               </Command.Item>
             </Command.GroupItems>

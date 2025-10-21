@@ -18,7 +18,8 @@ export enum APIEndpointName {
   PROFILE = "Profile Stats",
   GARDEN = "Garden",
   EMBED = "Embed Data",
-  RESOURCEPACK = "Resource Pack"
+  RESOURCEPACK = "Resource Pack",
+  SEARCH = "Search"
 }
 
 export * from "./types.d";
