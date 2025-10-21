@@ -86,7 +86,7 @@
     </li>
     <li>
       Networth: <Button.Root class="text-link font-semibold" rel="noreferrer" href="https://github.com/SkyCryptWebsite/SkyHelper-Networth-Go" target="_blank">SkyHelper Networth</Button.Root>
-      ported to GO by <span class="text-text/70">DuckySoLucky</span>
+      by <span class="text-text/70">SkyHelper</span>
     </li>
     <li>
       Player Heads: <Button.Root class="text-link font-semibold" rel="noreferrer" href="https://hypixel.net" target="_blank">SkyBlock</Button.Root>
