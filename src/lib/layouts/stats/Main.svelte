@@ -19,11 +19,11 @@
   import { recentSearches } from "$lib/stores/searches";
   import GripVertical from "@lucide/svelte/icons/grip-vertical";
   import Image from "@lucide/svelte/icons/image";
-  import { Avatar, Dialog } from "bits-ui";
+  import { Avatar, Collapsible, Dialog } from "bits-ui";
   import { Pane, PaneGroup, PaneResizer } from "paneforge";
   import { tick, untrack } from "svelte";
   import { cubicOut } from "svelte/easing";
-  import { fade } from "svelte/transition";
+  import { fade, slide } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
 
   const { data: ctx }: { data: ModelsStatsOutput } = $props();
@@ -177,12 +177,21 @@
       }}>
       <div class={cn("fixed top-0 right-0 h-dvh w-(--width)", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")} style="--width: {skinCollapsed ? 100 : rightSize}%"></div>
       <main data-vaul-drawer-wrapper class="@container relative mx-auto mt-12">
-        <div class="space-y-5 p-4 @[75rem]/parent:p-8">
-          <PlayerProfile />
-          <Skills />
-          <Stats />
-          <AdditionalStats />
-        </div>
+        <Collapsible.Root class="space-y-5 p-4 @[75rem]/parent:p-8">
+          <Collapsible.Trigger class="bg-text/10 mx-auto mt-3.5 w-full rounded-full p-2.5 text-xs font-semibold uppercase">{profile.displayName}'s Overview</Collapsible.Trigger>
+          <Collapsible.Content forceMount={true} class="space-y-5">
+            {#snippet child({ props, open })}
+              {#if open}
+                <div {...props} transition:slide={{ duration: 300, easing: cubicOut, axis: "y" }}>
+                  <PlayerProfile />
+                  <Skills />
+                  <Stats />
+                  <AdditionalStats />
+                </div>
+              {/if}
+            {/snippet}
+          </Collapsible.Content>
+        </Collapsible.Root>
 
         <Navbar>
           <Sections />
