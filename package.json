@@ -1,8 +1,12 @@
 {
   "name": "skycrypt-frontend",
-  "version": "0.0.1",
+  "version": "3.0.0",
   "private": true,
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SkyCryptWebsite/SkyCryptv2.git"
+  },
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
@@ -17,7 +21,10 @@
     "lint": "prettier --check . && eslint . && pnpm check",
     "format": "prettier --write .",
     "prepare": "svelte-kit sync || echo ''",
-    "test:unit": "vitest"
+    "test:unit": "vitest",
+    "changelog": "changelogen",
+    "changelog:bump": "changelogen --bump",
+    "release": "changelogen --release --push"
   },
   "devDependencies": {
     "@date-fns/tz": "^1.4.1",
@@ -37,6 +44,7 @@
     "@vitest/browser": "^3.2.4",
     "@vitest/ui": "^3.2.4",
     "bits-ui": "^2.14.0",
+    "changelogen": "^0.6.2",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "dotenv-cli": "^10.0.0",

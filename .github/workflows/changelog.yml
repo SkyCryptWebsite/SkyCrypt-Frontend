@@ -1,0 +1,53 @@
+name: Auto Release
+
+on:
+  push:
+    branches:
+      - dev
+      - prod
+    paths-ignore:
+      - "CHANGELOG.md"
+      - "package.json"
+      - ".github/workflows/changelog.yml"
+      - ".github/workflows/release.yml"
+
+jobs:
+  auto-release:
+    name: Auto Release
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'SkyCryptWebsite'
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: PNPM Install
+        uses: ./.github/actions/pnpm-install
+
+      - name: Create Prerelease (dev branch)
+        if: github.ref == 'refs/heads/dev'
+        run: pnpm run release -- --prerelease=beta
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release (prod branch)
+        if: github.ref == 'refs/heads/prod'
+        run: pnpm run release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync GitHub Release
+        run: pnpm dlx changelogen gh release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

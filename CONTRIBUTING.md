@@ -55,9 +55,43 @@ Please ensure that you don't accidentally commit the changes you made to the `.v
 
 When you are ready to submit your changes, please create a pull request (PR) on GitHub. Make sure to check the following:
 
+- **Use Conventional Commits**: Follow the [Conventional Commits](https://www.conventionalcommits.org/) specification for your commit messages.
 - Your code is well formatted and follows the project's coding style. Run `pnpm lint` to check for linting errors. If there are any `prettier` errors, run `pnpm format` to fix them. If there are any `eslint` or `svelte-check` errors, fix them manually.
 - Your code builds successfully. Run `pnpm build` to check for build errors.
 - Your PR has a clear title and description explaining the changes you made.
+
+### Commit Message Format
+
+We use conventional commits to automatically generate changelogs and manage releases. Your commit messages should follow this format:
+
+```
+<type>[optional scope]: <subject>
+```
+
+The scope is optional but recommended for better categorization.
+
+**Examples**:
+
+- `feat(stats): add dungeon statistics display`
+- `feat: add new feature`
+- `fix(ui): correct navbar alignment on mobile`
+- `fix: resolve rendering issue`
+- `docs: update contributing guidelines`
+
+### Automated Releases
+
+Releases are created automatically based on the branch:
+
+- **dev branch** → Creates prereleases (e.g., `v0.1.0-beta.1`) and deploys to cupcake.shiiyu.moe
+- **prod branch** → Creates stable releases (e.g., `v0.1.0`) and deploys to sky.shiiyu.moe
+
+The version bump is determined automatically by your commit types:
+
+- `fix:` commits → patch version (0.0.1 → 0.0.2)
+- `feat:` commits → minor version (0.0.1 → 0.1.0)
+- Breaking changes (`feat!:` or `BREAKING CHANGE:`) → major version (0.0.1 → 1.0.0)
+
+**Commit Type Reference**: See [.github/CONVENTIONAL_COMMITS.md](.github/CONVENTIONAL_COMMITS.md) for a quick reference guide.
 
 ## Issues
 

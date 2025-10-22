@@ -1,0 +1,86 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release-type:
+        description: "Release type (Manual override)"
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+          - prerelease
+      prerelease-id:
+        description: "Prerelease identifier (e.g., alpha, beta, rc) - only for prerelease"
+        required: false
+        type: string
+        default: "beta"
+
+jobs:
+  release:
+    name: Manual Release
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'SkyCryptWebsite' && (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/prod')
+
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: PNPM Install
+        uses: ./.github/actions/pnpm-install
+
+      - name: Make dummy env for types
+        run: mv .env.example .env
+
+      - name: Run tests
+        run: pnpm test:unit -- --run
+
+      - name: Run linting
+        run: pnpm lint
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Create Release (patch)
+        if: inputs.release-type == 'patch'
+        run: pnpm run release -- --patch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release (minor)
+        if: inputs.release-type == 'minor'
+        run: pnpm run release -- --minor
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release (major)
+        if: inputs.release-type == 'major'
+        run: pnpm run release -- --major
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Prerelease
+        if: inputs.release-type == 'prerelease'
+        run: pnpm run release -- --prerelease=${{ inputs.prerelease-id }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync GitHub Release
+        run: npx changelogen gh release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
