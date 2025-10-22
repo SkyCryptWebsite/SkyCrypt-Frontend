@@ -32,15 +32,15 @@
           {#if stats?.error}
             <Notice title="An unexpected error has occurred" type="error" error={stats.error.message} />
           {/if}
-          <div {...props} transition:slide={{ duration: 300, easing: cubicOut, axis: "y" }}>
-            {#if stats?.current}
-              {#each Object.entries(stats.current) as [statName, statData], index (index)}
+          {#if stats?.current?.stats}
+            <div {...props} transition:slide|global={{ duration: 300, easing: cubicOut, axis: "y" }}>
+              {#each Object.entries(stats.current.stats) as [statName, statData], index (index)}
                 {#if statData.total > 0}
                   <Stat stat={statName} {statData} />
                 {/if}
               {/each}
-            {/if}
-          </div>
+            </div>
+          {/if}
         {/if}
       {/snippet}
     </Collapsible.Content>

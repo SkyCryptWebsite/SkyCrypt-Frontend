@@ -1,5 +1,6 @@
 <script lang="ts">
   import { getHoverContext } from "$ctx";
+  import type { ModelsStatsInfo } from "$lib/shared/api/orval-generated";
   import { STATS_DATA } from "$lib/shared/constants/stats";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { content } from "$lib/stores/internal";
@@ -8,10 +9,7 @@
 
   type Props = {
     stat: string;
-    statData: {
-      [string: string]: number;
-      base: number;
-    };
+    statData: ModelsStatsInfo;
     class?: string | null | undefined;
   };
 
