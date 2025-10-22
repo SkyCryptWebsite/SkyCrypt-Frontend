@@ -41,19 +41,9 @@
   let navbarElement = $state<HTMLDivElement | null>(null);
   let observer: IntersectionObserver;
 
-  let allLinks = $derived(
-    filteredSectionOrderPreferences.reduce(
-      (acc: Record<string, HTMLAnchorElement | null>, section) => {
-        acc[section.name] = null;
-        return acc;
-      },
-      {} as Record<string, HTMLAnchorElement | null>
-    )
-  );
-
   function handleSectionClick(sectionName: SectionName) {
     tabValue.set(sectionName);
-    scrollToTab({ element: allLinks[sectionName], smooth: true });
+    scrollToTab({ smooth: true });
   }
 
   function scrollToTab({
@@ -124,7 +114,7 @@
   $effect(() => {
     if (navbarElement && $tabValue) {
       tick().then(() => {
-        scrollToTab({ element: allLinks[$tabValue], smooth: true });
+        scrollToTab({ smooth: true });
         // eslint-disable-next-line svelte/no-navigation-without-resolve
         replaceState("#" + $tabValue, page.state);
       });
@@ -132,13 +122,13 @@
   });
 </script>
 
-<ScrollArea.Root type="always" class="navbar group !sticky top-[calc(3rem+env(safe-area-inset-top,0))] z-20 overflow-clip" data-pinned={pinned} bind:ref={navbarElement}>
+<ScrollArea.Root type="always" class="navbar group sticky! top-[calc(3rem+env(safe-area-inset-top,0))] z-20 overflow-clip" data-pinned={pinned} bind:ref={navbarElement}>
   <ScrollArea.Viewport>
     <div class="flex! flex-nowrap items-center gap-2 pb-2 font-semibold whitespace-nowrap text-text/80">
-      <div class="absolute bottom-[0.4375rem] z-1 h-[2px] w-[calc(100%+0.5rem)] bg-icon"></div>
+      <div class="absolute bottom-1.75 z-1 h-[2px] w-[calc(100%+0.5rem)] bg-icon"></div>
       <div class="absolute inset-0 bottom-2 group-data-[pinned=true]:group-data-[mode=dark]/html:bg-[oklch(19.13%_0_0)]/90 group-data-[pinned=true]:group-data-[mode=light]/html:bg-[oklch(95.51%_0_0)]/92"></div>
       {#each filteredSectionOrderPreferences as section, index (index)}
-        <Button.Root class="relative px-2 py-3 after:absolute after:top-full after:left-0 after:h-0 after:w-full after:origin-top after:rounded-full after:bg-icon after:transition-all after:duration-100 after:ease-out hover:after:top-[calc(100%-4px)] hover:after:h-2 data-[active=true]:text-text data-[active=true]:after:top-[calc(100%-4px)] data-[active=true]:after:h-2" data-id={section.name} data-active={$tabValue === section.name} bind:ref={allLinks[section.name]} onclick={() => handleSectionClick(section.name)}>
+        <Button.Root class="relative px-2 py-3 after:absolute after:top-full after:left-0 after:h-0 after:w-full after:origin-top after:rounded-full after:bg-icon after:transition-all after:duration-100 after:ease-out hover:after:top-[calc(100%-4px)] hover:after:h-2 data-[active=true]:text-text data-[active=true]:after:top-[calc(100%-4px)] data-[active=true]:after:h-2" data-id={section.name} data-active={$tabValue === section.name} onclick={() => handleSectionClick(section.name)}>
           {section.name?.replaceAll("_", " ")}
         </Button.Root>
       {/each}
