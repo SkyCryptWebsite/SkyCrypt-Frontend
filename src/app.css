@@ -58,6 +58,8 @@
   /* Fonts */
   --font-icomoon: "icomoon", "Montserrat";
   --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-minecraft: "Minecraft", var(--font-sans);
+  --font-minecraft-upper: "Minecraft-Upper", var(--font-sans);
 }
 
 @theme inline {
@@ -120,6 +122,23 @@
       /* ᠅ powder, */ U+1805,
       /* ✿ dye, */ U+273F,
       /* ⚚ dungeon-upgrade, */ U+269A;
+  }
+
+  @font-face {
+    font-family: "Minecraft";
+    src: url("/fonts/minecraft/MinecraftSevenv2-Regular.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Minecraft-Upper";
+    src: url("/fonts/minecraft/MinecraftTenv2-Regular.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+    text-transform: uppercase;
   }
 
   /* For color preview to work you need to have the 'naumovs.color-highlight' extension installed */
@@ -349,4 +368,25 @@
 @utility chroma-gradient {
   @apply relative animate-chroma bg-size-[8.875rem_8.875rem] bg-clip-text bg-origin-padding !text-transparent;
   background-image: repeating-linear-gradient(-45deg, oklch(62.8% 0.258 29.2), oklch(77.2% 0.174 64.6), oklch(93.1% 0.229 123), oklch(87% 0.29 142), oklch(87.2% 0.255 148), oklch(90.5% 0.155 195), oklch(56.3% 0.241 261), oklch(46.6% 0.304 271), oklch(62.7% 0.307 316), oklch(65.3% 0.268 355), oklch(62.8% 0.258 29.2) 100px);
+}
+
+@utility minecraft-tooltip {
+  @apply !font-minecraft;
+  box-shadow: rgba(16, 0, 16, 0.93) 0px 0px 0px 2px;
+  line-height: 18px;
+  margin-left: 15px;
+  margin-top: -30px;
+  pointer-events: none;
+  position: fixed;
+  text-indent: initial;
+  text-shadow: rgb(63, 63, 63) 2px 2px;
+  width: fit-content;
+  z-index: 9999;
+  background: rgba(16, 0, 16, 0.93);
+  border-width: 2px;
+  border-style: solid;
+  border-color: initial;
+  border-image: linear-gradient(rgba(80, 0, 255, 0.31), rgba(40, 0, 127, 0.31)) 1 / 1 / 0 stretch;
+  border-radius: 4px;
+  padding: 4px 4px 3px;
 }
