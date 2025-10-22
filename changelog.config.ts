@@ -30,7 +30,7 @@ const config: ChangelogConfig = {
     args: []
   },
   templates: {
-    commitMessage: "chore(release): v{{newVersion}}",
+    commitMessage: "chore(release): v{{newVersion}} [skip ci]",
     tagMessage: "v{{newVersion}}",
     tagBody: "v{{newVersion}}"
   },
