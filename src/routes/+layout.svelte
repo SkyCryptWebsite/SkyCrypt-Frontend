@@ -38,10 +38,9 @@
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
   import "../app.css";
-  import type { PageData } from "./$types";
   import { schema } from "./schema";
 
-  let { data, children }: { data: PageData; children: Snippet } = $props();
+  let { children }: { children: Snippet } = $props();
   let isMobile = $state(new IsMobile());
   let isHover = $state(new IsHover());
   let toastId: string | number = $state(0);
