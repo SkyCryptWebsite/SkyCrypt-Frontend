@@ -45,11 +45,11 @@ jobs:
       - name: PNPM Install
         uses: ./.github/actions/pnpm-install
 
-      # - name: Make dummy env for types
-      #   run: |
-      #     echo "ls -a ."
-      #     ls -a .
-      #     mv .env.example .env
+      - name: Make dummy env for types
+        run: |
+          echo "ls -a ."
+          ls -a .
+          mv .env.example .env
 
       - name: Check linting, formatting, and svelte checks
         run: pnpm lint
@@ -64,11 +64,11 @@ jobs:
       - name: PNPM Install
         uses: ./.github/actions/pnpm-install
 
-      - name: Make dummy env for types
-        run: |
-          echo "ls -a ."
-          ls -a .
-          mv .env.example .env
+      # - name: Make dummy env for types
+      #   run: |
+      #     echo "ls -a ."
+      #     ls -a .
+      #     mv .env.example .env
 
       - name: Vite Build
         run: pnpm run build
