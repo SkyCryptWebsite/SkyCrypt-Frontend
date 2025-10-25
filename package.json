@@ -67,7 +67,6 @@
     "prettier-plugin-tailwindcss": "^0.7.1",
     "pretty-ms": "^9.3.0",
     "runed": "^0.35.1",
-    "simple-git-hooks": "^2.13.1",
     "skinview3d": "^3.4.1",
     "svelte": "^5.41.2",
     "svelte-check": "^4.3.3",
@@ -93,7 +92,8 @@
     "zod": "^4.1.12"
   },
   "dependencies": {
-    "@sentry/sveltekit": "^10.21.0"
+    "@sentry/sveltekit": "^10.21.0",
+    "simple-git-hooks": "^2.13.1"
   },
   "engines": {
     "node": "^22",
