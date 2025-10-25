@@ -82,7 +82,7 @@ jobs:
       - name: Vite Build
         run: pnpm run build
         env:
-          PUBLIC_SERVER_API_URL: ${{ env.SERVER_API_URL }}
+          PUBLIC_SERVER_API_URL: https://${{ env.SERVER_API_URL }}/api/
           SERVER_API_TOKEN: ${{ secrets.SERVER_API_TOKEN }}
 
   package:
@@ -124,7 +124,7 @@ jobs:
           push: true
           build-args: |
             PUBLIC_COMMIT_HASH=${{ env.SHORT_SHA }}
-            PUBLIC_SERVER_API_URL=${{ env.SERVER_API_URL }}
+            PUBLIC_SERVER_API_URL=https://${{ env.SERVER_API_URL }}/api/
             SERVER_API_TOKEN=${{ secrets.SERVER_API_TOKEN }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
