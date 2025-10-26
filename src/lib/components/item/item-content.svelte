@@ -27,20 +27,7 @@
   const enchanted = $derived(skyblockItem?.texture_path?.includes("/api/leather/") ? false : skyblockItem && "shiny" in skyblockItem ? skyblockItem.shiny : false);
   const hasColor = $derived(skyblockItem?.lore?.some((lore) => lore.includes("Color:")) ?? false);
   const packs = $derived(getPacksContext().packs);
-  const packData = $derived.by(() => {
-    try {
-      if (!packs || !skyblockItem?.texture_pack) return undefined;
-      return packs.find((pack) => pack.id === skyblockItem?.texture_pack);
-    } catch (e) {
-      console.error(e);
-      console.info("Error getting pack data for item:", {
-        item: skyblockItem,
-        packs: packs,
-        getPacksContext: getPacksContext()
-      });
-      return undefined;
-    }
-  });
+  const packData = $derived(packs?.find((pack) => pack.id === skyblockItem?.texture_pack));
 
   // Get the wiki link for the itemf
   export const wikiInfo = derivedStore<typeof wikiOrderPreferences, { url: string; name: string } | undefined>(wikiOrderPreferences, ($wikiOrderPreferences) => {
