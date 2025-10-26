@@ -32,6 +32,11 @@
     return packs.find((pack) => pack.id === skyblockItem?.texture_pack);
   });
 
+  $inspect({
+    packs,
+    packData
+  });
+
   // Get the wiki link for the itemf
   export const wikiInfo = derivedStore<typeof wikiOrderPreferences, { url: string; name: string } | undefined>(wikiOrderPreferences, ($wikiOrderPreferences) => {
     const wiki = skyblockItem?.wiki;
