@@ -54,6 +54,7 @@
 <!-- Mark completed items with an "x" -->
 
 - [ ] My code follows the project's style guidelines
+- [ ] I have used [conventional commits](../.github/CONVENTIONAL_COMMITS.md) for all commit messages
 - [ ] I have performed a self-review of my own code
 - [ ] My changes generate no new warnings or errors
 - [ ] Any dependent changes have been merged and published

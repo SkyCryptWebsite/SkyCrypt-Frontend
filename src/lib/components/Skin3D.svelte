@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { getProfileCtx } from "$ctx/profile.svelte";
+  import { getProfileContext } from "$ctx";
   import { cn } from "$lib/shared/utils";
   import ky from "ky";
   import * as skinview3d from "skinview3d";
   import { onDestroy } from "svelte";
 
-  const ctx = getProfileCtx();
-  const uuid = $derived(ctx.profile.uuid);
+  const ctx = getProfileContext();
+  const uuid = $derived(ctx.uuid);
 
   let { class: className }: { class: string | undefined } = $props();
   let viewer = $state<skinview3d.SkinViewer>();
@@ -56,7 +56,7 @@
   };
 
   $effect.pre(() => {
-    updateSkinViewer(uuid);
+    if (uuid) updateSkinViewer(uuid);
     updateViewerSize();
     return () => viewer?.dispose();
   });

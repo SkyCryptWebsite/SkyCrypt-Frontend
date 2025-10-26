@@ -68,7 +68,7 @@
 
 <Tabs.Content value={SettingsTab.Misc} class="space-y-6">
   <div class="flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto">
-    <div class="bg-text/[0.05] space-y-4 rounded-lg p-4">
+    <div class="space-y-4 rounded-lg bg-text/5 p-4">
       <div class="flex items-start gap-2 rounded-lg p-2 font-semibold">
         <Settings2 class="size-5 h-lh shrink-0" />
         <div>
@@ -79,15 +79,15 @@
           </div>
         </div>
       </div>
-      <Label.Root for="performance" class="bg-text/[0.05] flex items-center justify-between gap-4 rounded-lg p-2">
+      <Label.Root for="performance" class="flex items-center justify-between gap-4 rounded-lg bg-text/5 p-2">
         <div class="flex items-start gap-2">
-          <Fan class="data-[performance=false]:animate-spin-slow size-6 h-lh shrink-0 will-change-transform data-[performance=true]:animate-spin" data-performance={$performanceMode} />
+          <Fan class="size-6 h-lh shrink-0 will-change-transform data-[performance=false]:animate-spin-slow data-[performance=true]:animate-spin" data-performance={$performanceMode} />
           <div class="flex flex-col">
             <Tooltip.Provider delayDuration={0}>
               <Tooltip.Root>
                 <Tooltip.Trigger class="flex items-center gap-1">
-                  <h4 class="text-text/90 font-semibold">Performance Mode</h4>
-                  <CircleQuestionMark class="text-text/60 size-4 h-lh" />
+                  <h4 class="font-semibold text-text/90">Performance Mode</h4>
+                  <CircleQuestionMark class="size-4 h-lh text-text/60" />
                 </Tooltip.Trigger>
                 <Tooltip.Portal>
                   <Tooltip.Content forceMount class={cn("z-50 flex w-full max-w-lg flex-col space-y-2 overflow-hidden rounded-lg p-4 select-text", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}>
@@ -112,63 +112,63 @@
             <p class="text-text/60">Disables blur, transparency and backdrop effects for better performance on low-end devices.</p>
           </div>
         </div>
-        <Switch.Root id="performance" checked={$performanceMode} class="data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30 peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out" onCheckedChange={() => performanceMode.update((value) => !value)}>
-          <Switch.Thumb class="bg-text pointer-events-none block size-4 shrink-0 rounded-full transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
+        <Switch.Root id="performance" checked={$performanceMode} class="peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30" onCheckedChange={() => performanceMode.update((value) => !value)}>
+          <Switch.Thumb class="pointer-events-none block size-4 shrink-0 rounded-full bg-text transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
         </Switch.Root>
       </Label.Root>
 
-      <Label.Root for="glint" class="bg-text/[0.05] flex items-center justify-between gap-4 rounded-lg p-2">
+      <Label.Root for="glint" class="flex items-center justify-between gap-4 rounded-lg bg-text/5 p-2">
         <div class="flex items-start gap-2">
           <Sparkle class="size-6 h-lh shrink-0" />
           <div class="flex flex-col">
-            <h4 class="text-text/90 font-semibold">Show Glint</h4>
+            <h4 class="font-semibold text-text/90">Show Glint</h4>
             <p class="text-text/60">Show the enchantment glint effect on enchanted items.</p>
           </div>
         </div>
-        <Switch.Root id="glint" checked={$showGlint} class="data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30 peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out" onCheckedChange={() => showGlint.update((value) => !value)}>
-          <Switch.Thumb class="bg-text pointer-events-none block size-4 shrink-0 rounded-full transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
+        <Switch.Root id="glint" checked={$showGlint} class="peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30" onCheckedChange={() => showGlint.update((value) => !value)}>
+          <Switch.Thumb class="pointer-events-none block size-4 shrink-0 rounded-full bg-text transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
         </Switch.Root>
       </Label.Root>
 
-      <Label.Root for="rainbow" class="bg-text/[0.05] flex items-center justify-between gap-4 rounded-lg p-2">
+      <Label.Root for="rainbow" class="flex items-center justify-between gap-4 rounded-lg bg-text/5 p-2">
         <div class="flex items-start gap-2">
           <Rainbow class="size-6 h-lh shrink-0" />
           <div class="flex flex-col">
-            <h4 class="text-text/90 group-data-[rainbow=true]/html:chroma-gradient font-semibold">Rainbow Colors</h4>
+            <h4 class="font-semibold text-text/90 group-data-[rainbow=true]/html:chroma-gradient">Rainbow Colors</h4>
             <p class="text-text/60">Enable rainbow colors animation for maxed enchants on items.</p>
           </div>
         </div>
         <Switch.Root
           id="rainbow"
           checked={$rainbowEnchantments}
-          class="data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30 peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out"
+          class="peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30"
           onCheckedChange={() => {
             rainbowEnchantments.update((value) => !value);
             toggleRainbow();
           }}>
-          <Switch.Thumb class="bg-text pointer-events-none block size-4 shrink-0 rounded-full transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
+          <Switch.Thumb class="pointer-events-none block size-4 shrink-0 rounded-full bg-text transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
         </Switch.Root>
       </Label.Root>
 
-      <div class="bg-text/[0.05] flex items-center justify-between gap-4 rounded-lg p-2">
+      <div class="flex items-center justify-between gap-4 rounded-lg bg-text/5 p-2">
         <div class="flex items-start gap-2">
           <Keyboard class="size-6 h-lh shrink-0" />
           <div class="flex flex-col">
-            <h4 class="text-text/90 font-semibold">Keybind</h4>
+            <h4 class="font-semibold text-text/90">Keybind</h4>
             <p class="text-text/60">Set the keybind to open the command menu</p>
           </div>
         </div>
-        <Button.Root class="bg-text/10 hover:bg-text/20 border-text/20 text-text/90 focus:ring-icon/50 flex h-8 min-w-8 items-center justify-center rounded-md border px-2 py-1 font-mono text-sm font-semibold transition-colors ease-out focus:ring-2 focus:outline-none" onclick={handleKeybindClick} onkeydown={handleKeybindKeydown} tabindex={0}>
+        <Button.Root class="flex h-8 min-w-8 items-center justify-center rounded-md border border-text/20 bg-text/10 px-2 py-1 font-mono text-sm font-semibold text-text/90 transition-colors ease-out hover:bg-text/20 focus:ring-2 focus:ring-icon/50 focus:outline-none" onclick={handleKeybindClick} onkeydown={handleKeybindKeydown} tabindex={0}>
           {#if isListening}
-            <span class="text-icon animate-pulse">Press a key</span>
+            <span class="animate-pulse text-icon">Press a key</span>
           {:else}
             <span class="min-w-2 text-center">{$keybind}</span>
           {/if}
         </Button.Root>
       </div>
     </div>
-    <Separator.Root class="bg-icon/30 shrink-0 data-[orientation=horizontal]:h-0.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-0.5" />
-    <div class="bg-text/[0.05] space-y-4 rounded-lg p-4">
+    <Separator.Root class="shrink-0 bg-icon/30 data-[orientation=horizontal]:h-0.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-0.5" />
+    <div class="space-y-4 rounded-lg bg-text/5 p-4">
       <div class="flex items-start gap-2 rounded-lg p-2 font-semibold">
         <BookOpenText class="size-5 h-lh shrink-0" />
         <div class="">
@@ -189,15 +189,15 @@
         }}>
         {#each wikiOrder as wiki (wiki.id)}
           {@const normalizedName = wiki.name.replaceAll("_", " ")}
-          <div animate:flip={{ duration: 300, easing: cubicOut }} class="bg-text/[0.05] relative flex items-center gap-2 rounded-lg p-2 font-semibold">
-            <GripVertical class="text-text/60 size-5 shrink-0" />
+          <div animate:flip={{ duration: 300, easing: cubicOut }} class="relative flex items-center gap-2 rounded-lg bg-text/5 p-2 font-semibold">
+            <GripVertical class="size-5 shrink-0 text-text/60" />
             <div class="flex flex-col">
               {normalizedName}
               <Button.Root href={wiki.link} target="_blank" class="text-link/60 underline">{new URL(wiki.link).hostname}</Button.Root>
             </div>
             {#if SHADOW_ITEM_MARKER_PROPERTY_NAME in wiki && wiki[SHADOW_ITEM_MARKER_PROPERTY_NAME]}
-              <div in:fade={{ duration: 300, easing: cubicOut }} class="bg-text/[0.05] visible absolute inset-0 flex animate-pulse items-center gap-2 rounded-lg p-2 font-semibold opacity-30">
-                <GripVertical class="text-text/60 size-5 shrink-0" />
+              <div in:fade={{ duration: 300, easing: cubicOut }} class="visible absolute inset-0 flex animate-pulse items-center gap-2 rounded-lg bg-text/5 p-2 font-semibold opacity-30">
+                <GripVertical class="size-5 shrink-0 text-text/60" />
                 <div class="flex flex-col">
                   {normalizedName}
                   <Button.Root href={wiki.link} target="_blank" class="text-link/60 underline">{new URL(wiki.link).hostname}</Button.Root>
@@ -209,7 +209,7 @@
       </div>
       {#if $differsFromDefault}
         <Button.Root
-          class="bg-text/65 text-background/80 hover:bg-text/80 mt-4 w-full rounded-lg p-1.5 text-sm font-semibold uppercase transition-colors ease-out"
+          class="mt-4 w-full rounded-lg bg-text/65 p-1.5 text-sm font-semibold text-background/80 uppercase transition-colors ease-out hover:bg-text/80"
           onclick={() => {
             sectionOrderPreferences.set(defaultSectionOrder);
           }}>

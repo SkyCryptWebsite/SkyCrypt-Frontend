@@ -38,7 +38,7 @@
           {/if}
         {/snippet}
       </Dialog.Overlay>
-      <Dialog.Content forceMount class={cn("font-icomoon fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg p-4 select-text", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}>
+      <Dialog.Content forceMount class={cn("fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg p-4 font-icomoon select-text", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}>
         {#snippet child({ props, open })}
           {#if open}
             <div {...props} transition:flyAndScale>
@@ -55,7 +55,7 @@
   <Drawer.Root bind:open={noticeOpen} shouldScaleBackground={false} setBackgroundColorOnScale={false}>
     <Drawer.Portal>
       <Drawer.Overlay class="fixed inset-0 z-40 bg-black/80" />
-      <Drawer.Content class="bg-background-lore fixed right-0 bottom-0 left-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px]">
+      <Drawer.Content class="fixed right-0 bottom-0 left-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px] bg-background-lore">
         <div class="mx-auto w-full max-w-md overflow-auto p-6">
           {@render notice?.()}
         </div>

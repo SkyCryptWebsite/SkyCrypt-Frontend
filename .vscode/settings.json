@@ -14,6 +14,7 @@
   "svelte.plugin.svelte.defaultScriptLanguage": "ts",
   "tailwindCSS.classAttributes": ["class", "class:*", "class:name"],
   "tailwindCSS.emmetCompletions": true,
+  "tailwindCSS.classFunctions": ["cn", "clsx"],
   "tailwindCSS.includeLanguages": {
     "html": "html",
     "plaintext": "html",
@@ -23,5 +24,11 @@
   },
   "javascript.updateImportsOnFileMove.enabled": "prompt",
   "typescript.updateImportsOnFileMove.enabled": "prompt",
-  "eslint.validate": ["javascript", "typescript", "svelte"]
+  "eslint.validate": ["javascript", "typescript", "svelte"],
+  "prettier.documentSelectors": ["**/*.svelte"],
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "file": ".github/commit-message.instructions.md"
+    }
+  ]
 }

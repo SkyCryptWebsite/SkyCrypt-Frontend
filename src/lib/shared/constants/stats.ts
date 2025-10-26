@@ -1,4 +1,4 @@
-import type { StatsData } from "$types/processed/profile/stats";
+import type { StatsData } from "$types";
 
 export const STATS_DATA: StatsData = {
   health: {

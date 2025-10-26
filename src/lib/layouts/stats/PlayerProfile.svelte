@@ -1,8 +1,7 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
-  import { getProfileCtx } from "$ctx/profile.svelte";
+  import { getHoverContext, getProfileContext } from "$ctx";
   import ApiNotice from "$lib/components/APINotice.svelte";
-  import { IsHover } from "$lib/hooks/is-hover.svelte";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { favorites } from "$lib/stores/favorites";
   import { performanceMode } from "$lib/stores/preferences";
@@ -14,7 +13,6 @@
   import Star from "@lucide/svelte/icons/star";
   import TriangleAlert from "@lucide/svelte/icons/triangle-alert";
   import { Avatar, Button, Popover, Tooltip } from "bits-ui";
-  import { getContext } from "svelte";
   import { toast } from "svelte-sonner";
 
   let toastId: string | number = $state(0);
@@ -27,11 +25,10 @@
   let noticeRef = $state<HTMLElement>(null!);
   let ignRef = $state<HTMLElement>(null!);
 
-  const ctx = getProfileCtx();
-  const profile = $derived(ctx.profile);
-  const isHover = getContext<IsHover>("isHover");
+  const profile = $derived(getProfileContext());
+  const isHover = getHoverContext();
 
-  const apiSettings = $derived(Object.entries(profile.apiSettings).filter(([_, value]) => !value));
+  const apiSettings = $derived(Object.entries(profile.apiSettings ?? {}).filter(([_, value]) => !value));
 
   const iconMapper: Record<string, string> = {
     TWITTER: "x-twitter.svg",
@@ -54,11 +51,11 @@
   Stats for
   <Popover.Root bind:open={ignOpen}>
     <Popover.Trigger
-      disabled={!profile.members.length}
-      class="bg-text/10 inline-flex items-center rounded-full py-2 pr-4 pl-2 align-middle text-xl font-semibold whitespace-nowrap sm:text-3xl"
+      disabled={!profile.members?.length}
+      class="inline-flex items-center rounded-full bg-text/10 py-2 pr-4 pl-2 align-middle text-xl font-semibold whitespace-nowrap sm:text-3xl"
       bind:ref={ignRef}
       onpointerenter={() => {
-        if (!profile.members.length) return;
+        if (!profile.members?.length) return;
         if (!isHover.current) return;
         profileOpen = false;
         ignOpen = true;
@@ -86,17 +83,17 @@
                 {#if member.username !== profile.username}
                   <a
                     href={resolve("/stats/[ign]/[[profile]]", {
-                      ign: member.username,
+                      ign: member.username ?? "",
                       profile: profile.profile_cute_name
                     })}
                     class="group flex min-w-(--bits-dropdown-menu-anchor-width) items-center p-2 focus-visible:outline-0"
                     data-sveltekit-preload-code="viewport"
                     data-removed={member.removed}>
-                    <div class="outline-icon group-hover:bg-text/20 group-hover:group-data-[removed=true]:bg-text/20 group-data-[removed=true]:bg-text/5 bg-text/10 flex w-full items-center justify-between gap-2 rounded-lg p-2 transition-colors duration-300 ease-out group-focus-visible:outline-1">
+                    <div class="flex w-full items-center justify-between gap-2 rounded-lg bg-text/10 p-2 outline-icon transition-colors duration-300 ease-out group-hover:bg-text/20 group-focus-visible:outline-1 group-data-[removed=true]:bg-text/5 group-hover:group-data-[removed=true]:bg-text/20">
                       <div class="flex items-center gap-2 pr-4">
-                        <Avatar.Root class="bg-text/10 size-8 shrink-0 rounded-sm">
+                        <Avatar.Root class="size-8 shrink-0 rounded-sm bg-text/10">
                           <Avatar.Image loading="lazy" src="https://crafatar.com/avatars/{member.uuid}?size=64&overlay" alt={member.username} class="aspect-square size-8 rounded-sm [image-rendering:pixelated] group-data-[removed=true]:grayscale-100" />
-                          <Avatar.Fallback class="text-text/60 flex h-full items-center justify-center text-lg font-semibold uppercase">
+                          <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">
                             <img loading="lazy" src="https://mc-heads.net/avatar/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40/64" alt="Steve" class="aspect-square size-8 rounded-sm [image-rendering:pixelated] group-data-[removed=true]:grayscale-100" />
                           </Avatar.Fallback>
                         </Avatar.Root>
@@ -105,7 +102,7 @@
                         </span>
                       </div>
                       {#if member.removed}
-                        <Ban class="light:invert text-text size-8" />
+                        <Ban class="size-8 text-text light:invert" />
                       {/if}
                     </div>
                   </a>
@@ -118,19 +115,19 @@
     </Popover.Content>
   </Popover.Root>
   on
-  <div class="bg-text/10 relative inline-flex items-center gap-2 rounded-full px-2 py-1 align-middle text-xl font-semibold data-[warning=true]:border-2 data-[warning=true]:border-yellow-500/20 sm:text-3xl" data-warning={!!apiSettings.length} bind:this={noticeRef}>
+  <div class="relative inline-flex items-center gap-2 rounded-full bg-text/10 px-2 py-1 align-middle text-xl font-semibold data-[warning=true]:border-2 data-[warning=true]:border-yellow-500/20 sm:text-3xl" data-warning={apiSettings.length != null} bind:this={noticeRef}>
     <Popover.Root bind:open={profileOpen}>
       <Popover.Trigger
-        disabled={!profile.profiles.length}
+        disabled={!profile.profiles?.length}
         onpointerenter={() => {
-          if (!profile.profiles.length) return;
+          if (!profile.profiles?.length) return;
           if (!isHover.current) return;
           ignOpen = false;
           profileOpen = true;
         }}
         class="rounded-full px-2 py-1">
         {profile.profile_cute_name}
-        {@render profileIcon(profile.game_mode)}
+        {@render profileIcon(profile.game_mode ?? "")}
       </Popover.Trigger>
       <Popover.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", $performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={noticeRef} strategy="absolute">
         {#snippet child({ wrapperProps, props, open })}
@@ -141,16 +138,16 @@
                   {#if otherProfile.profile_id !== profile.profile_id}
                     <a
                       href={resolve("/stats/[ign]/[[profile]]", {
-                        ign: profile.username,
+                        ign: profile.username ?? "",
                         profile: otherProfile.cute_name
                       })}
                       class="group flex items-center p-2 focus-visible:outline-0"
                       data-sveltekit-preload-code="viewport">
-                      <div class="group-hover:bg-text/20 outline-icon bg-text/10 w-full rounded-lg p-2 transition-colors duration-300 ease-out group-focus-visible:outline-1">
+                      <div class="w-full rounded-lg bg-text/10 p-2 outline-icon transition-colors duration-300 ease-out group-hover:bg-text/20 group-focus-visible:outline-1">
                         <span class="light:invert">
                           {otherProfile.cute_name}
                         </span>
-                        {@render profileIcon(otherProfile.game_mode)}
+                        {@render profileIcon(otherProfile.game_mode ?? "")}
                       </div>
                     </a>
                   {/if}
@@ -168,7 +165,7 @@
           <TriangleAlert class="size-6 text-yellow-500" />
         </Popover.Trigger>
         <Popover.Portal>
-          <Popover.Content forceMount class="bg-background-grey z-50 max-w-sm rounded-lg" sideOffset={0} side="bottom" align="center" customAnchor={noticeRef} collisionPadding={6}>
+          <Popover.Content forceMount class="z-50 max-w-sm rounded-lg bg-background-grey" sideOffset={0} side="bottom" align="center" customAnchor={noticeRef} collisionPadding={6}>
             {#snippet child({ wrapperProps, props, open })}
               {#if open}
                 <div {...wrapperProps}>
@@ -189,10 +186,10 @@
 <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
   <Tooltip.Root bind:open={favoriteTooltipOpen} disableCloseOnTriggerClick={false}>
     <Tooltip.Trigger
-      class="bg-icon/90 hover:bg-icon aspect-square rounded-full p-2 transition-opacity duration-150 ease-out"
+      class="aspect-square rounded-full bg-icon/90 p-2 transition-opacity duration-150 ease-out hover:bg-icon"
       onclick={() => {
         if (!$favorites.some((fav) => fav.uuid === profile.uuid)) {
-          favorites.set([...$favorites, { uuid: profile.uuid, ign: profile.username }]);
+          favorites.set([...$favorites, { uuid: profile.uuid ?? "", ign: profile.username ?? "" }]);
           toast.dismiss(toastId);
           toastId = toast.success(`Added ${profile.username} to your favorites!`);
         } else {
@@ -213,7 +210,7 @@
       {/snippet}
     </Tooltip.Trigger>
     <Tooltip.Portal>
-      <Tooltip.Content forceMount class="bg-background-grey text-text/80 z-50 rounded-lg p-4 font-semibold" sideOffset={6} side="top" align="center">
+      <Tooltip.Content forceMount class="z-50 rounded-lg bg-background-grey p-4 font-semibold text-text/80" sideOffset={6} side="top" align="center">
         {#snippet child({ wrapperProps, props, open })}
           {#if open}
             <div {...wrapperProps}>
@@ -233,54 +230,56 @@
   </Tooltip.Root>
 
   <Button.Root
-    class="bg-icon/90 hover:bg-icon aspect-square rounded-full p-2 transition-opacity duration-150 ease-out"
+    class="aspect-square rounded-full bg-icon/90 p-2 transition-opacity duration-150 ease-out hover:bg-icon"
     onclick={() => {
       copyToClipboard(window.location.href);
     }}>
     <Link class="size-4" />
   </Button.Root>
 
-  <Button.Root href={`https://plancke.io/hypixel/player/stats/${profile.username}`} target="_blank" class="bg-icon/90 hover:bg-icon flex items-center justify-center gap-1.5 rounded-full px-2 py-1 font-semibold transition-opacity duration-150 ease-out">
+  <Button.Root href={`https://plancke.io/hypixel/player/stats/${profile.username}`} target="_blank" class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon">
     Plancke <ExternalLink class="size-4" />
   </Button.Root>
 
-  <Button.Root href={`https://elitebot.dev/@${profile.username}/${profile.profile_cute_name}`} target="_blank" class="bg-icon/90 hover:bg-icon flex items-center justify-center gap-1.5 rounded-full px-2 py-1 font-semibold transition-opacity duration-150 ease-out">
+  <Button.Root href={`https://elitebot.dev/@${profile.username}/${profile.profile_cute_name}`} target="_blank" class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon">
     Elite <ExternalLink class="size-4" />
   </Button.Root>
 
   <Button.Root
-    class="bg-icon/90 hover:bg-icon hidden items-center justify-center gap-1.5 rounded-full px-2 py-1 font-semibold transition-opacity duration-150 ease-out data-[visible=true]:flex"
+    class="hidden items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon data-[visible=true]:flex"
     data-visible={showMore}
     onclick={() => {
-      copyToClipboard(profile.uuid);
+      copyToClipboard(profile.uuid ?? "");
     }}>
     Copy UUID
   </Button.Root>
 
-  {#each Object.entries(profile.social) as [key, value], index (index)}
-    {#if key === "DISCORD"}
-      <Button.Root class="bg-icon/90 hover:bg-icon hidden items-center justify-center gap-1.5 rounded-full px-2 py-1 font-semibold transition-opacity duration-150 ease-out data-[visible=true]:flex" data-visible={showMore} onclick={() => copyToClipboard(value)}>
-        <Avatar.Root>
-          <Avatar.Image loading="lazy" src="/img/icons/{iconMapper[key]}" alt="{profile.username}'s {key.toLocaleLowerCase()}" class="size-4 text-white" />
-          <Avatar.Fallback>
-            {profile.username.slice(0, 2)}
-          </Avatar.Fallback>
-        </Avatar.Root>
-        {value}
-      </Button.Root>
-    {:else}
-      <Button.Root href={value} target="_blank" class="bg-icon/90 hover:bg-icon hidden aspect-square items-center justify-center gap-1.5 rounded-full px-2 py-1 font-semibold transition-opacity duration-150 ease-out data-[visible=true]:flex" data-visible={showMore}>
-        <Avatar.Root>
-          <Avatar.Image loading="lazy" src="/img/icons/{iconMapper[key]}" alt="{profile.username}'s {key.toLocaleLowerCase()}" class="size-4 text-white" />
-          <Avatar.Fallback>
-            {profile.username.slice(0, 2)}
-          </Avatar.Fallback>
-        </Avatar.Root>
-      </Button.Root>
-    {/if}
-  {/each}
+  {#if profile.social}
+    {#each Object.entries(profile.social) as [key, value], index (index)}
+      {#if key === "DISCORD"}
+        <Button.Root class="hidden items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon data-[visible=true]:flex" data-visible={showMore} onclick={() => copyToClipboard(value)}>
+          <Avatar.Root>
+            <Avatar.Image loading="lazy" src="/img/icons/{iconMapper[key]}" alt="{profile.username}'s {key.toLocaleLowerCase()}" class="size-4 text-white" />
+            <Avatar.Fallback>
+              {profile.username?.slice(0, 2)}
+            </Avatar.Fallback>
+          </Avatar.Root>
+          {value}
+        </Button.Root>
+      {:else}
+        <Button.Root href={value} target="_blank" class="hidden aspect-square items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon data-[visible=true]:flex" data-visible={showMore}>
+          <Avatar.Root>
+            <Avatar.Image loading="lazy" src="/img/icons/{iconMapper[key]}" alt="{profile.username}'s {key.toLocaleLowerCase()}" class="size-4 text-white" />
+            <Avatar.Fallback>
+              {profile.username?.slice(0, 2)}
+            </Avatar.Fallback>
+          </Avatar.Root>
+        </Button.Root>
+      {/if}
+    {/each}
+  {/if}
 
-  <Button.Root class="bg-icon/90 hover:bg-icon rounded-full p-2 transition-opacity duration-150 ease-out" onclick={() => (showMore = !showMore)}>
+  <Button.Root class="rounded-full bg-icon/90 p-2 transition-opacity duration-150 ease-out hover:bg-icon" onclick={() => (showMore = !showMore)}>
     {#if showMore}
       <ChevronLeft class="size-4" />
     {:else}

@@ -65,12 +65,12 @@
     }}>
     {#each sectionOrder as section (section.id)}
       {@const normalizedName = section.name.replaceAll("_", " ")}
-      <div animate:flip={{ duration: 300, easing: cubicOut }} class="bg-text/[0.05] relative flex items-center gap-2 rounded-lg p-2 font-semibold">
-        <GripVertical class="text-text/60 size-5" />
+      <div animate:flip={{ duration: 300, easing: cubicOut }} class="relative flex items-center gap-2 rounded-lg bg-text/5 p-2 font-semibold">
+        <GripVertical class="size-5 text-text/60" />
         {normalizedName}
         {#if SHADOW_ITEM_MARKER_PROPERTY_NAME in section && section[SHADOW_ITEM_MARKER_PROPERTY_NAME]}
-          <div in:fade={{ duration: 300, easing: cubicOut }} class="bg-text/[0.05] visible absolute inset-0 flex animate-pulse items-center gap-2 rounded-lg p-2 font-semibold opacity-30">
-            <GripVertical class="text-text/60 size-5" />
+          <div in:fade={{ duration: 300, easing: cubicOut }} class="visible absolute inset-0 flex animate-pulse items-center gap-2 rounded-lg bg-text/5 p-2 font-semibold opacity-30">
+            <GripVertical class="size-5 text-text/60" />
             {normalizedName}
           </div>
         {/if}
@@ -79,7 +79,7 @@
   </div>
   {#if $differsFromDefault}
     <Button.Root
-      class="bg-text/65 text-background/80 hover:bg-text/80 mt-4 w-full rounded-lg p-1.5 text-sm font-semibold uppercase transition-colors ease-out"
+      class="mt-4 w-full rounded-lg bg-text/65 p-1.5 text-sm font-semibold text-background/80 uppercase transition-colors ease-out hover:bg-text/80"
       onclick={() => {
         sectionOrderPreferences.set(defaultSectionOrder);
       }}>

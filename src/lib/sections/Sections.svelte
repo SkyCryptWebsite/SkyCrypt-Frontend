@@ -34,14 +34,22 @@
     <Tabs.Root value={$tabValue} class="contents" data-section={$tabValue}>
       <Tabs.Content value={$tabValue} class="section">
         {#await COMPONENTS[$tabValue]()}
-          <div class={cn("bg-text/[0.05] rounded-lg p-6", $performanceMode ? "bg-background-lore" : "backdrop-blur-sm")}>
+          <div class={cn("rounded-lg bg-text/5 p-6", $performanceMode ? "bg-background-lore" : "backdrop-blur-sm")}>
             <div class="flex items-center gap-2">
-              <LoaderCircle class="text-text/60 size-5 animate-spin" />
-              <span class="text-text/80 font-semibold">Loading {titleCase($tabValue)}...</span>
+              <LoaderCircle class="size-5 animate-spin text-text/60" />
+              <span class="font-semibold text-text/80">Loading {titleCase($tabValue)}...</span>
             </div>
           </div>
         {:then { default: Component }}
-          <Component order={findIndex($tabValue)} />
+          <svelte:boundary>
+            {#snippet pending()}
+              <LoaderCircle class="animate-spin text-icon" />
+            {/snippet}
+            {#snippet failed(err, reset)}
+              <Notice title="An unexpected error has occurred" type="error" error={err} retry={reset} />
+            {/snippet}
+            <Component order={findIndex($tabValue)} />
+          </svelte:boundary>
         {:catch}
           <Notice type="error" title={`Failed to load section ${$tabValue}`}>
             <p class="text-text/80">This section may not be available or there was an error loading it.</p>

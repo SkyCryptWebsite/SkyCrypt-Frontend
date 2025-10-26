@@ -1,12 +1,14 @@
 <script lang="ts">
   import { browser, dev } from "$app/environment";
   import { beforeNavigate } from "$app/navigation";
-  import { page, updated } from "$app/state";
+  import { page } from "$app/state";
+  import { PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
   import Header from "$lib/components/header/Header.svelte";
   import { SettingsTab } from "$lib/components/header/types";
   import PerformanceMode from "$lib/components/PerformanceMode.svelte";
   import { IsHover } from "$lib/hooks/is-hover.svelte";
   import { IsMobile } from "$lib/hooks/is-mobile.svelte";
+  import { getPacks, searchUser } from "$lib/shared/api/skycrypt-api.remote";
   import themes from "$lib/shared/constants/themes";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { favorites } from "$lib/stores/favorites";
@@ -26,23 +28,19 @@
   import Sparkle from "@lucide/svelte/icons/sparkle";
   import Wifi from "@lucide/svelte/icons/wifi";
   import WifiOff from "@lucide/svelte/icons/wifi-off";
-  import { QueryClientProvider } from "@tanstack/svelte-query";
+  import { isHttpError, type RemoteQuery } from "@sveltejs/kit";
   import { Avatar, Button, Command, computeCommandScore, Dialog, Tooltip } from "bits-ui";
-  import { Control, Field } from "formsnap";
-  import { onMount, setContext, type Snippet } from "svelte";
+  import { onMount, type Snippet } from "svelte";
   import SvelteSeo from "svelte-seo";
   import { toast, Toaster, type ToasterProps } from "svelte-sonner";
   import { cubicOut } from "svelte/easing";
   import { writable } from "svelte/store";
   import { fade } from "svelte/transition";
-  import { superForm } from "sveltekit-superforms";
-  import { zod4Client as zodClient } from "sveltekit-superforms/adapters";
   import { Drawer } from "vaul-svelte";
   import "../app.css";
-  import type { PageData } from "./$types";
   import { schema } from "./schema";
 
-  let { data, children }: { data: PageData; children: Snippet } = $props();
+  let { children }: { children: Snippet } = $props();
   let isMobile = $state(new IsMobile());
   let isHover = $state(new IsHover());
   let toastId: string | number = $state(0);
@@ -50,18 +48,17 @@
   let loading = $state(false);
   let commandValue = $state(null!);
 
+  let searchQuery = $state<string>("");
+  const searchQueryValidated = $derived(schema.safeParse({ query: searchQuery }));
+
+  let searchUserRemoteFn = $state<RemoteQuery<never>>();
+
   const { ign } = page.params;
 
   const position = writable<ToasterProps["position"]>("bottom-right");
   const theme = writable<ToasterProps["theme"]>("dark");
   const noEmbedUrls = ["/og/", "/stats/"];
-
-  const form = superForm(data.searchForm, {
-    validators: zodClient(schema),
-    validationMethod: "oninput",
-    id: "searchFormCommand"
-  });
-  const { form: formData, enhance, errors, tainted, submitting, isTainted, message } = form;
+  const packs = new PacksContext();
 
   function updateOnlineStatus() {
     toast.dismiss(toastId);
@@ -104,7 +101,7 @@
   function closeCommand() {
     openCommand.set(false);
     commandValue = null!;
-    $formData.query = "";
+    searchQuery = "";
   }
 
   function handleSettingTab(tab: SettingsTab) {
@@ -113,8 +110,9 @@
     settingsOpen.set(true);
   }
 
-  setContext("isMobile", isMobile);
-  setContext("isHover", isHover);
+  setMobileContext(isMobile);
+  setHoverContext(isHover);
+  setPacksContext(packs);
 
   themeStore.subscribe((newTheme) => theme.set(themes.find((theme) => theme.id === newTheme)?.light ? "light" : "dark"));
 
@@ -127,9 +125,9 @@
   beforeNavigate(({ type }) => {
     if (type === "leave" || type === "link") return;
     loading = true;
-    if ($errors.query) return;
-    if ($formData.query.trim() !== "") {
-      recentSearches.update((searches) => [...new Set([{ ign: $formData.query.trim() }, ...searches])].slice(0, 5));
+    if (!searchQueryValidated.success) return;
+    if (searchQuery.trim() !== "") {
+      recentSearches.update((searches) => [...new Set([{ ign: searchQuery.trim() }, ...searches])].slice(0, 5));
     }
     setTimeout(() => {
       loading = false;
@@ -138,9 +136,15 @@
   });
 
   beforeNavigate(({ willUnload, to }) => {
-    if (updated.current && !willUnload && to?.url) {
+    if (!willUnload && to?.url) {
       location.href = to.url.href;
     }
+  });
+
+  $effect(() => {
+    const packsDataRemoteFunction = getPacks();
+    const packsData = packsDataRemoteFunction.current;
+    if (packsData) packs.packs = packsData;
   });
 </script>
 
@@ -204,18 +208,11 @@
 
 <div class="pointer-events-none fixed inset-0 z-[-1] h-dvh w-screen [background-image:var(--bg-url)] bg-cover bg-scroll bg-center bg-no-repeat"></div>
 
-<QueryClientProvider client={data.queryClient}>
-  <Header />
+<Header />
 
-  <Tooltip.Provider delayDuration={0}>
-    {@render children()}
-  </Tooltip.Provider>
-  {#if dev}
-    {#await import("@tanstack/svelte-query-devtools") then { SvelteQueryDevtools }}
-      <SvelteQueryDevtools />
-    {/await}
-  {/if}
-</QueryClientProvider>
+<Tooltip.Provider delayDuration={0}>
+  {@render children()}
+</Tooltip.Provider>
 
 <Dialog.Root bind:open={$openCommand}>
   <Dialog.Portal>
@@ -228,7 +225,7 @@
     </Dialog.Overlay>
     <Dialog.Content
       forceMount
-      class={cn("font-icomoon fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg select-text", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}
+      class={cn("fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg font-icomoon select-text", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}
       onOpenAutoFocus={(e) => {
         e.preventDefault();
         commandInput?.focus();
@@ -254,7 +251,7 @@
     }}>
     <Drawer.Portal>
       <Drawer.Overlay class="fixed inset-0 z-40 bg-black/80" />
-      <Drawer.Content class="bg-background-lore fixed right-0 bottom-0 left-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px]">
+      <Drawer.Content class="fixed right-0 bottom-0 left-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px] bg-background-lore">
         <div class="mx-auto w-full max-w-md overflow-auto p-6">
           {@render $content?.()}
         </div>
@@ -264,48 +261,47 @@
 {/if}
 
 {#snippet command()}
-  <form method="POST" action="/search" use:enhance class="bg-background/20 relative flex h-full w-4/5 items-center justify-start overflow-clip rounded-[1.125rem] @[38rem]:w-full">
-    <Field {form} name="query">
-      <Control>
-        {#snippet children({ props })}
-          <input {...props} type="search" required class="hidden" bind:value={$formData.query} />
-        {/snippet}
-      </Control>
-    </Field>
-  </form>
-  <Command.Root bind:value={commandValue} class="divide-icon/30 flex h-full w-full flex-col divide-y self-start overflow-hidden rounded-lg" filter={customFilter}>
+  <div class="relative flex h-full w-4/5 items-center justify-start overflow-clip rounded-[1.125rem] bg-background/20 @[38rem]:w-full">
+    <input type="search" required class="hidden" bind:value={searchQuery} />
+  </div>
+  <Command.Root bind:value={commandValue} class="flex h-full w-full flex-col divide-y divide-icon/30 self-start overflow-hidden rounded-lg" filter={customFilter}>
     <div class="flex h-12 items-center">
-      <Button.Root type="button" class="text-text flex aspect-square  h-full items-center justify-center" onclick={() => form.submit()}>
-        {#if $formData.query.length > 0 && isTainted($tainted?.query) && $errors.query !== undefined}
+      <Button.Root
+        type="button"
+        class="flex aspect-square h-full  items-center justify-center text-text"
+        onclick={() => {
+          searchUserRemoteFn = searchUser({ username: searchQuery });
+        }}>
+        {#if !searchQueryValidated.success && searchQuery.length > 0}
           <CircleAlert class="size-4" />
-        {:else if $submitting || loading}
+        {:else if searchUserRemoteFn?.loading || loading}
           <LoaderCircle class="size-4 animate-spin" />
         {:else}
           <Search class="size-4" />
         {/if}
       </Button.Root>
       <Command.Input
-        class="placeholder:text-text/50 text-text inline-flex h-12 w-full truncate rounded-tl-lg rounded-tr-lg pr-4 text-base transition-colors ease-out focus:ring-0 focus:outline-hidden"
+        class="inline-flex h-12 w-full truncate rounded-tl-lg rounded-tr-lg pr-4 text-base text-text transition-colors ease-out placeholder:text-text/50 focus:ring-0 focus:outline-hidden"
         placeholder="Search for something..."
         type="search"
         required
-        bind:value={$formData.query}
+        bind:value={searchQuery}
         bind:ref={commandInput}
         onkeydown={(e) => {
           if (commandValue && commandValue !== "search") return;
           const k = e.key.toLowerCase();
           if (k === "enter" || k === "search") {
             e.preventDefault();
-            form.submit();
+            searchUserRemoteFn = searchUser({ username: searchQuery });
           }
         }} />
     </div>
 
-    <Command.List class="max-h-[30rem] overflow-x-hidden overflow-y-auto px-2 pb-2">
+    <Command.List class="max-h-120 overflow-x-hidden overflow-y-auto px-2 pb-2">
       <Command.Viewport>
         <Command.Empty class="text-muted-foreground flex w-full items-center justify-center pt-8 pb-6 text-sm">
-          {#if $message && $message.type === "error"}
-            {$message.text}
+          {#if searchUserRemoteFn?.error}
+            {isHttpError(searchUserRemoteFn.error) ? searchUserRemoteFn.error.body.message : "Something went wrong"}
           {:else}
             Press Enter to search
           {/if}
@@ -318,9 +314,9 @@
               {#each $recentSearches.slice(0, 5) as recentSearch, index (index)}
                 {#if !ign || recentSearch.ign !== ign}
                   <Command.LinkItem value={recentSearch.ign} href="/stats/{recentSearch.ign}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[recentSearch.ign, "profile", "player", "favorite", "favorites"]}>
-                    <Avatar.Root class="bg-text/10 size-4 shrink-0">
+                    <Avatar.Root class="size-4 shrink-0 bg-text/10">
                       <Avatar.Image loading="lazy" src={recentSearch.uuid ? `https://crafatar.com/avatars/${recentSearch.uuid}?size=64&overlay` : "https://mc-heads.net/avatar/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40/64"} alt={recentSearch.ign} class="aspect-square size-4 [image-rendering:pixelated]" />
-                      <Avatar.Fallback class="text-text/60 flex h-full items-center justify-center text-lg font-semibold uppercase">
+                      <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">
                         {recentSearch.ign.slice(0, 2)}
                       </Avatar.Fallback>
                     </Avatar.Root>
@@ -339,9 +335,9 @@
               {#each $favorites.slice(0, 5) as favorite, index (index)}
                 {#if !ign || favorite.ign !== ign}
                   <Command.LinkItem value={favorite.ign} href="/stats/{favorite.ign}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[favorite.ign, favorite.uuid, "profile", "player", "favorite", "favorites"]}>
-                    <Avatar.Root class="bg-text/10 size-4 shrink-0">
+                    <Avatar.Root class="size-4 shrink-0 bg-text/10">
                       <Avatar.Image loading="lazy" src={`https://crafatar.com/avatars/${favorite.uuid}?size=64&overlay`} alt={favorite.ign} class="aspect-square size-4 [image-rendering:pixelated]" />
-                      <Avatar.Fallback class="text-text/60 flex h-full items-center justify-center text-lg font-semibold uppercase">
+                      <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">
                         {favorite.ign.slice(0, 2)}
                       </Avatar.Fallback>
                     </Avatar.Root>
@@ -354,20 +350,27 @@
         {/if}
         <Command.Separator class="bg-foreground/5 h-px w-full" />
 
-        {#if $formData.query.length}
+        {#if searchQuery.length}
           <Command.Group>
             <Command.GroupHeading class="text-muted-foreground px-3 pt-4 pb-2 text-xs">Actions</Command.GroupHeading>
             <Command.GroupItems>
-              <Command.Item value="search" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[$formData.query, "search", "find", "profile"]} onSelect={() => form.submit()}>
-                {#if $submitting || loading}
+              <Command.Item
+                value="search"
+                class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}
+                keywords={[searchQuery, "search", "find", "profile"]}
+                onSelect={() => {
+                  searchUserRemoteFn = searchUser({ username: searchQuery });
+                }}>
+                {#if searchUserRemoteFn?.loading || loading}
                   <LoaderCircle class="size-4 animate-spin" />
                 {:else}
-                  <Search class="text-text size-4" />
+                  <Search class="size-4 text-text" />
                 {/if}
-                {#if $message && $message.type === "error"}
-                  {$message.text}
+
+                {#if searchUserRemoteFn?.error}
+                  {isHttpError(searchUserRemoteFn.error) ? searchUserRemoteFn.error.body.message : "Something went wrong"}
                 {:else}
-                  Search for {$formData.query}
+                  Search for {searchQuery}
                 {/if}
               </Command.Item>
             </Command.GroupItems>
@@ -379,31 +382,31 @@
           <Command.GroupHeading class="text-muted-foreground px-3 pt-4 pb-2 text-xs">Settings</Command.GroupHeading>
           <Command.GroupItems>
             <Command.Item value="packs" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["packs", "change", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Packs)}>
-              <div class="bg-icon/80 rounded-lg p-1">
+              <div class="rounded-lg bg-icon/80 p-1">
                 <PackageOpen class="size-4" />
               </div>
               Change Packs
             </Command.Item>
             <Command.Item value="themes" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["themes", "change", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Themes)}>
-              <div class="bg-icon/80 rounded-lg p-1">
+              <div class="rounded-lg bg-icon/80 p-1">
                 <PaintBucket class="size-4" />
               </div>
               Change Theme
             </Command.Item>
             <Command.Item value="section-order" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["order", "change", "section", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Order)}>
-              <div class="bg-icon/80 rounded-lg p-1">
+              <div class="rounded-lg bg-icon/80 p-1">
                 <ListOrdered class="size-4" />
               </div>
               Change Section Order
             </Command.Item>
             <Command.Item value="wiki-order" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["order", "misc", "change", "wiki", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Misc)}>
-              <div class="bg-icon/80 rounded-lg p-1">
+              <div class="rounded-lg bg-icon/80 p-1">
                 <BookOpenText class="size-4" />
               </div>
               Change Wiki Order
             </Command.Item>
             <Command.Item value="keybind" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["keybind", "misc", "change", "command", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Misc)}>
-              <div class="bg-icon/80 rounded-lg p-1">
+              <div class="rounded-lg bg-icon/80 p-1">
                 <Keyboard class="size-4" />
               </div>
               Change Command Keybind
@@ -416,8 +419,8 @@
                 performanceMode.set(!$performanceMode);
                 closeCommand();
               }}>
-              <div class="bg-icon/80 rounded-lg p-1">
-                <Fan class="data-[performance=false]:animate-spin-slow size-4 will-change-transform data-[performance=true]:animate-spin" data-performance={$performanceMode} />
+              <div class="rounded-lg bg-icon/80 p-1">
+                <Fan class="size-4 will-change-transform data-[performance=false]:animate-spin-slow data-[performance=true]:animate-spin" data-performance={$performanceMode} />
               </div>
               Toggle Performance Mode
             </Command.Item>
@@ -429,7 +432,7 @@
                 showGlint.set(!$showGlint);
                 closeCommand();
               }}>
-              <div class="bg-icon/80 rounded-lg p-1">
+              <div class="rounded-lg bg-icon/80 p-1">
                 <Sparkle class="size-4" />
               </div>
               Toggle Glint

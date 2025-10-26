@@ -1,12 +1,9 @@
-# Ignore files for PNPM, NPM and YARN
-pnpm-lock.yaml
+# Package Managers
 package-lock.json
+pnpm-lock.yaml
 yarn.lock
+bun.lock
+bun.lockb
 
-# Assets
-static/
-
-build/
-node_modules/
-.DS_Store
-.svelte-kit/
+# Miscellaneous
+/static/

@@ -1,17 +1,15 @@
-<script lang="ts">
-  import { getDynamicCtx } from "$ctx/dynamic.svelte";
+<!-- <script lang="ts">
+  import { getMiscContext } from "$ctx";
   import AdditionStat from "$lib/components/AdditionStat.svelte";
   import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
   import Items from "$lib/layouts/stats/Items.svelte";
-  import { SectionName } from "$lib/shared/api";
-  import type { MiscV2 } from "$types/statsv2";
   import { format } from "numerable";
 
-  const ctx = getDynamicCtx<() => MiscV2[SectionName.MISC] | undefined>(SectionName.MISC);
-  const misc = $derived(ctx?.data?.());
-</script>
+  const misc = $derived(getMiscContext());
+</script> -->
 
-{#if misc && misc.effects != null && Object.values(misc.effects).reduce((acc, val) => acc + val.length, 0) > 0}
+<!-- TODO: Fix types after ModelsMiscOutput gets updated -->
+<!-- {#if misc && misc.effects != null && Object.values(misc.effects).reduce((acc, val) => acc + val.length, 0) > 0}
   <SectionSubtitle class="uppercase!">Potions</SectionSubtitle>
   <Items>
     {#snippet text()}
@@ -25,4 +23,4 @@
       </div>
     {/snippet}
   </Items>
-{/if}
+{/if} -->

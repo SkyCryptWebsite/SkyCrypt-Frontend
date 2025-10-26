@@ -1,88 +1,75 @@
 <script lang="ts">
-  import { getProfileCtx } from "$ctx/profile.svelte";
+  import { getProfileContext } from "$ctx";
   import AdditionStat from "$lib/components/AdditionStat.svelte";
   import Bonus from "$lib/components/Bonus.svelte";
   import Chip from "$lib/components/Chip.svelte";
   import Item from "$lib/components/Item.svelte";
-  import Notice from "$lib/components/Notice.svelte";
   import ScrollItems from "$lib/components/scroll-items.svelte";
   import Section from "$lib/components/Section.svelte";
   import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
   import Items from "$lib/layouts/stats/Items.svelte";
-  import { api, SectionName } from "$lib/shared/api";
+  import { getRiftSection } from "$lib/shared/api/skycrypt-api.remote";
   import { cn } from "$lib/shared/utils";
-  import type { RiftV2 } from "$types/statsv2";
   import { tz } from "@date-fns/tz";
-  import LoaderCircle from "@lucide/svelte/icons/loader-circle";
-  import { createQuery } from "@tanstack/svelte-query";
   import { formatDate, formatDistanceToNowStrict } from "date-fns";
   import { format } from "numerable";
 
   let { order }: { order: number } = $props();
 
-  const ctx = getProfileCtx();
-  const profile = $derived(ctx.profile);
+  const profile = $derived(getProfileContext());
 
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
 
-  const query = createQuery<RiftV2>(() => ({
-    queryKey: [SectionName.RIFT, profileUUID, profileId],
-    queryFn: () => api().getSection(SectionName.RIFT, profileUUID, profileId)
-  }));
-
-  const rift = $derived.by(() => {
-    if (query.isPending || query.error || !query.data) return;
-    return query.data[SectionName.RIFT];
-  });
+  const rift = $derived(await getRiftSection({ uuid: profileUUID!, profileId: profileId! }));
 
   const equipment = $derived(rift?.equipment);
   const armor = $derived(rift?.armor);
 </script>
 
 <Section id="Rift" {order}>
-  {#if query.isPending}
-    <LoaderCircle class="text-icon animate-spin" />
-  {/if}
-  {#if query.error}
-    <Notice title="An unexpected error has occurred" type="error" error={query.error} />
-  {/if}
-  {#if query.isSuccess && query.data && rift}
+  {#if rift}
     <Items class="flex-col">
       {#snippet text()}
         <div>
           <AdditionStat text="Visits" data={format(rift.visits)} />
-          <AdditionStat text="Motes" data={format(rift.motes.purse)} asterisk={true}>
-            <div class="flex flex-col gap-4">
-              <div class="text-sm font-bold">
-                <span class="text-text/85">Lifetime Motes:</span>
-                <span class="text-text">
-                  {format(rift.motes.lifetime)}
-                </span>
-                <span class="block font-normal">Total Motes earned in Rift.</span>
+          {#if rift.motes}
+            <AdditionStat text="Motes" data={format(rift.motes.purse)} asterisk={true}>
+              <div class="flex flex-col gap-4">
+                <div class="text-sm font-bold">
+                  <span class="text-text/85">Lifetime Motes:</span>
+                  <span class="text-text">
+                    {format(rift.motes.lifetime)}
+                  </span>
+                  <span class="block font-normal">Total Motes earned in Rift.</span>
+                </div>
+                <div class="text-sm font-bold">
+                  <span class="text-text/85">Motes Orbs:</span>
+                  <span class="text-text">
+                    {rift.motes.orbs}
+                  </span>
+                  <span class="block font-normal">Amount of Mote Orbs player has picked up inside of the Rift.</span>
+                </div>
               </div>
+            </AdditionStat>
+          {/if}
+          {#if rift.enigma}
+            <AdditionStat text="Enigma Souls" data="{rift.enigma.souls} / {rift.enigma.totalSouls}" maxed={rift.enigma.souls === rift.enigma.totalSouls} asterisk={true}>
               <div class="text-sm font-bold">
-                <span class="text-text/85">Motes Orbs:</span>
+                <span class="text-text/85">Progress:</span>
                 <span class="text-text">
-                  {rift.motes.orbs}
+                  {(((rift.enigma.souls ?? 0) / (rift.enigma.totalSouls ?? 0)) * 100).toFixed(2)}%
                 </span>
-                <span class="block font-normal">Amount of Mote Orbs player has picked up inside of the Rift.</span>
+                <span class="block font-normal"> Percentage of Enigma Souls found. </span>
               </div>
-            </div>
-          </AdditionStat>
-          <AdditionStat text="Enigma Souls" data="{rift.enigma.souls} / {rift.enigma.totalSouls}" maxed={rift.enigma.souls === rift.enigma.totalSouls} asterisk={true}>
-            <div class="text-sm font-bold">
-              <span class="text-text/85">Progress:</span>
-              <span class="text-text">
-                {((rift.enigma.souls / rift.enigma.totalSouls) * 100).toFixed(2)}%
-              </span>
-              <span class="block font-normal"> Percentage of Enigma Souls found. </span>
-            </div>
-          </AdditionStat>
-          <AdditionStat text="McGrubber's Burgers" data="{rift.castle.grubberStacks} / {rift.castle.maxBurgers}" maxed={rift.castle.grubberStacks === rift.castle.maxBurgers} />
+            </AdditionStat>
+          {/if}
+          {#if rift.castle}
+            <AdditionStat text="McGrubber's Burgers" data="{rift.castle.grubberStacks} / {rift.castle.maxBurgers}" maxed={rift.castle.grubberStacks === rift.castle.maxBurgers} />
+          {/if}
 
           <Items subtitle="Armor">
-            {#if armor && armor.armor.length > 0}
+            {#if armor && armor.armor && armor.armor.length > 0}
               {#each armor.armor.filter((piece) => piece.texture_path) as piece, index (index)}
                 <Item {piece} />
               {/each}
@@ -90,14 +77,14 @@
               <p class="space-x-0.5 leading-6">{profile.username} has no armor equipped</p>
             {/if}
             {#snippet info()}
-              {#if armor}
+              {#if armor && armor.stats}
                 <Bonus stats={armor.stats} />
               {/if}
             {/snippet}
           </Items>
 
           <Items subtitle="Equipment">
-            {#if equipment && equipment.equipment.length > 0}
+            {#if equipment && equipment.equipment && equipment.equipment.length > 0}
               {#each equipment.equipment.filter((piece) => piece.texture_path) as piece, index (index)}
                 <Item {piece} />
               {/each}
@@ -105,7 +92,7 @@
               <p class="space-x-0.5 leading-6">{profile.username} has no equipment equipped</p>
             {/if}
             {#snippet info()}
-              {#if equipment}
+              {#if equipment && equipment.stats}
                 <Bonus stats={equipment.stats} />
               {/if}
             {/snippet}
@@ -115,63 +102,71 @@
 
       <div class="space-y-4">
         <SectionSubtitle class="my-0">Porthals</SectionSubtitle>
-        <AdditionStat text="Porthals Unlocked" data={rift.porhtal.porhtalsFound} maxed={rift.porhtal.porhtalsFound === 7} />
+        {#if rift.porhtal}
+          <AdditionStat text="Porthals Unlocked" data={rift.porhtal.porhtalsFound ?? 0} maxed={rift.porhtal.porhtalsFound === 7} />
+        {/if}
       </div>
 
-      <ScrollItems>
-        {#each rift.porhtal.porhtals as porhtal, index (index)}
-          {@const hasUnlocked = porhtal.unlocked}
-          <Chip image={{ src: porhtal.texture }} class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked })}>
-            <div class={cn("flex flex-col")}>
-              <div class="font-bold whitespace-nowrap">
-                <span class="opacity-60">{porhtal.name}</span>
-              </div>
-            </div>
-          </Chip>
-        {/each}
-      </ScrollItems>
-      <div class="space-y-4">
-        <SectionSubtitle class="my-0">Timecharms</SectionSubtitle>
-        <AdditionStat text="Timecharms Obtained" data={rift.timecharms.timecharmsFound} maxed={rift.timecharms.timecharmsFound === 8} />
-      </div>
-      <ScrollItems>
-        {#each rift.timecharms.timecharms as timecharm, index (index)}
-          {@const hasUnlocked = timecharm.unlocked}
-
-          <Chip image={{ src: timecharm.texture }} class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked }, "whitespace-nowrap")} tooltip={hasUnlocked ? tooltip : undefined}>
-            <div class={cn("flex flex-col")}>
-              <div class="font-bold whitespace-nowrap">
-                <span class="opacity-60">{timecharm.name}</span>
-                <div class="text-sm">
-                  {#if hasUnlocked}
-                    <span class="opacity-60">
-                      Obtained {formatDistanceToNowStrict(timecharm.unlockedAt, {
-                        addSuffix: true,
-                        in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone)
-                      })}
-                    </span>
-                  {:else}
-                    <span class="opacity-60">Not Obtained</span>
-                  {/if}
+      {#if rift.porhtal}
+        <ScrollItems>
+          {#each rift.porhtal.porhtals as porhtal, index (index)}
+            {@const hasUnlocked = porhtal.unlocked}
+            <Chip image={{ src: porhtal.texture ?? "" }} class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked })}>
+              <div class={cn("flex flex-col")}>
+                <div class="font-bold whitespace-nowrap">
+                  <span class="opacity-60">{porhtal.name}</span>
                 </div>
               </div>
-            </div>
-          </Chip>
+            </Chip>
+          {/each}
+        </ScrollItems>
+      {/if}
+      <div class="space-y-4">
+        <SectionSubtitle class="my-0">Timecharms</SectionSubtitle>
+        {#if rift.timecharms}
+          <AdditionStat text="Timecharms Obtained" data={rift.timecharms.timecharmsFound ?? 0} maxed={rift.timecharms.timecharmsFound === 8} />
+        {/if}
+      </div>
+      {#if rift.timecharms}
+        <ScrollItems>
+          {#each rift.timecharms.timecharms as timecharm, index (index)}
+            {@const hasUnlocked = timecharm.unlocked}
 
-          {#snippet tooltip()}
-            <div class="text-sm font-bold">
-              <div>
-                <span class="opacity-85">Obtained:</span>
-                <span class="text-text">
-                  {#if hasUnlocked}
-                    {formatDate(timecharm.unlockedAt, "dd MMMM yyyy 'at' HH:mm", { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) })}
-                  {/if}
-                </span>
+            <Chip image={{ src: timecharm.texture ?? "" }} class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked }, "whitespace-nowrap")} tooltip={hasUnlocked ? tooltip : undefined}>
+              <div class={cn("flex flex-col")}>
+                <div class="font-bold whitespace-nowrap">
+                  <span class="opacity-60">{timecharm.name}</span>
+                  <div class="text-sm">
+                    {#if hasUnlocked && timecharm.unlockedAt != null}
+                      <span class="opacity-60">
+                        Obtained {formatDistanceToNowStrict(timecharm.unlockedAt, {
+                          addSuffix: true,
+                          in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone)
+                        })}
+                      </span>
+                    {:else}
+                      <span class="opacity-60">Not Obtained</span>
+                    {/if}
+                  </div>
+                </div>
               </div>
-            </div>
-          {/snippet}
-        {/each}
-      </ScrollItems>
+            </Chip>
+
+            {#snippet tooltip()}
+              <div class="text-sm font-bold">
+                <div>
+                  <span class="opacity-85">Obtained:</span>
+                  <span class="text-text">
+                    {#if hasUnlocked && timecharm.unlockedAt != null}
+                      {formatDate(timecharm.unlockedAt, "dd MMMM yyyy 'at' HH:mm", { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) })}
+                    {/if}
+                  </span>
+                </div>
+              </div>
+            {/snippet}
+          {/each}
+        </ScrollItems>
+      {/if}
     </Items>
   {/if}
 </Section>

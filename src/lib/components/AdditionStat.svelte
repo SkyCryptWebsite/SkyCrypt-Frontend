@@ -1,10 +1,10 @@
 <script lang="ts">
-  import type { IsHover } from "$lib/hooks/is-hover.svelte";
+  import { getHoverContext } from "$ctx";
   import { RARITY_COLORS } from "$lib/shared/constants/rarities";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { content } from "$lib/stores/internal";
   import { Tooltip } from "bits-ui";
-  import { getContext, type Snippet } from "svelte";
+  import { type Snippet } from "svelte";
 
   type Props = {
     text: string;
@@ -25,14 +25,14 @@
   let open = $state(false);
   let asteriskRef = $state<HTMLElement | null>(null);
 
-  const isHover = getContext<IsHover>("isHover");
+  const isHover = getHoverContext();
 </script>
 
 <Tooltip.Root bind:open>
-  <Tooltip.Trigger class={cn(`text-text/60 my-0 flex items-center gap-1 font-bold data-[is-tooltip=false]:cursor-default`, { "text-maxed": maxed }, className)} data-is-tooltip={asterisk} onpointerdown={() => (open = !open)} onclick={() => content.set(children)}>
+  <Tooltip.Trigger class={cn(`my-0 flex items-center gap-1 font-bold text-text/60 data-[is-tooltip=false]:cursor-default`, { "text-maxed": maxed }, className)} data-is-tooltip={asterisk} onpointerdown={() => (open = !open)} onclick={() => content.set(children)}>
     {#snippet child({ props })}
       <button {...props}>
-        <div class={!asterisk ? cn("text-text/60 my-0 flex items-center gap-1 font-bold data-[is-tooltip=false]:cursor-default", { "text-maxed": maxed }, className) : "contents"}>
+        <div class={!asterisk ? cn("my-0 flex items-center gap-1 font-bold text-text/60 data-[is-tooltip=false]:cursor-default", { "text-maxed": maxed }, className) : "contents"}>
           <div style={textRarityColor ? `color: var(--§${RARITY_COLORS[textRarityColor]})` : ""} class="capitalize">
             {text}:
           </div>
@@ -56,7 +56,7 @@
   </Tooltip.Trigger>
   <Tooltip.Portal>
     {#if asterisk && isHover.current}
-      <Tooltip.Content forceMount class="bg-background-grey z-50 rounded-lg p-4" sideOffset={0} side="top" align="center" customAnchor={asteriskRef}>
+      <Tooltip.Content forceMount class="z-50 rounded-lg bg-background-grey p-4" sideOffset={0} side="top" align="center" customAnchor={asteriskRef}>
         {#snippet child({ wrapperProps, props, open })}
           {#if open}
             <div {...wrapperProps}>
