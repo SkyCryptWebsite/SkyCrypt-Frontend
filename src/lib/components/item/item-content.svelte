@@ -28,13 +28,18 @@
   const hasColor = $derived(skyblockItem?.lore?.some((lore) => lore.includes("Color:")) ?? false);
   const packs = $derived(getPacksContext().packs);
   const packData = $derived.by(() => {
-    if (!packs || !skyblockItem?.texture_pack) return undefined;
-    return packs.find((pack) => pack.id === skyblockItem?.texture_pack);
-  });
-
-  $inspect({
-    packs,
-    packData
+    try {
+      if (!packs || !skyblockItem?.texture_pack) return undefined;
+      return packs.find((pack) => pack.id === skyblockItem?.texture_pack);
+    } catch (e) {
+      console.error(e);
+      console.log("Error getting pack data for item:", {
+        item: skyblockItem,
+        packs: packs,
+        getPacksContext: getPacksContext()
+      });
+      return undefined;
+    }
   });
 
   // Get the wiki link for the itemf
