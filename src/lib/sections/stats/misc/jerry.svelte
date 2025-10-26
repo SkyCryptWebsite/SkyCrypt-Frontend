@@ -5,7 +5,7 @@
   import Items from "$lib/layouts/stats/Items.svelte";
   import { format } from "numerable";
 
-  const misc = $derived(getMiscContext());
+  const misc = $derived(getMiscContext().misc);
 </script>
 
 {#if misc && misc.season_of_jerry != null}

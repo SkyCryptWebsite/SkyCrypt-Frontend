@@ -6,7 +6,7 @@
   import { titleCase } from "$lib/shared/helper";
   import { format } from "numerable";
 
-  const misc = $derived(getMiscContext());
+  const misc = $derived(getMiscContext().misc);
 </script>
 
 {#if misc && misc.pet_milestones != null}

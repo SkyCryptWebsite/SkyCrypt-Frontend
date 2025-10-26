@@ -15,7 +15,7 @@
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
 
-  const data = $derived(getSkillsContext());
+  const data = $derived(getSkillsContext().skills);
   const fishing = $derived(data?.fishing);
   const fishingTools = $derived(fishing?.tools);
   const highestPriorityFishingTool = $derived(fishingTools?.highest_priority_tool);

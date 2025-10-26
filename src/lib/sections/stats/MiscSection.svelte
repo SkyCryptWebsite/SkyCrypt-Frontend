@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { getProfileContext, setMiscContext } from "$ctx";
+  import { getProfileContext, MiscContext, setMiscContext } from "$ctx";
   import Section from "$lib/components/Section.svelte";
-  import SetContext from "$lib/components/SetContext.svelte";
   import { getMiscSection } from "$lib/shared/api/skycrypt-api.remote";
   import Auctions from "./misc/auctions.svelte";
   import Claimed from "./misc/claimed.svelte";
@@ -22,28 +21,33 @@
   const profileUUID = $derived(profile.uuid);
   const profileId = $derived(profile.profile_id);
 
+  const miscClass = new MiscContext();
+  setMiscContext(miscClass);
+
   const misc = $derived(await getMiscSection({ uuid: profileUUID!, profileId: profileId! }));
+
+  $effect(() => {
+    miscClass.misc = misc;
+  });
 </script>
 
 <Section id="Misc" {order}>
   {#if misc}
-    <SetContext data={misc} setContextFn={setMiscContext}>
-      <Essence />
-      <!-- TODO: Essence Shop -->
-      <Kills />
-      <!-- <Races /> -->
-      <Gifts />
-      <Jerry />
-      <Dragons />
-      <Endstone />
-      <Damage />
-      <Pet />
-      <Mythological />
-      <!-- <Potions /> -->
-      <Upgrades />
-      <Auctions />
-      <Claimed />
-      <Uncategorized />
-    </SetContext>
+    <Essence />
+    <!-- TODO: Essence Shop -->
+    <Kills />
+    <!-- <Races /> -->
+    <Gifts />
+    <Jerry />
+    <Dragons />
+    <Endstone />
+    <Damage />
+    <Pet />
+    <Mythological />
+    <!-- <Potions /> -->
+    <Upgrades />
+    <Auctions />
+    <Claimed />
+    <Uncategorized />
   {/if}
 </Section>

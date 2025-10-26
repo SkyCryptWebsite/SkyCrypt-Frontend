@@ -15,9 +15,33 @@ export class PacksContext {
   }
 }
 
+export class MiscContext {
+  #misc: ModelsMiscOutput | null = $state(null);
+
+  get misc() {
+    return this.#misc;
+  }
+
+  set misc(value: ModelsMiscOutput | null) {
+    this.#misc = value;
+  }
+}
+
+export class SkillsContext {
+  #skills: ModelsSkillsOutput | null = $state(null);
+
+  get skills() {
+    return this.#skills;
+  }
+
+  set skills(value: ModelsSkillsOutput | null) {
+    this.#skills = value;
+  }
+}
+
 export const [getProfileContext, setProfileContext] = createContext<ModelsStatsOutput>();
-export const [getSkillsContext, setSkillsContext] = createContext<ModelsSkillsOutput>();
-export const [getMiscContext, setMiscContext] = createContext<ModelsMiscOutput>();
+export const [getSkillsContext, setSkillsContext] = createContext<SkillsContext>();
+export const [getMiscContext, setMiscContext] = createContext<MiscContext>();
 export const [getMobileContext, setMobileContext] = createContext<IsMobile>();
 export const [getHoverContext, setHoverContext] = createContext<IsHover>();
 export const [getPacksContext, setPacksContext] = createContext<PacksContext>();

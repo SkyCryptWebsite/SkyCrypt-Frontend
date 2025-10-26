@@ -11,7 +11,7 @@
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
 
-  const data = $derived(getSkillsContext());
+  const data = $derived(getSkillsContext().skills);
   const enchanting = $derived(data?.enchanting);
 </script>
 
