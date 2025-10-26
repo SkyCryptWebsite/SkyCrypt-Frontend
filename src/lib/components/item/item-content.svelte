@@ -33,7 +33,7 @@
       return packs.find((pack) => pack.id === skyblockItem?.texture_pack);
     } catch (e) {
       console.error(e);
-      console.log("Error getting pack data for item:", {
+      console.info("Error getting pack data for item:", {
         item: skyblockItem,
         packs: packs,
         getPacksContext: getPacksContext()
