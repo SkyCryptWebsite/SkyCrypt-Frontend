@@ -103,6 +103,10 @@ jobs:
       - name: Assign short SHA
         run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
+      - name: Re-assign server API URL if prod
+        if: github.ref == 'refs/heads/prod'
+        run: echo "SERVER_API_URL=sky.shiiyu.moe" >> $GITHUB_ENV
+
       - name: Registry login
         uses: docker/login-action@v3
         with:
