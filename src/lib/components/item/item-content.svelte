@@ -26,9 +26,11 @@
   const bgColor = $derived(getRarityClass(piece?.rarity ?? ("common".toLowerCase() as string), "bg"));
   const enchanted = $derived(skyblockItem?.texture_path?.includes("/api/leather/") ? false : skyblockItem && "shiny" in skyblockItem ? skyblockItem.shiny : false);
   const hasColor = $derived(skyblockItem?.lore?.some((lore) => lore.includes("Color:")) ?? false);
-  const packsContext = $derived(getPacksContext());
-  const packs = $derived(packsContext.packs);
-  const packData = $derived(packs?.find((pack) => pack.id === skyblockItem?.texture_pack));
+  const packs = $derived(getPacksContext().packs);
+  const packData = $derived.by(() => {
+    if (!packs || !skyblockItem?.texture_pack) return undefined;
+    return packs.find((pack) => pack.id === skyblockItem?.texture_pack);
+  });
 
   // Get the wiki link for the itemf
   export const wikiInfo = derivedStore<typeof wikiOrderPreferences, { url: string; name: string } | undefined>(wikiOrderPreferences, ($wikiOrderPreferences) => {
