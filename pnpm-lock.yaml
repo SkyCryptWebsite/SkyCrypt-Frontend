@@ -4613,8 +4613,8 @@ packages:
       typescript:
         optional: true
 
-  validator@13.15.15:
-    resolution: {integrity: sha512-BgWVbCI72aIQy937xbawcs+hrVaN/CZ2UwutgaJ36hGqRrLNM+f5LUT/YPRbo8IV/ASeFzXszezV+y2+rq3l8A==}
+  validator@13.15.20:
+    resolution: {integrity: sha512-KxPOq3V2LmfQPP4eqf3Mq/zrT0Dqp2Vmx2Bn285LwVahLc+CsxOM0crBHczm8ijlcjZ0Q5Xd6LW3z3odTPnlrw==}
     engines: {node: '>= 0.10'}
 
   vaul-svelte@1.0.0-next.7:
@@ -5347,7 +5347,7 @@ snapshots:
       loglevel: 1.9.2
       loglevel-plugin-prefix: 0.8.4
       minimatch: 6.2.0
-      validator: 13.15.15
+      validator: 13.15.20
     transitivePeerDependencies:
       - encoding
 
@@ -6675,7 +6675,7 @@ snapshots:
       dayjs: 1.11.18
       dlv: 1.1.3
       normalize-url: 8.1.0
-      validator: 13.15.15
+      validator: 13.15.20
     optional: true
 
   '@vitest/browser-webdriverio@4.0.4(vite@7.1.12(@types/node@24.9.1)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.1))(vitest@4.0.4)(webdriverio@9.20.0)':
@@ -7176,7 +7176,7 @@ snapshots:
     dependencies:
       '@types/validator': 13.15.3
       libphonenumber-js: 1.12.24
-      validator: 13.15.15
+      validator: 13.15.20
     optional: true
 
   cliui@8.0.1:
@@ -9829,7 +9829,7 @@ snapshots:
       typescript: 5.9.3
     optional: true
 
-  validator@13.15.15: {}
+  validator@13.15.20: {}
 
   vaul-svelte@1.0.0-next.7(svelte@5.42.3):
     dependencies:
