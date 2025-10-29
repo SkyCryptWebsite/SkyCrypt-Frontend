@@ -53,7 +53,7 @@ const config = {
       }
     },
     version: {
-      name: process.env.PUBLIC_COMMIT_HASH,
+      name: process.env.PUBLIC_COMMIT_HASH || Date.now().toString(),
       pollInterval:
         // in ms
         1000 * 60 // 1 minute
