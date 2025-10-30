@@ -30,6 +30,8 @@
 
   const apiSettings = $derived(Object.entries(profile.apiSettings ?? {}).filter(([_, value]) => !value));
 
+  $inspect(apiSettings);
+
   const iconMapper: Record<string, string> = {
     TWITTER: "x-twitter.svg",
     YOUTUBE: "youtube.svg",
@@ -115,7 +117,7 @@
     </Popover.Content>
   </Popover.Root>
   on
-  <div class="relative inline-flex items-center gap-2 rounded-full bg-text/10 px-2 py-1 align-middle text-xl font-semibold data-[warning=true]:border-2 data-[warning=true]:border-yellow-500/20 sm:text-3xl" data-warning={apiSettings.length != null} bind:this={noticeRef}>
+  <div class="relative inline-flex items-center gap-2 rounded-full bg-text/10 px-2 py-1 align-middle text-xl font-semibold data-[warning=true]:border-2 data-[warning=true]:border-yellow-500/20 sm:text-3xl" data-warning={apiSettings.length > 0} bind:this={noticeRef}>
     <Popover.Root bind:open={profileOpen}>
       <Popover.Trigger
         disabled={!profile.profiles?.length}
@@ -252,6 +254,15 @@
       copyToClipboard(profile.uuid ?? "");
     }}>
     Copy UUID
+  </Button.Root>
+
+  <Button.Root
+    class="hidden items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon data-[visible=true]:flex"
+    data-visible={showMore}
+    onclick={() => {
+      copyToClipboard(profile.profile_id ?? "");
+    }}>
+    Copy Profile UUID
   </Button.Root>
 
   {#if profile.social}

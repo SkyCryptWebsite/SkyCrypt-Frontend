@@ -1,13 +1,12 @@
 import { dev } from "$app/environment";
 import { env } from "$env/dynamic/public";
 import * as Sentry from "@sentry/sveltekit";
-import { browserTracingIntegration, consoleLoggingIntegration, contextLinesIntegration, extraErrorDataIntegration, httpClientIntegration } from "@sentry/sveltekit";
+import { consoleLoggingIntegration, contextLinesIntegration, extraErrorDataIntegration } from "@sentry/sveltekit";
 
 const { PUBLIC_SENTRY_DSN } = env;
 
 Sentry.init({
   dsn: PUBLIC_SENTRY_DSN,
-  tunnel: "/api/tunnel",
 
   // Enable logs to be sent to Sentry
   enableLogs: true,
@@ -19,12 +18,9 @@ Sentry.init({
   // https://docs.sentry.io/platforms/javascript/configuration/options/#traces-sample-rate
   tracesSampleRate: 0.5,
 
-  // If you don't want to use Session Replay, just remove the line below:
-  integrations: [browserTracingIntegration(), httpClientIntegration(), contextLinesIntegration(), extraErrorDataIntegration(), consoleLoggingIntegration()],
+  integrations: [contextLinesIntegration(), extraErrorDataIntegration(), consoleLoggingIntegration()],
 
+  // Disable Sentry during development
   enabled: !dev,
   environment: dev ? "development" : "production"
 });
-
-// If you have a custom error handler, pass it to `handleErrorWithSentry`
-export const handleError = Sentry.handleErrorWithSentry();
