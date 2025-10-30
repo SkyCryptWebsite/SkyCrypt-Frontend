@@ -96,7 +96,7 @@
     "simple-git-hooks": "^2.13.1"
   },
   "engines": {
-    "node": "^22",
+    "node": "^24",
     "pnpm": "^10",
     "deno": "forbidden, use node instead",
     "npm": "forbidden, use pnpm instead",
