@@ -11,7 +11,8 @@ export default defineConfig({
       sourceMapsUploadOptions: {
         org: "skycrypt",
         project: "javascript-sveltekit"
-      }
+      },
+      adapter: "node"
     }),
     tailwindcss(),
     sveltekit(),
