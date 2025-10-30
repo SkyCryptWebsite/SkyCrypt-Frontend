@@ -10,7 +10,7 @@
 // Only necessary if you have an import from `$env/static/public`
 /// <reference types="../.svelte-kit/ambient.d.ts" />
 
-import { build, files, prerendered, version } from "$service-worker";
+import { build, files, version } from "$service-worker";
 
 // This gives `self` the correct types
 const self = globalThis.self as unknown as ServiceWorkerGlobalScope;
@@ -20,8 +20,7 @@ const CACHE = `cache-${version}`;
 
 const ASSETS = [
   ...build, // the app itself
-  ...files, // everything in `static`
-  ...prerendered // everything prerendered
+  ...files // everything in `static`
 ];
 
 self.addEventListener("install", (event) => {
@@ -48,7 +47,7 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   // ignore POST requests, chrome-extension requests, etc
-  if (event.request.method !== "GET" || url.protocol === "chrome-extension:") return;
+  if (event.request.method !== "GET" || url.protocol === "chrome-extension:" || url.pathname.startsWith("/_app/remote")) return;
 
   async function respond() {
     const cache = await caches.open(CACHE);
