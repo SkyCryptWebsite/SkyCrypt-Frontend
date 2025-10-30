@@ -24,14 +24,24 @@
   const dungeons = $derived(await getDungeonsSection({ uuid: profileUUID!, profileId: profileId! }));
 
   function formatDuration(end: number) {
-    const duration = formatDurationDateFns(intervalToDuration({ start: 0, end }, { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) }), {
-      format: ["minutes", "seconds"],
-      delimiter: ":",
-      zero: true,
-      locale: {
-        formatDistance: (_token, count) => String(count).padStart(2, "0")
+    const interval = intervalToDuration({ start: 0, end }, { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) });
+
+    // Always extract and format both minutes and seconds
+    const minutes = interval.minutes ?? 0;
+    const seconds = interval.seconds ?? 0;
+
+    const duration = formatDurationDateFns(
+      { minutes, seconds },
+      {
+        format: ["minutes", "seconds"],
+        delimiter: ":",
+        zero: true,
+        locale: {
+          formatDistance: (_token, count) => String(count).padStart(2, "0")
+        }
       }
-    });
+    );
+
     if (duration === "") return "-";
     return duration;
   }
