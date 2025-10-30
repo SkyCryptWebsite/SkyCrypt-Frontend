@@ -115,7 +115,7 @@
     </Popover.Content>
   </Popover.Root>
   on
-  <div class="relative inline-flex items-center gap-2 rounded-full bg-text/10 px-2 py-1 align-middle text-xl font-semibold data-[warning=true]:border-2 data-[warning=true]:border-yellow-500/20 sm:text-3xl" data-warning={apiSettings.length != null} bind:this={noticeRef}>
+  <div class="relative inline-flex items-center gap-2 rounded-full bg-text/10 px-2 py-1 align-middle text-xl font-semibold data-[warning=true]:border-2 data-[warning=true]:border-yellow-500/20 sm:text-3xl" data-warning={apiSettings.length} bind:this={noticeRef}>
     <Popover.Root bind:open={profileOpen}>
       <Popover.Trigger
         disabled={!profile.profiles?.length}
