@@ -254,6 +254,15 @@
     Copy UUID
   </Button.Root>
 
+  <Button.Root
+    class="hidden items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon data-[visible=true]:flex"
+    data-visible={showMore}
+    onclick={() => {
+      copyToClipboard(profile.profile_id ?? "");
+    }}>
+    Copy Profile UUID
+  </Button.Root>
+
   {#if profile.social}
     {#each Object.entries(profile.social) as [key, value], index (index)}
       {#if key === "DISCORD"}
