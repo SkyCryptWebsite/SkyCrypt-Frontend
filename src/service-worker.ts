@@ -23,24 +23,26 @@ const ASSETS = [
   ...files // everything in `static`
 ];
 
+// Remove previous cached data from disk
+async function deleteOldCaches() {
+  for (const key of await caches.keys()) {
+    if (key !== CACHE) await caches.delete(key);
+  }
+}
+
 self.addEventListener("install", (event) => {
-  // Create a new cache and add all files to it
-  async function addFilesToCache() {
+  // Delete old caches first, then create a new cache and add all files to it
+  async function installCache() {
+    await deleteOldCaches();
     const cache = await caches.open(CACHE);
     await cache.addAll(ASSETS);
   }
 
-  event.waitUntil(addFilesToCache());
+  event.waitUntil(installCache());
 });
 
 self.addEventListener("activate", (event) => {
-  // Remove previous cached data from disk
-  async function deleteOldCaches() {
-    for (const key of await caches.keys()) {
-      if (key !== CACHE) await caches.delete(key);
-    }
-  }
-
+  // Old caches are already deleted during install
   event.waitUntil(deleteOldCaches());
 });
 
