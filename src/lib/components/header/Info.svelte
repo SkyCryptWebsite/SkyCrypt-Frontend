@@ -110,7 +110,7 @@
       <span class="hidden @md:inline">About</span>
     </Popover.Trigger>
     <Popover.Portal>
-      <Popover.Content forceMount side="bottom" sideOffset={8} align="center" collisionPadding={8} class="z-50 max-h-96 max-w-[32rem] overflow-x-clip overflow-y-auto rounded-lg bg-background-grey/95 px-8 py-4">
+      <Popover.Content forceMount side="bottom" sideOffset={8} align="center" collisionPadding={8} class="z-50 max-h-96 max-w-lg overflow-x-clip overflow-y-auto rounded-lg bg-background-grey/95 px-8 py-4">
         {#snippet child({ wrapperProps, props, open })}
           {#if open}
             <div {...wrapperProps}>

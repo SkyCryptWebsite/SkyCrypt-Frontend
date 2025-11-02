@@ -30,8 +30,6 @@
 
   const apiSettings = $derived(Object.entries(profile.apiSettings ?? {}).filter(([_, value]) => !value));
 
-  $inspect(apiSettings);
-
   const iconMapper: Record<string, string> = {
     TWITTER: "x-twitter.svg",
     YOUTUBE: "youtube.svg",
@@ -63,14 +61,14 @@
         ignOpen = true;
       }}>
       {#if profile.rank?.rankColor}
-        <div class="relative flex items-center justify-center overflow-hidden rounded-full bg-[var(--color)] px-2 py-1 text-xl" style={`--color:${profile.rank.rankColor}`}>
+        <div class="relative flex items-center justify-center overflow-hidden rounded-full bg-(--color) px-2 py-1 text-xl" style={`--color:${profile.rank.rankColor}`}>
           <div class="relative z-20 inline-flex justify-between gap-3 text-sm font-bold text-white sm:text-lg">
             <span>{profile.rank.rankText}</span>
             {#if profile.rank.plusText}
               <span>{profile.rank.plusText}</span>
             {/if}
           </div>
-          <div class="absolute top-0 -right-3 bottom-0 z-10 h-14 w-1/2 skew-x-[-20deg] bg-[var(--plusColor)]" style={`--plusColor:${profile.rank.plusColor ?? profile.rank.rankColor}`}></div>
+          <div class="absolute top-0 -right-3 bottom-0 z-10 h-14 w-1/2 skew-x-[-20deg] bg-(--plusColor)" style={`--plusColor:${profile.rank.plusColor ?? profile.rank.rankColor}`}></div>
         </div>
       {/if}
       <span class={cn(profile.rank?.rankColor ? "pl-4" : "pl-2")}>{profile.displayName}</span>
@@ -173,7 +171,7 @@
                 <div {...wrapperProps}>
                   <div {...props} transition:flyAndScale>
                     <ApiNotice />
-                    <Popover.Arrow class="!text-icon [&>svg[data-arrow]]:text-icon" />
+                    <Popover.Arrow class="text-icon! [&>svg[data-arrow]]:text-icon" />
                   </div>
                 </div>
               {/if}

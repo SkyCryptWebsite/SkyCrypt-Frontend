@@ -293,7 +293,7 @@
 }
 
 @utility shine {
-  @apply overflow-hidden before:pointer-events-none before:absolute before:inset-0 before:z-8 before:size-full before:animate-shine before:rounded-lg before:bg-linear-to-t before:from-[oklch(1_0_0_/_0)] before:via-[oklch(1_0_0_/_0.50)] before:to-[oklch(0.77_0.09_243.21_/_0)];
+  @apply overflow-hidden before:pointer-events-none before:absolute before:inset-0 before:z-8 before:size-full before:animate-shine before:rounded-lg before:bg-linear-to-t before:from-[oklch(1_0_0/0)] before:via-[oklch(1_0_0/0.50)] before:to-[oklch(0.77_0.09_243.21/0)];
 }
 
 @utility enchanted {
@@ -364,6 +364,6 @@
 }
 
 @utility chroma-gradient {
-  @apply relative animate-chroma bg-size-[8.875rem_8.875rem] bg-clip-text bg-origin-padding !text-transparent;
+  @apply relative animate-chroma bg-size-[8.875rem_8.875rem] bg-clip-text bg-origin-padding text-transparent!;
   background-image: repeating-linear-gradient(-45deg, oklch(62.8% 0.258 29.2), oklch(77.2% 0.174 64.6), oklch(93.1% 0.229 123), oklch(87% 0.29 142), oklch(87.2% 0.255 148), oklch(90.5% 0.155 195), oklch(56.3% 0.241 261), oklch(46.6% 0.304 271), oklch(62.7% 0.307 316), oklch(65.3% 0.268 355), oklch(62.8% 0.258 29.2) 100px);
 }
