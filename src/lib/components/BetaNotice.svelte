@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { IsHover } from "$lib/hooks/is-hover.svelte";
+  import { getHoverContext } from "$ctx";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { performanceMode } from "$lib/stores/preferences";
   import CircleQuestionMark from "@lucide/svelte/icons/circle-question-mark";
@@ -8,7 +8,7 @@
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
-  let isHover = $state(new IsHover());
+  const isHover = getHoverContext();
   let noticeOpen = $state(false);
 </script>
 
