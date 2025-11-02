@@ -1,8 +1,8 @@
 @import "tailwindcss";
 @plugin "./plugins/text-shadow.ts";
 @plugin "./plugins/themes.ts";
-@source "./safelist.ts";
 @source "app.html";
+@source inline("{group-data-[rainbow=false]/html:,}{text-,bg-}minecraft-{0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f}");
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant light (&:where(.light, .light *));
 
