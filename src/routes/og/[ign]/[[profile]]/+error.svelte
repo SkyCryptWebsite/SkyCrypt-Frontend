@@ -10,7 +10,7 @@
     <h1 class="text-center text-2xl font-semibold">Oops! Something went wrong</h1>
     <p class="text-center">An error occurred while trying to fetch the embed data for '{page.params.ign}'</p>
     <p>Try again or contact us if the problem persists.</p>
-    <Button.Root href="/" class="mx-auto flex w-full max-w-fit items-center justify-center rounded-3xl bg-icon px-6 py-3 text-base font-bold text-white uppercase transition-all duration-150 ease-out [text-shadow:0_0_3px_oklch(0%_0_0_/_50%)] hover:scale-[1.015] disabled:opacity-50 dark:text-text">Go home</Button.Root>
+    <Button.Root href="/" class="mx-auto flex w-full max-w-fit items-center justify-center rounded-3xl bg-icon px-6 py-3 text-base font-bold text-white uppercase transition-all duration-150 ease-out [text-shadow:0_0_3px_oklch(0%_0_0/50%)] hover:scale-[1.015] disabled:opacity-50 dark:text-text">Go home</Button.Root>
   </div>
   <p class="text-xs text-text/40">{page.status}: {page.error?.message}</p>
 </main>

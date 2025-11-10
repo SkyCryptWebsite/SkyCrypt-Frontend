@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { IsHover } from "$lib/hooks/is-hover.svelte";
+  import { getHoverContext } from "$ctx";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { performanceMode } from "$lib/stores/preferences";
   import CircleQuestionMark from "@lucide/svelte/icons/circle-question-mark";
@@ -8,11 +8,11 @@
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
-  let isHover = $state(new IsHover());
+  const isHover = getHoverContext();
   let noticeOpen = $state(false);
 </script>
 
-<footer class="fixed -bottom-0.5 left-0 z-30 w-full p-[env(safe-area-inset-top,0)] pr-[max(0.625rem,env(safe-area-inset-right))] pb-[env(safe-area-inset-bottom,0)] pl-[max(0.625rem,env(safe-area-inset-left))] leading-[3rem]">
+<footer class="fixed -bottom-0.5 left-0 z-30 w-full p-[env(safe-area-inset-top,0)] pr-[max(0.625rem,env(safe-area-inset-right))] pb-[env(safe-area-inset-bottom,0)] pl-[max(0.625rem,env(safe-area-inset-left))] leading-12">
   <div class="relative mx-auto w-fit rounded-t-md border-2 border-yellow-300 bg-yellow-800 px-2.5 text-yellow-300">
     <p class="flex items-center gap-x-1.5"><TriangleAlert class="size-5" />This is the SkyCrypt development site</p>
     <Button.Root class="absolute -top-3 -right-2.5" onpointerdown={() => (noticeOpen = !noticeOpen)}>

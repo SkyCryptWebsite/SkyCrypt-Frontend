@@ -134,7 +134,7 @@
               <Collapsible.Content class="mt-4 flex flex-wrap gap-4">
                 <Items>
                   {#each pets.missing as pet, index (index)}
-                    <div class="grayscale-[80%] hover:grayscale-0">
+                    <div class="grayscale-80 hover:grayscale-0">
                       <Item piece={pet} />
                     </div>
                   {/each}

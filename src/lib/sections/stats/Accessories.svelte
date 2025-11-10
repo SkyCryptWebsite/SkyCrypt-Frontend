@@ -204,7 +204,7 @@
                 {#if accessories.missing && accessories.missing.length > 0}
                   <Items>
                     {#each accessories.missing as accessory, index (index)}
-                      <div class="grayscale-[80%] hover:grayscale-0">
+                      <div class="grayscale-80 hover:grayscale-0">
                         <Item piece={accessory} />
                       </div>
                     {/each}
@@ -213,7 +213,7 @@
                 {#if accessories.upgrades && accessories.upgrades.length > 0}
                   <Items subtitle="Missing Accessory Upgrades">
                     {#each accessories.upgrades as accessory, index (index)}
-                      <div class="grayscale-[80%] hover:grayscale-0">
+                      <div class="grayscale-80 hover:grayscale-0">
                         <Item piece={accessory} />
                       </div>
                     {/each}

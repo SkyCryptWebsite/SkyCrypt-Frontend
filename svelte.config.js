@@ -6,12 +6,12 @@ import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
  * @param {string} filename
  * @returns {boolean}
  */
-const forceRunesMode = (filename) => {
-  if (filename.match(/[\\/\\]node_modules[\\/\\]/)) {
-    return false;
-  }
-  return true;
-};
+// const forceRunesMode = (filename) => {
+//   if (filename.match(/[\\/\\]node_modules[\\/\\]/)) {
+//     return false;
+//   }
+//   return true;
+// };
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
   // Consult https://svelte.dev/docs/kit/integrations
@@ -74,11 +74,11 @@ const config = {
   },
   vitePlugin: {
     // Can be removed once Svelte 6 is released, as `true` will be the default
-    dynamicCompileOptions({ filename, compileOptions }) {
+    dynamicCompileOptions({ _filename, _compileOptions }) {
       // Dynamically set runes mode per Svelte file
-      if (forceRunesMode(filename) && !compileOptions.runes) {
-        return { runes: true };
-      }
+      // if (forceRunesMode(filename) && !compileOptions.runes) {
+      return { runes: true };
+      // }
     }
   }
 };

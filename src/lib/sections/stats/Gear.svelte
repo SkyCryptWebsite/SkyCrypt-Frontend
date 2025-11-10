@@ -92,7 +92,7 @@
           <ScrollArea.Viewport>
             <div class="flex flex-row gap-6 md:gap-3">
               {#each firstWardrobeItems as _, i (i)}
-                <div class="min-h-[4.5rem] min-w-[4.5rem]">
+                <div class="min-h-18 min-w-18">
                   <Wardrobe wardrobeItems={wardrobe[i]} />
                 </div>
               {/each}

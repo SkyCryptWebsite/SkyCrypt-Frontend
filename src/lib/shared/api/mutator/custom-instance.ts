@@ -29,14 +29,24 @@ const getUrl = (contextUrl: string): string => {
 const getHeaders = (headers?: HeadersInit): HeadersInit => {
   try {
     const { request } = getRequestEvent();
-    return {
+
+    // Convert the request Headers object to a plain object
+    const requestHeadersObj: Record<string, string> = {};
+    request.headers.forEach((value, key) => {
+      requestHeadersObj[key] = value;
+    });
+
+    const mergedHeaders: HeadersInit = {
+      ...requestHeadersObj,
       ...headers,
-      ...request.headers,
       "X-API-Token": SERVER_API_TOKEN
     };
+
+    return mergedHeaders;
   } catch {
     return {
-      ...headers
+      ...headers,
+      "X-API-Token": SERVER_API_TOKEN
     };
   }
 };

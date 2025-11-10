@@ -1,3 +1,0 @@
-const safelist = ["text-minecraft-0", "text-minecraft-1", "text-minecraft-2", "text-minecraft-3", "text-minecraft-4", "text-minecraft-5", "text-minecraft-6", "text-minecraft-7", "text-minecraft-8", "text-minecraft-9", "text-minecraft-a", "text-minecraft-b", "text-minecraft-c", "text-minecraft-d", "text-minecraft-e", "text-minecraft-f", "bg-minecraft-0", "bg-minecraft-1", "bg-minecraft-2", "bg-minecraft-3", "bg-minecraft-4", "bg-minecraft-5", "bg-minecraft-6", "bg-minecraft-7", "bg-minecraft-8", "bg-minecraft-9", "bg-minecraft-a", "bg-minecraft-b", "bg-minecraft-c", "bg-minecraft-d", "bg-minecraft-e", "bg-minecraft-f"];
-
-export default safelist;
