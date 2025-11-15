@@ -6,6 +6,7 @@
   import CircleX from "@lucide/svelte/icons/circle-x";
   import Info from "@lucide/svelte/icons/info";
   import RotateCcw from "@lucide/svelte/icons/rotate-ccw";
+  import * as Sentry from "@sentry/sveltekit";
   import { isHttpError, type HttpError } from "@sveltejs/kit";
   import { Button } from "bits-ui";
   import type { Snippet } from "svelte";
@@ -24,7 +25,10 @@
   let { title, children, type, class: className, error: fullError, retry }: Props = $props();
 
   $effect(() => {
-    if (fullError) console.error(fullError);
+    if (fullError) {
+      Sentry.captureException(fullError);
+      console.error(fullError);
+    }
   });
 </script>
 
