@@ -12,6 +12,9 @@ Sentry.init({
   // Enable logs to be sent to Sentry
   enableLogs: true,
 
+  // Enable debug
+  debug: true,
+
   // Set tracesSampleRate to 1.0 to capture 100%
   // of transactions for tracing.
   // We recommend adjusting this value in production
@@ -19,7 +22,6 @@ Sentry.init({
   // https://docs.sentry.io/platforms/javascript/configuration/options/#traces-sample-rate
   tracesSampleRate: 0.5,
 
-  // If you don't want to use Session Replay, just remove the line below:
   integrations: [browserTracingIntegration(), httpClientIntegration(), contextLinesIntegration(), extraErrorDataIntegration(), consoleLoggingIntegration()],
 
   enabled: !dev,

@@ -46,7 +46,10 @@
       </div>
     </div>
   {/snippet}
-  <Main data={await getProfileStats({ uuid: page.params.ign ?? "", profileId: page.params.profile ?? "" })} />
+  <!-- TODO: Remove the key block and make the profile context reactive  -->
+  {#key page.data.ign || page.params.profile}
+    <Main data={await getProfileStats({ uuid: page.params.ign ?? "", profileId: page.params.profile ?? "" })} />
+  {/key}
   {#snippet failed(err, reset)}
     <div class="flex h-screen items-center justify-center">
       <Notice title="An unexpected error has occurred" type="error" error={err} retry={reset} />
