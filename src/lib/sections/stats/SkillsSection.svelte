@@ -10,9 +10,9 @@
 
   let { order }: { order: number } = $props();
 
-  const profile = $derived(getProfileContext());
-  const profileUUID = $derived(profile.uuid);
-  const profileId = $derived(profile.profile_id);
+  const profile = $derived(getProfileContext().current);
+  const profileUUID = $derived(profile?.uuid);
+  const profileId = $derived(profile?.profile_id);
 
   const skillsContext = new SkillsContext();
   setSkillsContext(skillsContext);
@@ -33,22 +33,22 @@
     {#if skills.mining}
       <Mining />
     {:else}
-      <p class="space-x-0.5 leading-6">{profile.username} doesn't have anything related to mining.</p>
+      <p class="space-x-0.5 leading-6">{profile?.username} doesn't have anything related to mining.</p>
     {/if}
     {#if skills.farming}
       <Farming />
     {:else}
-      <p class="space-x-0.5 leading-6">{profile.username} doesn't have anything related to farming.</p>
+      <p class="space-x-0.5 leading-6">{profile?.username} doesn't have anything related to farming.</p>
     {/if}
     {#if skills.fishing}
       <Fishing />
     {:else}
-      <p class="space-x-0.5 leading-6">{profile.username} doesn't have anything related to fishing.</p>
+      <p class="space-x-0.5 leading-6">{profile?.username} doesn't have anything related to fishing.</p>
     {/if}
     {#if skills.enchanting}
       <Enchanting />
     {:else}
-      <p class="space-x-0.5 leading-6">{profile.username} doesn't have anything related to enchanting.</p>
+      <p class="space-x-0.5 leading-6">{profile?.username} doesn't have anything related to enchanting.</p>
     {/if}
   {/if}
 </Section>

@@ -10,7 +10,7 @@ export default defineConfig({
     sentrySvelteKit({
       sourceMapsUploadOptions: {
         org: "skycrypt",
-        project: "javascript-sveltekit"
+        project: "skycrypt-sveltekit"
       },
       adapter: "node"
     }),

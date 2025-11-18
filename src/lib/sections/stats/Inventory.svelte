@@ -29,16 +29,16 @@
   let openTab = $state<string>("inventory");
   let searchValue = $state<string>();
 
-  const profile = $derived(getProfileContext());
-  const profileId = $derived(profile.profile_id);
-  const uuid = $derived(profile.uuid);
+  const profile = $derived(getProfileContext().current);
+  const profileId = $derived(profile?.profile_id);
+  const uuid = $derived(profile?.uuid);
 
   const debouncedSearchValue = $state(new Debounced(() => searchValue, 300));
 
   const tabs = $derived<Tabs[]>([
     {
       id: "inventory",
-      icon: `https://crafatar.com/renders/head/${profile.uuid}?overlay`,
+      icon: `https://crafatar.com/renders/head/${profile?.uuid}?overlay`,
       gap: 27
     },
     {

@@ -5,8 +5,8 @@
   import * as skinview3d from "skinview3d";
   import { onDestroy } from "svelte";
 
-  const ctx = getProfileContext();
-  const uuid = $derived(ctx.uuid);
+  const ctx = $derived(getProfileContext().current);
+  const uuid = $derived(ctx?.uuid);
 
   let { class: className }: { class: string | undefined } = $props();
   let viewer = $state<skinview3d.SkinViewer>();

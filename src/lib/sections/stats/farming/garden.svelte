@@ -17,9 +17,9 @@
   import { Avatar, Collapsible, Progress, Tooltip } from "bits-ui";
   import { format } from "numerable";
 
-  const profile = $derived(getProfileContext());
-  const profileId = $derived(profile.profile_id);
-  const gardenLocked = $derived(profile.skyblock_level?.level ?? 0 <= 5);
+  const profile = $derived(getProfileContext().current);
+  const profileId = $derived(profile?.profile_id);
+  const gardenLocked = $derived(profile?.skyblock_level?.level ?? 0 <= 5);
 
   let sectionOpen: boolean = $state(false);
 

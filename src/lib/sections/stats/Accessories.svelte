@@ -16,9 +16,9 @@
 
   let { order }: { order: number } = $props();
 
-  const profile = $derived(getProfileContext());
-  const profileUUID = $derived(profile.uuid);
-  const profileId = $derived(profile.profile_id);
+  const profile = $derived(getProfileContext().current);
+  const profileUUID = $derived(profile?.uuid);
+  const profileId = $derived(profile?.profile_id);
 
   const accessories = $derived(await getAccessoriesSection({ uuid: profileUUID!, profileId: profileId! }));
 </script>
@@ -192,7 +192,7 @@
               {/if}
             </div>
           {:else}
-            <p class="space-x-0.5 leading-6 font-bold text-text/60">{profile.username} doesn't have any accessories.</p>
+            <p class="space-x-0.5 leading-6 font-bold text-text/60">{profile?.username} doesn't have any accessories.</p>
           {/if}
           {#if (accessories.missing && accessories.missing.length > 0) || (accessories.upgrades && accessories.upgrades.length > 0)}
             <Collapsible.Root>
@@ -226,7 +226,7 @@
       </Items>
     {:else}
       <Items>
-        <p class="space-x-0.5 leading-6">{profile.username} doesn't have any accessories</p>
+        <p class="space-x-0.5 leading-6">{profile?.username} doesn't have any accessories</p>
       </Items>
     {/if}
   {/if}

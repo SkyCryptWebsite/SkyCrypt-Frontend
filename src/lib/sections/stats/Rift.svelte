@@ -16,10 +16,10 @@
 
   let { order }: { order: number } = $props();
 
-  const profile = $derived(getProfileContext());
+  const profile = $derived(getProfileContext().current);
 
-  const profileUUID = $derived(profile.uuid);
-  const profileId = $derived(profile.profile_id);
+  const profileUUID = $derived(profile?.uuid);
+  const profileId = $derived(profile?.profile_id);
 
   const rift = $derived(await getRiftSection({ uuid: profileUUID!, profileId: profileId! }));
 
@@ -74,7 +74,7 @@
                 <Item {piece} />
               {/each}
             {:else}
-              <p class="space-x-0.5 leading-6">{profile.username} has no armor equipped</p>
+              <p class="space-x-0.5 leading-6">{profile?.username} has no armor equipped</p>
             {/if}
             {#snippet info()}
               {#if armor && armor.stats}
@@ -89,7 +89,7 @@
                 <Item {piece} />
               {/each}
             {:else}
-              <p class="space-x-0.5 leading-6">{profile.username} has no equipment equipped</p>
+              <p class="space-x-0.5 leading-6">{profile?.username} has no equipment equipped</p>
             {/if}
             {#snippet info()}
               {#if equipment && equipment.stats}

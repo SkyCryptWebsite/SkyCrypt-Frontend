@@ -13,9 +13,9 @@
 
   let { order }: { order: number } = $props();
 
-  const profile = $derived(getProfileContext());
-  const profileUUID = $derived(profile.uuid);
-  const profileId = $derived(profile.profile_id);
+  const profile = $derived(getProfileContext().current);
+  const profileUUID = $derived(profile?.uuid);
+  const profileId = $derived(profile?.profile_id);
 
   const minions = $derived(await getMinionsSection({ uuid: profileUUID!, profileId: profileId! }));
 

@@ -32,22 +32,22 @@
     "@commitlint/config-conventional": "^20.0.0",
     "@commitlint/types": "^20.0.0",
     "@date-fns/tz": "^1.4.1",
-    "@eslint/compat": "^1.4.1",
+    "@eslint/compat": "^2.0.0",
     "@eslint/js": "^9.39.1",
-    "@lucide/svelte": "^0.553.0",
+    "@lucide/svelte": "^0.554.0",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
     "@sveltejs/adapter-node": "^5.4.0",
-    "@sveltejs/kit": "^2.48.4",
+    "@sveltejs/kit": "^2.48.5",
     "@sveltejs/vite-plugin-svelte": "^6.2.1",
     "@tailwindcss/vite": "^4.1.17",
     "@types/eslint": "^9.6.1",
-    "@types/node": "^24.10.0",
+    "@types/node": "^24.10.1",
     "@types/relaxed-json": "^1.0.4",
     "@types/upng-js": "^2.1.5",
-    "@vitest/browser-webdriverio": "^4.0.8",
-    "@vitest/ui": "^4.0.8",
-    "bits-ui": "^2.14.2",
+    "@vitest/browser-webdriverio": "^4.0.10",
+    "@vitest/ui": "^4.0.10",
+    "bits-ui": "^2.14.3",
     "changelogen": "^0.6.2",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
@@ -68,8 +68,8 @@
     "pretty-ms": "^9.3.0",
     "runed": "^0.36.0",
     "skinview3d": "^3.4.1",
-    "svelte": "^5.43.5",
-    "svelte-check": "^4.3.3",
+    "svelte": "^5.43.11",
+    "svelte-check": "^4.3.4",
     "svelte-dnd-action": "^0.9.67",
     "svelte-interactions": "^0.2.0",
     "svelte-persisted-store": "^0.12.0",
@@ -82,17 +82,17 @@
     "tailwindcss": "^4.1.17",
     "tslib": "^2.8.1",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.3",
+    "typescript-eslint": "^8.47.0",
     "vaul-svelte": "1.0.0-next.7",
-    "vite": "^7.2.2",
+    "vite": "npm:rolldown-vite@latest",
     "vite-plugin-devtools-json": "^1.0.0",
-    "vitest": "^4.0.8",
+    "vitest": "^4.0.10",
     "vitest-browser-svelte": "^2.0.1",
-    "webdriverio": "^9.20.0",
+    "webdriverio": "^9.20.1",
     "zod": "^4.1.12"
   },
   "dependencies": {
-    "@sentry/sveltekit": "^10.24.0",
+    "@sentry/sveltekit": "^10.25.0",
     "simple-git-hooks": "^2.13.1"
   },
   "engines": {
@@ -112,7 +112,10 @@
       "geckodriver",
       "simple-git-hooks",
       "svelte-preprocess"
-    ]
+    ],
+    "overrides": {
+      "vite": "npm:rolldown-vite@latest"
+    }
   },
   "simple-git-hooks": {
     "commit-msg": "pnpm exec commitlint --edit $1"

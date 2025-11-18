@@ -17,9 +17,9 @@
   import Upgrades from "./misc/upgrades.svelte";
 
   let { order }: { order: number } = $props();
-  const profile = $derived(getProfileContext());
-  const profileUUID = $derived(profile.uuid);
-  const profileId = $derived(profile.profile_id);
+  const profile = $derived(getProfileContext().current);
+  const profileUUID = $derived(profile?.uuid);
+  const profileId = $derived(profile?.profile_id);
 
   const miscClass = new MiscContext();
   setMiscContext(miscClass);
