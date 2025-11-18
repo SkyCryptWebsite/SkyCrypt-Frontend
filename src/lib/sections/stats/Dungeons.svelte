@@ -17,9 +17,9 @@
 
   let { order }: { order: number } = $props();
 
-  const profile = $derived(getProfileContext());
-  const profileUUID = $derived(profile.uuid);
-  const profileId = $derived(profile.profile_id);
+  const profile = $derived(getProfileContext().current);
+  const profileUUID = $derived(profile?.uuid);
+  const profileId = $derived(profile?.profile_id);
 
   const dungeons = $derived(await getDungeonsSection({ uuid: profileUUID!, profileId: profileId! }));
 
@@ -51,7 +51,7 @@
   {#if dungeons}
     <div class="space-y-4">
       {#if dungeons.level && dungeons.level.xp === 0}
-        <p class="space-x-0.5 leading-6">{profile.username} hasn't unlocked Dungeons yet.</p>
+        <p class="space-x-0.5 leading-6">{profile?.username} hasn't unlocked Dungeons yet.</p>
       {:else if dungeons}
         <div class="flex flex-col flex-wrap justify-start gap-x-4 gap-y-2 pt-4 sm:flex-row">
           {#if dungeons.level}

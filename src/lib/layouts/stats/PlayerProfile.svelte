@@ -25,10 +25,10 @@
   let noticeRef = $state<HTMLElement>(null!);
   let ignRef = $state<HTMLElement>(null!);
 
-  const profile = $derived(getProfileContext());
+  const profile = $derived(getProfileContext().current);
   const isHover = getHoverContext();
 
-  const apiSettings = $derived(Object.entries(profile.apiSettings ?? {}).filter(([_, value]) => !value));
+  const apiSettings = $derived(Object.entries(profile?.apiSettings ?? {}).filter(([_, value]) => !value));
 
   const iconMapper: Record<string, string> = {
     TWITTER: "x-twitter.svg",
@@ -51,16 +51,17 @@
   Stats for
   <Popover.Root bind:open={ignOpen}>
     <Popover.Trigger
-      disabled={!profile.members?.length}
+      disabled={!profile?.members?.length}
       class="inline-flex items-center rounded-full bg-text/10 py-2 pr-4 pl-2 align-middle text-xl font-semibold whitespace-nowrap sm:text-3xl"
       bind:ref={ignRef}
       onpointerenter={() => {
-        if (!profile.members?.length) return;
+        if (profile == null) return;
+        if (profile.members?.length) return;
         if (!isHover.current) return;
         profileOpen = false;
         ignOpen = true;
       }}>
-      {#if profile.rank?.rankColor}
+      {#if profile != null && profile.rank?.rankColor}
         <div class="relative flex items-center justify-center overflow-hidden rounded-full bg-(--color) px-2 py-1 text-xl" style={`--color:${profile.rank.rankColor}`}>
           <div class="relative z-20 inline-flex justify-between gap-3 text-sm font-bold text-white sm:text-lg">
             <span>{profile.rank.rankText}</span>
@@ -71,7 +72,7 @@
           <div class="absolute top-0 -right-3 bottom-0 z-10 h-14 w-1/2 skew-x-[-20deg] bg-(--plusColor)" style={`--plusColor:${profile.rank.plusColor ?? profile.rank.rankColor}`}></div>
         </div>
       {/if}
-      <span class={cn(profile.rank?.rankColor ? "pl-4" : "pl-2")}>{profile.displayName}</span>
+      <span class={cn(profile?.rank?.rankColor ? "pl-4" : "pl-2")}>{profile?.displayName}</span>
     </Popover.Trigger>
 
     <Popover.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", $performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={ignRef} strategy="absolute">
@@ -79,12 +80,12 @@
         {#if open}
           <div {...wrapperProps}>
             <div {...props} transition:flyAndScale>
-              {#each profile.members as member (member.uuid)}
-                {#if member.username !== profile.username}
+              {#each profile?.members as member (member.uuid)}
+                {#if member.username !== profile?.username}
                   <a
                     href={resolve("/stats/[ign]/[[profile]]", {
                       ign: member.username ?? "",
-                      profile: profile.profile_cute_name
+                      profile: profile?.profile_cute_name
                     })}
                     class="group flex min-w-(--bits-dropdown-menu-anchor-width) items-center p-2 focus-visible:outline-0"
                     data-sveltekit-preload-code="viewport"
@@ -118,27 +119,28 @@
   <div class="relative inline-flex items-center gap-2 rounded-full bg-text/10 px-2 py-1 align-middle text-xl font-semibold data-[warning=true]:border-2 data-[warning=true]:border-yellow-500/20 sm:text-3xl" data-warning={apiSettings.length > 0} bind:this={noticeRef}>
     <Popover.Root bind:open={profileOpen}>
       <Popover.Trigger
-        disabled={!profile.profiles?.length}
+        disabled={!profile?.profiles?.length}
         onpointerenter={() => {
-          if (!profile.profiles?.length) return;
+          if (profile == null) return;
+          if (profile.profiles?.length) return;
           if (!isHover.current) return;
           ignOpen = false;
           profileOpen = true;
         }}
         class="rounded-full px-2 py-1">
-        {profile.profile_cute_name}
-        {@render profileIcon(profile.game_mode ?? "")}
+        {profile?.profile_cute_name}
+        {@render profileIcon(profile?.game_mode ?? "")}
       </Popover.Trigger>
       <Popover.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", $performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={noticeRef} strategy="absolute">
         {#snippet child({ wrapperProps, props, open })}
           {#if open}
             <div {...wrapperProps}>
               <div {...props} transition:flyAndScale>
-                {#each profile.profiles ?? [] as otherProfile (otherProfile.profile_id)}
-                  {#if otherProfile.profile_id !== profile.profile_id}
+                {#each profile?.profiles ?? [] as otherProfile (otherProfile.profile_id)}
+                  {#if otherProfile.profile_id !== profile?.profile_id}
                     <a
                       href={resolve("/stats/[ign]/[[profile]]", {
-                        ign: profile.username ?? "",
+                        ign: profile?.username ?? "",
                         profile: otherProfile.cute_name
                       })}
                       class="group flex items-center p-2 focus-visible:outline-0"
@@ -188,6 +190,7 @@
     <Tooltip.Trigger
       class="aspect-square rounded-full bg-icon/90 p-2 transition-opacity duration-150 ease-out hover:bg-icon"
       onclick={() => {
+        if (profile == null) return;
         if (!$favorites.some((fav) => fav.uuid === profile.uuid)) {
           favorites.set([...$favorites, { uuid: profile.uuid ?? "", ign: profile.username ?? "" }]);
           toast.dismiss(toastId);
@@ -201,7 +204,7 @@
       onpointerdown={() => (favoriteTooltipOpen = !favoriteTooltipOpen)}>
       {#snippet child({ props })}
         <button {...props}>
-          {#if $favorites.some((fav) => fav.uuid === profile.uuid)}
+          {#if $favorites.some((fav) => fav.uuid === profile?.uuid)}
             <Star class="size-4 fill-white" />
           {:else}
             <Star class="size-4" />
@@ -216,7 +219,7 @@
             <div {...wrapperProps}>
               <div {...props} transition:flyAndScale>
                 <Tooltip.Arrow />
-                {#if $favorites.some((fav) => fav.uuid === profile.uuid)}
+                {#if $favorites.some((fav) => fav.uuid === profile?.uuid)}
                   <p>Remove from favorites</p>
                 {:else}
                   <p>Add to favorites</p>
@@ -237,11 +240,11 @@
     <Link class="size-4" />
   </Button.Root>
 
-  <Button.Root href={`https://plancke.io/hypixel/player/stats/${profile.username}`} target="_blank" class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon">
+  <Button.Root href={`https://plancke.io/hypixel/player/stats/${profile?.username}`} target="_blank" class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon">
     Plancke <ExternalLink class="size-4" />
   </Button.Root>
 
-  <Button.Root href={`https://elitebot.dev/@${profile.username}/${profile.profile_cute_name}`} target="_blank" class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon">
+  <Button.Root href={`https://elitebot.dev/@${profile?.username}/${profile?.profile_cute_name}`} target="_blank" class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon">
     Elite <ExternalLink class="size-4" />
   </Button.Root>
 
@@ -249,7 +252,7 @@
     class="hidden items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon data-[visible=true]:flex"
     data-visible={showMore}
     onclick={() => {
-      copyToClipboard(profile.uuid ?? "");
+      copyToClipboard(profile?.uuid ?? "");
     }}>
     Copy UUID
   </Button.Root>
@@ -258,12 +261,12 @@
     class="hidden items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon data-[visible=true]:flex"
     data-visible={showMore}
     onclick={() => {
-      copyToClipboard(profile.profile_id ?? "");
+      copyToClipboard(profile?.profile_id ?? "");
     }}>
     Copy Profile UUID
   </Button.Root>
 
-  {#if profile.social}
+  {#if profile?.social}
     {#each Object.entries(profile.social) as [key, value], index (index)}
       {#if key === "DISCORD"}
         <Button.Root class="hidden items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon data-[visible=true]:flex" data-visible={showMore} onclick={() => copyToClipboard(value)}>

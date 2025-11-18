@@ -3,6 +3,18 @@ import type { IsMobile } from "$lib/hooks/is-mobile.svelte";
 import type { ModelsMiscOutput, ModelsResourcePackConfig, ModelsSkillsOutput, ModelsStatsOutput } from "$lib/shared/api/orval-generated";
 import { createContext } from "svelte";
 
+export class ProfileContext {
+  #current: ModelsStatsOutput | null = $state(null);
+
+  get current() {
+    return this.#current;
+  }
+
+  set current(value: ModelsStatsOutput | null) {
+    this.#current = value;
+  }
+}
+
 export class PacksContext {
   #packs: ModelsResourcePackConfig[] = $state([]);
 
@@ -39,7 +51,7 @@ export class SkillsContext {
   }
 }
 
-export const [getProfileContext, setProfileContext] = createContext<ModelsStatsOutput>();
+export const [getProfileContext, setProfileContext] = createContext<ProfileContext>();
 export const [getSkillsContext, setSkillsContext] = createContext<SkillsContext>();
 export const [getMiscContext, setMiscContext] = createContext<MiscContext>();
 export const [getMobileContext, setMobileContext] = createContext<IsMobile>();

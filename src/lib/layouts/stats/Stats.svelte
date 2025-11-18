@@ -11,11 +11,17 @@
   import { slide } from "svelte/transition";
 
   let openState = $state(false);
-  const profile = $derived(getProfileContext());
-  const profileUUID = $derived(profile.uuid);
-  const profileId = $derived(profile.profile_id);
+  const profile = $derived(getProfileContext().current);
+  const profileUUID = $derived(profile?.uuid);
+  const profileId = $derived(profile?.profile_id);
 
   let stats = $state<RemoteQuery<ModelsStats>>();
+
+  $effect(() => {
+    if (openState) {
+      stats = getAdditionalStats({ uuid: profileUUID!, profileId: profileId! });
+    }
+  });
 </script>
 
 <div class="stats flex flex-col">

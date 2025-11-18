@@ -12,10 +12,10 @@
 
   let { order }: { order: number } = $props();
 
-  const profile = $derived(getProfileContext());
+  const profile = $derived(getProfileContext().current);
 
-  const profileUUID = $derived(profile.uuid);
-  const profileId = $derived(profile.profile_id);
+  const profileUUID = $derived(profile?.uuid);
+  const profileId = $derived(profile?.profile_id);
 
   const slayer = $derived(await getSlayerSection({ uuid: profileUUID!, profileId: profileId! }));
 </script>
@@ -24,7 +24,7 @@
   {#if slayer}
     <div class="space-y-4">
       {#if slayer.totalSlayerExp === 0}
-        <p class="space-x-0.5 leading-6">{profile.username} hasn't unlocked Slayers yet.</p>
+        <p class="space-x-0.5 leading-6">{profile?.username} hasn't unlocked Slayers yet.</p>
       {:else}
         <div class="pt-4 pb-1.5">
           <AdditionStat text="Total Slayer XP" data={format(slayer.totalSlayerExp)} />

@@ -3,7 +3,7 @@
   import { replaceState } from "$app/navigation";
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
-  import { getHoverContext, setProfileContext } from "$ctx";
+  import { getHoverContext, ProfileContext, setProfileContext } from "$ctx";
   import Item from "$lib/components/Item.svelte";
   import ItemContent from "$lib/components/item/item-content.svelte";
   import Navbar from "$lib/components/Navbar.svelte";
@@ -14,13 +14,13 @@
   import Sections from "$lib/sections/Sections.svelte";
   import type { ModelsStatsOutput } from "$lib/shared/api/orval-generated";
   import { cn, flyAndScale } from "$lib/shared/utils";
+  import { recentSearches } from "$lib/stores";
   import { itemContent, itemContentSpecial, showItem } from "$lib/stores/internal";
   import { performanceMode, showGlint } from "$lib/stores/preferences";
-  import { recentSearches } from "$lib/stores/searches";
   import Image from "@lucide/svelte/icons/image";
   import { Avatar, Dialog } from "bits-ui";
   import { Pane } from "paneforge";
-  import { tick, untrack } from "svelte";
+  import { onDestroy, tick } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
@@ -39,67 +39,70 @@
   let _defaultLeftPanel = $derived(Math.ceil((300 / innerWidth) * 100));
   let _defaultRightPanel = $derived(Math.ceil((700 / innerWidth) * 100));
 
+  const abortController = new AbortController();
+
   // Initialize the profile context
-  setProfileContext(ctx);
+  const profileClass = new ProfileContext();
+  setProfileContext(profileClass);
+
+  function rewriteURL() {
+    if (!(ctx as ModelsStatsOutput)) return;
+
+    const { username, profile_cute_name } = ctx;
+    if (!username) return;
+
+    const current = page.url.pathname;
+    const wanted = `/stats/${username}/${profile_cute_name || ""}`;
+
+    // Update the URL to match the username and cute name
+    if (current !== wanted) {
+      // Only proceed if not aborted
+      if (!abortController.signal.aborted) {
+        tick()
+          .then(() => {
+            if (!abortController.signal.aborted) {
+              replaceState(
+                resolve("/stats/[ign]/[[profile]]", {
+                  ign: username,
+                  profile: profile_cute_name || ""
+                }),
+                page.state
+              );
+            }
+          })
+          .catch(() => {});
+      }
+    }
+  }
+
+  recentSearches.update((searches) => {
+    if (!ctx) return searches;
+
+    const { username, uuid } = ctx;
+    if (!username || !uuid) return searches;
+
+    // Find existing search by username/IGN and update with UUID
+    const existingIndex = searches.findIndex((search) => search.ign.toLowerCase() === username.toLowerCase());
+
+    if (existingIndex !== -1) {
+      // Update existing search with UUID
+      searches[existingIndex] = {
+        ...searches[existingIndex],
+        uuid: uuid
+      };
+    }
+
+    return searches;
+  });
 
   // Update the profile context when the data changes
   $effect(() => {
-    const abortController = new AbortController();
-    // setProfileContext(ctx);
+    profileClass.current = profile;
+    rewriteURL();
+  });
 
-    recentSearches.update((searches) => {
-      if (!ctx) return searches;
-
-      const { username, uuid } = ctx;
-      if (!username || !uuid) return searches;
-
-      // Find existing search by username/IGN and update with UUID
-      const existingIndex = searches.findIndex((search) => search.ign.toLowerCase() === username.toLowerCase());
-
-      if (existingIndex !== -1) {
-        // Update existing search with UUID
-        searches[existingIndex] = {
-          ...searches[existingIndex],
-          uuid: uuid
-        };
-      }
-
-      return searches;
-    });
-
-    untrack(() => {
-      if (!(ctx as ModelsStatsOutput)) return;
-
-      const { username, profile_cute_name } = ctx;
-      if (!username) return;
-
-      const current = page.url.pathname;
-      const wanted = `/stats/${username}/${profile_cute_name || ""}`;
-
-      // Update the URL to match the username and cute name
-      if (current !== wanted) {
-        // Only proceed if not aborted
-        if (!abortController.signal.aborted) {
-          tick()
-            .then(() => {
-              if (!abortController.signal.aborted) {
-                replaceState(
-                  resolve("/stats/[ign]/[[profile]]", {
-                    ign: username,
-                    profile: profile_cute_name || ""
-                  }),
-                  page.state
-                );
-              }
-            })
-            .catch(() => {});
-        }
-      }
-    });
-
-    return () => {
-      abortController.abort();
-    };
+  onDestroy(() => {
+    abortController.abort();
   });
 </script>
 

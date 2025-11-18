@@ -15,9 +15,9 @@
 
   let { order }: { order: number } = $props();
 
-  const profile = $derived(getProfileContext());
-  const profileUUID = $derived(profile.uuid);
-  const profileId = $derived(profile.profile_id);
+  const profile = $derived(getProfileContext().current);
+  const profileUUID = $derived(profile?.uuid);
+  const profileId = $derived(profile?.profile_id);
 
   const pets = $derived(await getPetsSection({ uuid: profileUUID!, profileId: profileId! }));
 
@@ -146,7 +146,7 @@
       </Items>
     {:else}
       <Items>
-        <p class="space-x-0.5 leading-6">{profile.username} doesn't have any pets</p>
+        <p class="space-x-0.5 leading-6">{profile?.username} doesn't have any pets</p>
       </Items>
     {/if}
   {/if}

@@ -7,9 +7,9 @@
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
 
-  const profile = $derived(getProfileContext());
+  const profile = $derived(getProfileContext().current);
 
-  const apiSettings = $derived(Object.entries(profile.apiSettings ?? {}).filter(([_, value]) => !value));
+  const apiSettings = $derived(Object.entries(profile?.apiSettings ?? {}).filter(([_, value]) => !value));
 
   const isHover = getHoverContext();
 </script>
@@ -24,7 +24,7 @@
         {/if}
         <span class="inline-block whitespace-nowrap capitalize">{key.replaceAll("_", " ")}</span>{#if index < apiSettings.length - 1},{/if}
       {/each}
-      {apiSettings.length === 1 ? "is" : "are"} not available for {profile.username} due to limited API access.
+      {apiSettings.length === 1 ? "is" : "are"} not available for {profile?.username} due to limited API access.
     </p>
     <p>
       {#if isHover.current}

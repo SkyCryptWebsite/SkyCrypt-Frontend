@@ -14,10 +14,9 @@
 
   let { order }: { order: number } = $props();
 
-  const ctx = getProfileContext();
-  const profile = $derived(ctx);
-  const profileUUID = $derived(profile.uuid);
-  const profileId = $derived(profile.profile_id);
+  const profile = $derived(getProfileContext().current);
+  const profileUUID = $derived(profile?.uuid);
+  const profileId = $derived(profile?.profile_id);
 
   const { armor, equipment, wardrobe, weapons } = $derived(await getGearSection({ uuid: profileUUID!, profileId: profileId! }));
   const firstWardrobeItems = $derived.by(() => {
@@ -57,7 +56,7 @@
           {/if}
         {/each}
       {:else}
-        <p class="space-x-0.5 leading-6">{profile.username} has no armor equipped</p>
+        <p class="space-x-0.5 leading-6">{profile?.username} has no armor equipped</p>
       {/if}
       {#snippet info()}
         {#if armor.stats}
@@ -74,7 +73,7 @@
           <Item {piece} />
         {/each}
       {:else}
-        <p class="space-x-0.5 leading-6">{profile.username} has no equipment equipped</p>
+        <p class="space-x-0.5 leading-6">{profile?.username} has no equipment equipped</p>
       {/if}
       {#snippet info()}
         {#if equipment.stats}
@@ -120,7 +119,7 @@
             {/if}
           </div>
         {:else}
-          <p class="space-x-0.5 leading-6">{profile.username} has no weapons</p>
+          <p class="space-x-0.5 leading-6">{profile?.username} has no weapons</p>
         {/if}
       {/snippet}
 
