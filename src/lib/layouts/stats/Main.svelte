@@ -17,10 +17,9 @@
   import { itemContent, itemContentSpecial, showItem } from "$lib/stores/internal";
   import { performanceMode, showGlint } from "$lib/stores/preferences";
   import { recentSearches } from "$lib/stores/searches";
-  import GripVertical from "@lucide/svelte/icons/grip-vertical";
   import Image from "@lucide/svelte/icons/image";
   import { Avatar, Dialog } from "bits-ui";
-  import { Pane, PaneGroup, PaneResizer } from "paneforge";
+  import { Pane } from "paneforge";
   import { tick, untrack } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
@@ -32,13 +31,13 @@
 
   const profile = $derived(ctx);
 
-  let rightSize = $state(0);
-  let leftSize = $state(0);
-  let skinCollapsed = $state(false);
-  let leftPane = $state<Pane>(null!);
+  let _rightSize = $state(0);
+  let _leftSize = $state(0);
+  let _skinCollapsed = $state(false);
+  let _leftPane = $state<Pane>(null!);
   let innerWidth = $state(0);
-  let defaultLeftPanel = $derived(Math.ceil((300 / innerWidth) * 100));
-  let defaultRightPanel = $derived(Math.ceil((700 / innerWidth) * 100));
+  let _defaultLeftPanel = $derived(Math.ceil((300 / innerWidth) * 100));
+  let _defaultRightPanel = $derived(Math.ceil((700 / innerWidth) * 100));
 
   // Initialize the profile context
   setProfileContext(ctx);
@@ -113,7 +112,8 @@
 <svelte:window bind:innerWidth />
 
 <div class="@container/parent relative">
-  <PaneGroup id="panes" direction="horizontal" autoSaveId="paneConfig" class="relative w-full !overflow-x-clip !overflow-y-visible">
+  <!-- TODO: Re-enable paneforge once this is fixed: https://github.com/svecosystem/paneforge/issues/89 -->
+  <!-- <PaneGroup id="panes" direction="horizontal" autoSaveId="paneConfig" class="relative w-full !overflow-x-clip !overflow-y-visible">
     {#if innerWidth >= 1024}
       <div class="group/pane contents">
         <Pane
@@ -189,7 +189,40 @@
         </Navbar>
       </main>
     </Pane>
-  </PaneGroup>
+  </PaneGroup> -->
+  <!-- TODO: See the paneforge todo above  -->
+  <div class="@container fixed top-1/2 left-0 z-10 hidden h-dvh w-[30vw] -translate-y-1/2 @[75rem]/parent:block">
+    {#if $performanceMode}
+      <Avatar.Root>
+        {#snippet child({ props })}
+          <div transition:fade={{ duration: 300, easing: cubicOut }} {...props}>
+            <Avatar.Image loading="lazy" src="https://vzge.me/full/832/{profile.uuid}.webp?no=shadow&y=-3" alt="{profile.username}'s avatar" class="max-h-128 object-cover" />
+            <Avatar.Fallback>
+              <Image class="size-24 object-cover text-text" />
+            </Avatar.Fallback>
+          </div>
+        {/snippet}
+      </Avatar.Root>
+    {:else if browser && innerWidth >= 1024}
+      {#await import('$lib/components/Skin3D.svelte') then { default: Skin3D }}
+        <Skin3D class="h-full" />
+      {/await}
+    {/if}
+  </div>
+
+  <div class={cn("fixed top-0 right-0 min-h-dvh w-full @[75rem]/parent:w-[calc(100%-30vw)]", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")}></div>
+  <main data-vaul-drawer-wrapper class="@container relative mx-auto mt-12 @[75rem]/parent:ml-[30vw]">
+    <div class="space-y-5 p-4 @[75rem]/parent:p-8">
+      <PlayerProfile />
+      <Skills />
+      <Stats />
+      <AdditionalStats />
+    </div>
+
+    <Navbar>
+      <Sections />
+    </Navbar>
+  </main>
 </div>
 
 {#if isHover.current}
