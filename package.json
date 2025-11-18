@@ -92,7 +92,7 @@
     "zod": "^4.1.12"
   },
   "dependencies": {
-    "@sentry/sveltekit": "^10.24.0",
+    "@sentry/sveltekit": "^10.25.0",
     "simple-git-hooks": "^2.13.1"
   },
   "engines": {

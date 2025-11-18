@@ -1,4 +1,4 @@
-import * as Sentry from "@sentry/sveltekit";
+import { handleErrorWithSentry, sentryHandle } from "@sentry/sveltekit";
 import type { Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 
@@ -22,5 +22,8 @@ const headersHandler = (async ({ event, resolve }) => {
   return response;
 }) satisfies Handle;
 
-export const handleError = Sentry.handleErrorWithSentry();
-export const handle = sequence(Sentry.sentryHandle(), headersHandler) satisfies Handle;
+// If you have a custom error handler, pass it to `handleErrorWithSentry`
+export const handleError = handleErrorWithSentry();
+
+// If you have custom handlers, make sure to place them after `sentryHandle()` in the `sequence` function.
+export const handle = sequence(sentryHandle(), headersHandler) satisfies Handle;
