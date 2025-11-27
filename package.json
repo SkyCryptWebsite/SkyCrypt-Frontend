@@ -62,7 +62,7 @@
     "orval": "^7.17.0",
     "paneforge": "^1.0.2",
     "playwright": "^1.57.0",
-    "prettier": "^3.7.1",
+    "prettier": "^3.6.2",
     "prettier-plugin-svelte": "^3.4.0",
     "prettier-plugin-tailwindcss": "^0.7.1",
     "pretty-ms": "^9.3.0",
@@ -114,7 +114,7 @@
       "svelte-preprocess"
     ],
     "overrides": {
-      "vite": "npm:rolldown-vite@latest"
+      "vite": "npm:rolldown-vite@^7.2.8"
     }
   },
   "simple-git-hooks": {
