@@ -85,7 +85,7 @@
                   <a
                     href={resolve("/stats/[ign]/[[profile]]", {
                       ign: member.username ?? "",
-                      profile: profile?.profile_cute_name
+                      profile: member?.cute_name
                     })}
                     class="group flex min-w-(--bits-dropdown-menu-anchor-width) items-center p-2 focus-visible:outline-0"
                     data-sveltekit-preload-code="viewport"
