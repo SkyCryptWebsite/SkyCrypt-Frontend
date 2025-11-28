@@ -484,6 +484,12 @@ export const getApiEmbedUuidProfileIdResponse = zod.object({
 });
 
 /**
+ * Retrieves all emojis from the database
+ * @summary Get all emojis
+ */
+export const getApiEmojisResponse = zod.record(zod.string(), zod.unknown());
+
+/**
  * Returns garden data for the given profile ID
  * @summary Get garden stats of a specified profile
  */
@@ -589,6 +595,7 @@ export const getApiGardenProfileIdResponse = zod.object({
                     bid: zod.number().optional(),
                     boosters: zod.array(zod.string()).optional(),
                     champion_combat_xp: zod.number().optional(),
+                    collected_coins: zod.number().optional(),
                     compact_blocks: zod.number().optional(),
                     divan_powder_coating: zod.number().optional(),
                     donated_museum: zod.boolean().optional(),
@@ -1780,6 +1787,7 @@ export const getApiSkillsUuidProfileIdResponse = zod.object({
                     bid: zod.number().optional(),
                     boosters: zod.array(zod.string()).optional(),
                     champion_combat_xp: zod.number().optional(),
+                    collected_coins: zod.number().optional(),
                     compact_blocks: zod.number().optional(),
                     divan_powder_coating: zod.number().optional(),
                     donated_museum: zod.boolean().optional(),
@@ -2154,6 +2162,7 @@ export const getApiUsernameUuidParams = zod.object({
 });
 
 export const getApiUsernameUuidResponse = zod.object({
+  displayName: zod.string().optional(),
   username: zod.string().optional(),
   uuid: zod.string().optional()
 });
@@ -2167,6 +2176,7 @@ export const getApiUuidUsernameParams = zod.object({
 });
 
 export const getApiUuidUsernameResponse = zod.object({
+  displayName: zod.string().optional(),
   username: zod.string().optional(),
   uuid: zod.string().optional()
 });
