@@ -2,6 +2,7 @@
   import { replaceState } from "$app/navigation";
   import { page } from "$app/state";
   import { getProfileContext } from "$ctx";
+  import ScrollAreaPrimitive from "$lib/components/ScrollAreaPrimitive.svelte";
   import type { SectionName } from "$lib/sections/types";
   import { tabValue } from "$lib/stores/internal";
   import { sectionOrderPreferences } from "$lib/stores/preferences";
@@ -122,8 +123,8 @@
   });
 </script>
 
-<ScrollArea.Root type="always" class="navbar group sticky! top-[calc(3rem+env(safe-area-inset-top,0))] z-20 overflow-clip" data-pinned={pinned} bind:ref={navbarElement}>
-  <ScrollArea.Viewport>
+<ScrollAreaPrimitive type="always" class="navbar group sticky! top-[calc(3rem+env(safe-area-inset-top,0))] z-20 overflow-clip" data-pinned={pinned} bind:ref={navbarElement} orientation="horizontal">
+  {#snippet viewportChildren()}
     <div class="flex! flex-nowrap items-center gap-2 pb-2 font-semibold whitespace-nowrap text-text/80">
       <div class="absolute bottom-1.75 z-1 h-0.5 w-[calc(100%+0.5rem)] bg-icon"></div>
       <div class="absolute inset-0 bottom-2 group-data-[pinned=true]:group-data-[mode=dark]/html:bg-[oklch(19.13%_0_0)]/90 group-data-[pinned=true]:group-data-[mode=light]/html:bg-[oklch(95.51%_0_0)]/92"></div>
@@ -133,11 +134,12 @@
         </Button.Root>
       {/each}
     </div>
-  </ScrollArea.Viewport>
+  {/snippet}
+
   <ScrollArea.Scrollbar orientation="horizontal" class="z-10 flex h-0.5 w-full origin-center -translate-y-[0.44rem] touch-none transition-all duration-300 ease-out select-none group-hover:h-2 group-hover:-translate-y-1">
     <ScrollArea.Thumb class="rounded-full bg-icon" />
   </ScrollArea.Scrollbar>
-</ScrollArea.Root>
+</ScrollAreaPrimitive>
 
 <div class="flex flex-col flex-nowrap gap-y-5 px-4 pb-4 @[75rem]/parent:px-8 @[75rem]/parent:pb-8">
   {@render children?.()}

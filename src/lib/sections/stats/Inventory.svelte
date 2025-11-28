@@ -3,6 +3,7 @@
   import { env } from "$env/dynamic/public";
   import Item from "$lib/components/Item.svelte";
   import Notice from "$lib/components/Notice.svelte";
+  import ScrollAreaPrimitive from "$lib/components/ScrollAreaPrimitive.svelte";
   import Section from "$lib/components/Section.svelte";
   import { type ModelsStrippedItem } from "$lib/shared/api/orval-generated";
   import { getInventorySection, searchInventorySection } from "$lib/shared/api/skycrypt-api.remote";
@@ -118,8 +119,8 @@
 <Section id="Inventory" {order} class="min-h-[600px]">
   <Tabs.Root bind:value={openTab} class="@container relative mb-0 rounded-lg bg-background/30 p-5 pt-4">
     <Tabs.List>
-      <ScrollArea.Root>
-        <ScrollArea.Viewport class="border-b border-icon">
+      <ScrollAreaPrimitive viewClass="border-b border-icon" orientation="horizontal">
+        {#snippet viewportChildren()}
           <div class="flex! h-full shrink-0 flex-nowrap items-center gap-3 px-4 whitespace-nowrap">
             {#each tabs as tab (tab.id)}
               <Tabs.Trigger value={tab.id} class="group relative flex items-center justify-center gap-0.5 pb-2 text-xs uppercase">
@@ -138,11 +139,11 @@
               </Tabs.Trigger>
             {/each}
           </div>
-        </ScrollArea.Viewport>
+        {/snippet}
         <ScrollArea.Scrollbar orientation="horizontal">
           <ScrollArea.Thumb />
         </ScrollArea.Scrollbar>
-      </ScrollArea.Root>
+      </ScrollAreaPrimitive>
     </Tabs.List>
 
     <Tabs.Content value={openTab}>
