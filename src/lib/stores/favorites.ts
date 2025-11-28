@@ -3,7 +3,7 @@ import { persisted } from "svelte-persisted-store";
 
 // First param `favorites` is the local storage key.
 // Second param is the initial value.
-export const favorites = persisted<{ uuid: string; ign: string }[]>("favorites", []);
+export const favorites = persisted<{ uuid: string; ign: string; displayName?: string }[]>("favorites", []);
 
 // Check if favorites is in old format (string[]) and remove it if so
 if (browser) {

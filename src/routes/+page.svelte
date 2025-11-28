@@ -7,7 +7,7 @@
   import { favorites } from "$lib/stores/favorites";
   import { content } from "$lib/stores/internal";
   import { performanceMode } from "$lib/stores/preferences";
-  import { getContributors } from "$routes/ contributors.remote";
+  import { type Contributor, getContributors } from "$routes/ contributors.remote";
   import CodeXml from "@lucide/svelte/icons/code-xml";
   import GitPullRequestArrow from "@lucide/svelte/icons/git-pull-request-arrow";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
@@ -118,10 +118,10 @@
 
   <div class="grid grid-cols-1 gap-5 @xl:grid-cols-2 @5xl:grid-cols-3">
     {#if $favorites.length === 0}
-      {@render profile({ id: "0", name: "No favorites set!", quote: "Why don't you set a favorite?" }, { tip: true })}
+      {@render profile({ id: "0", username: "No favorites set!", quote: "Why don't you set a favorite?" }, { tip: true })}
     {:else}
       {#each $favorites.reverse() as favorite, index (index)}
-        {@render profile({ id: favorite.uuid, name: favorite.ign, role: Role.FAVORITE }, { favorite: true })}
+        {@render profile({ id: favorite.uuid, username: favorite.ign, role: Role.FAVORITE, displayName: favorite.displayName }, { favorite: true })}
       {/each}
     {/if}
 
@@ -142,7 +142,7 @@
   </div>
 </main>
 
-{#snippet profile(user: { id: string; name: string; quote?: string; role?: Role }, options?: { tip?: boolean; favorite?: boolean })}
+{#snippet profile(user: Contributor, options?: { tip?: boolean; favorite?: boolean })}
   {#snippet tooltipContent()}
     <p class="font-semibold text-text/80 capitalize">
       {#if options?.favorite}
@@ -158,14 +158,14 @@
   <div class={cn("relative rounded-lg", { "transition-all duration-300 ease-out hover:scale-105": !options?.tip })}>
     <Button.Root href={options?.tip ? "#" : `/stats/${user.id}`} class={cn("relative flex h-full min-w-0 items-center gap-4 rounded-lg p-5", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
       <Avatar.Root class="size-16 shrink-0 rounded-lg bg-text/10">
-        <Avatar.Image loading="lazy" src={options?.tip ? "https://mc-heads.net/avatar/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40/64" : `https://crafatar.com/avatars/${user.id}?size=64&overlay`} alt={user.name} class="aspect-square size-16 rounded-lg [image-rendering:pixelated]" />
+        <Avatar.Image loading="lazy" src={options?.tip ? "https://mc-heads.net/avatar/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40/64" : `https://crafatar.com/avatars/${user.id}?size=64&overlay`} alt={user.username} class="aspect-square size-16 rounded-lg [image-rendering:pixelated]" />
         <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">
-          {user.name.slice(0, 2)}
+          {user.username?.slice(0, 2)}
         </Avatar.Fallback>
       </Avatar.Root>
       <div class="flex flex-col justify-center gap-0">
         <div class="text-lg font-semibold text-text">
-          {user.name}
+          {user.displayName ?? user.username}
         </div>
         {#if user.quote}
           <div class={cn("pr-4 text-sm font-medium text-pretty text-text/80", user.role === Role.TECHNOBLADE ? "italic" : "")}>{@html user.quote}</div>
