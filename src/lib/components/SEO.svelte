@@ -11,7 +11,7 @@
 </script>
 
 <svelte:head>
-  <link rel="icon" href={isStatsPage ? `https://crafatar.com/avatars/${embedData.uuid}?size=32&overlay` : `https://vzge.me/bust/${embedData.uuid}?y=-40`} sizes="32x32" type="image/png" />
+  <link rel="icon" href={isStatsPage ? `https://avatar.kalifondation.fr/avatars/${embedData.uuid}?size=32&overlay` : `https://vzge.me/bust/${embedData.uuid}?y=-40`} sizes="32x32" type="image/png" />
 </svelte:head>
 
 <SvelteSeo

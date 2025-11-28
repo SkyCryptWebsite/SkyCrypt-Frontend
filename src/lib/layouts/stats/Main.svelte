@@ -108,7 +108,7 @@
 
 <svelte:head>
   <link rel="canonical" href={`https://sky.shiiyu.moe/stats/${profile.uuid}/${profile.profile_id}`} />
-  <link rel="icon" href="https://crafatar.com/avatars/{profile.uuid}?size=32&overlay" sizes="32x32" type="image/png" />
+  <link rel="icon" href="https://avatar.kalifondation.fr/avatars/{profile.uuid}?size=32&overlay" sizes="32x32" type="image/png" />
   <title>{profile.displayName} | SkyCrypt</title>
 </svelte:head>
 

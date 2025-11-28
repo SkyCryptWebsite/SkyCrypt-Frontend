@@ -55,8 +55,8 @@ const config = {
       directives: {
         "script-src": ["self", "unsafe-inline"],
         "style-src": ["self", "unsafe-inline", "https://fonts.googleapis.com"],
-        "img-src": ["self", "data:", "https://vzge.me", "https://crafatar.com", "https://mc-heads.net", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe"],
-        "connect-src": ["self", "https://crafatar.com", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe"],
+        "img-src": ["self", "data:", "https://vzge.me", "https://avatar.kalifondation.fr", "https://mc-heads.net", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe"],
+        "connect-src": ["self", "https://avatar.kalifondation.fr", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe"],
         "font-src": ["self", "https://fonts.gstatic.com"]
       }
     },

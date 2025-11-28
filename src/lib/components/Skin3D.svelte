@@ -27,7 +27,7 @@
     if (loadedUuid === uuid) return;
     canvasIsLoading = true;
 
-    const cape = await ky.head(`https://crafatar.com/capes/${uuid}`).catch(() => ({ ok: false }));
+    const cape = await ky.head(`https://avatar.kalifondation.fr/capes/${uuid}`).catch(() => ({ ok: false }));
 
     if (!viewer) {
       viewer = new skinview3d.SkinViewer({
@@ -39,9 +39,9 @@
       });
     }
 
-    await viewer.loadSkin(`https://crafatar.com/skins/${uuid}`);
+    await viewer.loadSkin(`https://avatar.kalifondation.fr/skins/${uuid}`);
     if (cape.ok) {
-      await viewer.loadCape(`https://crafatar.com/capes/${uuid}`);
+      await viewer.loadCape(`https://avatar.kalifondation.fr/capes/${uuid}`);
     } else {
       viewer.resetCape();
     }
