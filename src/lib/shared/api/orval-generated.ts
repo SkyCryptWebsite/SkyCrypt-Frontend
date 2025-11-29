@@ -6,6 +6,10 @@
  * OpenAPI spec version: 1.0
  */
 import { customFetch } from "./mutator/custom-instance";
+export interface FiberMap {
+  [key: string]: unknown;
+}
+
 export type ModelsArmorResultStats = { [key: string]: number };
 
 export interface ModelsArmorResult {
@@ -663,6 +667,7 @@ export interface ModelsPetScoreReward {
 }
 
 export interface ModelsPlayerResolve {
+  displayName?: string;
   username?: string;
   uuid?: string;
 }
@@ -1024,6 +1029,7 @@ export interface SkycrypttypesExtraAttributes {
   bid?: number;
   boosters?: string[];
   champion_combat_xp?: number;
+  collected_coins?: number;
   compact_blocks?: number;
   divan_powder_coating?: number;
   donated_museum?: boolean;
@@ -1115,6 +1121,8 @@ export interface SkycrypttypesTexture {
   Signature?: string;
   Value?: string;
 }
+
+export type GetApiEmojis200 = { [key: string]: unknown };
 
 /**
  * Returns accessories for the given user and profile ID
@@ -1325,6 +1333,40 @@ export const getGetApiEmbedUuidProfileIdUrl = (uuid: string, profileId?: string)
 
 export const getApiEmbedUuidProfileId = async (uuid: string, profileId?: string, options?: RequestInit): Promise<getApiEmbedUuidProfileIdResponse> => {
   return customFetch<getApiEmbedUuidProfileIdResponse>(getGetApiEmbedUuidProfileIdUrl(uuid, profileId), {
+    ...options,
+    method: "GET"
+  });
+};
+
+/**
+ * Retrieves all emojis from the database
+ * @summary Get all emojis
+ */
+export type getApiEmojisResponse200 = {
+  data: GetApiEmojis200;
+  status: 200;
+};
+
+export type getApiEmojisResponse500 = {
+  data: FiberMap;
+  status: 500;
+};
+
+export type getApiEmojisResponseSuccess = getApiEmojisResponse200 & {
+  headers: Headers;
+};
+export type getApiEmojisResponseError = getApiEmojisResponse500 & {
+  headers: Headers;
+};
+
+export type getApiEmojisResponse = getApiEmojisResponseSuccess | getApiEmojisResponseError;
+
+export const getGetApiEmojisUrl = () => {
+  return `/api/emojis`;
+};
+
+export const getApiEmojis = async (options?: RequestInit): Promise<getApiEmojisResponse> => {
+  return customFetch<getApiEmojisResponse>(getGetApiEmojisUrl(), {
     ...options,
     method: "GET"
   });

@@ -85,7 +85,7 @@
                   <a
                     href={resolve("/stats/[ign]/[[profile]]", {
                       ign: member.username ?? "",
-                      profile: member?.cute_name
+                      profile: member?.profile_id
                     })}
                     class="group flex min-w-(--bits-dropdown-menu-anchor-width) items-center p-2 focus-visible:outline-0"
                     data-sveltekit-preload-code="viewport"
@@ -192,7 +192,7 @@
       onclick={() => {
         if (profile == null) return;
         if (!$favorites.some((fav) => fav.uuid === profile.uuid)) {
-          favorites.set([...$favorites, { uuid: profile.uuid ?? "", ign: profile.username ?? "" }]);
+          favorites.set([...$favorites, { uuid: profile.uuid ?? "", ign: profile.username ?? "", displayName: profile.displayName ?? undefined }]);
           toast.dismiss(toastId);
           toastId = toast.success(`Added ${profile.username} to your favorites!`);
         } else {
