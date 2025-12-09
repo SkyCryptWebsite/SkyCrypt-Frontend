@@ -4,8 +4,9 @@
   import { getProfileContext } from "$ctx";
   import ScrollAreaPrimitive from "$lib/components/ScrollAreaPrimitive.svelte";
   import type { SectionName } from "$lib/sections/types";
+  import { cn } from "$lib/shared/utils";
   import { tabValue } from "$lib/stores/internal";
-  import { sectionOrderPreferences } from "$lib/stores/preferences";
+  import { performanceMode, sectionOrderPreferences } from "$lib/stores/preferences";
   import ChevronLeft from "@lucide/svelte/icons/chevron-left";
   import ChevronRight from "@lucide/svelte/icons/chevron-right";
   import { Button, ScrollArea } from "bits-ui";
@@ -125,7 +126,7 @@
 
 <ScrollAreaPrimitive type="always" class="navbar group sticky! top-[calc(3rem+env(safe-area-inset-top,0))] z-20 overflow-clip" data-pinned={pinned} bind:ref={navbarElement} orientation="horizontal">
   {#snippet viewportChildren()}
-    <div class="flex! flex-nowrap items-center gap-2 bg-header pb-2 font-semibold whitespace-nowrap text-text/80">
+    <div class={cn("flex! flex-nowrap items-center gap-2 pb-2 font-semibold whitespace-nowrap text-text/80", $performanceMode ? "group-[data-pinned=true]:bg-header" : "group-[data-pinned=true][mode=dark]:backdrop-brightness-30 group-[data-pinned=true][mode=light]:backdrop-brightness-150")}>
       <div class="absolute bottom-1.75 z-1 h-0.5 w-[calc(100%+0.5rem)] bg-icon"></div>
       <div class="absolute inset-0 bottom-2 group-data-[pinned=true]:group-data-[mode=dark]/html:bg-[oklch(19.13%_0_0)]/90 group-data-[pinned=true]:group-data-[mode=light]/html:bg-[oklch(95.51%_0_0)]/92"></div>
       {#each filteredSectionOrderPreferences as section, index (index)}
