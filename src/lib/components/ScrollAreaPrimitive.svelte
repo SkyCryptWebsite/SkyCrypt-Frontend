@@ -47,7 +47,7 @@
   }
 </script>
 
-<ScrollArea.Root class={cn(className)} {...restProps}>
+<ScrollArea.Root bind:ref class={cn(className)} {...restProps}>
   <ScrollArea.Viewport bind:ref={viewRef} class={cn(viewClass)} onwheel={orientation === "horizontal" ? handleWheel : undefined}>
     {@render viewportChildren?.()}
   </ScrollArea.Viewport>
