@@ -20,6 +20,7 @@
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
 
+  type SettingsProps = Record<string, unknown>;
   const isHover = getHoverContext();
 
   onMount(() => {
@@ -55,7 +56,7 @@
   </Tabs.Root>
 {/snippet}
 
-{#snippet settingsButton(props: Record<string, unknown>)}
+{#snippet settingsButton(props: SettingsProps)}
   <button {...props} class="group absolute top-1/2 right-4 flex aspect-square shrink -translate-y-1/2 items-center justify-center gap-1 rounded-full bg-background/20 px-2.5 py-1.5 text-sm font-semibold text-text transition-all duration-100 ease-out @md:relative @md:top-0 @md:right-0 @md:my-1.5 @md:aspect-auto @md:translate-y-0">
     <Cog class="size-5 transition-all duration-300 ease-out data-[is-open=true]:rotate-45" data-is-open={$settingsOpen} />
     <p class="hidden @md:block">Settings</p>
