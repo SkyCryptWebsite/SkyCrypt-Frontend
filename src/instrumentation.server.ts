@@ -11,7 +11,7 @@ Sentry.init({
   // Enable logs to be sent to Sentry
   enableLogs: true,
 
-  tracesSampleRate: 1.0,
+  tracesSampleRate: 0.3,
   integrations: [contextLinesIntegration(), extraErrorDataIntegration(), consoleLoggingIntegration()],
 
   // Disable Sentry during development
