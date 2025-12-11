@@ -13,8 +13,7 @@ Sentry.init({
   enableLogs: true,
 
   // Enable debug
-  debug: true,
-  tracesSampleRate: 1.0,
+  tracesSampleRate: 0.3,
 
   integrations: [browserTracingIntegration(), httpClientIntegration(), contextLinesIntegration(), extraErrorDataIntegration(), consoleLoggingIntegration()],
   enabled: !dev,
