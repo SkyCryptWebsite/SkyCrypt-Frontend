@@ -12,7 +12,7 @@
 
   let { stats, title = "Bonus:", class: classNames }: Props = $props();
 
-  const statsData = Object.entries(stats);
+  const statsData = $derived(Object.entries(stats));
 </script>
 
 {#if statsData.length > 0}
