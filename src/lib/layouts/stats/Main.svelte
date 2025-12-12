@@ -31,6 +31,7 @@
 
   const profile = $derived(ctx);
 
+  let showStaticSkin = $state(false);
   let _rightSize = $state(0);
   let _leftSize = $state(0);
   let _skinCollapsed = $state(false);
@@ -108,7 +109,7 @@
 
 <svelte:head>
   <link rel="canonical" href={`https://sky.shiiyu.moe/stats/${profile.uuid}/${profile.profile_id}`} />
-  <link rel="icon" href="https://crafatar.com/avatars/{profile.uuid}?size=32&overlay" sizes="32x32" type="image/png" />
+  <link rel="icon" href="https://nmsr.nickac.dev/face/{profile.uuid}" sizes="32x32" type="image/png" />
   <title>{profile.displayName} | SkyCrypt</title>
 </svelte:head>
 
@@ -143,7 +144,7 @@
                   <Avatar.Root>
                     {#snippet child({ props })}
                       <div transition:fade={{ duration: 300, easing: cubicOut }} {...props}>
-                        <Avatar.Image loading="lazy" src="https://vzge.me/full/832/{profile.uuid}.webp?no=shadow&y=-3" alt="{profile.username}'s avatar" class="max-h-[32rem] object-cover" />
+                        <Avatar.Image loading="lazy" src="https://nmsr.nickac.dev/fullbody/{profile.uuid}?no=shadow" alt="{profile.username}'s avatar" class="max-h-[32rem] object-cover" />
                         <Avatar.Fallback>
                           <Image class="size-24 object-cover text-text" />
                         </Avatar.Fallback>
@@ -195,11 +196,11 @@
   </PaneGroup> -->
   <!-- TODO: See the paneforge todo above  -->
   <div class="@container fixed top-1/2 left-0 z-10 hidden h-dvh w-[30vw] -translate-y-1/2 @[75rem]/parent:block">
-    {#if $performanceMode}
-      <Avatar.Root>
+    {#if $performanceMode && !showStaticSkin}
+      <Avatar.Root class="flex size-full items-center justify-center">
         {#snippet child({ props })}
           <div transition:fade={{ duration: 300, easing: cubicOut }} {...props}>
-            <Avatar.Image loading="lazy" src="https://vzge.me/full/832/{profile.uuid}.webp?no=shadow&y=-3" alt="{profile.username}'s avatar" class="max-h-128 object-cover" />
+            <Avatar.Image loading="lazy" src="https://nmsr.nickac.dev/fullbody/{profile.uuid}?no=shadow" alt="{profile.username}'s avatar" class="max-h-128 object-cover" />
             <Avatar.Fallback>
               <Image class="size-24 object-cover text-text" />
             </Avatar.Fallback>
@@ -208,7 +209,7 @@
       </Avatar.Root>
     {:else if browser && innerWidth >= 1024}
       {#await import('$lib/components/Skin3D.svelte') then { default: Skin3D }}
-        <Skin3D class="h-full" />
+        <Skin3D showStaticSkin={() => (showStaticSkin = true)} class="h-full" />
       {/await}
     {/if}
   </div>

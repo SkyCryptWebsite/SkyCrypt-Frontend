@@ -39,7 +39,7 @@
   const tabs = $derived<Tabs[]>([
     {
       id: "inventory",
-      icon: `https://crafatar.com/renders/head/${profile?.uuid}?overlay`,
+      icon: `https://nmsr.nickac.dev/headiso/${profile?.uuid}?noshading&no=shadow`,
       gap: 27
     },
     {
