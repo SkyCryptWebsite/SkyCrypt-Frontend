@@ -92,9 +92,9 @@
                     data-removed={member.removed}>
                     <div class="flex w-full items-center justify-between gap-2 rounded-lg bg-text/10 p-2 outline-icon transition-colors duration-300 ease-out group-hover:bg-text/20 group-focus-visible:outline-1 group-data-[removed=true]:bg-text/5 group-hover:group-data-[removed=true]:bg-text/20">
                       <div class="flex items-center gap-2 pr-4">
-                        <Avatar.Root class="size-8 shrink-0 rounded-sm bg-text/10">
+                        <Avatar.Root class="size-8 shrink-0">
                           <Avatar.Image loading="lazy" src="https://nmsr.nickac.dev/face/{member.uuid}" alt={member.username} class="aspect-square size-8 rounded-sm [image-rendering:pixelated] group-data-[removed=true]:grayscale-100" />
-                          <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">
+                          <Avatar.Fallback class="flex h-full items-center justify-center rounded-sm bg-text/10 text-lg font-semibold text-text/60 uppercase">
                             <img loading="lazy" src="https://nmsr.nickac.dev/face/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40" alt="Steve" class="aspect-square size-8 rounded-sm [image-rendering:pixelated] group-data-[removed=true]:grayscale-100" />
                           </Avatar.Fallback>
                         </Avatar.Root>
