@@ -148,6 +148,10 @@ export const getUsername = query(getApiUsernameUuidParams, async ({ uuid }) => {
   return fetchSection(APIEndpointName.USERNAME, () => getApiUsernameUuid(uuid));
 });
 
+export const getUsernamePrerendered = prerender(getApiUsernameUuidParams, async ({ uuid }) => {
+  return fetchSection(APIEndpointName.USERNAME, () => getApiUsernameUuid(uuid));
+});
+
 /** Fetch packs */
 export const getPacks = prerender(async () => {
   return fetchSection(APIEndpointName.RESOURCEPACK, () => getApiResourcepacks());
