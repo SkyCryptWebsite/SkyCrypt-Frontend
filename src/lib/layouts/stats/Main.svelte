@@ -208,7 +208,7 @@
         {/snippet}
       </Avatar.Root>
     {:else if browser && innerWidth >= 1024}
-      {#await import('$lib/components/Skin3D.svelte') then { default: Skin3D }}
+      {#await import("$lib/components/Skin3D.svelte") then { default: Skin3D }}
         <Skin3D showStaticSkin={() => (showStaticSkin = true)} class="h-full" />
       {/await}
     {/if}

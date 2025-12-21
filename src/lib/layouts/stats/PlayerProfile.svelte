@@ -88,7 +88,7 @@
                       profile: member?.profile_id
                     })}
                     class="group flex min-w-(--bits-dropdown-menu-anchor-width) items-center p-2 focus-visible:outline-0"
-                    data-sveltekit-preload-code="viewport"
+                    data-sveltekit-preload-data="hover"
                     data-removed={member.removed}>
                     <div class="flex w-full items-center justify-between gap-2 rounded-lg bg-text/10 p-2 outline-icon transition-colors duration-300 ease-out group-hover:bg-text/20 group-focus-visible:outline-1 group-data-[removed=true]:bg-text/5 group-hover:group-data-[removed=true]:bg-text/20">
                       <div class="flex items-center gap-2 pr-4">
@@ -144,7 +144,7 @@
                         profile: otherProfile.cute_name
                       })}
                       class="group flex items-center p-2 focus-visible:outline-0"
-                      data-sveltekit-preload-code="viewport">
+                      data-sveltekit-preload-data="hover">
                       <div class="w-full rounded-lg bg-text/10 p-2 outline-icon transition-colors duration-300 ease-out group-hover:bg-text/20 group-focus-visible:outline-1">
                         <span class="light:invert">
                           {otherProfile.cute_name}

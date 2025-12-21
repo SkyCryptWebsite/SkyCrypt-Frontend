@@ -19,8 +19,7 @@
 
   const profile = $derived(getProfileContext().current);
   const profileId = $derived(profile?.profile_id);
-  const gardenLocked = $derived(profile?.skyblock_level?.level ?? 0 <= 5);
-
+  const gardenLocked = $derived((profile?.skyblock_level?.level ?? 0) <= 5);
   let sectionOpen: boolean = $state(false);
 
   const isHover = getHoverContext();
