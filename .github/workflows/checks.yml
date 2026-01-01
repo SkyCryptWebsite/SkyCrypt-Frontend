@@ -1,0 +1,19 @@
+name: Checks
+
+on:
+  workflow_call:
+
+jobs:
+  formatting-checks:
+    name: Linting, Formatting, Svelte Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: PNPM Install
+        uses: ./.github/actions/pnpm-install
+
+      - name: Make dummy env for types
+        run: mv .env.example .env
+
+      - name: Run checks
+        run: pnpm lint
