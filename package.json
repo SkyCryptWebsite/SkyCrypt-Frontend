@@ -47,7 +47,7 @@
     "@types/upng-js": "^2.1.5",
     "@vitest/browser-webdriverio": "^4.0.16",
     "@vitest/ui": "^4.0.16",
-    "bits-ui": "^2.14.4",
+    "bits-ui": "^2.15.1",
     "changelogen": "^0.6.2",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
@@ -88,7 +88,7 @@
     "vite-plugin-devtools-json": "^1.0.0",
     "vitest": "^4.0.16",
     "vitest-browser-svelte": "^2.0.1",
-    "webdriverio": "^9.22.0",
+    "webdriverio": "^9.23.0",
     "zod": "^4.3.4"
   },
   "dependencies": {

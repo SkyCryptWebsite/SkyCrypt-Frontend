@@ -35,7 +35,7 @@
               <Avatar.Fallback class="flex items-center rounded-lg text-center font-semibold uppercase">{pack.name?.slice(0, 2)}</Avatar.Fallback>
             </Avatar.Root>
             <div class="flex flex-col">
-              <h4 class="font-semibold text-text/90">{pack.name} <small>{pack.version}</small></h4>
+              <h4 class="font-semibold text-text/90"><Button.Root href={pack.url} target="_blank" rel="noopener noreferrer" class="text-link hover:underline">{pack.name}</Button.Root> <small>{pack.version}</small></h4>
               <p class="overflow-hidden font-normal text-ellipsis whitespace-nowrap text-text/60">
                 by
                 <span class="text-text/80">{pack.author}</span>
