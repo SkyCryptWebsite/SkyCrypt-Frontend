@@ -21,7 +21,7 @@
       <h4>Packs</h4>
       <div class="space-y-2">
         <p class="text-text/60">Resource packs change the textures of items, mobs and other elements in SkyCrypt.</p>
-        <p class="text-text/60">You can enable or disable as many packs as you want, but there preference order can't be changed.</p>
+        <p class="text-text/60">You can enable or disable as many packs as you want, but their preference order can't be changed.</p>
       </div>
     </div>
   </div>
