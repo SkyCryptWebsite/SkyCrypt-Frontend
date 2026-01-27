@@ -37,7 +37,7 @@
     "@lucide/svelte": "^0.562.0",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
-    "@sveltejs/adapter-node": "^5.5.1",
+    "@sveltejs/adapter-cloudflare": "^7.2.6",
     "@sveltejs/kit": "^2.49.5",
     "@sveltejs/vite-plugin-svelte": "^6.2.4",
     "@tailwindcss/vite": "^4.1.18",
@@ -89,6 +89,7 @@
     "vitest": "^4.0.17",
     "vitest-browser-svelte": "^2.0.1",
     "webdriverio": "^9.23.0",
+    "wrangler": "^4.61.0",
     "zod": "^4.3.5"
   },
   "dependencies": {

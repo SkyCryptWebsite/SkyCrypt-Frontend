@@ -1,0 +1,11 @@
+{
+    "name": "skyblock-web-view-lunarclient-com",
+    "main": "./.cloudflare/worker.js",
+    "site": {
+        "bucket": "./.cloudflare/public"
+    },
+    "build": {
+        "command": "npm run build"
+    },
+    "compatibility_date": "2026-01-23"
+}
