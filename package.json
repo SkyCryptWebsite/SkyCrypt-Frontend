@@ -68,7 +68,7 @@
     "pretty-ms": "^9.3.0",
     "runed": "^0.37.1",
     "skinview3d": "^3.4.1",
-    "svelte": "^5.48.4",
+    "svelte": "^5.48.5",
     "svelte-check": "^4.3.5",
     "svelte-dnd-action": "^0.9.69",
     "svelte-interactions": "^0.2.0",
