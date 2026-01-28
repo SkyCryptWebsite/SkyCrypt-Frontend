@@ -22,25 +22,36 @@
 </script>
 
 <script lang="ts">
+  import { getPreferences } from "$ctx";
   import { SettingsTab } from "$lib/components/header/types";
   import { sections } from "$lib/sections/constants";
+  import type { SectionID } from "$lib/sections/types";
   import type { Theme } from "$lib/shared/constants/themes";
   import themes from "$lib/shared/constants/themes";
-  import { sectionOrderPreferences } from "$lib/stores/preferences";
   import { theme as themeStore } from "$lib/stores/themes";
   import GripVertical from "@lucide/svelte/icons/grip-vertical";
   import ListOrdered from "@lucide/svelte/icons/list-ordered";
   import { Button, Tabs } from "bits-ui";
-  import { dndzone, SHADOW_ITEM_MARKER_PROPERTY_NAME } from "svelte-dnd-action";
+  import { dndzone, SHADOW_ITEM_MARKER_PROPERTY_NAME, type DndEvent } from "svelte-dnd-action";
   import { flip } from "svelte/animate";
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
 
-  const initialSectionOrderPreferences = sectionOrderPreferences.current;
-  const defaultSectionOrder = sections;
-  const differsFromDefault = $derived(JSON.stringify(sectionOrderPreferences.current) !== JSON.stringify(defaultSectionOrder));
+  const preferences = getPreferences();
 
-  let sectionOrder = $state(initialSectionOrderPreferences);
+  const defaultSectionOrder = sections;
+  const differsFromDefault = $derived(JSON.stringify(preferences.sectionOrder) !== JSON.stringify(defaultSectionOrder));
+
+  let sectionOrder = $derived(preferences.sectionOrder);
+
+  function onconsider(e: CustomEvent<DndEvent<SectionID>>) {
+    sectionOrder = e.detail.items;
+  }
+
+  function onfinalize(e: CustomEvent<DndEvent<SectionID>>) {
+    sectionOrder = e.detail.items;
+    preferences.sectionOrder = e.detail.items;
+  }
 </script>
 
 <Tabs.Content value={SettingsTab.Order}>
@@ -52,14 +63,7 @@
       <p class="text-text/60">Drag and drop the sections to reorder them as you like.</p>
     </div>
   </div>
-  <div
-    class="mt-4 flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto"
-    use:dndzone={{ items: sectionOrder, flipDurationMs: 300, dropTargetStyle: {} }}
-    onconsider={(e) => (sectionOrder = e.detail.items)}
-    onfinalize={(e) => {
-      sectionOrderPreferences.current = e.detail.items;
-      sectionOrder = e.detail.items;
-    }}>
+  <div class="mt-4 flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto" use:dndzone={{ items: sectionOrder, flipDurationMs: 300, dropTargetStyle: {} }} {onconsider} {onfinalize}>
     {#each sectionOrder as section (section.id)}
       {@const normalizedName = section.name.replaceAll("_", " ")}
       <div animate:flip={{ duration: 300, easing: cubicOut }} class="relative flex items-center gap-2 rounded-lg bg-text/5 p-2 font-semibold">
@@ -78,7 +82,7 @@
     <Button.Root
       class="mt-4 w-full rounded-lg bg-text/65 p-1.5 text-sm font-semibold text-background/80 uppercase transition-colors ease-out hover:bg-text/80"
       onclick={() => {
-        sectionOrderPreferences.current = defaultSectionOrder;
+        preferences.sectionOrder = defaultSectionOrder;
       }}>
       Reset to default
     </Button.Root>

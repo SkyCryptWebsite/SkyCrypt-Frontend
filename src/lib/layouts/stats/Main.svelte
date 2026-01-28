@@ -3,7 +3,7 @@
   import { replaceState } from "$app/navigation";
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
-  import { getHoverContext, getProfileContext, ProfileContext, setProfileContext } from "$ctx";
+  import { getHoverContext, getPreferences, getProfileContext, ProfileContext, setProfileContext } from "$ctx";
   import Item from "$lib/components/Item.svelte";
   import ItemContent from "$lib/components/item/item-content.svelte";
   import Navbar from "$lib/components/Navbar.svelte";
@@ -17,7 +17,6 @@
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { recentSearches } from "$lib/stores";
   import { itemContent, itemContentSpecial, showItem } from "$lib/stores/internal";
-  import { performanceMode, showGlint } from "$lib/stores/preferences";
   import Image from "@lucide/svelte/icons/image";
   import { Avatar, Dialog } from "bits-ui";
   import { Pane } from "paneforge";
@@ -29,6 +28,7 @@
   const { data: ctx }: { data: ModelsStatsOutput } = $props();
 
   const isHover = getHoverContext();
+  const preferences = getPreferences();
 
   const profile = $derived(ctx);
 
@@ -144,7 +144,7 @@
           <div class="relative flex h-full items-center justify-center">
             <div class="fixed top-1/2 z-10 -translate-y-1/2">
               {#if !skinCollapsed}
-                {#if performanceMode.current}
+                {#if preferences.performanceMode}
                   <Avatar.Root>
                     {#snippet child({ props })}
                       <div transition:fade={{ duration: 300, easing: cubicOut }} {...props}>
@@ -183,7 +183,7 @@
       onResize={(size) => {
         rightSize = size;
       }}>
-      <div class={cn("fixed top-0 right-0 h-dvh w-(--width)", performanceMode.current ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")} style="--width: {skinCollapsed ? 100 : rightSize}%"></div>
+      <div class={cn("fixed top-0 right-0 h-dvh w-(--width)", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")} style="--width: {skinCollapsed ? 100 : rightSize}%"></div>
       <main data-vaul-drawer-wrapper class="@container relative mx-auto mt-12">
         <div class="space-y-5 p-4 @[75rem]/parent:p-8">
           <PlayerProfile />
@@ -200,7 +200,7 @@
   </PaneGroup> -->
   <!-- TODO: See the paneforge todo above  -->
   <div class="@container fixed top-1/2 left-0 z-10 hidden h-dvh w-[30vw] -translate-y-1/2 @[75rem]/parent:block">
-    {#if performanceMode.current && !showStaticSkin}
+    {#if preferences.performanceMode && !showStaticSkin}
       <Avatar.Root class="flex size-full items-center justify-center">
         {#snippet child({ props })}
           <div transition:fade={{ duration: 300, easing: cubicOut }} {...props}>
@@ -216,7 +216,7 @@
     {/if}
   </div>
 
-  <div class={cn("fixed top-0 right-0 min-h-dvh w-full @[75rem]/parent:w-[calc(100%-30vw)]", performanceMode.current ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")}></div>
+  <div class={cn("fixed top-0 right-0 min-h-dvh w-full @[75rem]/parent:w-[calc(100%-30vw)]", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")}></div>
   <main data-vaul-drawer-wrapper class="@container relative mx-auto mt-12 @[75rem]/parent:ml-[30vw]">
     {#if getProfileContext().current}
       <div class="space-y-5 p-4 @[75rem]/parent:p-8">
@@ -307,7 +307,7 @@
   </Drawer.Root>
 {/if}
 
-{#if showGlint.current}
+{#if preferences.showGlint}
   <svg xmlns="http://www.w3.org/2000/svg" height="0" width="0" class="fixed">
     <filter id="enchanted-glint">
       <feImage href="/img/enchanted-glint.avif"></feImage>
