@@ -88,7 +88,7 @@ export class PreferencesContext {
       this.sectionOrder = value;
     });
     loadSetting("performanceMode", (value: boolean) => {
-      this.performanceMode = value;
+      this.performanceMode = typeof value === "string" ? value === "true" : value;
     });
     loadSetting("keybind", (value: string) => {
       this.keybind = value;
