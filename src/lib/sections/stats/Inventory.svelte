@@ -18,7 +18,7 @@
   import { cubicOut } from "svelte/easing";
   import { crossfade, fade } from "svelte/transition";
 
-  const { PUBLIC_API_URL } = env;
+  const { PUBLIC_SERVER_API_URL } = env;
 
   type Tabs = {
     id: string;
@@ -44,57 +44,57 @@
     },
     {
       id: "backpack",
-      icon: PUBLIC_API_URL + "item/CHEST",
+      icon: PUBLIC_SERVER_API_URL + "item/CHEST",
       gap: 45
     },
     {
       id: "enderchest",
-      icon: PUBLIC_API_URL + "item/ENDER_CHEST",
+      icon: PUBLIC_SERVER_API_URL + "item/ENDER_CHEST",
       gap: 45
     },
     {
       id: "personal_vault",
-      icon: PUBLIC_API_URL + "head/f7aadff9ddc546fdcec6ed5919cc39dfa8d0c07ff4bc613a19f2e6d7f2593",
+      icon: PUBLIC_SERVER_API_URL + "head/f7aadff9ddc546fdcec6ed5919cc39dfa8d0c07ff4bc613a19f2e6d7f2593",
       gap: 45
     },
     {
       id: "talisman_bag",
-      icon: PUBLIC_API_URL + "head/961a918c0c49ba8d053e522cb91abc74689367b4d8aa06bfc1ba9154730985ff",
+      icon: PUBLIC_SERVER_API_URL + "head/961a918c0c49ba8d053e522cb91abc74689367b4d8aa06bfc1ba9154730985ff",
       gap: 45
     },
     {
       id: "potion_bag",
-      icon: PUBLIC_API_URL + "head/9f8b82427b260d0a61e6483fc3b2c35a585851e08a9a9df372548b4168cc817c",
+      icon: PUBLIC_SERVER_API_URL + "head/9f8b82427b260d0a61e6483fc3b2c35a585851e08a9a9df372548b4168cc817c",
       gap: 45
     },
     {
       id: "fishing_bag",
-      icon: PUBLIC_API_URL + "head/eb8e297df6b8dffcf135dba84ec792d420ad8ecb458d144288572a84603b1631",
+      icon: PUBLIC_SERVER_API_URL + "head/eb8e297df6b8dffcf135dba84ec792d420ad8ecb458d144288572a84603b1631",
       gap: 45
     },
     {
       id: "quiver",
-      icon: PUBLIC_API_URL + "head/4cb3acdc11ca747bf710e59f4c8e9b3d949fdd364c6869831ca878f0763d1787",
+      icon: PUBLIC_SERVER_API_URL + "head/4cb3acdc11ca747bf710e59f4c8e9b3d949fdd364c6869831ca878f0763d1787",
       gap: 45
     },
     {
       id: "museum",
-      icon: PUBLIC_API_URL + "head/438cf3f8e54afc3b3f91d20a49f324dca1486007fe545399055524c17941f4dc",
+      icon: PUBLIC_SERVER_API_URL + "head/438cf3f8e54afc3b3f91d20a49f324dca1486007fe545399055524c17941f4dc",
       gap: 54
     },
     {
       id: "rift_inventory",
-      icon: PUBLIC_API_URL + "head/445240fcf1a9796327dda5593985343af9121a7156bc76e3d6b341b02e6a6e52",
+      icon: PUBLIC_SERVER_API_URL + "head/445240fcf1a9796327dda5593985343af9121a7156bc76e3d6b341b02e6a6e52",
       gap: 45
     },
     {
       id: "rift_enderchest",
-      icon: PUBLIC_API_URL + "head/a6cc486c2be1cb9dfcb2e53dd9a3e9a883bfadb27cb956f1896d602b4067",
+      icon: PUBLIC_SERVER_API_URL + "head/a6cc486c2be1cb9dfcb2e53dd9a3e9a883bfadb27cb956f1896d602b4067",
       gap: 45
     },
     {
       id: "search",
-      icon: PUBLIC_API_URL + "item/EYE_OF_ENDER",
+      icon: PUBLIC_SERVER_API_URL + "item/EYE_OF_ENDER",
       gap: 45
     }
   ]);
