@@ -1,10 +1,9 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
-  import { getHoverContext, getProfileContext } from "$ctx";
+  import { getHoverContext, getPreferences, getProfileContext } from "$ctx";
   import ApiNotice from "$lib/components/APINotice.svelte";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { favorites } from "$lib/stores/favorites";
-  import { performanceMode } from "$lib/stores/preferences";
   import Ban from "@lucide/svelte/icons/ban";
   import ChevronLeft from "@lucide/svelte/icons/chevron-left";
   import ChevronRight from "@lucide/svelte/icons/chevron-right";
@@ -27,6 +26,7 @@
 
   const profile = $derived(getProfileContext().current);
   const isHover = getHoverContext();
+  const preferences = getPreferences();
 
   const apiSettings = $derived(Object.entries(profile?.apiSettings ?? {}).filter(([_, value]) => !value));
 
@@ -75,7 +75,7 @@
       <span class={cn(profile?.rank?.rankColor ? "pl-4" : "pl-2")}>{profile?.displayName}</span>
     </Popover.Trigger>
 
-    <Popover.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", performanceMode.current ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={ignRef} strategy="absolute">
+    <Popover.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", preferences.performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={ignRef} strategy="absolute">
       {#snippet child({ wrapperProps, props, open })}
         {#if open}
           <div {...wrapperProps}>
@@ -131,7 +131,7 @@
         {profile?.profile_cute_name}
         {@render profileIcon(profile?.game_mode ?? "")}
       </Popover.Trigger>
-      <Popover.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", performanceMode.current ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={noticeRef} strategy="absolute">
+      <Popover.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", preferences.performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={noticeRef} strategy="absolute">
         {#snippet child({ wrapperProps, props, open })}
           {#if open}
             <div {...wrapperProps}>

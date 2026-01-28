@@ -2,11 +2,10 @@ import { SettingsTab } from "$lib/components/header/types";
 import { sections } from "$lib/sections/constants";
 import type { SectionName } from "$lib/sections/types";
 import type { ModelsStrippedItem } from "$lib/shared/api/orval-generated";
-import { sectionOrderPreferences } from "$lib/stores/preferences";
 import type { Snippet } from "svelte";
 import { writable } from "svelte/store";
 
-export const tabValue = writable<SectionName>(sectionOrderPreferences.current[0].name || sections[0].name);
+export const tabValue = writable<SectionName>(sections[0].name);
 export const showItem = writable<boolean>(false);
 export const tooltipAnchor = writable<HTMLElement>(null!);
 export const itemContent = writable<ModelsStrippedItem | undefined>();

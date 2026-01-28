@@ -1,13 +1,12 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
-  import { getHoverContext } from "$ctx";
+  import { getHoverContext, getPreferences } from "$ctx";
   import { env } from "$env/dynamic/public";
   import Notice from "$lib/components/Notice.svelte";
   import { searchUser } from "$lib/shared/api/skycrypt-api.remote";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { favorites } from "$lib/stores/favorites";
   import { content } from "$lib/stores/internal";
-  import { performanceMode } from "$lib/stores/preferences";
   import { type Contributor, getContributors } from "$routes/ contributors.remote";
   import CodeXml from "@lucide/svelte/icons/code-xml";
   import GitPullRequestArrow from "@lucide/svelte/icons/git-pull-request-arrow";
@@ -22,6 +21,7 @@
 
   const { PUBLIC_DISCORD_INVITE, PUBLIC_PATREON } = env;
 
+  const preferences = getPreferences();
   let searchQuery = $state<string>(null!);
   const searchQueryValidated = $derived(schema.safeParse({ query: searchQuery }));
 
@@ -87,7 +87,7 @@
 </script>
 
 <main class="@container mx-auto mt-12 flex max-w-272 flex-col justify-center gap-6 pt-5 pr-[max(1.25rem+env(safe-area-inset-right))] pb-[max(1.25rem+env(safe-area-inset-bottom))] pl-[max(1.25rem+env(safe-area-inset-left))]">
-  <div class={cn("flex w-full flex-col justify-center gap-6 rounded-lg py-6 text-3xl", performanceMode.current ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
+  <div class={cn("flex w-full flex-col justify-center gap-6 rounded-lg py-6 text-3xl", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
     <div class="flex flex-col justify-center gap-2">
       <div class="flex flex-col gap-6">
         <label for="search" class="m-1 w-full text-center font-semibold">Show SkyBlock stats for</label>
@@ -157,7 +157,7 @@
   {/snippet}
 
   <div class={cn("relative rounded-lg", { "transition-all duration-300 ease-out hover:scale-105": !options?.tip })}>
-    <Button.Root href={options?.tip ? undefined : resolve("/stats/[ign]", { ign: user.id })} class={cn("relative flex h-full min-w-0 items-center gap-4 rounded-lg p-5 text-left", performanceMode.current ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
+    <Button.Root href={options?.tip ? undefined : resolve("/stats/[ign]", { ign: user.id })} class={cn("relative flex h-full min-w-0 items-center gap-4 rounded-lg p-5 text-left", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
       <Avatar.Root class="size-16 shrink-0">
         <Avatar.Image loading="lazy" src={options?.tip ? "https://nmsr.nickac.dev/face/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40" : `https://nmsr.nickac.dev/face/${user.id}`} alt={user.username} class={cn("aspect-square size-16 [image-rendering:pixelated]", options?.tip ? "rounded-lg bg-text/10" : "")} />
         <Avatar.Fallback class="flex h-full items-center justify-center rounded-lg bg-text/10 text-lg font-semibold text-text/60 uppercase">
@@ -217,7 +217,7 @@
 {/snippet}
 
 {#snippet profileSkeleton()}
-  <div class={cn("relative flex min-w-0 items-center gap-2 rounded-lg p-5", performanceMode.current ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
+  <div class={cn("relative flex min-w-0 items-center gap-2 rounded-lg p-5", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
     <div class="size-16 animate-pulse rounded-lg bg-text/10"></div>
     <div class="flex flex-col gap-1">
       <div class="h-6 w-24 animate-pulse rounded-lg bg-text/10"></div>
@@ -228,7 +228,7 @@
 {/snippet}
 
 {#snippet ctalink(href: string, text: { title: string; description: string }, img: { src: string; alt: string })}
-  <Button.Root {href} target="_blank" rel="noreferrer" class={cn("flex w-full items-center gap-4 rounded-lg p-4 transition-all duration-300 ease-out hover:scale-[1.05]", performanceMode.current ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
+  <Button.Root {href} target="_blank" rel="noreferrer" class={cn("flex w-full items-center gap-4 rounded-lg p-4 transition-all duration-300 ease-out hover:scale-[1.05]", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
     <Avatar.Root class="size-12 shrink-0 rounded-lg select-none">
       <Avatar.Image loading="lazy" src={img.src} alt={img.alt} class="pointer-events-none size-12 rounded-lg" />
       <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">{img.alt.slice(0, 2)}</Avatar.Fallback>
