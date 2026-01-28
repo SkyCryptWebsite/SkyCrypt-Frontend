@@ -1,9 +1,9 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
   import { getHoverContext, getPreferences, getProfileContext } from "$ctx";
+  import { getFavorites } from "$ctx/favorites.svelte";
   import ApiNotice from "$lib/components/APINotice.svelte";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { favorites } from "$lib/stores/favorites";
   import Ban from "@lucide/svelte/icons/ban";
   import ChevronLeft from "@lucide/svelte/icons/chevron-left";
   import ChevronRight from "@lucide/svelte/icons/chevron-right";
@@ -27,6 +27,7 @@
   const profile = $derived(getProfileContext().current);
   const isHover = getHoverContext();
   const preferences = getPreferences();
+  const favorites = getFavorites();
 
   const apiSettings = $derived(Object.entries(profile?.apiSettings ?? {}).filter(([_, value]) => !value));
 
@@ -191,12 +192,12 @@
       class="aspect-square rounded-full bg-icon/90 p-2 transition-opacity duration-150 ease-out hover:bg-icon"
       onclick={() => {
         if (profile == null) return;
-        if (!$favorites.some((fav) => fav.uuid === profile.uuid)) {
-          favorites.set([...$favorites, { uuid: profile.uuid ?? "", ign: profile.username ?? "", displayName: profile.displayName ?? undefined }]);
+        if (!favorites.current.some((fav) => fav.uuid === profile.uuid)) {
+          favorites.current = [...favorites.current, { uuid: profile.uuid ?? "", ign: profile.username ?? "", displayName: profile.displayName ?? undefined }];
           toast.dismiss(toastId);
           toastId = toast.success(`Added ${profile.username} to your favorites!`);
         } else {
-          favorites.set($favorites.filter((fav) => fav.uuid !== profile.uuid));
+          favorites.current = favorites.current.filter((fav) => fav.uuid !== profile.uuid);
           toast.dismiss(toastId);
           toastId = toast.success(`Removed ${profile.username} from your favorites!`);
         }
@@ -204,7 +205,7 @@
       onpointerdown={() => (favoriteTooltipOpen = !favoriteTooltipOpen)}>
       {#snippet child({ props })}
         <button {...props}>
-          {#if $favorites.some((fav) => fav.uuid === profile?.uuid)}
+          {#if favorites.current.some((fav) => fav.uuid === profile?.uuid)}
             <Star class="size-4 fill-white" />
           {:else}
             <Star class="size-4" />
@@ -219,7 +220,7 @@
             <div {...wrapperProps}>
               <div {...props} transition:flyAndScale>
                 <Tooltip.Arrow />
-                {#if $favorites.some((fav) => fav.uuid === profile?.uuid)}
+                {#if favorites.current.some((fav) => fav.uuid === profile?.uuid)}
                   <p>Remove from favorites</p>
                 {:else}
                   <p>Add to favorites</p>

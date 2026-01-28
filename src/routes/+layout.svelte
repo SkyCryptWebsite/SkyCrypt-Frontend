@@ -3,6 +3,7 @@
   import { beforeNavigate } from "$app/navigation";
   import { page, updated } from "$app/state";
   import { initPreferences, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
+  import { initFavorites } from "$ctx/favorites.svelte";
   import Header from "$lib/components/header/Header.svelte";
   import { SettingsTab } from "$lib/components/header/types";
   import PerformanceMode from "$lib/components/PerformanceMode.svelte";
@@ -11,7 +12,6 @@
   import { getPacks, searchUser } from "$lib/shared/api/skycrypt-api.remote";
   import themes from "$lib/shared/constants/themes";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { favorites } from "$lib/stores/favorites";
   import { content, openCommand, settingsOpen, settingsTab } from "$lib/stores/internal";
   import { recentSearches } from "$lib/stores/searches";
   import { theme as themeStore } from "$lib/stores/themes";
@@ -55,6 +55,7 @@
   const { ign } = page.params;
 
   const preferences = initPreferences();
+  const favorites = initFavorites();
 
   const position = writable<ToasterProps["position"]>("bottom-right");
   const theme = writable<ToasterProps["theme"]>("dark");
@@ -329,11 +330,11 @@
           </Command.Group>
         {/if}
         <Command.Separator class="bg-foreground/5 h-px w-full" />
-        {#if $favorites.length !== 0 && (!ign || !$favorites.some((f) => f.ign === ign))}
+        {#if favorites.current.length !== 0 && (!ign || !favorites.current.some((f) => f.ign === ign))}
           <Command.Group>
             <Command.GroupHeading class="text-muted-foreground px-3 pt-4 pb-2 text-xs">Favorites</Command.GroupHeading>
             <Command.GroupItems>
-              {#each $favorites.slice(0, 5) as favorite, index (index)}
+              {#each favorites.current.slice(0, 5) as favorite, index (index)}
                 {#if !ign || favorite.ign !== ign}
                   <Command.LinkItem value={favorite.ign} href="/stats/{favorite.ign}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[favorite.ign, favorite.uuid, "profile", "player", "favorite", "favorites"]}>
                     <Avatar.Root class="size-4 shrink-0 bg-text/10">

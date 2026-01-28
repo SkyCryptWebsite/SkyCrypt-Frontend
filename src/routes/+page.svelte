@@ -1,11 +1,11 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
   import { getHoverContext, getPreferences } from "$ctx";
+  import { getFavorites } from "$ctx/favorites.svelte";
   import { env } from "$env/dynamic/public";
   import Notice from "$lib/components/Notice.svelte";
   import { searchUser } from "$lib/shared/api/skycrypt-api.remote";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { favorites } from "$lib/stores/favorites";
   import { content } from "$lib/stores/internal";
   import { type Contributor, getContributors } from "$routes/ contributors.remote";
   import CodeXml from "@lucide/svelte/icons/code-xml";
@@ -22,6 +22,8 @@
   const { PUBLIC_DISCORD_INVITE, PUBLIC_PATREON } = env;
 
   const preferences = getPreferences();
+  const favorites = getFavorites();
+
   let searchQuery = $state<string>(null!);
   const searchQueryValidated = $derived(schema.safeParse({ query: searchQuery }));
 
@@ -118,10 +120,10 @@
   {/if}
 
   <div class="grid grid-cols-1 gap-5 @xl:grid-cols-2 @5xl:grid-cols-3">
-    {#if $favorites.length === 0}
+    {#if favorites.current.length === 0}
       {@render profile({ id: "0", username: "No favorites set!", quote: "Why don't you set a favorite?" }, { tip: true })}
     {:else}
-      {#each $favorites.reverse() as favorite, index (index)}
+      {#each favorites.current.reverse() as favorite, index (index)}
         {@render profile({ id: favorite.uuid, username: favorite.ign, role: Role.FAVORITE, displayName: favorite.displayName }, { favorite: true })}
       {/each}
     {/if}
@@ -182,7 +184,7 @@
             if (!options?.favorite) {
               content.set(tooltipContent);
             } else {
-              favorites.set($favorites.filter((favorite) => favorite.uuid !== user.id));
+              favorites.current = favorites.current.filter((favorite) => favorite.uuid !== user.id);
             }
           }}>
           {#snippet child({ props })}
