@@ -24,7 +24,7 @@ const config = {
         server: true
       }
     },
-    adapter,
+    adapter: adapter(),
     alias: {
       $params: "./src/params",
       $types: "./src/lib/types",
