@@ -418,3 +418,8 @@
 @utility minecraft-tooltip {
   @apply relative rounded-sm border-2 border-solid border-transparent bg-mctooltip-bg px-1 pt-1 pb-0.75 indent-[initial] font-minecraft text-[0.9375rem] leading-4.5 font-normal text-pretty [border-image:linear-gradient(to_bottom,oklch(48.503%_0.297_278.42/0.31),oklch(29.365%_0.17619_281.21/0.31))_1] text-shadow-[0.09375rem_0.09375rem_oklch(36.768%,0.00004,271.152)];
 }
+
+body {
+  -webkit-user-select: none;
+  user-select: none;
+}

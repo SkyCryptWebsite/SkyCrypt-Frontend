@@ -1,21 +1,12 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
-  import { getFavorites, getHoverContext, getPreferences, getProfileContext } from "$ctx";
+  import { getHoverContext, getPreferences, getProfileContext } from "$ctx";
   import { APINotice } from "$lib/components/notices";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import Ban from "@lucide/svelte/icons/ban";
-  import ChevronLeft from "@lucide/svelte/icons/chevron-left";
-  import ChevronRight from "@lucide/svelte/icons/chevron-right";
-  import ExternalLink from "@lucide/svelte/icons/external-link";
-  import Link from "@lucide/svelte/icons/link";
-  import Star from "@lucide/svelte/icons/star";
   import TriangleAlert from "@lucide/svelte/icons/triangle-alert";
-  import { Avatar, Button, Popover, Tooltip } from "bits-ui";
-  import { toast } from "svelte-sonner";
+  import { Avatar, Popover } from "bits-ui";
 
-  let toastId: string | number = $state(0);
-  let showMore = $state(false);
-  let favoriteTooltipOpen = $state(false);
   let noticeOpen = $state(false);
   let ignOpen = $state(false);
   let profileOpen = $state(false);
@@ -26,25 +17,8 @@
   const profile = $derived(getProfileContext().current);
   const isHover = getHoverContext();
   const preferences = getPreferences();
-  const favorites = getFavorites();
 
   const apiSettings = $derived(Object.entries(profile?.apiSettings ?? {}).filter(([_, value]) => !value));
-
-  const iconMapper: Record<string, string> = {
-    TWITTER: "x-twitter.svg",
-    YOUTUBE: "youtube.svg",
-    INSTAGRAM: "instagram.svg",
-    TIKTOK: "tiktok.svg",
-    TWITCH: "twitch.svg",
-    DISCORD: "discord.svg",
-    HYPIXEL: "hypixel.avif"
-  };
-
-  function copyToClipboard(value: string) {
-    navigator.clipboard.writeText(value);
-    toast.dismiss(toastId);
-    toastId = toast.success(`Copied ${value} to your clipboard!`);
-  }
 </script>
 
 <div class="flex flex-wrap items-center gap-x-2 gap-y-3 text-4xl">
@@ -183,121 +157,6 @@
       </Popover.Root>
     {/if}
   </div>
-</div>
-
-<div class="flex flex-wrap items-center gap-x-4 gap-y-2">
-  <Tooltip.Root bind:open={favoriteTooltipOpen} disableCloseOnTriggerClick={false}>
-    <Tooltip.Trigger
-      class="aspect-square rounded-full bg-icon/90 p-2 transition-opacity duration-150 ease-out hover:bg-icon"
-      onclick={() => {
-        if (profile == null) return;
-        if (!favorites.current.some((fav) => fav.uuid === profile.uuid)) {
-          favorites.current = [...favorites.current, { uuid: profile.uuid ?? "", ign: profile.username ?? "", displayName: profile.displayName ?? undefined }];
-          toast.dismiss(toastId);
-          toastId = toast.success(`Added ${profile.username} to your favorites!`);
-        } else {
-          favorites.current = favorites.current.filter((fav) => fav.uuid !== profile.uuid);
-          toast.dismiss(toastId);
-          toastId = toast.success(`Removed ${profile.username} from your favorites!`);
-        }
-      }}
-      onpointerdown={() => (favoriteTooltipOpen = !favoriteTooltipOpen)}>
-      {#snippet child({ props })}
-        <button {...props}>
-          {#if favorites.current.some((fav) => fav.uuid === profile?.uuid)}
-            <Star class="size-4 fill-white" />
-          {:else}
-            <Star class="size-4" />
-          {/if}
-        </button>
-      {/snippet}
-    </Tooltip.Trigger>
-    <Tooltip.Portal>
-      <Tooltip.Content forceMount class="z-50 rounded-lg bg-background-grey p-4 font-semibold text-text/80" sideOffset={6} side="top" align="center">
-        {#snippet child({ wrapperProps, props, open })}
-          {#if open}
-            <div {...wrapperProps}>
-              <div {...props} transition:flyAndScale>
-                <Tooltip.Arrow />
-                {#if favorites.current.some((fav) => fav.uuid === profile?.uuid)}
-                  <p>Remove from favorites</p>
-                {:else}
-                  <p>Add to favorites</p>
-                {/if}
-              </div>
-            </div>
-          {/if}
-        {/snippet}
-      </Tooltip.Content>
-    </Tooltip.Portal>
-  </Tooltip.Root>
-
-  <Button.Root
-    class="aspect-square rounded-full bg-icon/90 p-2 transition-opacity duration-150 ease-out hover:bg-icon"
-    onclick={() => {
-      copyToClipboard(window.location.href);
-    }}>
-    <Link class="size-4" />
-  </Button.Root>
-
-  <Button.Root href={`https://plancke.io/hypixel/player/stats/${profile?.username}`} target="_blank" class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon">
-    Plancke <ExternalLink class="size-4" />
-  </Button.Root>
-
-  <Button.Root href={`https://elitebot.dev/@${profile?.username}/${profile?.profile_cute_name}`} target="_blank" class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon">
-    Elite <ExternalLink class="size-4" />
-  </Button.Root>
-
-  <Button.Root
-    class="hidden items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon data-[visible=true]:flex"
-    data-visible={showMore}
-    onclick={() => {
-      copyToClipboard(profile?.uuid ?? "");
-    }}>
-    Copy UUID
-  </Button.Root>
-
-  <Button.Root
-    class="hidden items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon data-[visible=true]:flex"
-    data-visible={showMore}
-    onclick={() => {
-      copyToClipboard(profile?.profile_id ?? "");
-    }}>
-    Copy Profile UUID
-  </Button.Root>
-
-  {#if profile?.social}
-    {#each Object.entries(profile.social) as [key, value], index (index)}
-      {#if key === "DISCORD"}
-        <Button.Root class="hidden items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon data-[visible=true]:flex" data-visible={showMore} onclick={() => copyToClipboard(value)}>
-          <Avatar.Root>
-            <Avatar.Image loading="lazy" src="/img/icons/{iconMapper[key]}" alt="{profile.username}'s {key.toLocaleLowerCase()}" class="size-4 text-white" />
-            <Avatar.Fallback>
-              {profile.username?.slice(0, 2)}
-            </Avatar.Fallback>
-          </Avatar.Root>
-          {value}
-        </Button.Root>
-      {:else}
-        <Button.Root href={value} target="_blank" class="hidden aspect-square items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon data-[visible=true]:flex" data-visible={showMore}>
-          <Avatar.Root>
-            <Avatar.Image loading="lazy" src="/img/icons/{iconMapper[key]}" alt="{profile.username}'s {key.toLocaleLowerCase()}" class="size-4 text-white" />
-            <Avatar.Fallback>
-              {profile.username?.slice(0, 2)}
-            </Avatar.Fallback>
-          </Avatar.Root>
-        </Button.Root>
-      {/if}
-    {/each}
-  {/if}
-
-  <Button.Root class="rounded-full bg-icon/90 p-2 transition-opacity duration-150 ease-out hover:bg-icon" onclick={() => (showMore = !showMore)}>
-    {#if showMore}
-      <ChevronLeft class="size-4" />
-    {:else}
-      <ChevronRight class="size-4" />
-    {/if}
-  </Button.Root>
 </div>
 
 {#snippet profileIcon(gameMode: string)}

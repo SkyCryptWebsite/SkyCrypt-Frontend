@@ -1,4 +1,4 @@
-import adapter from "@sveltejs/adapter-node";
+import adapter from "@sveltejs/adapter-cloudflare";
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -36,7 +36,7 @@ const config = {
       }
     },
     version: {
-      name: process.env.PUBLIC_COMMIT_HASH || Date.now().toString(),
+      name: process.env.PUBLIC_COMMIT_HASH,
       // in ms
       pollInterval: 1000 * 60 // 1 minute
     }

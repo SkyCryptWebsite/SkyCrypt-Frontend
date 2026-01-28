@@ -7,10 +7,6 @@
   import { ContainedItemsGrid, ItemContent } from "$lib/components/item";
   import { Navbar } from "$lib/components/misc";
   import Skin3D from "$lib/components/misc/Skin3D.svelte";
-  import AdditionalStats from "$lib/layouts/stats/AdditionalStats.svelte";
-  import PlayerProfile from "$lib/layouts/stats/PlayerProfile.svelte";
-  import Skills from "$lib/layouts/stats/Skills.svelte";
-  import Stats from "$lib/layouts/stats/Stats.svelte";
   import Sections from "$lib/sections/Sections.svelte";
   import type { ModelsStatsOutput } from "$lib/shared/api/orval-generated";
   import { cn, flyAndScale } from "$lib/shared/utils";
@@ -199,7 +195,7 @@
     </Pane>
   </PaneGroup> -->
   <!-- TODO: See the paneforge todo above  -->
-  <div class="@container fixed top-1/2 left-0 z-10 hidden h-dvh w-[30vw] -translate-y-1/2 @[75rem]/parent:block">
+  <div class="@container fixed inset-y-0 left-0 z-10 hidden h-dvh w-[30vw] @[75rem]/parent:block">
     {#if preferences.performanceMode && !showStaticSkin}
       <Avatar.Root class="flex size-full items-center justify-center">
         {#snippet child({ props })}
@@ -217,15 +213,8 @@
   </div>
 
   <div class={cn("fixed top-0 right-0 min-h-dvh w-full @[75rem]/parent:w-[calc(100%-30vw)]", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")}></div>
-  <main data-vaul-drawer-wrapper class="@container relative mx-auto mt-12 @[75rem]/parent:ml-[30vw]">
+  <main data-vaul-drawer-wrapper class="@container relative mx-auto @[75rem]/parent:ml-[30vw]">
     {#if getProfileContext().current}
-      <div class="space-y-5 p-4 @[75rem]/parent:p-8">
-        <PlayerProfile />
-        <Skills />
-        <Stats />
-        <AdditionalStats />
-      </div>
-
       <Navbar>
         <Sections />
       </Navbar>

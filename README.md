@@ -1,3 +1,11 @@
+> This is a fork of [SkyCryptWebsite/SkyCrypt-Frontend](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend) with minimal changes to support embedding the profile viewer in Lunar Client. To keep this fork up to date with upstream:
+>
+> ```
+> git rebase upstream/dev
+> # Resolve any conflicts that occur
+> git push origin dev --force-with-lease
+> ```
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: light)" srcset="static/img/logo_black.avif">

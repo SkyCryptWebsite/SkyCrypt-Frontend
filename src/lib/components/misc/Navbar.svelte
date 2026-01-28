@@ -125,7 +125,7 @@
   });
 </script>
 
-<ScrollAreaPrimitive type="scroll" class="navbar group sticky! top-[calc(3rem+env(safe-area-inset-top,0))] z-20 overflow-clip" data-pinned={pinned} bind:ref={navbarElement} orientation="horizontal">
+<ScrollAreaPrimitive type="scroll" class="navbar group sticky! top-0 z-20 overflow-clip" data-pinned={pinned} bind:ref={navbarElement} orientation="horizontal">
   {#snippet viewportChildren()}
     <div class="mx-6 flex! flex-nowrap items-center gap-2 pb-2 font-semibold whitespace-nowrap text-text/80">
       <div class="absolute bottom-1.75 -left-6 z-1 h-0.5 w-[calc(100%+1.5rem)] bg-icon"></div>

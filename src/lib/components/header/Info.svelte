@@ -1,7 +1,7 @@
 <script lang="ts">
+  import { version } from "$app/environment";
   import { getHoverContext } from "$ctx";
   import { env } from "$env/dynamic/public";
-  import { PUBLIC_COMMIT_HASH } from "$env/static/public";
   import { flyAndScale } from "$lib/shared/utils";
   import Info from "@lucide/svelte/icons/info";
   import { Button, Popover } from "bits-ui";
@@ -14,7 +14,7 @@
 
 {#snippet info()}
   <p class="my-4">SkyCrypt is a free, open-source stats viewer for Hypixel SkyBlock.</p>
-  <p>Currently running version <Button.Root class="font-semibold text-link" rel="noreferrer" href="https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/{PUBLIC_COMMIT_HASH}" target="_blank">{PUBLIC_COMMIT_HASH}</Button.Root>.</p>
+    <p>Currently running version <Button.Root class="font-semibold text-link" rel="noreferrer" href="https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/{version}" target="_blank">{version}</Button.Root>.</p>
   <p class="my-4">
     You can report bugs, suggest features on <Button.Root class="font-semibold text-link" href={PUBLIC_DISCORD_INVITE} target="_blank" rel="noreferrer">Discord</Button.Root>, and/or contribute to the code on <Button.Root class="font-semibold text-link" href="https://github.com/SkyCryptWebsite" target="_blank" rel="noreferrer">GitHub</Button.Root>. It would be much appreciated!
   </p>
