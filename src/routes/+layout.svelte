@@ -4,6 +4,7 @@
   import { page, updated } from "$app/state";
   import { initPreferences, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
   import { initFavorites } from "$ctx/favorites.svelte";
+  import { initDisabledPacks } from "$ctx/packs.svelte";
   import Header from "$lib/components/header/Header.svelte";
   import { SettingsTab } from "$lib/components/header/types";
   import PerformanceMode from "$lib/components/PerformanceMode.svelte";
@@ -111,6 +112,8 @@
     closeCommand();
     settingsOpen.set(true);
   }
+
+  initDisabledPacks();
 
   setMobileContext(isMobile);
   setHoverContext(isHover);

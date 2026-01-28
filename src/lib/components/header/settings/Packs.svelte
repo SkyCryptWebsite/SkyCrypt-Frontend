@@ -1,15 +1,13 @@
 <script lang="ts">
   import { getPacksContext } from "$ctx";
+  import { getDisabledPacks } from "$ctx/packs.svelte";
   import { SettingsTab } from "$lib/components/header/types";
-  import { disabledPacks } from "$lib/stores/packs";
   import PackageOpen from "@lucide/svelte/icons/package-open";
   import { Avatar, Button, Label, Switch, Tabs } from "bits-ui";
-  import { derived, get } from "svelte/store";
 
-  const initialPackConfig = get(disabledPacks);
-  const hasPackConfigChanged = derived(disabledPacks, ($disabledPacks) => {
-    return JSON.stringify($disabledPacks.sort()) !== JSON.stringify(initialPackConfig.sort());
-  });
+  const disabledPacks = getDisabledPacks();
+  const initialPackConfig = disabledPacks.current;
+  const hasPackConfigChanged = $derived(JSON.stringify(disabledPacks.current.sort()) !== JSON.stringify(initialPackConfig.sort()));
   const packsContext = $derived(getPacksContext());
   const packs = $derived(packsContext.packs);
 </script>
@@ -43,7 +41,7 @@
             </div>
           </div>
           {#if pack.id}
-            <Switch.Root id={pack.id} checked={!$disabledPacks.includes(pack.id)} class="peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30" onCheckedChange={() => disabledPacks.update((value) => (!value.includes(pack.id ?? "") ? [...new Set([...value, pack.id ?? ""])] : value.filter((id) => id !== (pack.id ?? ""))))}>
+            <Switch.Root id={pack.id} checked={!disabledPacks.current.includes(pack.id)} class="peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30" onCheckedChange={() => (disabledPacks.current = !disabledPacks.current.includes(pack.id ?? "") ? [...new Set([...disabledPacks.current, pack.id ?? ""])] : disabledPacks.current.filter((id) => id !== (pack.id ?? "")))}>
               <Switch.Thumb class="pointer-events-none block size-4 shrink-0 rounded-full bg-text transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
             </Switch.Root>
           {/if}
@@ -53,11 +51,11 @@
   {:else}
     <p class="mt-4 text-center text-sm text-text/60">No packs available.</p>
   {/if}
-  {#if $hasPackConfigChanged}
+  {#if hasPackConfigChanged}
     <Button.Root
       class="mt-4 w-full rounded-lg bg-text/65 p-1.5 text-sm font-semibold text-background/80 uppercase transition-colors ease-out hover:bg-text/80"
       onclick={() => {
-        document.cookie = `disabledPacks=${JSON.stringify($disabledPacks)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
+        document.cookie = `disabledPacks=${JSON.stringify(disabledPacks.current)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
         window.location.reload();
       }}>
       Reload to apply changes
