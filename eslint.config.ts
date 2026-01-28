@@ -4,11 +4,11 @@ import prettier from "eslint-config-prettier";
 import svelte from "eslint-plugin-svelte";
 import { defineConfig } from "eslint/config";
 import globals from "globals";
-import { fileURLToPath } from "node:url";
+import path from "node:path";
 import ts from "typescript-eslint";
 import svelteConfig from "./svelte.config.js";
 
-const gitignorePath = fileURLToPath(new URL("./.gitignore", import.meta.url));
+const gitignorePath = path.resolve(import.meta.dirname, ".gitignore");
 
 export default defineConfig(
   includeIgnoreFile(gitignorePath),
@@ -48,15 +48,8 @@ export default defineConfig(
     languageOptions: {
       parserOptions: {
         projectService: true,
-        extraFileExtensions: [".svelte"], // Add support for additional file extensions, such as .svelte
+        extraFileExtensions: [".svelte"],
         parser: ts.parser,
-        svelteFeatures: {
-          experimentalGenerics: true
-        },
-        // We recommend importing and specifying svelte.config.js.
-        // By doing so, some rules in eslint-plugin-svelte will automatically read the configuration and adjust their behavior accordingly.
-        // While certain Svelte settings may be statically loaded from svelte.config.js even if you don’t specify it,
-        // explicitly specifying it ensures better compatibility and functionality.
         svelteConfig
       }
     },

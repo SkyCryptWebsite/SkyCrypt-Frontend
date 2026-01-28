@@ -1,17 +1,6 @@
 import adapter from "@sveltejs/adapter-node";
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
-/**
- * Determine whether to force runes mode for a given filename
- * @param {string} filename
- * @returns {boolean}
- */
-// const forceRunesMode = (filename) => {
-//   if (filename.match(/[\\/\\]node_modules[\\/\\]/)) {
-//     return false;
-//   }
-//   return true;
-// };
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
   // Consult https://svelte.dev/docs/kit/integrations
@@ -35,10 +24,7 @@ const config = {
         server: true
       }
     },
-    // adapter-auto only supports some environments, see https://kit.svelte.dev/docs/adapter-auto for a list.
-    // If your environment is not supported, or you settled on a specific environment, switch out the adapter.
-    // See https://kit.svelte.dev/docs/adapters for more information about adapters.
-    adapter: adapter(),
+    adapter,
     alias: {
       $params: "./src/params",
       $types: "./src/lib/types",
@@ -75,10 +61,7 @@ const config = {
   vitePlugin: {
     // Can be removed once Svelte 6 is released, as `true` will be the default
     dynamicCompileOptions({ _filename, _compileOptions }) {
-      // Dynamically set runes mode per Svelte file
-      // if (forceRunesMode(filename) && !compileOptions.runes) {
       return { runes: true };
-      // }
     }
   }
 };
