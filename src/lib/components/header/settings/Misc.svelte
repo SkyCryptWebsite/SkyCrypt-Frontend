@@ -1,9 +1,9 @@
 <script lang="ts">
   import { getPreferences } from "$ctx";
+  import { getWikiOrder } from "$ctx/wiki.svelte";
   import { SettingsTab } from "$lib/components/header/types";
   import { sections } from "$lib/sections/constants";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { wikiOrderPreferences } from "$lib/stores/wiki";
   import BookOpenText from "@lucide/svelte/icons/book-open-text";
   import CircleQuestionMark from "@lucide/svelte/icons/circle-question-mark";
   import Fan from "@lucide/svelte/icons/fan";
@@ -16,11 +16,11 @@
   import { dndzone, SHADOW_ITEM_MARKER_PROPERTY_NAME } from "svelte-dnd-action";
   import { flip } from "svelte/animate";
   import { cubicOut } from "svelte/easing";
-  import { get } from "svelte/store";
   import { fade } from "svelte/transition";
 
   const preferences = getPreferences();
-  const initialWikiOrderPreferences = get(wikiOrderPreferences);
+  const wikiOrderContext = getWikiOrder();
+  const initialWikiOrderPreferences = wikiOrderContext.current;
 
   let isListening = $state(false);
   let wikiOrder = $state(initialWikiOrderPreferences);
@@ -170,7 +170,7 @@
         use:dndzone={{ items: wikiOrder, flipDurationMs: 300, dropTargetStyle: {} }}
         onconsider={(e) => (wikiOrder = e.detail.items)}
         onfinalize={(e) => {
-          wikiOrderPreferences.set(e.detail.items);
+          wikiOrderContext.current = e.detail.items;
           wikiOrder = e.detail.items;
         }}>
         {#each wikiOrder as wiki (wiki.id)}

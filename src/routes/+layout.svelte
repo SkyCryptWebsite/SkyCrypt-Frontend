@@ -7,6 +7,7 @@
   import { initDisabledPacks } from "$ctx/packs.svelte";
   import { initRecentSearches } from "$ctx/searches.svelte";
   import { initTheme } from "$ctx/themes.svelte";
+  import { initWikiOrder } from "$ctx/wiki.svelte";
   import Header from "$lib/components/header/Header.svelte";
   import { SettingsTab } from "$lib/components/header/types";
   import PerformanceMode from "$lib/components/PerformanceMode.svelte";
@@ -116,6 +117,7 @@
   }
 
   initDisabledPacks();
+  initWikiOrder();
 
   setMobileContext(isMobile);
   setHoverContext(isHover);
