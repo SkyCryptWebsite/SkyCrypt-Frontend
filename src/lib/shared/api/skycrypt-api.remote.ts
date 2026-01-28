@@ -71,8 +71,8 @@ export const getPetsSection = query(GetApiPetsUuidProfileIdParams, async ({ uuid
 });
 
 /** Fetch inventory data for a specific profile and inventory type */
-export const getInventorySection = query(z.object({ ...GetApiInventoryUuidProfileIdInventoryIdParams.shape, ...GetApiInventoryUuidProfileIdInventoryIdQueryParams.shape }), async ({ uuid, profileId, inventoryId, search }) => {
-  return fetchSection(APIEndpointName.INVENTORY, () => getApiInventoryUuidProfileIdInventoryId(uuid, profileId, inventoryId, { search }));
+export const getInventorySection = query(z.object({ ...GetApiInventoryUuidProfileIdInventoryIdParams.shape, ...GetApiInventoryUuidProfileIdInventoryIdQueryParams.shape }), async ({ uuid, profileId, inventoryId, query }) => {
+  return fetchSection(APIEndpointName.INVENTORY, () => getApiInventoryUuidProfileIdInventoryId(uuid, profileId, inventoryId, { query }));
 });
 
 /** Fetch inventory data for a specific profile and inventory type */

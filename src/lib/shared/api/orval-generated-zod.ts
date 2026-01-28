@@ -922,7 +922,7 @@ export const GetApiInventoryUuidProfileIdInventoryIdParams = zod.object({
 });
 
 export const GetApiInventoryUuidProfileIdInventoryIdQueryParams = zod.object({
-  search: zod.string().optional().describe("Search string (required when inventoryId is 'search')")
+  query: zod.string().optional().describe("Search query (required when inventoryId is 'search')")
 });
 
 export const GetApiInventoryUuidProfileIdInventoryIdResponseItem = zod.object({

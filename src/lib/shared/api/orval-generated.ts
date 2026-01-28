@@ -1134,9 +1134,9 @@ export type GetApiEmojis200 = { [key: string]: unknown };
 
 export type GetApiInventoryUuidProfileIdInventoryIdParams = {
   /**
-   * Search string (required when inventoryId is 'search')
+   * Search query (required when inventoryId is 'search')
    */
-  search?: string;
+  query?: string;
 };
 
 /**
