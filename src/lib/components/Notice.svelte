@@ -32,7 +32,7 @@
   });
 </script>
 
-<div class={cn("space-y-5 rounded-lg p-6 data-[type=error]:text-red-200 data-[type=info]:text-blue-200 data-[type=warning]:text-yellow-200 @[75rem]/parent:p-8", $performanceMode ? "data-[type=error]:bg-red-800 data-[type=info]:bg-blue-800 data-[type=warning]:bg-yellow-800" : "backdrop-blur-sm data-[type=error]:bg-red-700/5 data-[type=info]:bg-blue-700/5 data-[type=warning]:bg-yellow-700/5", className)} data-type={type}>
+<div class={cn("space-y-5 rounded-lg p-6 data-[type=error]:text-red-200 data-[type=info]:text-blue-200 data-[type=warning]:text-yellow-200 @[75rem]/parent:p-8", performanceMode.current ? "data-[type=error]:bg-red-800 data-[type=info]:bg-blue-800 data-[type=warning]:bg-yellow-800" : "backdrop-blur-sm data-[type=error]:bg-red-700/5 data-[type=info]:bg-blue-700/5 data-[type=warning]:bg-yellow-700/5", className)} data-type={type}>
   <div class="justify-starts flex items-center gap-2">
     {#if type === "error"}
       <CircleX class="size-8" />

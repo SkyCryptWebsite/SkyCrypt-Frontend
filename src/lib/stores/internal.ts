@@ -4,9 +4,9 @@ import type { SectionName } from "$lib/sections/types";
 import type { ModelsStrippedItem } from "$lib/shared/api/orval-generated";
 import { sectionOrderPreferences } from "$lib/stores/preferences";
 import type { Snippet } from "svelte";
-import { get, writable } from "svelte/store";
+import { writable } from "svelte/store";
 
-export const tabValue = writable<SectionName>(get(sectionOrderPreferences)[0].name || sections[0].name);
+export const tabValue = writable<SectionName>(sectionOrderPreferences.current[0].name || sections[0].name);
 export const showItem = writable<boolean>(false);
 export const tooltipAnchor = writable<HTMLElement>(null!);
 export const itemContent = writable<ModelsStrippedItem | undefined>();

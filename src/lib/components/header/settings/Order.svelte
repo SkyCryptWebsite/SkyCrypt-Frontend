@@ -34,14 +34,11 @@
   import { dndzone, SHADOW_ITEM_MARKER_PROPERTY_NAME } from "svelte-dnd-action";
   import { flip } from "svelte/animate";
   import { cubicOut } from "svelte/easing";
-  import { derived, get } from "svelte/store";
   import { fade } from "svelte/transition";
 
-  const initialSectionOrderPreferences = get(sectionOrderPreferences);
+  const initialSectionOrderPreferences = sectionOrderPreferences.current;
   const defaultSectionOrder = sections;
-  const differsFromDefault = derived(sectionOrderPreferences, ($sectionOrderPreferences) => {
-    return JSON.stringify($sectionOrderPreferences) !== JSON.stringify(defaultSectionOrder);
-  });
+  const differsFromDefault = $derived(JSON.stringify(sectionOrderPreferences.current) !== JSON.stringify(defaultSectionOrder));
 
   let sectionOrder = $state(initialSectionOrderPreferences);
 </script>
@@ -60,7 +57,7 @@
     use:dndzone={{ items: sectionOrder, flipDurationMs: 300, dropTargetStyle: {} }}
     onconsider={(e) => (sectionOrder = e.detail.items)}
     onfinalize={(e) => {
-      sectionOrderPreferences.set(e.detail.items);
+      sectionOrderPreferences.current = e.detail.items;
       sectionOrder = e.detail.items;
     }}>
     {#each sectionOrder as section (section.id)}
@@ -77,11 +74,11 @@
       </div>
     {/each}
   </div>
-  {#if $differsFromDefault}
+  {#if differsFromDefault}
     <Button.Root
       class="mt-4 w-full rounded-lg bg-text/65 p-1.5 text-sm font-semibold text-background/80 uppercase transition-colors ease-out hover:bg-text/80"
       onclick={() => {
-        sectionOrderPreferences.set(defaultSectionOrder);
+        sectionOrderPreferences.current = defaultSectionOrder;
       }}>
       Reset to default
     </Button.Root>

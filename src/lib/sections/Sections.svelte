@@ -25,7 +25,7 @@
   } satisfies Record<SectionName, () => Promise<{ default: unknown }>>;
 
   function findIndex(id: SectionName) {
-    return $sectionOrderPreferences.findIndex((section) => section.name === id);
+    return sectionOrderPreferences.current.findIndex((section) => section.name === id);
   }
 </script>
 
@@ -34,7 +34,7 @@
     <Tabs.Root value={$tabValue} class="contents" data-section={$tabValue}>
       <Tabs.Content value={$tabValue} class="section">
         {#await COMPONENTS[$tabValue]()}
-          <div class={cn("rounded-lg bg-text/5 p-6", $performanceMode ? "bg-background-lore" : "backdrop-blur-sm")}>
+          <div class={cn("rounded-lg bg-text/5 p-6", performanceMode.current ? "bg-background-lore" : "backdrop-blur-sm")}>
             <div class="flex items-center gap-2">
               <LoaderCircle class="size-5 animate-spin text-text/60" />
               <span class="font-semibold text-text/80">Loading {titleCase($tabValue)}...</span>

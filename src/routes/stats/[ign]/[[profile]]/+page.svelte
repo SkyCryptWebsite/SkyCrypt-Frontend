@@ -14,7 +14,7 @@
     const hash = page.url.hash;
     if (hash) {
       const sectionName = hash.substring(1) as SectionName;
-      const validSectionNames = $sectionOrderPreferences.map((section) => section.name);
+      const validSectionNames = sectionOrderPreferences.current.map((section) => section.name);
       if (validSectionNames.includes(sectionName)) {
         tabValue.set(sectionName);
       }
@@ -38,7 +38,7 @@
 <svelte:boundary>
   {#snippet pending()}
     <div class="flex h-screen items-center justify-center">
-      <div class={cn("rounded-lg bg-text/5 p-6", $performanceMode ? "bg-background-grey" : "backdrop-blur-sm")}>
+      <div class={cn("rounded-lg bg-text/5 p-6", performanceMode.current ? "bg-background-grey" : "backdrop-blur-sm")}>
         <div class="flex items-center gap-2">
           <LoaderCircle class="size-5 animate-spin text-text/60" />
           <span class="font-semibold text-text/80">Loading profile...</span>

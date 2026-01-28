@@ -117,7 +117,7 @@
             <CircleX class="size-4 h-lh text-minecraft-c" /> Networth:
           </Popover.Trigger>
           {#if isHttpError(err)}
-            <Popover.Content forceMount class={cn("z-50 overflow-hidden rounded-lg p-4 font-semibold", $performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} strategy="absolute">
+            <Popover.Content forceMount class={cn("z-50 overflow-hidden rounded-lg p-4 font-semibold", performanceMode.current ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} strategy="absolute">
               {#snippet child({ wrapperProps, props, open })}
                 {#if open}
                   <div {...wrapperProps}>

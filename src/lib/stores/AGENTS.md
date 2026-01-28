@@ -2,13 +2,13 @@
 
 ## OVERVIEW
 
-Global state: volatile UI (`writable`) and persistent preferences (`svelte-persisted-store`).
+Global state: volatile UI (`writable`) and persistent preferences (`PersistedState`).
 
 ## WHERE TO LOOK
 
 | File             | Purpose                              | Persistence |
 | ---------------- | ------------------------------------ | ----------- |
-| `internal.ts`    | Volatile UI (modals, tooltips, tabs) | Session     |
+| `internal.ts`    | Volatile UI (modals, tooltips, tabs) | None        |
 | `preferences.ts` | User config + schema validation      | Local       |
 | `favorites.ts`   | Saved profiles + migration           | Local       |
 | `themes.ts`      | Theme selection                      | Local       |
@@ -19,7 +19,7 @@ Global state: volatile UI (`writable`) and persistent preferences (`svelte-persi
 ### Persistence Pattern
 
 ```typescript
-export const storeName = persisted<Type>("localStorageKey", defaultValue);
+export const storeName = new PersistedState<Type>("localStorageKey", defaultValue);
 // Key MUST match store name
 ```
 
@@ -42,10 +42,10 @@ if (browser) {
 ### Volatile State
 
 - Use `internal.ts` for shared state that resets on reload
-- Standard Svelte `writable` stores
+- Standard Svelte `$` runes
 - Examples: `settingsOpen`, `tooltipAnchor`, `api_token`
 
 ### Typing
 
-- STRICTLY type all stores: `persisted<SectionID[]>` not `persisted<any>`
+- STRICTLY type all stores: `new PersistedState<SectionID[]>` not `new PersistedState<any>`
 - Import types from `$lib/sections/types` or `$types`

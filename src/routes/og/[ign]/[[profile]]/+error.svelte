@@ -6,7 +6,7 @@
 </script>
 
 <main class="flex h-screen w-full flex-col items-center justify-center">
-  <div class={cn("flex w-full max-w-md flex-col items-center justify-center gap-3 rounded-lg p-6", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}>
+  <div class={cn("flex w-full max-w-md flex-col items-center justify-center gap-3 rounded-lg p-6", performanceMode.current ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}>
     <h1 class="text-center text-2xl font-semibold">Oops! Something went wrong</h1>
     <p class="text-center">An error occurred while trying to fetch the embed data for '{page.params.ign}'</p>
     <p>Try again or contact us if the problem persists.</p>

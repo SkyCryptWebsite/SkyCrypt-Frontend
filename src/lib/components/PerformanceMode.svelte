@@ -108,7 +108,7 @@
       action: {
         label: "Enable",
         onClick: () => {
-          performanceMode.set(true);
+          performanceMode.current = true;
           toast.message("Performance Mode Enabled", {
             id: "performance-mode-enabled",
             description: "Please note that the performance detection is not 100% accurate and may not always reflect your device's capabilities, be your own judge. You can always disable performance mode in settings.",

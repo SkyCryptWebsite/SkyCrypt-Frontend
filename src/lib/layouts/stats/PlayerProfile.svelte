@@ -75,7 +75,7 @@
       <span class={cn(profile?.rank?.rankColor ? "pl-4" : "pl-2")}>{profile?.displayName}</span>
     </Popover.Trigger>
 
-    <Popover.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", $performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={ignRef} strategy="absolute">
+    <Popover.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", performanceMode.current ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={ignRef} strategy="absolute">
       {#snippet child({ wrapperProps, props, open })}
         {#if open}
           <div {...wrapperProps}>
@@ -131,7 +131,7 @@
         {profile?.profile_cute_name}
         {@render profileIcon(profile?.game_mode ?? "")}
       </Popover.Trigger>
-      <Popover.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", $performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={noticeRef} strategy="absolute">
+      <Popover.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", performanceMode.current ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={noticeRef} strategy="absolute">
         {#snippet child({ wrapperProps, props, open })}
           {#if open}
             <div {...wrapperProps}>

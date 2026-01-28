@@ -144,7 +144,7 @@
           <div class="relative flex h-full items-center justify-center">
             <div class="fixed top-1/2 z-10 -translate-y-1/2">
               {#if !skinCollapsed}
-                {#if $performanceMode}
+                {#if performanceMode.current}
                   <Avatar.Root>
                     {#snippet child({ props })}
                       <div transition:fade={{ duration: 300, easing: cubicOut }} {...props}>
@@ -183,7 +183,7 @@
       onResize={(size) => {
         rightSize = size;
       }}>
-      <div class={cn("fixed top-0 right-0 h-dvh w-(--width)", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")} style="--width: {skinCollapsed ? 100 : rightSize}%"></div>
+      <div class={cn("fixed top-0 right-0 h-dvh w-(--width)", performanceMode.current ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")} style="--width: {skinCollapsed ? 100 : rightSize}%"></div>
       <main data-vaul-drawer-wrapper class="@container relative mx-auto mt-12">
         <div class="space-y-5 p-4 @[75rem]/parent:p-8">
           <PlayerProfile />
@@ -200,7 +200,7 @@
   </PaneGroup> -->
   <!-- TODO: See the paneforge todo above  -->
   <div class="@container fixed top-1/2 left-0 z-10 hidden h-dvh w-[30vw] -translate-y-1/2 @[75rem]/parent:block">
-    {#if $performanceMode && !showStaticSkin}
+    {#if performanceMode.current && !showStaticSkin}
       <Avatar.Root class="flex size-full items-center justify-center">
         {#snippet child({ props })}
           <div transition:fade={{ duration: 300, easing: cubicOut }} {...props}>
@@ -216,7 +216,7 @@
     {/if}
   </div>
 
-  <div class={cn("fixed top-0 right-0 min-h-dvh w-full @[75rem]/parent:w-[calc(100%-30vw)]", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")}></div>
+  <div class={cn("fixed top-0 right-0 min-h-dvh w-full @[75rem]/parent:w-[calc(100%-30vw)]", performanceMode.current ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")}></div>
   <main data-vaul-drawer-wrapper class="@container relative mx-auto mt-12 @[75rem]/parent:ml-[30vw]">
     {#if getProfileContext().current}
       <div class="space-y-5 p-4 @[75rem]/parent:p-8">
@@ -307,7 +307,7 @@
   </Drawer.Root>
 {/if}
 
-{#if $showGlint}
+{#if showGlint.current}
   <svg xmlns="http://www.w3.org/2000/svg" height="0" width="0" class="fixed">
     <filter id="enchanted-glint">
       <feImage href="/img/enchanted-glint.avif"></feImage>

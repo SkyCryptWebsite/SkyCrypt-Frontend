@@ -29,7 +29,7 @@
   const bgColor = $derived(getRarityClass(piece.rarity ?? ("common".toLowerCase() as string), "bg"));
   const recombobulated = $derived(showRecombobulated && (skyblockItem.recombobulated ?? false));
   const enchanted = $derived(skyblockItem?.texture_path?.includes("/api/leather/") ? false : skyblockItem.shiny);
-  const shine = $derived(!$performanceMode && shouldShine(skyblockItem));
+  const shine = $derived(!performanceMode.current && shouldShine(skyblockItem));
   const showNumbers = $derived(showCount && (skyblockItem.Count ?? 0) > 1);
 
   const isHover = getHoverContext();
@@ -43,7 +43,7 @@
 
 <Tooltip.Root bind:open={tooltipOpen} disableHoverableContent={true} ignoreNonKeyboardFocus={true} disabled={!inViewport.current} delayDuration={300}>
   <Tooltip.Trigger
-    class={cn(`relative flex aspect-square items-center justify-center overflow-clip nice-colors-dark `, isInventory ? "size-6 p-0 sm:size-16" : `size-18 p-2 ${bgColor}`, { shine: shine && !isInventory }, { "rounded-lg": !isInventory }, $performanceMode ? "" : "transition-all duration-150 ease-out hover:scale-110 active:scale-110")}
+    class={cn(`relative flex aspect-square items-center justify-center overflow-clip nice-colors-dark `, isInventory ? "size-6 p-0 sm:size-16" : `size-18 p-2 ${bgColor}`, { shine: shine && !isInventory }, { "rounded-lg": !isInventory }, performanceMode.current ? "" : "transition-all duration-150 ease-out hover:scale-110 active:scale-110")}
     bind:ref={targetNode}
     onclick={() => {
       if (skyblockItem.containsItems) {

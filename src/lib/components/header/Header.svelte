@@ -24,7 +24,7 @@
     {#if page.url.pathname.startsWith("/stats")}
       <div class="mx-auto my-1.5 w-full max-w-lg px-4 @[38rem]:block">
         <Button.Root class="relative flex h-full w-4/5 items-center justify-start overflow-clip rounded-[1.125rem] bg-background/20 @[38rem]:w-full" onpointerdown={() => openCommand.set(true)}>
-          <div class="peer flex h-full w-full shrink items-center rounded-r-3xl bg-transparent pr-0 pl-2 text-xs font-semibold text-text/80 outline-hidden transition-[colors_border-radius_opacity] duration-300 ease-out hover:rounded-r-none hover:bg-background/20 focus-visible:rounded-r-none focus-visible:bg-background/20 focus-visible:ring-transparent focus-visible:outline-hidden @[38rem]:grow @[38rem]:pl-4 @[38rem]:text-base">Press <kbd class="mx-1 rounded-sm bg-background/20 px-1">{$keybind}</kbd> to search</div>
+          <div class="peer flex h-full w-full shrink items-center rounded-r-3xl bg-transparent pr-0 pl-2 text-xs font-semibold text-text/80 outline-hidden transition-[colors_border-radius_opacity] duration-300 ease-out hover:rounded-r-none hover:bg-background/20 focus-visible:rounded-r-none focus-visible:bg-background/20 focus-visible:ring-transparent focus-visible:outline-hidden @[38rem]:grow @[38rem]:pl-4 @[38rem]:text-base">Press <kbd class="mx-1 rounded-sm bg-background/20 px-1">{keybind.current}</kbd> to search</div>
 
           <div class="flex aspect-square h-full items-center justify-center rounded-full bg-background/15 transition-all duration-300 ease-out peer-hover:rounded-l-none peer-hover:bg-background/20 peer-focus-visible:rounded-l-none peer-focus-visible:bg-background/20 @[38rem]:aspect-video @[38rem]:px-4">
             <Search class="size-4 text-text @[38rem]:size-6" />

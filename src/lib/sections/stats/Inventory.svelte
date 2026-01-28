@@ -199,7 +199,7 @@
         <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
           {#each items as item, index (index)}
             {#if item}
-              <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!$performanceMode && shouldShine(item)}>
+              <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!performanceMode.current && shouldShine(item)}>
                 {@render itemSnippet(item)}
               </div>
             {:else}
@@ -231,7 +231,7 @@
               {#snippet child({ props })}
                 <div {...props}>
                   {#if item.texture_path}
-                    <div class="relative flex aspect-square items-center justify-center rounded-sm group-data-[state=active]:bg-text/10 group-data-[state=inactive]:bg-text/4 data-[shine=true]:shine" data-shine={!$performanceMode && shouldShine(item)}>
+                    <div class="relative flex aspect-square items-center justify-center rounded-sm group-data-[state=active]:bg-text/10 group-data-[state=inactive]:bg-text/4 data-[shine=true]:shine" data-shine={!performanceMode.current && shouldShine(item)}>
                       {@render itemSnippet(item)}
                     </div>
                   {:else}
@@ -256,7 +256,7 @@
                   {/if}
                   <Tabs.Content value={index.toString()}>
                     {#if containedItem.texture_path}
-                      <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!$performanceMode && shouldShine(item)}>
+                      <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!performanceMode.current && shouldShine(item)}>
                         {@render itemSnippet(containedItem)}
                       </div>
                     {:else}
@@ -301,7 +301,7 @@
             {/if}
           {/if}
           {#if item.texture_path}
-            <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!$performanceMode && shouldShine(item)}>
+            <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!performanceMode.current && shouldShine(item)}>
               {#if tab.id === "inventory"}
                 {@render itemSnippet({ ...item, rarity: item.rarity ?? "uncommon" } as ModelsStrippedItem)}
               {:else}
