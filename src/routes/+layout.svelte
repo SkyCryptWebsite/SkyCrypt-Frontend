@@ -5,6 +5,7 @@
   import { initPreferences, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
   import { initFavorites } from "$ctx/favorites.svelte";
   import { initDisabledPacks } from "$ctx/packs.svelte";
+  import { initRecentSearches } from "$ctx/searches.svelte";
   import Header from "$lib/components/header/Header.svelte";
   import { SettingsTab } from "$lib/components/header/types";
   import PerformanceMode from "$lib/components/PerformanceMode.svelte";
@@ -14,7 +15,6 @@
   import themes from "$lib/shared/constants/themes";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { content, openCommand, settingsOpen, settingsTab } from "$lib/stores/internal";
-  import { recentSearches } from "$lib/stores/searches";
   import { theme as themeStore } from "$lib/stores/themes";
   import BookOpenText from "@lucide/svelte/icons/book-open-text";
   import CircleAlert from "@lucide/svelte/icons/circle-alert";
@@ -57,6 +57,7 @@
 
   const preferences = initPreferences();
   const favorites = initFavorites();
+  const recentSearches = initRecentSearches();
 
   const position = writable<ToasterProps["position"]>("bottom-right");
   const theme = writable<ToasterProps["theme"]>("dark");
@@ -132,7 +133,7 @@
     loading = true;
     if (!searchQueryValidated.success) return;
     if (searchQuery.trim() !== "") {
-      recentSearches.update((searches) => [...new Set([{ ign: searchQuery.trim() }, ...searches])].slice(0, 5));
+      recentSearches.current = [...new Set([{ ign: searchQuery.trim() }, ...recentSearches.current])].slice(0, 5);
     }
     setTimeout(() => {
       loading = false;
@@ -312,11 +313,11 @@
           {/if}
         </Command.Empty>
 
-        {#if $recentSearches.length !== 0}
+        {#if recentSearches.current.length !== 0}
           <Command.Group>
             <Command.GroupHeading class="text-muted-foreground px-3 pt-4 pb-2 text-xs">Recent Searches</Command.GroupHeading>
             <Command.GroupItems>
-              {#each $recentSearches.slice(0, 5) as recentSearch, index (index)}
+              {#each recentSearches.current.slice(0, 5) as recentSearch, index (index)}
                 {#if !ign || recentSearch.ign !== ign}
                   <Command.LinkItem value={recentSearch.ign} href="/stats/{recentSearch.ign}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[recentSearch.ign, "profile", "player", "favorite", "favorites"]}>
                     <Avatar.Root class="size-4 shrink-0 bg-text/10">
