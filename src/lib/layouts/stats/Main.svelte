@@ -3,10 +3,11 @@
   import { replaceState } from "$app/navigation";
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
-  import { getHoverContext, ProfileContext, setProfileContext } from "$ctx";
+  import { getHoverContext, getProfileContext, ProfileContext, setProfileContext } from "$ctx";
   import Item from "$lib/components/Item.svelte";
   import ItemContent from "$lib/components/item/item-content.svelte";
   import Navbar from "$lib/components/Navbar.svelte";
+  import Skin3D from "$lib/components/Skin3D.svelte";
   import AdditionalStats from "$lib/layouts/stats/AdditionalStats.svelte";
   import PlayerProfile from "$lib/layouts/stats/PlayerProfile.svelte";
   import Skills from "$lib/layouts/stats/Skills.svelte";
@@ -36,7 +37,7 @@
   let _leftSize = $state(0);
   let _skinCollapsed = $state(false);
   let _leftPane = $state<Pane>(null!);
-  let innerWidth = $state(0);
+  let innerWidth = $state(window.innerWidth);
   let _defaultLeftPanel = $derived(Math.ceil((300 / innerWidth) * 100));
   let _defaultRightPanel = $derived(Math.ceil((700 / innerWidth) * 100));
 
@@ -97,8 +98,11 @@
   });
 
   // Update the profile context when the data changes
-  $effect(() => {
+  $effect.pre(() => {
     profileClass.current = profile;
+  });
+
+  $effect(() => {
     rewriteURL();
   });
 
@@ -208,24 +212,24 @@
         {/snippet}
       </Avatar.Root>
     {:else if browser && innerWidth >= 1024}
-      {#await import("$lib/components/Skin3D.svelte") then { default: Skin3D }}
-        <Skin3D showStaticSkin={() => (showStaticSkin = true)} class="h-full" />
-      {/await}
+      <Skin3D showStaticSkin={() => (showStaticSkin = true)} class="h-full" />
     {/if}
   </div>
 
   <div class={cn("fixed top-0 right-0 min-h-dvh w-full @[75rem]/parent:w-[calc(100%-30vw)]", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")}></div>
   <main data-vaul-drawer-wrapper class="@container relative mx-auto mt-12 @[75rem]/parent:ml-[30vw]">
-    <div class="space-y-5 p-4 @[75rem]/parent:p-8">
-      <PlayerProfile />
-      <Skills />
-      <Stats />
-      <AdditionalStats />
-    </div>
+    {#if getProfileContext().current}
+      <div class="space-y-5 p-4 @[75rem]/parent:p-8">
+        <PlayerProfile />
+        <Skills />
+        <Stats />
+        <AdditionalStats />
+      </div>
 
-    <Navbar>
-      <Sections />
-    </Navbar>
+      <Navbar>
+        <Sections />
+      </Navbar>
+    {/if}
   </main>
 </div>
 
