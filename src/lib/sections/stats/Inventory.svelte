@@ -191,7 +191,7 @@
       <Notice title="An unexpected error has occurred" type="error" error={err} {retry} />
     {/snippet}
     {#if debouncedSearchValue.current === "" || !debouncedSearchValue.current}{:else}
-      {@const items = await searchInventorySection({ uuid: uuid!, profileId: profileId!, inventoryId: "search", search: debouncedSearchValue.current })}
+      {@const items = await searchInventorySection({ uuid: uuid!, profileId: profileId!, inventoryId: "search", query: debouncedSearchValue.current })}
 
       {#if !items || items.length === 0}
         <p class="mx-auto w-fit leading-6">No items found.</p>

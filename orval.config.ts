@@ -6,7 +6,6 @@ export default defineConfig({
     output: {
       target: "./src/lib/shared/api/orval-generated.ts",
       client: "fetch",
-      httpClient: "fetch",
       tsconfig: "./tsconfig.json",
       override: {
         mutator: {
