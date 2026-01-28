@@ -1,13 +1,13 @@
 <script lang="ts">
   import { getHoverContext, getPreferences } from "$ctx";
+  import { changeTheme, getTheme } from "$ctx/themes.svelte";
   import Misc from "$lib/components/header/settings/Misc.svelte";
   import Order from "$lib/components/header/settings/Order.svelte";
   import Packs from "$lib/components/header/settings/Packs.svelte";
-  import Themes, { changeTheme } from "$lib/components/header/settings/Themes.svelte";
+  import Themes from "$lib/components/header/settings/Themes.svelte";
   import { SettingsTab } from "$lib/components/header/types";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { settingsOpen, settingsTab } from "$lib/stores/internal";
-  import { theme as themeStore } from "$lib/stores/themes";
   import Cog from "@lucide/svelte/icons/cog";
   import ListOrdered from "@lucide/svelte/icons/list-ordered";
   import PackageOpen from "@lucide/svelte/icons/package-open";
@@ -22,9 +22,10 @@
   type SettingsProps = Record<string, unknown>;
   const isHover = getHoverContext();
   const preferences = getPreferences();
+  const themeContext = getTheme();
 
   onMount(() => {
-    changeTheme($themeStore);
+    changeTheme(themeContext.current, themeContext);
   });
 </script>
 

@@ -6,6 +6,7 @@
   import { initFavorites } from "$ctx/favorites.svelte";
   import { initDisabledPacks } from "$ctx/packs.svelte";
   import { initRecentSearches } from "$ctx/searches.svelte";
+  import { initTheme } from "$ctx/themes.svelte";
   import Header from "$lib/components/header/Header.svelte";
   import { SettingsTab } from "$lib/components/header/types";
   import PerformanceMode from "$lib/components/PerformanceMode.svelte";
@@ -15,7 +16,6 @@
   import themes from "$lib/shared/constants/themes";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { content, openCommand, settingsOpen, settingsTab } from "$lib/stores/internal";
-  import { theme as themeStore } from "$lib/stores/themes";
   import BookOpenText from "@lucide/svelte/icons/book-open-text";
   import CircleAlert from "@lucide/svelte/icons/circle-alert";
   import Fan from "@lucide/svelte/icons/fan";
@@ -30,7 +30,7 @@
   import WifiOff from "@lucide/svelte/icons/wifi-off";
   import { isHttpError, type RemoteQuery } from "@sveltejs/kit";
   import { Avatar, Button, Command, computeCommandScore, Dialog, Tooltip } from "bits-ui";
-  import { onMount, type Snippet } from "svelte";
+  import { onMount, untrack, type Snippet } from "svelte";
   import SvelteSeo from "svelte-seo";
   import { toast, Toaster, type ToasterProps } from "svelte-sonner";
   import { cubicOut } from "svelte/easing";
@@ -58,6 +58,7 @@
   const preferences = initPreferences();
   const favorites = initFavorites();
   const recentSearches = initRecentSearches();
+  const themeContext = initTheme();
 
   const position = writable<ToasterProps["position"]>("bottom-right");
   const theme = writable<ToasterProps["theme"]>("dark");
@@ -120,8 +121,6 @@
   setHoverContext(isHover);
   setPacksContext(packs);
 
-  themeStore.subscribe((newTheme) => theme.set(themes.find((theme) => theme.id === newTheme)?.light ? "light" : "dark"));
-
   onMount(() => {
     if (window.innerWidth <= 600) {
       position.set("bottom-center");
@@ -145,6 +144,12 @@
     if (updated.current && !willUnload && to?.url) {
       location.href = to.url.href;
     }
+  });
+
+  $effect.pre(() => {
+    untrack(() => {
+      themeContext.current = themes.find((theme) => theme.id === themeContext.current)?.light ? "light" : "dark";
+    });
   });
 
   $effect(() => {
@@ -184,7 +189,7 @@
       // @ts-expect-error It accepts any property
       image: "/img/app-icons/svg.svg"
     }}
-    themeColor={themes.find((theme) => theme.id === $themeStore)?.light ? "#dbdbdb" : "#282828"}
+    themeColor={themes.find((theme) => theme.id === themeContext.current)?.light ? "#dbdbdb" : "#282828"}
     manifest="/manifest.webmanifest" />
 {/if}
 

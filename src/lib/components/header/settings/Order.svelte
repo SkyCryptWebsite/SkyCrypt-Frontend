@@ -1,34 +1,8 @@
-<script lang="ts" module>
-  function changeTheme(themeId: Theme["id"]) {
-    const theme = themes.find((theme) => theme.id === themeId);
-    if (!theme) {
-      themeStore.set("default");
-      document.documentElement.dataset.theme = "default";
-      return;
-    }
-    if (theme.light) {
-      document.documentElement.dataset.mode = "light";
-      document.documentElement.classList.remove("dark");
-      document.documentElement.classList.add("light");
-    } else {
-      document.documentElement.dataset.mode = "dark";
-      document.documentElement.classList.remove("light");
-      document.documentElement.classList.add("dark");
-    }
-
-    document.documentElement.dataset.theme = theme.id;
-  }
-  export { changeTheme };
-</script>
-
 <script lang="ts">
   import { getPreferences } from "$ctx";
   import { SettingsTab } from "$lib/components/header/types";
   import { sections } from "$lib/sections/constants";
   import type { SectionID } from "$lib/sections/types";
-  import type { Theme } from "$lib/shared/constants/themes";
-  import themes from "$lib/shared/constants/themes";
-  import { theme as themeStore } from "$lib/stores/themes";
   import GripVertical from "@lucide/svelte/icons/grip-vertical";
   import ListOrdered from "@lucide/svelte/icons/list-ordered";
   import { Button, Tabs } from "bits-ui";

@@ -1,13 +1,14 @@
 <script lang="ts">
   import { page } from "$app/state";
+  import { getTheme } from "$ctx/themes.svelte";
   import type { ModelsEmbedData } from "$lib/shared/api/orval-generated";
   import themes from "$lib/shared/constants/themes";
   import { getLongDescription, getMetaTitle, getShortDescription } from "$lib/shared/embedGenerator";
-  import { theme as themeStore } from "$lib/stores/themes";
   import SvelteSeo from "svelte-seo";
 
   const { embedData }: { embedData: ModelsEmbedData } = $props();
   const isStatsPage = page.url.pathname.includes("/stats/");
+  const themeContext = getTheme();
 </script>
 
 <svelte:head>
@@ -42,5 +43,5 @@
     title: getMetaTitle(embedData),
     description: getLongDescription(embedData)
   }}
-  themeColor={themes.find((theme) => theme.id === $themeStore)?.light ? "#dbdbdb" : "#282828"}
+  themeColor={themes.find((theme) => theme.id === themeContext.current)?.light ? "#dbdbdb" : "#282828"}
   manifest="/manifest.webmanifest" />
