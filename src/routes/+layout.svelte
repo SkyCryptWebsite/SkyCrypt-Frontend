@@ -31,7 +31,7 @@
   import WifiOff from "@lucide/svelte/icons/wifi-off";
   import { isHttpError, type RemoteQuery } from "@sveltejs/kit";
   import { Avatar, Button, Command, computeCommandScore, Dialog, Tooltip } from "bits-ui";
-  import { onMount, untrack, type Snippet } from "svelte";
+  import { onMount, type Snippet } from "svelte";
   import SvelteSeo from "svelte-seo";
   import { toast, Toaster, type ToasterProps } from "svelte-sonner";
   import { cubicOut } from "svelte/easing";
@@ -54,7 +54,7 @@
 
   let searchUserRemoteFn = $state<RemoteQuery<never>>();
 
-  const { ign } = page.params;
+  const { ign } = $derived(page.params);
 
   const preferences = initPreferences();
   const favorites = initFavorites();
@@ -146,12 +146,6 @@
     if (updated.current && !willUnload && to?.url) {
       location.href = to.url.href;
     }
-  });
-
-  $effect.pre(() => {
-    untrack(() => {
-      themeContext.current = themes.find((theme) => theme.id === themeContext.current)?.light ? "light" : "dark";
-    });
   });
 
   $effect(() => {
