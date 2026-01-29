@@ -7,7 +7,7 @@ interface RecentSearchData {
 }
 
 export class RecentSearchesContext {
-  #data = new PersistedState<RecentSearchData[]>("skycryptrecentSearches", []);
+  #data = new PersistedState<RecentSearchData[]>("skycryptRecentSearches", []);
 
   constructor() {
     $effect.pre(() => {
