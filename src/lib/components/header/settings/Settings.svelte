@@ -1,6 +1,5 @@
 <script lang="ts">
   import { getHoverContext, getPreferences } from "$ctx";
-  import { changeTheme, getTheme } from "$ctx/themes.svelte";
   import Misc from "$lib/components/header/settings/Misc.svelte";
   import Order from "$lib/components/header/settings/Order.svelte";
   import Packs from "$lib/components/header/settings/Packs.svelte";
@@ -14,7 +13,6 @@
   import PaintBucket from "@lucide/svelte/icons/paint-bucket";
   import Settings from "@lucide/svelte/icons/settings";
   import { Dialog, Tabs } from "bits-ui";
-  import { onMount } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
@@ -22,11 +20,6 @@
   type SettingsProps = Record<string, unknown>;
   const isHover = getHoverContext();
   const preferences = getPreferences();
-  const themeContext = getTheme();
-
-  onMount(() => {
-    changeTheme(themeContext.current, themeContext);
-  });
 </script>
 
 {#snippet settings()}
