@@ -7,7 +7,7 @@
 
   const disabledPacks = getDisabledPacks();
   const initialPackConfig = disabledPacks.current;
-  const hasPackConfigChanged = $derived(JSON.stringify(disabledPacks.current.sort()) !== JSON.stringify(initialPackConfig.sort()));
+  const hasPackConfigChanged = $derived(JSON.stringify(disabledPacks.current.toSorted()) !== JSON.stringify(initialPackConfig.toSorted()));
   const packsContext = $derived(getPacksContext());
   const packs = $derived(packsContext.packs);
 </script>
