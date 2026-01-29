@@ -4,6 +4,7 @@
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
   import { getHoverContext, getPreferences, getProfileContext, ProfileContext, setProfileContext } from "$ctx";
+  import { getRecentSearches } from "$ctx/searches.svelte";
   import Item from "$lib/components/Item.svelte";
   import ItemContent from "$lib/components/item/item-content.svelte";
   import Navbar from "$lib/components/Navbar.svelte";
@@ -15,12 +16,11 @@
   import Sections from "$lib/sections/Sections.svelte";
   import type { ModelsStatsOutput } from "$lib/shared/api/orval-generated";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { recentSearches } from "$lib/stores";
   import { itemContent, itemContentSpecial, showItem } from "$lib/stores/internal";
   import Image from "@lucide/svelte/icons/image";
   import { Avatar, Dialog } from "bits-ui";
   import { Pane } from "paneforge";
-  import { onDestroy, tick } from "svelte";
+  import { onDestroy, tick, untrack } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
@@ -29,6 +29,7 @@
 
   const isHover = getHoverContext();
   const preferences = getPreferences();
+  const recentSearches = getRecentSearches();
 
   const profile = $derived(ctx);
 
@@ -77,24 +78,25 @@
     }
   }
 
-  recentSearches.update((searches) => {
-    if (!ctx) return searches;
+  $effect.pre(() => {
+    if (!ctx) return;
 
     const { username, uuid } = ctx;
-    if (!username || !uuid) return searches;
+    if (!username || !uuid) return;
 
-    // Find existing search by username/IGN and update with UUID
-    const existingIndex = searches.findIndex((search) => search.ign.toLowerCase() === username.toLowerCase());
+    untrack(() => {
+      // Find existing search by username/IGN and update with UUID
+      const existingIndex = recentSearches.current.findIndex((search) => search.ign.toLowerCase() === username.toLowerCase());
 
-    if (existingIndex !== -1) {
-      // Update existing search with UUID
-      searches[existingIndex] = {
-        ...searches[existingIndex],
-        uuid: uuid
-      };
-    }
-
-    return searches;
+      if (existingIndex !== -1) {
+        // Update existing search with UUID and update IGN in case it changed casing
+        recentSearches.current[existingIndex] = {
+          ...recentSearches.current[existingIndex],
+          ign: username,
+          uuid: uuid
+        };
+      }
+    });
   });
 
   // Update the profile context when the data changes
