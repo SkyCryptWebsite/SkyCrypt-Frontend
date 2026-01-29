@@ -2,12 +2,7 @@
   import { browser, dev } from "$app/environment";
   import { beforeNavigate } from "$app/navigation";
   import { page, updated } from "$app/state";
-  import { initPreferences, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
-  import { initFavorites } from "$ctx/favorites.svelte";
-  import { initDisabledPacks } from "$ctx/packs.svelte";
-  import { initRecentSearches } from "$ctx/searches.svelte";
-  import { initTheme } from "$ctx/themes.svelte";
-  import { initWikiOrder } from "$ctx/wiki.svelte";
+  import { initDisabledPacks, initFavorites, initPreferences, initRecentSearches, initTheme, initWikiOrder, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
   import Header from "$lib/components/header/Header.svelte";
   import { SettingsTab } from "$lib/components/header/types";
   import PerformanceMode from "$lib/components/PerformanceMode.svelte";

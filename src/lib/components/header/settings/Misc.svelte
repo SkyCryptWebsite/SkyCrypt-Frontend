@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { getPreferences } from "$ctx";
-  import { getWikiOrder } from "$ctx/wiki.svelte";
+  import { getPreferences, getWikiOrder } from "$ctx";
   import { SettingsTab } from "$lib/components/header/types";
   import { sections } from "$lib/sections/constants";
   import { cn, flyAndScale } from "$lib/shared/utils";

@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { getPacksContext } from "$ctx";
-  import { getDisabledPacks } from "$ctx/packs.svelte";
+  import { getDisabledPacks, getPacksContext } from "$ctx";
   import { SettingsTab } from "$lib/components/header/types";
   import PackageOpen from "@lucide/svelte/icons/package-open";
   import { Avatar, Button, Label, Switch, Tabs } from "bits-ui";

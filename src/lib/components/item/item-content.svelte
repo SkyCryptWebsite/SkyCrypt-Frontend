@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { getPacksContext } from "$ctx";
-  import { getWikiOrder, type WikiOrderData } from "$ctx/wiki.svelte";
+  import { getPacksContext, getWikiOrder, type WikiOrderData } from "$ctx";
   import ContainedItem from "$lib/components/ContainedItem.svelte";
   import type { ModelsStrippedItem } from "$lib/shared/api/orval-generated";
   import { getRarityClass, removeFormatting, renderLore } from "$lib/shared/helper";

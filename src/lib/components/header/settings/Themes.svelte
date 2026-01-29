@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { changeTheme, getTheme } from "$ctx/themes.svelte";
+  import { changeTheme, getTheme } from "$ctx";
   import { SettingsTab } from "$lib/components/header/types";
   import { getThemeIcons } from "$lib/shared/api/themes.remote";
   import themes from "$lib/shared/constants/themes";

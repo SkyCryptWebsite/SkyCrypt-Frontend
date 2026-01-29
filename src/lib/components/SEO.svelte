@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { getTheme } from "$ctx/themes.svelte";
+  import { getTheme } from "$ctx";
   import type { ModelsEmbedData } from "$lib/shared/api/orval-generated";
   import themes from "$lib/shared/constants/themes";
   import { getLongDescription, getMetaTitle, getShortDescription } from "$lib/shared/embedGenerator";

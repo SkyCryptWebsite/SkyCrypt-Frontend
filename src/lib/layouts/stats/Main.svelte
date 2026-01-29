@@ -3,8 +3,7 @@
   import { replaceState } from "$app/navigation";
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
-  import { getHoverContext, getPreferences, getProfileContext, ProfileContext, setProfileContext } from "$ctx";
-  import { getRecentSearches } from "$ctx/searches.svelte";
+  import { getHoverContext, getPreferences, getProfileContext, getRecentSearches, ProfileContext, setProfileContext } from "$ctx";
   import Item from "$lib/components/Item.svelte";
   import ItemContent from "$lib/components/item/item-content.svelte";
   import Navbar from "$lib/components/Navbar.svelte";

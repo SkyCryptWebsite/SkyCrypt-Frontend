@@ -1,7 +1,6 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
-  import { getHoverContext, getPreferences } from "$ctx";
-  import { getFavorites } from "$ctx/favorites.svelte";
+  import { getFavorites, getHoverContext, getPreferences } from "$ctx";
   import { env } from "$env/dynamic/public";
   import Notice from "$lib/components/Notice.svelte";
   import { searchUser } from "$lib/shared/api/skycrypt-api.remote";
