@@ -1,4 +1,5 @@
 import { browser } from "$app/environment";
+import { loadOldStorageKey } from "$ctx/utils";
 import themes, { type Theme } from "$lib/shared/constants/themes";
 import { PersistedState } from "runed";
 import { createContext, untrack } from "svelte";
@@ -25,22 +26,9 @@ export class ThemeContext {
   }
 
   loadOldTheme() {
-    loadSetting("theme", (value: ThemeData) => {
+    loadOldStorageKey("theme", (value: ThemeData) => {
       this.current = value;
     });
-
-    function loadSetting<T>(key: string, setter: (value: T) => void) {
-      const item = localStorage.getItem(key);
-      if (item !== null) {
-        try {
-          const value = item.startsWith("{") || item.startsWith("[") ? JSON.parse(item) : item;
-          setter(value);
-          localStorage.removeItem(key);
-        } catch (e) {
-          console.error(`Failed to load old setting for ${key}:`, e);
-        }
-      }
-    }
   }
 }
 

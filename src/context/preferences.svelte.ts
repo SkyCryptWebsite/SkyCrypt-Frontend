@@ -1,4 +1,5 @@
 import { browser } from "$app/environment";
+import { loadOldStorageKey } from "$ctx/utils";
 import { sections } from "$lib/sections/constants";
 import type { SectionID } from "$lib/sections/types";
 import { PersistedState } from "runed";
@@ -84,34 +85,21 @@ export class PreferencesContext {
   }
 
   loadOldSettings() {
-    loadSetting("sectionOrderPreferences", (value: SectionID[]) => {
+    loadOldStorageKey("sectionOrderPreferences", (value: SectionID[]) => {
       this.sectionOrder = value;
     });
-    loadSetting("performanceMode", (value: boolean) => {
+    loadOldStorageKey("performanceMode", (value: boolean) => {
       this.performanceMode = typeof value === "string" ? value === "true" : value;
     });
-    loadSetting("keybind", (value: string) => {
+    loadOldStorageKey("keybind", (value: string) => {
       this.keybind = value;
     });
-    loadSetting("showGlint", (value: boolean) => {
+    loadOldStorageKey("showGlint", (value: boolean) => {
       this.showGlint = value;
     });
-    loadSetting("rainbowEnchantments", (value: boolean) => {
+    loadOldStorageKey("rainbowEnchantments", (value: boolean) => {
       this.rainbowEnchantments = value;
     });
-
-    function loadSetting<T>(key: string, setter: (value: T) => void) {
-      const item = localStorage.getItem(key);
-      if (item !== null) {
-        try {
-          const value = item.startsWith("{") || item.startsWith("[") ? JSON.parse(item) : item;
-          setter(value);
-          localStorage.removeItem(key);
-        } catch (e) {
-          console.error(`Failed to load old setting for ${key}:`, e);
-        }
-      }
-    }
   }
 }
 

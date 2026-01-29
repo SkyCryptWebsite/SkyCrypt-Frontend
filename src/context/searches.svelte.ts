@@ -1,3 +1,4 @@
+import { loadOldStorageKey } from "$ctx/utils";
 import { PersistedState } from "runed";
 import { createContext, untrack } from "svelte";
 
@@ -26,22 +27,9 @@ export class RecentSearchesContext {
   }
 
   loadOldRecentSearches() {
-    loadSetting("recentSearches", (value: RecentSearchData[]) => {
+    loadOldStorageKey("recentSearches", (value: RecentSearchData[]) => {
       this.current = value;
     });
-
-    function loadSetting<T>(key: string, setter: (value: T) => void) {
-      const item = localStorage.getItem(key);
-      if (item !== null) {
-        try {
-          const value = item.startsWith("{") || item.startsWith("[") ? JSON.parse(item) : item;
-          setter(value);
-          localStorage.removeItem(key);
-        } catch (e) {
-          console.error(`Failed to load old setting for ${key}:`, e);
-        }
-      }
-    }
   }
 }
 
