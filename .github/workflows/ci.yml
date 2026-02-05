@@ -7,6 +7,7 @@ on:
 jobs:
   changeset:
     name: Changeset Check
+    if: ${{ !startsWith(github.head_ref, 'changeset-release/') }}
     runs-on: ubuntu-latest
 
     steps:
