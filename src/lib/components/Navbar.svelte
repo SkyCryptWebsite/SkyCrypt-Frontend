@@ -1,11 +1,10 @@
 <script lang="ts">
   import { replaceState } from "$app/navigation";
   import { page } from "$app/state";
-  import { getPreferences, getProfileContext } from "$ctx";
+  import { getInternalState, getPreferences, getProfileContext } from "$ctx";
   import ScrollAreaPrimitive from "$lib/components/ScrollAreaPrimitive.svelte";
   import type { SectionName } from "$lib/sections/types";
   import { cn } from "$lib/shared/utils";
-  import { tabValue } from "$lib/stores/internal";
   import ChevronLeft from "@lucide/svelte/icons/chevron-left";
   import ChevronRight from "@lucide/svelte/icons/chevron-right";
   import { Button, ScrollArea } from "bits-ui";
@@ -14,6 +13,7 @@
 
   const profile = $derived(getProfileContext().current);
   const preferences = getPreferences();
+  const internalState = getInternalState();
 
   const apiSettings = $derived(Object.entries(profile?.apiSettings ?? {}).filter(([_, value]) => !value));
   const disabledApiSettings: string[] = $derived(apiSettings.map(([key]) => key));
@@ -29,13 +29,13 @@
 
   const previousSection = $derived(
     filteredSectionOrderPreferences.find((_, index) => {
-      return index === filteredSectionOrderPreferences.findIndex((s) => s.name === $tabValue) - 1;
+      return index === filteredSectionOrderPreferences.findIndex((s) => s.name === internalState.tabValue) - 1;
     })
   );
 
   const nextSection = $derived(
     filteredSectionOrderPreferences.find((_, index) => {
-      return index === filteredSectionOrderPreferences.findIndex((s) => s.name === $tabValue) + 1;
+      return index === filteredSectionOrderPreferences.findIndex((s) => s.name === internalState.tabValue) + 1;
     })
   );
 
@@ -44,7 +44,7 @@
   let observer: IntersectionObserver;
 
   function handleSectionClick(sectionName: SectionName) {
-    tabValue.set(sectionName);
+    internalState.tabValue = sectionName;
     scrollToTab({ smooth: true });
   }
 
@@ -63,7 +63,7 @@
       inline: "center"
     };
 
-    const link = element ?? document.querySelector<HTMLAnchorElement>(`button[data-id="${$tabValue}"]`);
+    const link = element ?? document.querySelector<HTMLAnchorElement>(`button[data-id="${internalState.tabValue}"]`);
 
     if (link == null) {
       console.warn(`could not scroll to ${location.hash} tab because it does not exist`, link);
@@ -115,11 +115,11 @@
 
   // Effect to handle tab value changes and update URL
   $effect(() => {
-    if (navbarElement && $tabValue) {
+    if (navbarElement && internalState.tabValue) {
       tick().then(() => {
         scrollToTab({ smooth: true });
         // eslint-disable-next-line svelte/no-navigation-without-resolve
-        replaceState("#" + $tabValue, page.state);
+        replaceState("#" + internalState.tabValue, page.state);
       });
     }
   });
@@ -131,7 +131,7 @@
       <div class="absolute bottom-1.75 z-1 h-0.5 w-[calc(100%+0.5rem)] bg-icon"></div>
       <div class={cn("absolute inset-0 bottom-2", preferences.performanceMode ? "group-data-[pinned=true]:bg-header" : "transition duration-50 ease-out group-data-[pinned=true]:group-data-[mode=dark]/html:bg-[oklch(19.13%_0_0)]/90 group-data-[pinned=true]:group-data-[mode=light]/html:bg-[oklch(95.51%_0_0)]/92")}></div>
       {#each filteredSectionOrderPreferences as section, index (index)}
-        <Button.Root class="relative px-2 py-3 after:absolute after:top-full after:left-0 after:h-0 after:w-full after:origin-top after:rounded-full after:bg-icon after:transition-all after:duration-100 after:ease-out hover:after:top-[calc(100%-4px)] hover:after:h-2 data-[active=true]:text-text data-[active=true]:after:top-[calc(100%-4px)] data-[active=true]:after:h-2" data-id={section.name} data-active={$tabValue === section.name} onclick={() => handleSectionClick(section.name)}>
+        <Button.Root class="relative px-2 py-3 after:absolute after:top-full after:left-0 after:h-0 after:w-full after:origin-top after:rounded-full after:bg-icon after:transition-all after:duration-100 after:ease-out hover:after:top-[calc(100%-4px)] hover:after:h-2 data-[active=true]:text-text data-[active=true]:after:top-[calc(100%-4px)] data-[active=true]:after:h-2" data-id={section.name} data-active={internalState.tabValue === section.name} onclick={() => handleSectionClick(section.name)}>
           {section.name?.replaceAll("_", " ")}
         </Button.Root>
       {/each}

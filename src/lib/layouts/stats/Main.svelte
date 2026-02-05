@@ -3,7 +3,7 @@
   import { replaceState } from "$app/navigation";
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
-  import { getHoverContext, getPreferences, getProfileContext, getRecentSearches, ProfileContext, setProfileContext } from "$ctx";
+  import { getHoverContext, getInternalState, getPreferences, getProfileContext, getRecentSearches, ProfileContext, setProfileContext } from "$ctx";
   import Item from "$lib/components/Item.svelte";
   import ItemContent from "$lib/components/item/item-content.svelte";
   import Navbar from "$lib/components/Navbar.svelte";
@@ -15,7 +15,6 @@
   import Sections from "$lib/sections/Sections.svelte";
   import type { ModelsStatsOutput } from "$lib/shared/api/orval-generated";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { itemContent, itemContentSpecial, showItem } from "$lib/stores/internal";
   import Image from "@lucide/svelte/icons/image";
   import { Avatar, Dialog } from "bits-ui";
   import { Pane } from "paneforge";
@@ -29,6 +28,7 @@
   const isHover = getHoverContext();
   const preferences = getPreferences();
   const recentSearches = getRecentSearches();
+  const internalState = getInternalState();
 
   const profile = $derived(ctx);
 
@@ -235,7 +235,7 @@
 </div>
 
 {#if isHover.current}
-  <Dialog.Root bind:open={$showItem}>
+  <Dialog.Root bind:open={internalState.showItem}>
     <Dialog.Portal>
       <Dialog.Overlay forceMount class="fixed inset-0 z-40 bg-black/80">
         {#snippet child({ props, open })}
@@ -248,7 +248,7 @@
         {#snippet child({ props, open })}
           {#if open}
             <div {...props} transition:flyAndScale>
-              <ItemContent piece={$itemContent!} />
+              <ItemContent piece={internalState.itemContent!} />
             </div>
           {/if}
         {/snippet}
@@ -256,10 +256,10 @@
     </Dialog.Portal>
   </Dialog.Root>
   <Dialog.Root
-    bind:open={() => $itemContentSpecial !== undefined, (open) => open}
+    bind:open={() => internalState.itemContentSpecial !== undefined, (open) => open}
     onOpenChange={(open) => {
       if (!open) {
-        itemContentSpecial.set(undefined);
+        internalState.itemContentSpecial = undefined;
       }
     }}>
     <Dialog.Portal>
@@ -282,21 +282,21 @@
     </Dialog.Portal>
   </Dialog.Root>
 {:else}
-  <Drawer.Root bind:open={$showItem} shouldScaleBackground={true} setBackgroundColorOnScale={false}>
+  <Drawer.Root bind:open={internalState.showItem} shouldScaleBackground={true} setBackgroundColorOnScale={false}>
     <Drawer.Portal>
       <Drawer.Overlay class="fixed inset-0 z-40 bg-black/80" />
       <Drawer.Content class="fixed right-0 bottom-0 left-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px] bg-background-lore">
-        <ItemContent piece={$itemContent!} isDrawer={true} />
+        <ItemContent piece={internalState.itemContent!} isDrawer={true} />
       </Drawer.Content>
     </Drawer.Portal>
   </Drawer.Root>
   <Drawer.Root
-    bind:open={() => $itemContentSpecial !== undefined, (open) => open}
+    bind:open={() => internalState.itemContentSpecial !== undefined, (open) => open}
     shouldScaleBackground={false}
     setBackgroundColorOnScale={false}
     onOpenChange={(open) => {
       if (!open) {
-        itemContentSpecial.set(undefined);
+        internalState.itemContentSpecial = undefined;
       }
     }}>
     <Drawer.Portal>
@@ -319,17 +319,17 @@
 {/if}
 
 {#snippet containedItems()}
-  {#if $itemContentSpecial}
+  {#if internalState.itemContentSpecial}
     <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 @md:gap-1.5 @xl:gap-2">
-      {#if $itemContentSpecial.containsItems && $itemContentSpecial.containsItems.length !== 0}
-        {#each $itemContentSpecial.containsItems as containedItem, index (index)}
+      {#if internalState.itemContentSpecial.containsItems && internalState.itemContentSpecial.containsItems.length !== 0}
+        {#each internalState.itemContentSpecial.containsItems as containedItem, index (index)}
           {#if index > 0}
             {#if index % 54 === 0}
               <hr class="col-span-full h-4 border-0" />
             {/if}
           {/if}
           {#if containedItem.texture_path}
-            <div class="flex aspect-square items-center justify-center rounded-sm bg-text/4" onclick={() => itemContentSpecial.set(undefined)} role="none">
+            <div class="flex aspect-square items-center justify-center rounded-sm bg-text/4" onclick={() => (internalState.itemContentSpecial = undefined)} role="none">
               <Item piece={containedItem} isInventory={true} showRecombobulated={false} showCount={true} />
             </div>
           {:else}

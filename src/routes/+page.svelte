@@ -1,11 +1,10 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
-  import { getFavorites, getHoverContext, getPreferences } from "$ctx";
+  import { getFavorites, getHoverContext, getInternalState, getPreferences } from "$ctx";
   import { env } from "$env/dynamic/public";
   import Notice from "$lib/components/Notice.svelte";
   import { searchUser } from "$lib/shared/api/skycrypt-api.remote";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { content } from "$lib/stores/internal";
   import { type Contributor, getContributors } from "$routes/ contributors.remote";
   import CodeXml from "@lucide/svelte/icons/code-xml";
   import GitPullRequestArrow from "@lucide/svelte/icons/git-pull-request-arrow";
@@ -29,6 +28,7 @@
   let searchUserRemoteFn = $state<RemoteQuery<never>>();
 
   const isHover = getHoverContext();
+  const internalState = getInternalState();
 
   const iconMapper: Record<Role, typeof CodeXml | typeof Server | typeof GitPullRequestArrow | typeof Star | string> = {
     [Role.MAINTAINER]: CodeXml,
@@ -181,7 +181,7 @@
           class="absolute right-3 bottom-3"
           onclick={() => {
             if (!options?.favorite) {
-              content.set(tooltipContent);
+              internalState.content = tooltipContent;
             } else {
               favorites.current = favorites.current.filter((favorite) => favorite.uuid !== user.id);
             }

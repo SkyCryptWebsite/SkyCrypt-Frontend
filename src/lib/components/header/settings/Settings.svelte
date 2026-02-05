@@ -1,12 +1,11 @@
 <script lang="ts">
-  import { getHoverContext, getPreferences } from "$ctx";
+  import { getHoverContext, getInternalState, getPreferences } from "$ctx";
   import Misc from "$lib/components/header/settings/Misc.svelte";
   import Order from "$lib/components/header/settings/Order.svelte";
   import Packs from "$lib/components/header/settings/Packs.svelte";
   import Themes from "$lib/components/header/settings/Themes.svelte";
   import { SettingsTab } from "$lib/components/header/types";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { settingsOpen, settingsTab } from "$lib/stores/internal";
   import Cog from "@lucide/svelte/icons/cog";
   import ListOrdered from "@lucide/svelte/icons/list-ordered";
   import PackageOpen from "@lucide/svelte/icons/package-open";
@@ -20,10 +19,11 @@
   type SettingsProps = Record<string, unknown>;
   const isHover = getHoverContext();
   const preferences = getPreferences();
+  const internalState = getInternalState();
 </script>
 
 {#snippet settings()}
-  <Tabs.Root bind:value={$settingsTab}>
+  <Tabs.Root bind:value={internalState.settingsTab}>
     <Tabs.List class={cn("mb-4 flex justify-between rounded-lg p-2 font-semibold text-text", preferences.performanceMode ? "bg-text/30" : "backdrop-blur-lg backdrop-brightness-10")}>
       <Tabs.Trigger value={SettingsTab.Packs} class="flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold data-[state=active]:bg-icon/80">
         <PackageOpen class="size-5" />
@@ -51,13 +51,13 @@
 
 {#snippet settingsButton(props: SettingsProps)}
   <button {...props} class="group absolute top-1/2 right-4 flex aspect-square shrink -translate-y-1/2 items-center justify-center gap-1 rounded-full bg-background/20 px-2.5 py-1.5 text-sm font-semibold text-text transition-all duration-100 ease-out @md:relative @md:top-0 @md:right-0 @md:my-1.5 @md:aspect-auto @md:translate-y-0">
-    <Cog class="size-5 transition-all duration-300 ease-out data-[is-open=true]:rotate-45" data-is-open={$settingsOpen} />
+    <Cog class="size-5 transition-all duration-300 ease-out data-[is-open=true]:rotate-45" data-is-open={internalState.settingsOpen} />
     <p class="hidden @md:block">Settings</p>
   </button>
 {/snippet}
 
 {#if isHover.current}
-  <Dialog.Root bind:open={$settingsOpen}>
+  <Dialog.Root bind:open={internalState.settingsOpen}>
     <Dialog.Trigger>
       {#snippet child({ props })}
         {@render settingsButton(props)}
@@ -84,7 +84,7 @@
     </Dialog.Portal>
   </Dialog.Root>
 {:else}
-  <Drawer.Root shouldScaleBackground={true} setBackgroundColorOnScale={false} bind:open={$settingsOpen}>
+  <Drawer.Root shouldScaleBackground={true} setBackgroundColorOnScale={false} bind:open={internalState.settingsOpen}>
     <Drawer.Trigger>
       {#snippet child({ props })}
         {@render settingsButton(props)}

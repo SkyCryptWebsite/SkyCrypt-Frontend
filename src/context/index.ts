@@ -1,5 +1,6 @@
 export * from "./createContext.svelte";
 export * from "./favorites.svelte";
+export * from "./internal.svelte";
 export * from "./packs.svelte";
 export * from "./preferences.svelte";
 export * from "./searches.svelte";

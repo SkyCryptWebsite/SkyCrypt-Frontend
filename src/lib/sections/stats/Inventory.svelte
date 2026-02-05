@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getPreferences, getProfileContext } from "$ctx";
+  import { getInternalState, getPreferences, getProfileContext } from "$ctx";
   import { env } from "$env/dynamic/public";
   import Item from "$lib/components/Item.svelte";
   import Notice from "$lib/components/Notice.svelte";
@@ -9,7 +9,6 @@
   import { getInventorySection, searchInventorySection } from "$lib/shared/api/skycrypt-api.remote";
   import { renderLore, shouldShine } from "$lib/shared/helper";
   import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
-  import { itemContentSpecial } from "$lib/stores/internal";
   import Image from "@lucide/svelte/icons/image";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import { Avatar, ScrollArea, Tabs } from "bits-ui";
@@ -20,6 +19,7 @@
   const { PUBLIC_API_URL } = env;
 
   const preferences = getPreferences();
+  const internalState = getInternalState();
 
   type Tabs = {
     id: string;
@@ -107,11 +107,11 @@
     easing: cubicOut
   });
 
-  itemContentSpecial.subscribe((item) => {
-    if (item) {
+  $effect.pre(() => {
+    if (internalState.itemContentSpecial) {
       if (openTab === "search" || openTab === "backpack" || openTab === "museum") {
         console.warn("Item content special should not be set for search, backpack, or museum tabs.");
-        itemContentSpecial.set(undefined);
+        internalState.itemContentSpecial = undefined;
       }
     }
   });

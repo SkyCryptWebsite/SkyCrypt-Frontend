@@ -1,11 +1,10 @@
 <script lang="ts">
-  import { getHoverContext, getPreferences } from "$ctx";
+  import { getHoverContext, getInternalState, getPreferences } from "$ctx";
   import ItemContent from "$lib/components/item/item-content.svelte";
   import type { ModelsStrippedItem } from "$lib/shared/api/orval-generated";
   import { RARITIES, RARITY_COLORS } from "$lib/shared/constants/rarities";
   import { getRarityClass, shouldShine } from "$lib/shared/helper";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { itemContent, itemContentSpecial, showItem } from "$lib/stores/internal";
   import ImageOff from "@lucide/svelte/icons/image-off";
   import { Avatar, Tooltip, type AvatarImageLoadingStatus } from "bits-ui";
   import { IsInViewport } from "runed";
@@ -25,6 +24,7 @@
 
   const isHover = getHoverContext();
   const preferences = getPreferences();
+  const internalState = getInternalState();
 
   const inViewport = new IsInViewport(() => targetNode, { rootMargin: "200px 0px", threshold: 0 });
   const skyblockItem = $derived(piece);
@@ -47,11 +47,11 @@
     bind:ref={targetNode}
     onclick={() => {
       if (skyblockItem.containsItems) {
-        itemContentSpecial.set(skyblockItem);
+        internalState.itemContentSpecial = skyblockItem;
         return;
       }
-      itemContent.set(piece);
-      showItem.set(true);
+      internalState.itemContent = piece;
+      internalState.showItem = true;
     }}>
     {#snippet child({ props })}
       <div {...props}>

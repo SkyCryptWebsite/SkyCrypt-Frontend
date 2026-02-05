@@ -3,6 +3,7 @@
   import { beforeNavigate } from "$app/navigation";
   import { page, updated } from "$app/state";
   import { initDisabledPacks, initFavorites, initPreferences, initRecentSearches, initTheme, initWikiOrder, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
+  import { initInternalState } from "$ctx/internal.svelte";
   import Header from "$lib/components/header/Header.svelte";
   import { SettingsTab } from "$lib/components/header/types";
   import PerformanceMode from "$lib/components/PerformanceMode.svelte";
@@ -11,7 +12,6 @@
   import { getPacks, searchUser } from "$lib/shared/api/skycrypt-api.remote";
   import themes from "$lib/shared/constants/themes";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { content, openCommand, settingsOpen, settingsTab } from "$lib/stores/internal";
   import BookOpenText from "@lucide/svelte/icons/book-open-text";
   import CircleAlert from "@lucide/svelte/icons/circle-alert";
   import Fan from "@lucide/svelte/icons/fan";
@@ -55,6 +55,7 @@
   const favorites = initFavorites();
   const recentSearches = initRecentSearches();
   const themeContext = initTheme();
+  const internalState = initInternalState();
 
   const position = writable<ToasterProps["position"]>("bottom-right");
   const theme = writable<ToasterProps["theme"]>("dark");
@@ -86,7 +87,7 @@
   function handleKeydown(e: KeyboardEvent) {
     if (e.key === preferences.keybind) {
       e.preventDefault();
-      openCommand.set(true);
+      internalState.openCommand = true;
     }
   }
 
@@ -100,15 +101,15 @@
   }
 
   function closeCommand() {
-    openCommand.set(false);
+    internalState.openCommand = false;
     commandValue = null!;
     searchQuery = "";
   }
 
   function handleSettingTab(tab: SettingsTab) {
-    settingsTab.set(tab);
+    internalState.settingsTab = tab;
     closeCommand();
-    settingsOpen.set(true);
+    internalState.settingsOpen = true;
   }
 
   initDisabledPacks();
@@ -133,7 +134,7 @@
     }
     setTimeout(() => {
       loading = false;
-      openCommand.set(false);
+      internalState.openCommand = false;
     }, 1000);
   });
 
@@ -216,7 +217,7 @@
   {@render children()}
 </Tooltip.Provider>
 
-<Dialog.Root bind:open={$openCommand}>
+<Dialog.Root bind:open={internalState.openCommand}>
   <Dialog.Portal>
     <Dialog.Overlay forceMount class={cn("fixed inset-0 z-40", preferences.performanceMode ? "bg-background-lore" : "backdrop-blur-lg backdrop-brightness-50")}>
       {#snippet child({ props, open })}
@@ -245,17 +246,17 @@
 
 {#if !isHover.current}
   <Drawer.Root
-    bind:open={() => !!$content, (v) => v}
+    bind:open={() => !!internalState.content, (v) => v}
     shouldScaleBackground={false}
     setBackgroundColorOnScale={false}
     onOpenChange={(open) => {
-      if (!open) content.set(undefined);
+      if (!open) internalState.content = undefined;
     }}>
     <Drawer.Portal>
       <Drawer.Overlay class="fixed inset-0 z-40 bg-black/80" />
       <Drawer.Content class="fixed right-0 bottom-0 left-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px] bg-background-lore">
         <div class="mx-auto w-full max-w-md overflow-auto p-6">
-          {@render $content?.()}
+          {@render internalState.content?.()}
         </div>
       </Drawer.Content>
     </Drawer.Portal>
