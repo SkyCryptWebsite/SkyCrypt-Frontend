@@ -1,9 +1,8 @@
 <script lang="ts">
-  import { getHoverContext } from "$ctx";
+  import { getHoverContext, getInternalState } from "$ctx";
   import type { ModelsStatsInfo } from "$lib/shared/api/orval-generated";
   import { STATS_DATA } from "$lib/shared/constants/stats";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { content } from "$lib/stores/internal";
   import { Tooltip } from "bits-ui";
   import { format } from "numerable";
 
@@ -19,11 +18,12 @@
   let iconRef = $state<HTMLElement | null>(null);
 
   const isHover = getHoverContext();
+  const internalState = getInternalState();
 </script>
 
 <div>
   <Tooltip.Root bind:open>
-    <Tooltip.Trigger class={cn(`my-0 flex items-center gap-1 text-sm font-bold whitespace-nowrap ${STATS_DATA[stat].color}`, className)} onpointerdown={() => (open = !open)} onclick={() => content.set(tooltipContent)}>
+    <Tooltip.Trigger class={cn(`my-0 flex items-center gap-1 text-sm font-bold whitespace-nowrap ${STATS_DATA[stat].color}`, className)} onpointerdown={() => (open = !open)} onclick={() => (internalState.content = tooltipContent)}>
       <div bind:this={iconRef} class="inline-block font-icomoon text-base">{STATS_DATA[stat].symbol}</div>
       <span class="capitalize">{stat.replace(/_/g, " ")}</span>
       <span class="text-text">
