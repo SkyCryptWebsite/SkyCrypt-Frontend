@@ -67,7 +67,7 @@
         </Avatar.Fallback>
       </Avatar.Root>
 
-      <p class="relative min-w-0 wrap-break-word uppercase group-data-[mctooltip=false]/itemtooltip:text-center group-data-[mctooltip=false]/itemtooltip:text-base group-data-[mctooltip=false]/itemtooltip:font-semibold data-[multicolor=false]:text-text data-[multicolor=true]:rounded-full data-[multicolor=true]:py-1 group-data-[mctooltip=false]/itemtooltip:data-[multicolor=true]:bg-background-lore group-data-[mctooltip=false]/itemtooltip:data-[multicolor=true]:px-2 group-data-[mctooltip=false]/itemtooltip:sm:text-lg" data-multicolor={isMulticolor}>
+      <p class="relative min-w-0 wrap-break-word group-data-[mctooltip=false]/itemtooltip:text-center group-data-[mctooltip=false]/itemtooltip:text-base group-data-[mctooltip=false]/itemtooltip:font-semibold group-data-[mctooltip=false]/itemtooltip:uppercase data-[multicolor=false]:text-text data-[multicolor=true]:rounded-full data-[multicolor=true]:py-1 group-data-[mctooltip=false]/itemtooltip:data-[multicolor=true]:bg-background-lore group-data-[mctooltip=false]/itemtooltip:data-[multicolor=true]:px-2 group-data-[mctooltip=false]/itemtooltip:sm:text-lg" data-multicolor={isMulticolor}>
         {#if preferences.mctooltip}
           {@html itemNameHtml}
         {:else}
