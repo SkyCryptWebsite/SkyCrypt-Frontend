@@ -19,6 +19,9 @@ jobs:
       - name: PNPM Install
         uses: ./.github/actions/pnpm-install
 
+      - name: Fetch base branch
+        run: git fetch origin ${{ github.base_ref }}
+
       - name: Check for changeset
         run: pnpm changeset status --since=origin/${{ github.base_ref }}
 
