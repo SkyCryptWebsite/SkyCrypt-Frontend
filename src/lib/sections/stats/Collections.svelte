@@ -49,7 +49,7 @@
                     <span class={cn({ "text-gold": hasMaxed })}>{item.tier}</span>
                     <div class="text-sm">
                       <span class="opacity-60">Amount:</span>
-                      <span class="text-text">{format(item.amount)}</span>
+                      <span class="text-text">{format(item.totalAmount)}</span>
                     </div>
                   </div>
                 </div>
