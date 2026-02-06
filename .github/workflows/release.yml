@@ -35,7 +35,7 @@ jobs:
         uses: changesets/action@v1
         with:
           version: pnpm changeset:version
-          title: "Version Packages (Beta)"
+          title: "Version Packages"
           commit: "chore: version packages (beta)"
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
