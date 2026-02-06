@@ -21,6 +21,7 @@
   --color-header: var(--header);
   --color-bg: var(--bg);
   --color-logo: var(--logo);
+  --color-mctooltip-bg: var(--mctooltip-bg);
 
   /* Text Shadow */
   --text-shadow-sm: 0 0px 2px var(--tw-shadow-color);
@@ -56,7 +57,7 @@
   /* Fonts */
   --font-icomoon: "icomoon", Montserrat;
   --font-sans: Montserrat, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-minecraft: "Minecraft", var(--font-sans);
+  --font-minecraft: "Minecraft", var(--font-icomoon), var(--font-sans);
   --font-minecraft-upper: "Minecraft-Upper", var(--font-sans);
 }
 
@@ -199,6 +200,9 @@
 
     /* Normal Background */
     --bg: url(/img/bg.avif);
+
+    /* Minecraft Tooltip */
+    --mctooltip-bg: oklch(12.142% 0.05582 328.352 / 0.93);
 
     color-scheme: dark;
   }
@@ -387,22 +391,5 @@
 }
 
 @utility minecraft-tooltip {
-  @apply !font-minecraft;
-  box-shadow: rgba(16, 0, 16, 0.93) 0px 0px 0px 2px;
-  line-height: 18px;
-  margin-left: 15px;
-  margin-top: -30px;
-  pointer-events: none;
-  position: fixed;
-  text-indent: initial;
-  text-shadow: rgb(63, 63, 63) 2px 2px;
-  width: fit-content;
-  z-index: 9999;
-  background: rgba(16, 0, 16, 0.93);
-  border-width: 2px;
-  border-style: solid;
-  border-color: initial;
-  border-image: linear-gradient(rgba(80, 0, 255, 0.31), rgba(40, 0, 127, 0.31)) 1 / 1 / 0 stretch;
-  border-radius: 4px;
-  padding: 4px 4px 3px;
+  @apply relative rounded-sm border-2 border-solid border-transparent bg-mctooltip-bg px-1 pt-1 pb-0.75 indent-[initial] font-minecraft text-[0.9375rem] leading-4.5 font-normal text-pretty [border-image:linear-gradient(to_bottom,oklch(48.503%_0.297_278.42/0.31),oklch(29.365%_0.17619_281.21/0.31))_1] text-shadow-[0.09375rem_0.09375rem_oklch(36.768%,0.00004,271.152)];
 }

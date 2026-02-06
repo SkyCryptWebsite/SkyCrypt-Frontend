@@ -84,7 +84,7 @@
   </Tooltip.Trigger>
   {#if isHover.current && inViewport.current}
     <Tooltip.Portal>
-      <Tooltip.Content forceMount={inViewport.current} class="z-50 flex max-h-[calc(96vh-3rem)] flex-col overflow-clip rounded-lg bg-background-lore font-icomoon select-text" sideOffset={8} side="right" align="center" collisionPadding={8}>
+      <Tooltip.Content forceMount={inViewport.current} class="group/itemtooltip z-50 flex max-h-[calc(96vh-3rem)] flex-col overflow-clip font-icomoon select-text data-[mctooltip=false]:rounded-lg data-[mctooltip=false]:bg-background-lore" sideOffset={8} side="right" align="center" collisionPadding={8} data-mctooltip={preferences.mctooltip}>
         {#snippet child({ wrapperProps, props, open })}
           {#if open}
             <div {...wrapperProps}>
