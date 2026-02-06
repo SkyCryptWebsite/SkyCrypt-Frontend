@@ -24,8 +24,22 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: PNPM Install
-        uses: ./.github/actions/pnpm-install
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm fetch && pnpm install --frozen-lockfile
+        env:
+          HUSKY: "0"
 
       - name: Enter pre-release mode
         run: pnpm changeset pre enter beta 2>/dev/null || true
@@ -78,8 +92,22 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.PAT_TOKEN }}
 
-      - name: PNPM Install
-        uses: ./.github/actions/pnpm-install
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm fetch && pnpm install --frozen-lockfile
+        env:
+          HUSKY: "0"
 
       - name: Configure Git
         run: |
