@@ -84,6 +84,7 @@ jobs:
 
     permissions:
       contents: write
+      pull-requests: write
 
     steps:
       - name: Git checkout
@@ -109,42 +110,38 @@ jobs:
         env:
           HUSKY: "0"
 
-      - name: Configure Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Exit pre-release mode
+        run: pnpm changeset pre exit 2>/dev/null || true
 
-      - name: Exit pre-release and create stable version
-        run: |
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
+      - name: Create Release Pull Request
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: pnpm changeset:version
+          title: "Version Packages (Stable)"
+          commit: "chore: version packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
 
-          # Exit pre-release mode if active
-          if [ -f ".changeset/pre.json" ] && node -e "process.exit(require('./.changeset/pre.json').mode === 'pre' ? 0 : 1)" 2>/dev/null; then
-            pnpm changeset pre exit
-            pnpm changeset version
-          elif ls .changeset/*.md 2>/dev/null | grep -v README.md | head -1 >/dev/null 2>&1; then
-            # Not in pre-release but there are changesets to consume
-            pnpm changeset version
-          else
-            echo "Nothing to release"
+      - name: Create Stable GitHub Release
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+
+          if echo "$VERSION" | grep -q "beta"; then
+            echo "Current version ($VERSION) is still a beta, skipping"
             exit 0
           fi
 
-          NEW_VERSION=$(node -p "require('./package.json').version")
+          TAG="v${VERSION}"
 
-          if [ "$CURRENT_VERSION" = "$NEW_VERSION" ]; then
-            echo "Version unchanged ($CURRENT_VERSION), nothing to release"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists, skipping"
             exit 0
           fi
 
-          TAG="v${NEW_VERSION}"
-
-          git add .
-          git commit -m "chore: release ${TAG}"
           git tag "$TAG"
-          git push origin HEAD
           git push origin "$TAG"
-
           gh release create "$TAG" --title "$TAG" --generate-notes --latest
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
