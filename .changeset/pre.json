@@ -5,7 +5,9 @@
     "skycrypt-frontend": "3.0.0"
   },
   "changesets": [
+    "better-bags-rest",
     "eighty-ideas-jog",
+    "salty-queens-ask",
     "shaggy-yaks-flow",
     "two-dodos-stand"
   ]
