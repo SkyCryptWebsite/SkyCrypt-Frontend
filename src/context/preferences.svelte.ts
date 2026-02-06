@@ -11,6 +11,7 @@ interface PreferencesData {
   keybind: string;
   showGlint: boolean;
   rainbowEnchantments: boolean;
+  mctooltip: boolean;
 }
 
 export class PreferencesContext {
@@ -19,7 +20,8 @@ export class PreferencesContext {
     performanceMode: false,
     keybind: "/",
     showGlint: true,
-    rainbowEnchantments: false
+    rainbowEnchantments: false,
+    mctooltip: true
   });
 
   constructor() {
@@ -82,6 +84,14 @@ export class PreferencesContext {
     if (browser) {
       document.documentElement.dataset.rainbow = value ? "true" : "false";
     }
+  }
+
+  get mctooltip() {
+    return this.#data.current.mctooltip;
+  }
+
+  set mctooltip(value: boolean) {
+    this.#data.current = { ...this.#data.current, mctooltip: value };
   }
 
   loadOldSettings() {
