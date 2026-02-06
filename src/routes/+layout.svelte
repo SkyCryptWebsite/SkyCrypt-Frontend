@@ -20,6 +20,7 @@
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import PackageOpen from "@lucide/svelte/icons/package-open";
   import PaintBucket from "@lucide/svelte/icons/paint-bucket";
+  import Pickaxe from "@lucide/svelte/icons/pickaxe";
   import Search from "@lucide/svelte/icons/search";
   import Sparkle from "@lucide/svelte/icons/sparkle";
   import Wifi from "@lucide/svelte/icons/wifi";
@@ -439,6 +440,19 @@
                 <Sparkle class="size-4" />
               </div>
               Toggle Glint
+            </Command.Item>
+            <Command.Item
+              value="mctooltip"
+              class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}
+              keywords={["mctooltip", "minecraft", "tooltip", "toggle", "settings"]}
+              onSelect={() => {
+                preferences.mctooltip = !preferences.mctooltip;
+                closeCommand();
+              }}>
+              <div class="rounded-lg bg-icon/80 p-1">
+                <Pickaxe class="size-4" />
+              </div>
+              Toggle Minecraft-style Tooltips
             </Command.Item>
           </Command.GroupItems>
         </Command.Group>

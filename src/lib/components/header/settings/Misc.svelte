@@ -8,6 +8,7 @@
   import Fan from "@lucide/svelte/icons/fan";
   import GripVertical from "@lucide/svelte/icons/grip-vertical";
   import Keyboard from "@lucide/svelte/icons/keyboard";
+  import Pickaxe from "@lucide/svelte/icons/pickaxe";
   import Rainbow from "@lucide/svelte/icons/rainbow";
   import Settings2 from "@lucide/svelte/icons/settings-2";
   import Sparkle from "@lucide/svelte/icons/sparkle";
@@ -112,6 +113,19 @@
           </div>
         </div>
         <Switch.Root id="glint" checked={preferences.showGlint} class="peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30" onCheckedChange={() => (preferences.showGlint = !preferences.showGlint)}>
+          <Switch.Thumb class="pointer-events-none block size-4 shrink-0 rounded-full bg-text transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
+        </Switch.Root>
+      </Label.Root>
+
+      <Label.Root for="mctooltip" class="flex items-center justify-between gap-4 rounded-lg bg-text/5 p-2">
+        <div class="flex items-start gap-2">
+          <Pickaxe class="size-6 h-lh shrink-0" />
+          <div class="flex flex-col">
+            <h4 class="font-semibold text-text/90">Minecraft Styled Tooltips</h4>
+            <p class="text-text/60">Enable Minecraft styled tooltips for items.</p>
+          </div>
+        </div>
+        <Switch.Root id="mctooltip" checked={preferences.mctooltip} class="peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30" onCheckedChange={() => (preferences.mctooltip = !preferences.mctooltip)}>
           <Switch.Thumb class="pointer-events-none block size-4 shrink-0 rounded-full bg-text transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
         </Switch.Root>
       </Label.Root>
