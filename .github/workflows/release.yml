@@ -110,14 +110,11 @@ jobs:
         env:
           HUSKY: "0"
 
-      - name: Exit pre-release mode
-        run: pnpm changeset pre exit 2>/dev/null || true
-
       - name: Create Release Pull Request
         id: changesets
         uses: changesets/action@v1
         with:
-          version: pnpm changeset:version
+          version: pnpm changeset pre exit && pnpm changeset:version
           title: "Version Packages (Stable)"
           commit: "chore: version packages"
         env:
