@@ -21,7 +21,7 @@ export class PreferencesContext {
     keybind: "/",
     showGlint: true,
     rainbowEnchantments: false,
-    mctooltip: true
+    mctooltip: false
   });
 
   constructor() {
