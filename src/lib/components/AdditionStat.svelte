@@ -1,8 +1,7 @@
 <script lang="ts">
-  import { getHoverContext } from "$ctx";
+  import { getHoverContext, getInternalState } from "$ctx";
   import { RARITY_COLORS } from "$lib/shared/constants/rarities";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { content } from "$lib/stores/internal";
   import { Tooltip } from "bits-ui";
   import { type Snippet } from "svelte";
 
@@ -26,10 +25,11 @@
   let asteriskRef = $state<HTMLElement | null>(null);
 
   const isHover = getHoverContext();
+  const internalState = getInternalState();
 </script>
 
 <Tooltip.Root bind:open>
-  <Tooltip.Trigger class={cn(`my-0 flex items-center gap-1 font-bold text-text/60 data-[is-tooltip=false]:cursor-default`, { "text-maxed": maxed }, className)} data-is-tooltip={asterisk} onpointerdown={() => (open = !open)} onclick={() => content.set(children)}>
+  <Tooltip.Trigger class={cn(`my-0 flex items-center gap-1 font-bold text-text/60 data-[is-tooltip=false]:cursor-default`, { "text-maxed": maxed }, className)} data-is-tooltip={asterisk} onpointerdown={() => (open = !open)} onclick={() => (internalState.content = children)}>
     {#snippet child({ props })}
       <button {...props}>
         <div class={!asterisk ? cn("my-0 flex items-center gap-1 font-bold text-text/60 data-[is-tooltip=false]:cursor-default", { "text-maxed": maxed }, className) : "contents"}>

@@ -1,35 +1,14 @@
-<script lang="ts" module>
-  function changeTheme(themeId: Theme["id"]) {
-    const theme = themes.find((theme) => theme.id === themeId);
-    if (!theme) {
-      themeStore.set("default");
-      document.documentElement.dataset.theme = "default";
-      return;
-    }
-    if (theme.light) {
-      document.documentElement.dataset.mode = "light";
-      document.documentElement.classList.remove("dark");
-      document.documentElement.classList.add("light");
-    } else {
-      document.documentElement.dataset.mode = "dark";
-      document.documentElement.classList.remove("light");
-      document.documentElement.classList.add("dark");
-    }
-
-    document.documentElement.dataset.theme = theme.id;
-  }
-  export { changeTheme };
-</script>
-
 <script lang="ts">
+  import { changeTheme, getTheme } from "$ctx";
   import { SettingsTab } from "$lib/components/header/types";
   import { getThemeIcons } from "$lib/shared/api/themes.remote";
-  import type { Theme } from "$lib/shared/constants/themes";
   import themes from "$lib/shared/constants/themes";
-  import { theme as themeStore } from "$lib/stores/themes";
   import Check from "@lucide/svelte/icons/check";
   import PaintBucket from "@lucide/svelte/icons/paint-bucket";
   import { Avatar, Label, RadioGroup, Tabs } from "bits-ui";
+  import { flushSync } from "svelte";
+
+  const themeContext = getTheme();
 </script>
 
 <Tabs.Content value={SettingsTab.Themes}>
@@ -43,10 +22,12 @@
   </div>
   <RadioGroup.Root
     class="mt-4 flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto"
-    bind:value={$themeStore}
+    bind:value={themeContext.current}
     onValueChange={(v) => {
-      if (!document.startViewTransition) changeTheme(v);
-      document.startViewTransition(() => changeTheme(v));
+      if (!document.startViewTransition) changeTheme(v, themeContext);
+      document.startViewTransition(() => {
+        flushSync(() => changeTheme(v, themeContext));
+      });
     }}>
     {#each themes as theme (theme.id)}
       {@const iconSvg = await getThemeIcons({ color: theme["colors"]!.logo, invert: theme.light })}

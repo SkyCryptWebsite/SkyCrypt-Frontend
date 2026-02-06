@@ -2,7 +2,8 @@
   import { browser, dev } from "$app/environment";
   import { beforeNavigate } from "$app/navigation";
   import { page, updated } from "$app/state";
-  import { PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
+  import { initDisabledPacks, initFavorites, initPreferences, initRecentSearches, initTheme, initWikiOrder, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
+  import { initInternalState } from "$ctx/internal.svelte";
   import Header from "$lib/components/header/Header.svelte";
   import { SettingsTab } from "$lib/components/header/types";
   import PerformanceMode from "$lib/components/PerformanceMode.svelte";
@@ -11,11 +12,6 @@
   import { getPacks, searchUser } from "$lib/shared/api/skycrypt-api.remote";
   import themes from "$lib/shared/constants/themes";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { favorites } from "$lib/stores/favorites";
-  import { content, openCommand, settingsOpen, settingsTab } from "$lib/stores/internal";
-  import { keybind, performanceMode, showGlint } from "$lib/stores/preferences";
-  import { recentSearches } from "$lib/stores/searches";
-  import { theme as themeStore } from "$lib/stores/themes";
   import BookOpenText from "@lucide/svelte/icons/book-open-text";
   import CircleAlert from "@lucide/svelte/icons/circle-alert";
   import Fan from "@lucide/svelte/icons/fan";
@@ -53,7 +49,13 @@
 
   let searchUserRemoteFn = $state<RemoteQuery<never>>();
 
-  const { ign } = page.params;
+  const { ign } = $derived(page.params);
+
+  const preferences = initPreferences();
+  const favorites = initFavorites();
+  const recentSearches = initRecentSearches();
+  const themeContext = initTheme();
+  const internalState = initInternalState();
 
   const position = writable<ToasterProps["position"]>("bottom-right");
   const theme = writable<ToasterProps["theme"]>("dark");
@@ -83,9 +85,9 @@
   }
 
   function handleKeydown(e: KeyboardEvent) {
-    if (e.key === $keybind) {
+    if (e.key === preferences.keybind) {
       e.preventDefault();
-      openCommand.set(true);
+      internalState.openCommand = true;
     }
   }
 
@@ -99,22 +101,23 @@
   }
 
   function closeCommand() {
-    openCommand.set(false);
+    internalState.openCommand = false;
     commandValue = null!;
     searchQuery = "";
   }
 
   function handleSettingTab(tab: SettingsTab) {
-    settingsTab.set(tab);
+    internalState.settingsTab = tab;
     closeCommand();
-    settingsOpen.set(true);
+    internalState.settingsOpen = true;
   }
+
+  initDisabledPacks();
+  initWikiOrder();
 
   setMobileContext(isMobile);
   setHoverContext(isHover);
   setPacksContext(packs);
-
-  themeStore.subscribe((newTheme) => theme.set(themes.find((theme) => theme.id === newTheme)?.light ? "light" : "dark"));
 
   onMount(() => {
     if (window.innerWidth <= 600) {
@@ -127,11 +130,11 @@
     loading = true;
     if (!searchQueryValidated.success) return;
     if (searchQuery.trim() !== "") {
-      recentSearches.update((searches) => [...new Set([{ ign: searchQuery.trim() }, ...searches])].slice(0, 5));
+      recentSearches.current = [...new Set([{ ign: searchQuery.trim() }, ...recentSearches.current])].slice(0, 5);
     }
     setTimeout(() => {
       loading = false;
-      openCommand.set(false);
+      internalState.openCommand = false;
     }, 1000);
   });
 
@@ -178,7 +181,7 @@
       // @ts-expect-error It accepts any property
       image: "/img/app-icons/svg.svg"
     }}
-    themeColor={themes.find((theme) => theme.id === $themeStore)?.light ? "#dbdbdb" : "#282828"}
+    themeColor={themes.find((theme) => theme.id === themeContext.current)?.light ? "#dbdbdb" : "#282828"}
     manifest="/manifest.webmanifest" />
 {/if}
 
@@ -188,7 +191,7 @@
   position={$position}
   class="sm:mr-8"
   toastOptions={{
-    class: cn("gap-2! font-semibold! group rounded-lg! text-text/80! border-none!", $performanceMode ? "bg-background-grey!" : "backdrop-blur-lg! backdrop-brightness-50! bg-transparent!"),
+    class: cn("gap-2! font-semibold! group rounded-lg! text-text/80! border-none!", preferences.performanceMode ? "bg-background-grey!" : "backdrop-blur-lg! backdrop-brightness-50! bg-transparent!"),
     classes: {
       closeButton: "text-text/80! border-none! hover:opacity-60! bg-background-grey! hover:bg-background-grey!",
       description: "text-pretty! font-medium!",
@@ -202,7 +205,7 @@
   {/await}
 {/if}
 
-{#if browser && !$performanceMode}
+{#if browser && !preferences.performanceMode}
   <PerformanceMode />
 {/if}
 
@@ -214,9 +217,9 @@
   {@render children()}
 </Tooltip.Provider>
 
-<Dialog.Root bind:open={$openCommand}>
+<Dialog.Root bind:open={internalState.openCommand}>
   <Dialog.Portal>
-    <Dialog.Overlay forceMount class={cn("fixed inset-0 z-40", $performanceMode ? "bg-background-lore" : "backdrop-blur-lg backdrop-brightness-50")}>
+    <Dialog.Overlay forceMount class={cn("fixed inset-0 z-40", preferences.performanceMode ? "bg-background-lore" : "backdrop-blur-lg backdrop-brightness-50")}>
       {#snippet child({ props, open })}
         {#if open}
           <div {...props} transition:fade={{ duration: 150, easing: cubicOut }}></div>
@@ -225,7 +228,7 @@
     </Dialog.Overlay>
     <Dialog.Content
       forceMount
-      class={cn("fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg font-icomoon select-text", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}
+      class={cn("fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg font-icomoon select-text", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}
       onOpenAutoFocus={(e) => {
         e.preventDefault();
         commandInput?.focus();
@@ -243,17 +246,17 @@
 
 {#if !isHover.current}
   <Drawer.Root
-    bind:open={() => !!$content, (v) => v}
+    bind:open={() => !!internalState.content, (v) => v}
     shouldScaleBackground={false}
     setBackgroundColorOnScale={false}
     onOpenChange={(open) => {
-      if (!open) content.set(undefined);
+      if (!open) internalState.content = undefined;
     }}>
     <Drawer.Portal>
       <Drawer.Overlay class="fixed inset-0 z-40 bg-black/80" />
       <Drawer.Content class="fixed right-0 bottom-0 left-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px] bg-background-lore">
         <div class="mx-auto w-full max-w-md overflow-auto p-6">
-          {@render $content?.()}
+          {@render internalState.content?.()}
         </div>
       </Drawer.Content>
     </Drawer.Portal>
@@ -307,13 +310,13 @@
           {/if}
         </Command.Empty>
 
-        {#if $recentSearches.length !== 0}
+        {#if recentSearches.current.length !== 0}
           <Command.Group>
             <Command.GroupHeading class="text-muted-foreground px-3 pt-4 pb-2 text-xs">Recent Searches</Command.GroupHeading>
             <Command.GroupItems>
-              {#each $recentSearches.slice(0, 5) as recentSearch, index (index)}
+              {#each recentSearches.current.slice(0, 5) as recentSearch, index (index)}
                 {#if !ign || recentSearch.ign !== ign}
-                  <Command.LinkItem value={recentSearch.ign} href="/stats/{recentSearch.ign}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[recentSearch.ign, "profile", "player", "favorite", "favorites"]}>
+                  <Command.LinkItem value={recentSearch.ign} href="/stats/{recentSearch.ign}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[recentSearch.ign, "profile", "player", "favorite", "favorites"]}>
                     <Avatar.Root class="size-4 shrink-0 bg-text/10">
                       <Avatar.Image loading="lazy" src={recentSearch.uuid ? `https://nmsr.nickac.dev/face/${recentSearch.uuid}` : "https://nmsr.nickac.dev/face/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40"} alt={recentSearch.ign} class="aspect-square size-4 [image-rendering:pixelated]" />
                       <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">
@@ -328,13 +331,13 @@
           </Command.Group>
         {/if}
         <Command.Separator class="bg-foreground/5 h-px w-full" />
-        {#if $favorites.length !== 0 && (!ign || !$favorites.some((f) => f.ign === ign))}
+        {#if favorites.current.length !== 0 && (!ign || !favorites.current.some((f) => f.ign === ign))}
           <Command.Group>
             <Command.GroupHeading class="text-muted-foreground px-3 pt-4 pb-2 text-xs">Favorites</Command.GroupHeading>
             <Command.GroupItems>
-              {#each $favorites.slice(0, 5) as favorite, index (index)}
+              {#each favorites.current.slice(0, 5) as favorite, index (index)}
                 {#if !ign || favorite.ign !== ign}
-                  <Command.LinkItem value={favorite.ign} href="/stats/{favorite.ign}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[favorite.ign, favorite.uuid, "profile", "player", "favorite", "favorites"]}>
+                  <Command.LinkItem value={favorite.ign} href="/stats/{favorite.ign}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[favorite.ign, favorite.uuid, "profile", "player", "favorite", "favorites"]}>
                     <Avatar.Root class="size-4 shrink-0 bg-text/10">
                       <Avatar.Image loading="lazy" src={`https://nmsr.nickac.dev/face/${favorite.uuid}`} alt={favorite.ign} class="aspect-square size-4 [image-rendering:pixelated]" />
                       <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">
@@ -356,7 +359,7 @@
             <Command.GroupItems>
               <Command.Item
                 value="search"
-                class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}
+                class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}
                 keywords={[searchQuery, "search", "find", "profile"]}
                 onSelect={() => {
                   searchUserRemoteFn = searchUser({ username: searchQuery });
@@ -381,31 +384,31 @@
         <Command.Group>
           <Command.GroupHeading class="text-muted-foreground px-3 pt-4 pb-2 text-xs">Settings</Command.GroupHeading>
           <Command.GroupItems>
-            <Command.Item value="packs" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["packs", "change", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Packs)}>
+            <Command.Item value="packs" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["packs", "change", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Packs)}>
               <div class="rounded-lg bg-icon/80 p-1">
                 <PackageOpen class="size-4" />
               </div>
               Change Packs
             </Command.Item>
-            <Command.Item value="themes" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["themes", "change", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Themes)}>
+            <Command.Item value="themes" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["themes", "change", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Themes)}>
               <div class="rounded-lg bg-icon/80 p-1">
                 <PaintBucket class="size-4" />
               </div>
               Change Theme
             </Command.Item>
-            <Command.Item value="section-order" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["order", "change", "section", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Order)}>
+            <Command.Item value="section-order" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["order", "change", "section", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Order)}>
               <div class="rounded-lg bg-icon/80 p-1">
                 <ListOrdered class="size-4" />
               </div>
               Change Section Order
             </Command.Item>
-            <Command.Item value="wiki-order" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["order", "misc", "change", "wiki", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Misc)}>
+            <Command.Item value="wiki-order" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["order", "misc", "change", "wiki", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Misc)}>
               <div class="rounded-lg bg-icon/80 p-1">
                 <BookOpenText class="size-4" />
               </div>
               Change Wiki Order
             </Command.Item>
-            <Command.Item value="keybind" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["keybind", "misc", "change", "command", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Misc)}>
+            <Command.Item value="keybind" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["keybind", "misc", "change", "command", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Misc)}>
               <div class="rounded-lg bg-icon/80 p-1">
                 <Keyboard class="size-4" />
               </div>
@@ -413,23 +416,23 @@
             </Command.Item>
             <Command.Item
               value="performance-mode"
-              class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}
+              class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}
               keywords={["performance", "mode", "toggle", "settings"]}
               onSelect={() => {
-                performanceMode.set(!$performanceMode);
+                preferences.performanceMode = !preferences.performanceMode;
                 closeCommand();
               }}>
               <div class="rounded-lg bg-icon/80 p-1">
-                <Fan class="size-4 will-change-transform data-[performance=false]:animate-spin-slow data-[performance=true]:animate-spin" data-performance={$performanceMode} />
+                <Fan class="size-4 will-change-transform data-[performance=false]:animate-spin-slow data-[performance=true]:animate-spin" data-performance={preferences.performanceMode} />
               </div>
               Toggle Performance Mode
             </Command.Item>
             <Command.Item
               value="glint"
-              class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}
+              class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}
               keywords={["glint", "toggle", "settings"]}
               onSelect={() => {
-                showGlint.set(!$showGlint);
+                preferences.showGlint = !preferences.showGlint;
                 closeCommand();
               }}>
               <div class="rounded-lg bg-icon/80 p-1">

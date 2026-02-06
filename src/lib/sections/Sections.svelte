@@ -1,12 +1,14 @@
 <script lang="ts">
+  import { getInternalState, getPreferences } from "$ctx";
   import Notice from "$lib/components/Notice.svelte";
   import type { SectionName } from "$lib/sections/types";
   import { titleCase } from "$lib/shared/helper";
   import { cn } from "$lib/shared/utils";
-  import { tabValue } from "$lib/stores/internal";
-  import { performanceMode, sectionOrderPreferences } from "$lib/stores/preferences";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import { Tabs } from "bits-ui";
+
+  const preferences = getPreferences();
+  const internalState = getInternalState();
 
   const COMPONENTS = {
     Gear: () => import("$lib/sections/stats/Gear.svelte"),
@@ -25,19 +27,19 @@
   } satisfies Record<SectionName, () => Promise<{ default: unknown }>>;
 
   function findIndex(id: SectionName) {
-    return $sectionOrderPreferences.findIndex((section) => section.name === id);
+    return preferences.sectionOrder.findIndex((section) => section.name === id);
   }
 </script>
 
-{#key $tabValue}
-  {#if $tabValue in COMPONENTS}
-    <Tabs.Root value={$tabValue} class="contents" data-section={$tabValue}>
-      <Tabs.Content value={$tabValue} class="section">
-        {#await COMPONENTS[$tabValue]()}
-          <div class={cn("rounded-lg bg-text/5 p-6", $performanceMode ? "bg-background-lore" : "backdrop-blur-sm")}>
+{#key internalState.tabValue}
+  {#if internalState.tabValue in COMPONENTS}
+    <Tabs.Root value={internalState.tabValue} class="contents" data-section={internalState.tabValue}>
+      <Tabs.Content value={internalState.tabValue} class="section">
+        {#await COMPONENTS[internalState.tabValue]()}
+          <div class={cn("rounded-lg bg-text/5 p-6", preferences.performanceMode ? "bg-background-lore" : "backdrop-blur-sm")}>
             <div class="flex items-center gap-2">
               <LoaderCircle class="size-5 animate-spin text-text/60" />
-              <span class="font-semibold text-text/80">Loading {titleCase($tabValue)}...</span>
+              <span class="font-semibold text-text/80">Loading {titleCase(internalState.tabValue)}...</span>
             </div>
           </div>
         {:then { default: Component }}
@@ -48,17 +50,17 @@
             {#snippet failed(err, reset)}
               <Notice title="An unexpected error has occurred" type="error" error={err} retry={reset} />
             {/snippet}
-            <Component order={findIndex($tabValue)} />
+            <Component order={findIndex(internalState.tabValue)} />
           </svelte:boundary>
         {:catch}
-          <Notice type="error" title={`Failed to load section ${$tabValue}`}>
+          <Notice type="error" title={`Failed to load section ${internalState.tabValue}`}>
             <p class="text-text/80">This section may not be available or there was an error loading it.</p>
           </Notice>
         {/await}
       </Tabs.Content>
     </Tabs.Root>
   {:else}
-    <Notice type="error" title={`Invalid Section: ${$tabValue}`}>
+    <Notice type="error" title={`Invalid Section: ${internalState.tabValue}`}>
       <p class="text-text/80">This section does not exist or is not implemented.</p>
     </Notice>
   {/if}

@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { getHoverContext } from "$ctx";
+  import { getHoverContext, getInternalState } from "$ctx";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { content } from "$lib/stores/internal";
   import Image from "@lucide/svelte/icons/image";
   import { Avatar, Tooltip } from "bits-ui";
   import { IsInViewport } from "runed";
@@ -43,6 +42,7 @@
 
   const inViewport = new IsInViewport(() => targetNode, { rootMargin: "200px 0px", threshold: 0 });
   const isHover = getHoverContext();
+  const internalState = getInternalState();
 
   $effect(() => {
     if (inViewport.current && !hasBeenInViewport) {
@@ -52,7 +52,7 @@
 </script>
 
 <Tooltip.Root>
-  <Tooltip.Trigger class={cn("flex w-full max-w-fit items-center gap-2 rounded-lg bg-background/30 py-2", classNames)} onpointerdown={() => (open = !open)} onclick={() => content.set(tooltip)}>
+  <Tooltip.Trigger class={cn("flex w-full max-w-fit items-center gap-2 rounded-lg bg-background/30 py-2", classNames)} onpointerdown={() => (open = !open)} onclick={() => (internalState.content = tooltip)}>
     {#snippet child({ props })}
       <div {...props} bind:this={targetNode} in:fade={{ duration: animationOptions.animate ? 300 : 0, delay: animationOptions.animate ? 25 * (animationOptions.index + 1) : 0, easing: cubicOut }} out:fade={{ duration: animationOptions.animate ? 300 : 0, delay: animationOptions.animate ? 25 * (animationOptions.amountOfItems - animationOptions.index) : 0, easing: cubicOut }}>
         <div class="flex items-center gap-2 px-2">

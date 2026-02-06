@@ -139,7 +139,7 @@ pnpm orval        # Regenerate API types
 - Rolldown-Vite for bundling
 - GitHub Actions: checks → test → build → Docker (ghcr.io)
 - Sentry integration for error tracking
-- changelogen for releases
+- changesets for versioning and releases
 
 ## NOTES
 

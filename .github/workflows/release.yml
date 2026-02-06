@@ -1,86 +1,122 @@
 name: Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      release-type:
-        description: "Release type (Manual override)"
-        required: true
-        type: choice
-        options:
-          - patch
-          - minor
-          - major
-          - prerelease
-      prerelease-id:
-        description: "Prerelease identifier (e.g., alpha, beta, rc) - only for prerelease"
-        required: false
-        type: string
-        default: "beta"
+  push:
+    branches: [dev, prod]
+
+concurrency:
+  group: release-${{ github.ref_name }}
+  cancel-in-progress: false
 
 jobs:
-  release:
-    name: Manual Release
+  beta:
+    name: Beta Release
+    if: github.ref == 'refs/heads/dev' && github.repository_owner == 'SkyCryptWebsite'
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'SkyCryptWebsite' && (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/prod')
 
     permissions:
       contents: write
-      packages: write
-      id-token: write
+      pull-requests: write
 
     steps:
       - name: Git checkout
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Configure Git
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: PNPM Install
         uses: ./.github/actions/pnpm-install
 
-      - name: Make dummy env for types
-        run: mv .env.example .env
+      - name: Enter pre-release mode
+        run: pnpm changeset pre enter beta 2>/dev/null || true
 
-      - name: Run tests
-        run: pnpm test:unit -- --run
-
-      - name: Run linting
-        run: pnpm lint
-
-      - name: Build
-        run: pnpm run build
-
-      - name: Create Release (patch)
-        if: inputs.release-type == 'patch'
-        run: pnpm run release -- --patch
+      - name: Create Release Pull Request
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: pnpm changeset:version
+          title: "Version Packages"
+          commit: "chore: version packages (beta)"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
 
-      - name: Create Release (minor)
-        if: inputs.release-type == 'minor'
-        run: pnpm run release -- --minor
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Beta GitHub Release
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
 
-      - name: Create Release (major)
-        if: inputs.release-type == 'major'
-        run: pnpm run release -- --major
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          if ! echo "$VERSION" | grep -q "beta"; then
+            echo "Current version ($VERSION) is not a beta, skipping"
+            exit 0
+          fi
 
-      - name: Create Prerelease
-        if: inputs.release-type == 'prerelease'
-        run: pnpm run release -- --prerelease=${{ inputs.prerelease-id }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG="v${VERSION}"
 
-      - name: Sync GitHub Release
-        run: npx changelogen gh release
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists, skipping"
+            exit 0
+          fi
+
+          git tag "$TAG"
+          git push origin "$TAG"
+          gh release create "$TAG" --title "$TAG" --generate-notes --prerelease
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+
+  stable:
+    name: Stable Release
+    if: github.ref == 'refs/heads/prod' && github.repository_owner == 'SkyCryptWebsite'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PAT_TOKEN }}
+
+      - name: PNPM Install
+        uses: ./.github/actions/pnpm-install
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Exit pre-release and create stable version
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+
+          # Exit pre-release mode if active
+          if [ -f ".changeset/pre.json" ] && node -e "process.exit(require('./.changeset/pre.json').mode === 'pre' ? 0 : 1)" 2>/dev/null; then
+            pnpm changeset pre exit
+            pnpm changeset version
+          elif ls .changeset/*.md 2>/dev/null | grep -v README.md | head -1 >/dev/null 2>&1; then
+            # Not in pre-release but there are changesets to consume
+            pnpm changeset version
+          else
+            echo "Nothing to release"
+            exit 0
+          fi
+
+          NEW_VERSION=$(node -p "require('./package.json').version")
+
+          if [ "$CURRENT_VERSION" = "$NEW_VERSION" ]; then
+            echo "Version unchanged ($CURRENT_VERSION), nothing to release"
+            exit 0
+          fi
+
+          TAG="v${NEW_VERSION}"
+
+          git add .
+          git commit -m "chore: release ${TAG}"
+          git tag "$TAG"
+          git push origin HEAD
+          git push origin "$TAG"
+
+          gh release create "$TAG" --title "$TAG" --generate-notes --latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}

@@ -1,21 +1,8 @@
-<script lang="ts" module>
-  function toggleRainbow() {
-    const show = get(rainbowEnchantments);
-    if (show) {
-      document.documentElement.dataset.rainbow = "true";
-    } else {
-      document.documentElement.dataset.rainbow = "false";
-    }
-  }
-  export { toggleRainbow };
-</script>
-
 <script lang="ts">
+  import { getPreferences, getWikiOrder } from "$ctx";
   import { SettingsTab } from "$lib/components/header/types";
   import { sections } from "$lib/sections/constants";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { keybind, performanceMode, rainbowEnchantments, sectionOrderPreferences, showGlint } from "$lib/stores/preferences";
-  import { wikiOrderPreferences } from "$lib/stores/wiki";
   import BookOpenText from "@lucide/svelte/icons/book-open-text";
   import CircleQuestionMark from "@lucide/svelte/icons/circle-question-mark";
   import Fan from "@lucide/svelte/icons/fan";
@@ -28,18 +15,17 @@
   import { dndzone, SHADOW_ITEM_MARKER_PROPERTY_NAME } from "svelte-dnd-action";
   import { flip } from "svelte/animate";
   import { cubicOut } from "svelte/easing";
-  import { derived, get } from "svelte/store";
   import { fade } from "svelte/transition";
 
-  const initialWikiOrderPreferences = get(wikiOrderPreferences);
+  const preferences = getPreferences();
+  const wikiOrderContext = getWikiOrder();
+  const initialWikiOrderPreferences = wikiOrderContext.current;
 
   let isListening = $state(false);
   let wikiOrder = $state(initialWikiOrderPreferences);
 
   const defaultSectionOrder = sections;
-  const differsFromDefault = derived(sectionOrderPreferences, ($sectionOrderPreferences) => {
-    return JSON.stringify($sectionOrderPreferences) !== JSON.stringify(defaultSectionOrder);
-  });
+  const differsFromDefault = $derived(JSON.stringify(preferences.sectionOrder) !== JSON.stringify(defaultSectionOrder));
 
   function handleKeybindKeydown(e: KeyboardEvent) {
     if (isListening) {
@@ -47,11 +33,11 @@
       e.stopPropagation();
       const key = e.key;
       if (key.length === 1 && key.match(/[a-zA-Z0-9/\\.,;'"`~!@#$%^&*()_+\-=[\]{}|:<>?]/)) {
-        keybind.set(key);
+        preferences.keybind = key;
         isListening = false;
       } else if (key === "Escape") {
         isListening = false;
-        keybind.set($keybind || "/");
+        preferences.keybind = preferences.keybind || "/";
       }
     }
   }
@@ -81,7 +67,7 @@
       </div>
       <Label.Root for="performance" class="flex items-center justify-between gap-4 rounded-lg bg-text/5 p-2">
         <div class="flex items-start gap-2">
-          <Fan class="size-6 h-lh shrink-0 will-change-transform data-[performance=false]:animate-spin-slow data-[performance=true]:animate-spin" data-performance={$performanceMode} />
+          <Fan class="size-6 h-lh shrink-0 will-change-transform data-[performance=false]:animate-spin-slow data-[performance=true]:animate-spin" data-performance={preferences.performanceMode} />
           <div class="flex flex-col">
             <Tooltip.Provider delayDuration={0}>
               <Tooltip.Root>
@@ -90,7 +76,7 @@
                   <CircleQuestionMark class="size-4 h-lh text-text/60" />
                 </Tooltip.Trigger>
                 <Tooltip.Portal>
-                  <Tooltip.Content forceMount class={cn("z-50 flex w-full max-w-lg flex-col space-y-2 overflow-hidden rounded-lg p-4 select-text", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}>
+                  <Tooltip.Content forceMount class={cn("z-50 flex w-full max-w-lg flex-col space-y-2 overflow-hidden rounded-lg p-4 select-text", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}>
                     {#snippet child({ wrapperProps, props, open })}
                       {#if open}
                         <div {...wrapperProps}>
@@ -112,7 +98,7 @@
             <p class="text-text/60">Disables blur, transparency and backdrop effects for better performance on low-end devices.</p>
           </div>
         </div>
-        <Switch.Root id="performance" checked={$performanceMode} class="peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30" onCheckedChange={() => performanceMode.update((value) => !value)}>
+        <Switch.Root id="performance" checked={preferences.performanceMode} class="peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30" onCheckedChange={() => (preferences.performanceMode = !preferences.performanceMode)}>
           <Switch.Thumb class="pointer-events-none block size-4 shrink-0 rounded-full bg-text transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
         </Switch.Root>
       </Label.Root>
@@ -125,7 +111,7 @@
             <p class="text-text/60">Show the enchantment glint effect on enchanted items.</p>
           </div>
         </div>
-        <Switch.Root id="glint" checked={$showGlint} class="peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30" onCheckedChange={() => showGlint.update((value) => !value)}>
+        <Switch.Root id="glint" checked={preferences.showGlint} class="peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30" onCheckedChange={() => (preferences.showGlint = !preferences.showGlint)}>
           <Switch.Thumb class="pointer-events-none block size-4 shrink-0 rounded-full bg-text transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
         </Switch.Root>
       </Label.Root>
@@ -140,11 +126,10 @@
         </div>
         <Switch.Root
           id="rainbow"
-          checked={$rainbowEnchantments}
+          checked={preferences.rainbowEnchantments}
           class="peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30"
           onCheckedChange={() => {
-            rainbowEnchantments.update((value) => !value);
-            toggleRainbow();
+            preferences.rainbowEnchantments = !preferences.rainbowEnchantments;
           }}>
           <Switch.Thumb class="pointer-events-none block size-4 shrink-0 rounded-full bg-text transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
         </Switch.Root>
@@ -162,7 +147,7 @@
           {#if isListening}
             <span class="animate-pulse text-icon">Press a key</span>
           {:else}
-            <span class="min-w-2 text-center">{$keybind}</span>
+            <span class="min-w-2 text-center">{preferences.keybind}</span>
           {/if}
         </Button.Root>
       </div>
@@ -184,7 +169,7 @@
         use:dndzone={{ items: wikiOrder, flipDurationMs: 300, dropTargetStyle: {} }}
         onconsider={(e) => (wikiOrder = e.detail.items)}
         onfinalize={(e) => {
-          wikiOrderPreferences.set(e.detail.items);
+          wikiOrderContext.current = e.detail.items;
           wikiOrder = e.detail.items;
         }}>
         {#each wikiOrder as wiki (wiki.id)}
@@ -207,11 +192,11 @@
           </div>
         {/each}
       </div>
-      {#if $differsFromDefault}
+      {#if differsFromDefault}
         <Button.Root
           class="mt-4 w-full rounded-lg bg-text/65 p-1.5 text-sm font-semibold text-background/80 uppercase transition-colors ease-out hover:bg-text/80"
           onclick={() => {
-            sectionOrderPreferences.set(defaultSectionOrder);
+            preferences.sectionOrder = defaultSectionOrder;
           }}>
           Reset to default
         </Button.Root>

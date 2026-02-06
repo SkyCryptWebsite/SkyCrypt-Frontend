@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getHoverContext, getProfileContext } from "$ctx";
+  import { getHoverContext, getInternalState, getProfileContext } from "$ctx";
   import AdditionStat from "$lib/components/AdditionStat.svelte";
   import Chip from "$lib/components/Chip.svelte";
   import Notice from "$lib/components/Notice.svelte";
@@ -10,7 +10,6 @@
   import { calculatePercentage, formatNumber, getRarityClass, renderLore } from "$lib/shared/helper";
   import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { content } from "$lib/stores/internal";
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
   import Image from "@lucide/svelte/icons/image";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
@@ -23,6 +22,7 @@
   let sectionOpen: boolean = $state(false);
 
   const isHover = getHoverContext();
+  const internalState = getInternalState();
 </script>
 
 <Collapsible.Root bind:open={sectionOpen}>
@@ -138,7 +138,7 @@
             {/if}
           {/snippet}
           <Tooltip.Root disableCloseOnTriggerClick={false}>
-            <Tooltip.Trigger onclick={() => content.set(tooltipContent)}>
+            <Tooltip.Trigger onclick={() => (internalState.content = tooltipContent)}>
               <Avatar.Root class="flex aspect-square items-center justify-center rounded-sm bg-text/4 p-1">
                 <Avatar.Image src={plot.texture_path} class="h-auto w-14 select-none [image-rendering:pixelated]" />
                 <Avatar.Fallback>

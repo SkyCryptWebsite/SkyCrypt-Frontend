@@ -1,0 +1,12 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "skycrypt-frontend": "3.0.0"
+  },
+  "changesets": [
+    "eighty-ideas-jog",
+    "shaggy-yaks-flow",
+    "two-dodos-stand"
+  ]
+}

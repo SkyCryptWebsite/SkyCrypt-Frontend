@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getProfileContext } from "$ctx";
+  import { getInternalState, getPreferences, getProfileContext } from "$ctx";
   import { env } from "$env/dynamic/public";
   import Item from "$lib/components/Item.svelte";
   import Notice from "$lib/components/Notice.svelte";
@@ -9,8 +9,6 @@
   import { getInventorySection, searchInventorySection } from "$lib/shared/api/skycrypt-api.remote";
   import { renderLore, shouldShine } from "$lib/shared/helper";
   import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
-  import { itemContentSpecial } from "$lib/stores/internal";
-  import { performanceMode } from "$lib/stores/preferences";
   import Image from "@lucide/svelte/icons/image";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import { Avatar, ScrollArea, Tabs } from "bits-ui";
@@ -19,6 +17,9 @@
   import { crossfade, fade } from "svelte/transition";
 
   const { PUBLIC_API_URL } = env;
+
+  const preferences = getPreferences();
+  const internalState = getInternalState();
 
   type Tabs = {
     id: string;
@@ -106,11 +107,11 @@
     easing: cubicOut
   });
 
-  itemContentSpecial.subscribe((item) => {
-    if (item) {
+  $effect.pre(() => {
+    if (internalState.itemContentSpecial) {
       if (openTab === "search" || openTab === "backpack" || openTab === "museum") {
         console.warn("Item content special should not be set for search, backpack, or museum tabs.");
-        itemContentSpecial.set(undefined);
+        internalState.itemContentSpecial = undefined;
       }
     }
   });
@@ -199,7 +200,7 @@
         <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
           {#each items as item, index (index)}
             {#if item}
-              <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!$performanceMode && shouldShine(item)}>
+              <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!preferences.performanceMode && shouldShine(item)}>
                 {@render itemSnippet(item)}
               </div>
             {:else}
@@ -231,7 +232,7 @@
               {#snippet child({ props })}
                 <div {...props}>
                   {#if item.texture_path}
-                    <div class="relative flex aspect-square items-center justify-center rounded-sm group-data-[state=active]:bg-text/10 group-data-[state=inactive]:bg-text/4 data-[shine=true]:shine" data-shine={!$performanceMode && shouldShine(item)}>
+                    <div class="relative flex aspect-square items-center justify-center rounded-sm group-data-[state=active]:bg-text/10 group-data-[state=inactive]:bg-text/4 data-[shine=true]:shine" data-shine={!preferences.performanceMode && shouldShine(item)}>
                       {@render itemSnippet(item)}
                     </div>
                   {:else}
@@ -256,7 +257,7 @@
                   {/if}
                   <Tabs.Content value={index.toString()}>
                     {#if containedItem.texture_path}
-                      <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!$performanceMode && shouldShine(item)}>
+                      <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!preferences.performanceMode && shouldShine(item)}>
                         {@render itemSnippet(containedItem)}
                       </div>
                     {:else}
@@ -301,7 +302,7 @@
             {/if}
           {/if}
           {#if item.texture_path}
-            <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!$performanceMode && shouldShine(item)}>
+            <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!preferences.performanceMode && shouldShine(item)}>
               {#if tab.id === "inventory"}
                 {@render itemSnippet({ ...item, rarity: item.rarity ?? "uncommon" } as ModelsStrippedItem)}
               {:else}

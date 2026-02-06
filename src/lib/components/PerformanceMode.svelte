@@ -1,6 +1,6 @@
 <script lang="ts">
   import { browser } from "$app/environment";
-  import { performanceMode } from "$lib/stores/preferences";
+  import { getPreferences } from "$ctx";
   import { onMount } from "svelte";
   import { toast } from "svelte-sonner";
 
@@ -8,6 +8,7 @@
   const MIN_SAMPLES = 10; // Require more samples before triggering
   const SMOOTHING_FACTOR = 0.2; // For exponential moving average
   const INITIALIZATION_DELAY = 3000; // Wait 3 seconds after mount before detecting
+  const preferences = getPreferences();
 
   let fps = 60;
   let smoothedFps = 60;
@@ -108,7 +109,7 @@
       action: {
         label: "Enable",
         onClick: () => {
-          performanceMode.set(true);
+          preferences.performanceMode = true;
           toast.message("Performance Mode Enabled", {
             id: "performance-mode-enabled",
             description: "Please note that the performance detection is not 100% accurate and may not always reflect your device's capabilities, be your own judge. You can always disable performance mode in settings.",
