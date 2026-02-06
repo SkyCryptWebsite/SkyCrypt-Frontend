@@ -57,7 +57,7 @@
   });
 </script>
 
-<div class="group/itemtooltip group-data-[mctooltip=false]/itemtooltip:bg-mctooltip-bg group-data-[mctooltip=true]/itemtooltip:relative group-data-[mctooltip=true]/itemtooltip:contents group-data-[mctooltip=true]/itemtooltip:rounded-md group-data-[mctooltip=true]/itemtooltip:p-0.5" {@attach animateObfuscatedText} data-mctooltip={preferences.mctooltip}>
+<div class="group/itemtooltip data-[mctooltip=false]:contents data-[mctooltip=true]:relative data-[mctooltip=true]:rounded-lg data-[mctooltip=true]:bg-mctooltip-bg data-[mctooltip=true]:p-0.5" {@attach animateObfuscatedText} data-mctooltip={preferences.mctooltip}>
   <div class="group-data-[mctooltip=false]/itemtooltip:contents group-data-[mctooltip=true]/itemtooltip:minecraft-tooltip">
     <div class={cn(`flex-nowrap items-center justify-center gap-4 nice-colors-dark group-data-[mctooltip=false]/itemtooltip:flex group-data-[mctooltip=false]/itemtooltip:p-5`, { "group-data-[mctooltip=false]/itemtooltip:rounded-t-[10px]": isDrawer }, preferences.mctooltip ? undefined : bgColor)}>
       <Avatar.Root class="shrink-0 px-2 group-data-[mctooltip=true]/itemtooltip:hidden">
