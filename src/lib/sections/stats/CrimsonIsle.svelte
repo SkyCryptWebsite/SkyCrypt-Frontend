@@ -13,10 +13,10 @@
 
   let { order }: { order: number } = $props();
 
-  const profile = $derived(getProfileContext());
+  const profile = $derived(getProfileContext().current);
 
-  const profileUUID = $derived(profile.uuid);
-  const profileId = $derived(profile.profile_id);
+  const profileUUID = $derived(profile?.uuid);
+  const profileId = $derived(profile?.profile_id);
 
   const isle = $derived(await getCrimsonIsleSection({ uuid: profileUUID!, profileId: profileId! }));
 </script>

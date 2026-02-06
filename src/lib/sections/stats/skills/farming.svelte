@@ -12,7 +12,7 @@
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
   import { Collapsible } from "bits-ui";
 
-  const data = $derived(getSkillsContext());
+  const data = $derived(getSkillsContext().skills);
   const farming = $derived(data?.farming);
   const farmingTools = $derived(farming?.tools);
   const highestPriorityFarmingTool = $derived(farmingTools?.highest_priority_tool);

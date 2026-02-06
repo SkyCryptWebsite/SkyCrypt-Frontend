@@ -18,7 +18,7 @@
 
 {#if selectedPiece}
   <div class="rounded-lg bg-background/30 p-2">
-    <div class="size-14 bg-text/80 [mask-image:var(--image)] [-webkit-mask-image:var(--image)] [-webkit-mask-position:center_center] [-webkit-mask-repeat:no-repeat] [-webkit-mask-size:3.5rem] [image-rendering:pixelated]" style="--image: url('/img/textures/item/empty_armor_slot_{selectedPiece}.avif')"></div>
+    <div class="size-14 bg-text/80 mask-(--image) [-webkit-mask-image:var(--image)] [-webkit-mask-position:center_center] [-webkit-mask-repeat:no-repeat] [-webkit-mask-size:3.5rem] [image-rendering:pixelated]" style="--image: url('/img/textures/item/empty_armor_slot_{selectedPiece}.avif')"></div>
   </div>
 {:else}
   <div class="rounded-lg bg-background/30 p-2">

@@ -1,15 +1,14 @@
 <script lang="ts">
-  import { getProfileContext } from "$ctx";
+  import { getInternalState, getPreferences, getProfileContext } from "$ctx";
   import { env } from "$env/dynamic/public";
   import Item from "$lib/components/Item.svelte";
   import Notice from "$lib/components/Notice.svelte";
+  import ScrollAreaPrimitive from "$lib/components/ScrollAreaPrimitive.svelte";
   import Section from "$lib/components/Section.svelte";
   import { type ModelsStrippedItem } from "$lib/shared/api/orval-generated";
   import { getInventorySection, searchInventorySection } from "$lib/shared/api/skycrypt-api.remote";
   import { renderLore, shouldShine } from "$lib/shared/helper";
   import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
-  import { itemContentSpecial } from "$lib/stores/internal";
-  import { performanceMode } from "$lib/stores/preferences";
   import Image from "@lucide/svelte/icons/image";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import { Avatar, ScrollArea, Tabs } from "bits-ui";
@@ -18,6 +17,9 @@
   import { crossfade, fade } from "svelte/transition";
 
   const { PUBLIC_API_URL } = env;
+
+  const preferences = getPreferences();
+  const internalState = getInternalState();
 
   type Tabs = {
     id: string;
@@ -29,16 +31,16 @@
   let openTab = $state<string>("inventory");
   let searchValue = $state<string>();
 
-  const profile = $derived(getProfileContext());
-  const profileId = $derived(profile.profile_id);
-  const uuid = $derived(profile.uuid);
+  const profile = $derived(getProfileContext().current);
+  const profileId = $derived(profile?.profile_id);
+  const uuid = $derived(profile?.uuid);
 
   const debouncedSearchValue = $state(new Debounced(() => searchValue, 300));
 
   const tabs = $derived<Tabs[]>([
     {
       id: "inventory",
-      icon: `https://crafatar.com/renders/head/${profile.uuid}?overlay`,
+      icon: `https://nmsr.nickac.dev/headiso/${profile?.uuid}?noshading&no=shadow`,
       gap: 27
     },
     {
@@ -105,11 +107,11 @@
     easing: cubicOut
   });
 
-  itemContentSpecial.subscribe((item) => {
-    if (item) {
+  $effect.pre(() => {
+    if (internalState.itemContentSpecial) {
       if (openTab === "search" || openTab === "backpack" || openTab === "museum") {
         console.warn("Item content special should not be set for search, backpack, or museum tabs.");
-        itemContentSpecial.set(undefined);
+        internalState.itemContentSpecial = undefined;
       }
     }
   });
@@ -118,8 +120,8 @@
 <Section id="Inventory" {order} class="min-h-[600px]">
   <Tabs.Root bind:value={openTab} class="@container relative mb-0 rounded-lg bg-background/30 p-5 pt-4">
     <Tabs.List>
-      <ScrollArea.Root>
-        <ScrollArea.Viewport class="border-b border-icon">
+      <ScrollAreaPrimitive viewClass="border-b border-icon" orientation="horizontal">
+        {#snippet viewportChildren()}
           <div class="flex! h-full shrink-0 flex-nowrap items-center gap-3 px-4 whitespace-nowrap">
             {#each tabs as tab (tab.id)}
               <Tabs.Trigger value={tab.id} class="group relative flex items-center justify-center gap-0.5 pb-2 text-xs uppercase">
@@ -138,11 +140,11 @@
               </Tabs.Trigger>
             {/each}
           </div>
-        </ScrollArea.Viewport>
+        {/snippet}
         <ScrollArea.Scrollbar orientation="horizontal">
           <ScrollArea.Thumb />
         </ScrollArea.Scrollbar>
-      </ScrollArea.Root>
+      </ScrollAreaPrimitive>
     </Tabs.List>
 
     <Tabs.Content value={openTab}>
@@ -190,7 +192,7 @@
       <Notice title="An unexpected error has occurred" type="error" error={err} {retry} />
     {/snippet}
     {#if debouncedSearchValue.current === "" || !debouncedSearchValue.current}{:else}
-      {@const items = await searchInventorySection({ uuid: uuid!, profileId: profileId!, inventoryId: "search", search: debouncedSearchValue.current })}
+      {@const items = await searchInventorySection({ uuid: uuid!, profileId: profileId!, inventoryId: "search", query: debouncedSearchValue.current })}
 
       {#if !items || items.length === 0}
         <p class="mx-auto w-fit leading-6">No items found.</p>
@@ -198,7 +200,7 @@
         <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
           {#each items as item, index (index)}
             {#if item}
-              <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!$performanceMode && shouldShine(item)}>
+              <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!preferences.performanceMode && shouldShine(item)}>
                 {@render itemSnippet(item)}
               </div>
             {:else}
@@ -230,7 +232,7 @@
               {#snippet child({ props })}
                 <div {...props}>
                   {#if item.texture_path}
-                    <div class="relative flex aspect-square items-center justify-center rounded-sm group-data-[state=active]:bg-text/10 group-data-[state=inactive]:bg-text/4 data-[shine=true]:shine" data-shine={!$performanceMode && shouldShine(item)}>
+                    <div class="relative flex aspect-square items-center justify-center rounded-sm group-data-[state=active]:bg-text/10 group-data-[state=inactive]:bg-text/4 data-[shine=true]:shine" data-shine={!preferences.performanceMode && shouldShine(item)}>
                       {@render itemSnippet(item)}
                     </div>
                   {:else}
@@ -255,7 +257,7 @@
                   {/if}
                   <Tabs.Content value={index.toString()}>
                     {#if containedItem.texture_path}
-                      <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!$performanceMode && shouldShine(item)}>
+                      <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!preferences.performanceMode && shouldShine(item)}>
                         {@render itemSnippet(containedItem)}
                       </div>
                     {:else}
@@ -300,7 +302,7 @@
             {/if}
           {/if}
           {#if item.texture_path}
-            <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!$performanceMode && shouldShine(item)}>
+            <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!preferences.performanceMode && shouldShine(item)}>
               {#if tab.id === "inventory"}
                 {@render itemSnippet({ ...item, rarity: item.rarity ?? "uncommon" } as ModelsStrippedItem)}
               {:else}

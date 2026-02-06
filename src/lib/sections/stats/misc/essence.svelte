@@ -6,7 +6,7 @@
   import { cn } from "$lib/shared/utils";
   import { format } from "numerable";
 
-  const misc = $derived(getMiscContext());
+  const misc = $derived(getMiscContext().misc);
 </script>
 
 {#if misc && misc.essence != null}

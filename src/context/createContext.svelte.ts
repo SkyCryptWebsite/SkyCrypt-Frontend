@@ -3,6 +3,18 @@ import type { IsMobile } from "$lib/hooks/is-mobile.svelte";
 import type { ModelsMiscOutput, ModelsResourcePackConfig, ModelsSkillsOutput, ModelsStatsOutput } from "$lib/shared/api/orval-generated";
 import { createContext } from "svelte";
 
+export class ProfileContext {
+  #current: ModelsStatsOutput | null = $state(null);
+
+  get current() {
+    return this.#current;
+  }
+
+  set current(value: ModelsStatsOutput | null) {
+    this.#current = value;
+  }
+}
+
 export class PacksContext {
   #packs: ModelsResourcePackConfig[] = $state([]);
 
@@ -15,9 +27,33 @@ export class PacksContext {
   }
 }
 
-export const [getProfileContext, setProfileContext] = createContext<ModelsStatsOutput>();
-export const [getSkillsContext, setSkillsContext] = createContext<ModelsSkillsOutput>();
-export const [getMiscContext, setMiscContext] = createContext<ModelsMiscOutput>();
+export class MiscContext {
+  #misc: ModelsMiscOutput | null = $state(null);
+
+  get misc() {
+    return this.#misc;
+  }
+
+  set misc(value: ModelsMiscOutput | null) {
+    this.#misc = value;
+  }
+}
+
+export class SkillsContext {
+  #skills: ModelsSkillsOutput | null = $state(null);
+
+  get skills() {
+    return this.#skills;
+  }
+
+  set skills(value: ModelsSkillsOutput | null) {
+    this.#skills = value;
+  }
+}
+
+export const [getProfileContext, setProfileContext] = createContext<ProfileContext>();
+export const [getSkillsContext, setSkillsContext] = createContext<SkillsContext>();
+export const [getMiscContext, setMiscContext] = createContext<MiscContext>();
 export const [getMobileContext, setMobileContext] = createContext<IsMobile>();
 export const [getHoverContext, setHoverContext] = createContext<IsHover>();
 export const [getPacksContext, setPacksContext] = createContext<PacksContext>();

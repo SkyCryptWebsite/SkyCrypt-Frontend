@@ -1,17 +1,6 @@
 import adapter from "@sveltejs/adapter-node";
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
-/**
- * Determine whether to force runes mode for a given filename
- * @param {string} filename
- * @returns {boolean}
- */
-const forceRunesMode = (filename) => {
-  if (filename.match(/[\\/\\]node_modules[\\/\\]/)) {
-    return false;
-  }
-  return true;
-};
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
   // Consult https://svelte.dev/docs/kit/integrations
@@ -25,11 +14,16 @@ const config = {
 
   kit: {
     experimental: {
-      remoteFunctions: true
+      remoteFunctions: true,
+
+      tracing: {
+        server: true
+      },
+
+      instrumentation: {
+        server: true
+      }
     },
-    // adapter-auto only supports some environments, see https://kit.svelte.dev/docs/adapter-auto for a list.
-    // If your environment is not supported, or you settled on a specific environment, switch out the adapter.
-    // See https://kit.svelte.dev/docs/adapters for more information about adapters.
     adapter: adapter(),
     alias: {
       $params: "./src/params",
@@ -47,13 +41,13 @@ const config = {
       directives: {
         "script-src": ["self", "unsafe-inline"],
         "style-src": ["self", "unsafe-inline", "https://fonts.googleapis.com"],
-        "img-src": ["self", "data:", "https://vzge.me", "https://crafatar.com", "https://mc-heads.net", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe"],
-        "connect-src": ["self", "https://crafatar.com", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe"],
+        "img-src": ["self", "data:", "https://textures.minecraft.net", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe", "https://nmsr.nickac.dev"],
+        "connect-src": ["self", "https://mowojang.matdoes.dev", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe"],
         "font-src": ["self", "https://fonts.gstatic.com"]
       }
     },
     version: {
-      name: process.env.PUBLIC_COMMIT_HASH,
+      name: process.env.PUBLIC_COMMIT_HASH || Date.now().toString(),
       pollInterval:
         // in ms
         1000 * 60 // 1 minute
@@ -66,11 +60,8 @@ const config = {
   },
   vitePlugin: {
     // Can be removed once Svelte 6 is released, as `true` will be the default
-    dynamicCompileOptions({ filename, compileOptions }) {
-      // Dynamically set runes mode per Svelte file
-      if (forceRunesMode(filename) && !compileOptions.runes) {
-        return { runes: true };
-      }
+    dynamicCompileOptions({ _filename, _compileOptions }) {
+      return { runes: true };
     }
   }
 };

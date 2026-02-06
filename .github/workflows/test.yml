@@ -1,0 +1,22 @@
+name: Test
+
+on:
+  workflow_call:
+
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: PNPM Install
+        uses: ./.github/actions/pnpm-install
+
+      - name: Make dummy env for types
+        run: mv .env.example .env
+
+      - name: Run unit tests
+        run: pnpm test:unit -- --run

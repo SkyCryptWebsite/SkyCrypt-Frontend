@@ -6,7 +6,7 @@
   import { tz } from "@date-fns/tz";
   import { formatDate, formatDistanceToNowStrict } from "date-fns";
 
-  const misc = $derived(getMiscContext());
+  const misc = $derived(getMiscContext().misc);
 </script>
 
 {#if misc && misc.claimed_items != null}

@@ -1,0 +1,35 @@
+name: Build
+
+on:
+  workflow_call:
+    inputs:
+      server-api-url:
+        description: "Server API URL (without protocol or /api/ suffix)"
+        required: false
+        type: string
+        default: "sky.shiiyu.moe"
+    secrets:
+      server-api-token:
+        description: "Server API Token"
+        required: false
+
+jobs:
+  build:
+    name: Vite Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: PNPM Install
+        uses: ./.github/actions/pnpm-install
+
+      - name: Make dummy env for types
+        run: mv .env.example .env
+
+      - name: Vite Build
+        run: pnpm run build
+        env:
+          PUBLIC_SERVER_API_URL: https://${{ inputs.server-api-url }}/api/
+          SERVER_API_TOKEN: ${{ secrets.server-api-token }}

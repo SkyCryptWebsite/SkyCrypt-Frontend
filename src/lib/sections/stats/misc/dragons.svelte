@@ -6,7 +6,7 @@
   import { formatTime } from "$lib/shared/helper";
   import { format } from "numerable";
 
-  const misc = $derived(getMiscContext());
+  const misc = $derived(getMiscContext().misc);
   const dragons = $derived(misc?.dragons);
 </script>
 

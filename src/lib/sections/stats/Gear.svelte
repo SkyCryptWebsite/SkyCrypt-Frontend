@@ -3,6 +3,7 @@
   import Bonus from "$lib/components/Bonus.svelte";
   import EmptyEquipment from "$lib/components/EmptyEquipment.svelte";
   import Item from "$lib/components/Item.svelte";
+  import ScrollAreaPrimitive from "$lib/components/ScrollAreaPrimitive.svelte";
   import Section from "$lib/components/Section.svelte";
   import Wardrobe from "$lib/components/Wardrobe.svelte";
   import Items from "$lib/layouts/stats/Items.svelte";
@@ -14,10 +15,9 @@
 
   let { order }: { order: number } = $props();
 
-  const ctx = getProfileContext();
-  const profile = $derived(ctx);
-  const profileUUID = $derived(profile.uuid);
-  const profileId = $derived(profile.profile_id);
+  const profile = $derived(getProfileContext().current);
+  const profileUUID = $derived(profile?.uuid);
+  const profileId = $derived(profile?.profile_id);
 
   const { armor, equipment, wardrobe, weapons } = $derived(await getGearSection({ uuid: profileUUID!, profileId: profileId! }));
   const firstWardrobeItems = $derived.by(() => {
@@ -57,7 +57,7 @@
           {/if}
         {/each}
       {:else}
-        <p class="space-x-0.5 leading-6">{profile.username} has no armor equipped</p>
+        <p class="space-x-0.5 leading-6">{profile?.username} has no armor equipped</p>
       {/if}
       {#snippet info()}
         {#if armor.stats}
@@ -74,7 +74,7 @@
           <Item {piece} />
         {/each}
       {:else}
-        <p class="space-x-0.5 leading-6">{profile.username} has no equipment equipped</p>
+        <p class="space-x-0.5 leading-6">{profile?.username} has no equipment equipped</p>
       {/if}
       {#snippet info()}
         {#if equipment.stats}
@@ -88,21 +88,22 @@
     <Items subtitle="Wardrobe">
       <div class="max-w-full">
         <!-- min height was calc by: each piece of armor was 72px with a 8px gap and scrollbar was 2.5px and some more for gap for scrollbar -->
-        <ScrollArea.Root class="relative min-h-[335px]" type="auto">
-          <ScrollArea.Viewport>
+        <ScrollAreaPrimitive class="relative min-h-[335px]" type="auto" orientation="horizontal">
+          {#snippet viewportChildren()}
             <div class="flex flex-row gap-6 md:gap-3">
               {#each firstWardrobeItems as _, i (i)}
-                <div class="min-h-[4.5rem] min-w-[4.5rem]">
+                <div class="min-h-18 min-w-18">
                   <Wardrobe wardrobeItems={wardrobe[i]} />
                 </div>
               {/each}
             </div>
-          </ScrollArea.Viewport>
+          {/snippet}
+
           <ScrollArea.Scrollbar orientation="horizontal" class="mt-2 flex h-2.5 w-full touch-none rounded-full transition-all ease-out select-none">
             <ScrollArea.Thumb class="flex rounded-full bg-icon" />
           </ScrollArea.Scrollbar>
           <ScrollArea.Corner />
-        </ScrollArea.Root>
+        </ScrollAreaPrimitive>
       </div>
     </Items>
   {/if}
@@ -120,7 +121,7 @@
             {/if}
           </div>
         {:else}
-          <p class="space-x-0.5 leading-6">{profile.username} has no weapons</p>
+          <p class="space-x-0.5 leading-6">{profile?.username} has no weapons</p>
         {/if}
       {/snippet}
 

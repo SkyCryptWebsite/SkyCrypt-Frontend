@@ -1,36 +1,30 @@
 <script lang="ts">
-  import { getHoverContext } from "$ctx";
-  import Misc, { toggleRainbow } from "$lib/components/header/settings/Misc.svelte";
+  import { getHoverContext, getInternalState, getPreferences } from "$ctx";
+  import Misc from "$lib/components/header/settings/Misc.svelte";
   import Order from "$lib/components/header/settings/Order.svelte";
   import Packs from "$lib/components/header/settings/Packs.svelte";
-  import Themes, { changeTheme } from "$lib/components/header/settings/Themes.svelte";
+  import Themes from "$lib/components/header/settings/Themes.svelte";
   import { SettingsTab } from "$lib/components/header/types";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { settingsOpen, settingsTab } from "$lib/stores/internal";
-  import { performanceMode } from "$lib/stores/preferences";
-  import { theme as themeStore } from "$lib/stores/themes";
   import Cog from "@lucide/svelte/icons/cog";
   import ListOrdered from "@lucide/svelte/icons/list-ordered";
   import PackageOpen from "@lucide/svelte/icons/package-open";
   import PaintBucket from "@lucide/svelte/icons/paint-bucket";
   import Settings from "@lucide/svelte/icons/settings";
   import { Dialog, Tabs } from "bits-ui";
-  import { onMount } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
 
+  type SettingsProps = Record<string, unknown>;
   const isHover = getHoverContext();
-
-  onMount(() => {
-    changeTheme($themeStore);
-    toggleRainbow();
-  });
+  const preferences = getPreferences();
+  const internalState = getInternalState();
 </script>
 
 {#snippet settings()}
-  <Tabs.Root bind:value={$settingsTab}>
-    <Tabs.List class={cn("mb-4 flex justify-between rounded-lg p-2 font-semibold text-text", $performanceMode ? "bg-text/30" : "backdrop-blur-lg backdrop-brightness-10")}>
+  <Tabs.Root bind:value={internalState.settingsTab}>
+    <Tabs.List class={cn("mb-4 flex justify-between rounded-lg p-2 font-semibold text-text", preferences.performanceMode ? "bg-text/30" : "backdrop-blur-lg backdrop-brightness-10")}>
       <Tabs.Trigger value={SettingsTab.Packs} class="flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold data-[state=active]:bg-icon/80">
         <PackageOpen class="size-5" />
         Packs
@@ -55,22 +49,22 @@
   </Tabs.Root>
 {/snippet}
 
-{#snippet settingsButton(props: Record<string, unknown>)}
+{#snippet settingsButton(props: SettingsProps)}
   <button {...props} class="group absolute top-1/2 right-4 flex aspect-square shrink -translate-y-1/2 items-center justify-center gap-1 rounded-full bg-background/20 px-2.5 py-1.5 text-sm font-semibold text-text transition-all duration-100 ease-out @md:relative @md:top-0 @md:right-0 @md:my-1.5 @md:aspect-auto @md:translate-y-0">
-    <Cog class="size-5 transition-all duration-300 ease-out data-[is-open=true]:rotate-45" data-is-open={$settingsOpen} />
+    <Cog class="size-5 transition-all duration-300 ease-out data-[is-open=true]:rotate-45" data-is-open={internalState.settingsOpen} />
     <p class="hidden @md:block">Settings</p>
   </button>
 {/snippet}
 
 {#if isHover.current}
-  <Dialog.Root bind:open={$settingsOpen}>
+  <Dialog.Root bind:open={internalState.settingsOpen}>
     <Dialog.Trigger>
       {#snippet child({ props })}
         {@render settingsButton(props)}
       {/snippet}
     </Dialog.Trigger>
     <Dialog.Portal>
-      <Dialog.Overlay forceMount class={cn("fixed inset-0 z-40", $performanceMode ? "bg-background-lore" : "backdrop-blur-lg backdrop-brightness-50")}>
+      <Dialog.Overlay forceMount class={cn("fixed inset-0 z-40", preferences.performanceMode ? "bg-background-lore" : "backdrop-blur-lg backdrop-brightness-50")}>
         {#snippet child({ props, open })}
           {#if open}
             <div {...props} transition:fade={{ duration: 150, easing: cubicOut }}></div>
@@ -78,7 +72,7 @@
         {/snippet}
       </Dialog.Overlay>
 
-      <Dialog.Content forceMount class={cn("fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg px-8 py-4 font-icomoon select-text", $performanceMode ? "bg-background-grey/95" : "bg-background-grey/30 backdrop-blur-lg backdrop-brightness-50")}>
+      <Dialog.Content forceMount class={cn("fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg px-8 py-4 font-icomoon select-text", preferences.performanceMode ? "bg-background-grey/95" : "bg-background-grey/30 backdrop-blur-lg backdrop-brightness-50")}>
         {#snippet child({ props, open })}
           {#if open}
             <div {...props} transition:flyAndScale>
@@ -90,7 +84,7 @@
     </Dialog.Portal>
   </Dialog.Root>
 {:else}
-  <Drawer.Root shouldScaleBackground={true} setBackgroundColorOnScale={false} bind:open={$settingsOpen}>
+  <Drawer.Root shouldScaleBackground={true} setBackgroundColorOnScale={false} bind:open={internalState.settingsOpen}>
     <Drawer.Trigger>
       {#snippet child({ props })}
         {@render settingsButton(props)}

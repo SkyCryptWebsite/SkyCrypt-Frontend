@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getHoverContext, getProfileContext } from "$ctx";
+  import { getHoverContext, getInternalState, getProfileContext } from "$ctx";
   import AdditionStat from "$lib/components/AdditionStat.svelte";
   import Chip from "$lib/components/Chip.svelte";
   import Notice from "$lib/components/Notice.svelte";
@@ -10,20 +10,19 @@
   import { calculatePercentage, formatNumber, getRarityClass, renderLore } from "$lib/shared/helper";
   import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { content } from "$lib/stores/internal";
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
   import Image from "@lucide/svelte/icons/image";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import { Avatar, Collapsible, Progress, Tooltip } from "bits-ui";
   import { format } from "numerable";
 
-  const profile = $derived(getProfileContext());
-  const profileId = $derived(profile.profile_id);
-  const gardenLocked = $derived(profile.skyblock_level?.level ?? 0 <= 5);
-
+  const profile = $derived(getProfileContext().current);
+  const profileId = $derived(profile?.profile_id);
+  const gardenLocked = $derived((profile?.skyblock_level?.level ?? 0) <= 5);
   let sectionOpen: boolean = $state(false);
 
   const isHover = getHoverContext();
+  const internalState = getInternalState();
 </script>
 
 <Collapsible.Root bind:open={sectionOpen}>
@@ -56,7 +55,7 @@
               <h3 class="font-bold text-text/85">Progress to next level:</h3>
               <Progress.Root value={garden.level?.xpCurrent} max={hasMaxed ? garden.level?.xpCurrent : garden.level?.xpForNext} class="relative h-4 w-full overflow-hidden rounded-full bg-text/30">
                 <div class="absolute z-10 flex h-full w-full justify-center">
-                  <div class="text-xs font-semibold shadow-background/50 txt-shadow">
+                  <div class="text-xs font-semibold shadow-background/50 text-shadow-md">
                     {formatNumber(garden.level?.xpCurrent ?? 0)} / {formatNumber(garden.level?.xpForNext ?? 0)}
                     XP
                   </div>
@@ -139,7 +138,7 @@
             {/if}
           {/snippet}
           <Tooltip.Root disableCloseOnTriggerClick={false}>
-            <Tooltip.Trigger onclick={() => content.set(tooltipContent)}>
+            <Tooltip.Trigger onclick={() => (internalState.content = tooltipContent)}>
               <Avatar.Root class="flex aspect-square items-center justify-center rounded-sm bg-text/4 p-1">
                 <Avatar.Image src={plot.texture_path} class="h-auto w-14 select-none [image-rendering:pixelated]" />
                 <Avatar.Fallback>
@@ -222,7 +221,7 @@
           {#snippet progress()}
             <Progress.Root value={milestone.level?.xpCurrent} max={hasMaxed ? milestone.level?.xpCurrent : milestone.level?.xpForNext} class="relative h-4 w-full overflow-hidden ">
               <div class="absolute z-10 flex h-full w-full justify-center">
-                <div class="text-xs font-semibold shadow-background/50 txt-shadow">
+                <div class="text-xs font-semibold shadow-background/50 text-shadow-md">
                   {formatNumber(milestone.level?.xpCurrent ?? 0)} / {formatNumber(milestone.level?.xpForNext ?? 0)}
                   XP
                 </div>

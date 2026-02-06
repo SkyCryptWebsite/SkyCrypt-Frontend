@@ -1,86 +1,144 @@
 name: Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      release-type:
-        description: "Release type (Manual override)"
-        required: true
-        type: choice
-        options:
-          - patch
-          - minor
-          - major
-          - prerelease
-      prerelease-id:
-        description: "Prerelease identifier (e.g., alpha, beta, rc) - only for prerelease"
-        required: false
-        type: string
-        default: "beta"
+  push:
+    branches: [dev, prod]
+
+concurrency:
+  group: release-${{ github.ref_name }}
+  cancel-in-progress: false
 
 jobs:
-  release:
-    name: Manual Release
+  beta:
+    name: Beta Release
+    if: github.ref == 'refs/heads/dev' && github.repository_owner == 'SkyCryptWebsite'
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'SkyCryptWebsite' && (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/prod')
 
     permissions:
       contents: write
-      packages: write
-      id-token: write
+      pull-requests: write
 
     steps:
       - name: Git checkout
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Configure Git
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm fetch && pnpm install --frozen-lockfile
+        env:
+          HUSKY: "0"
+
+      - name: Enter pre-release mode
+        run: pnpm changeset pre enter beta 2>/dev/null || true
+
+      - name: Create Release Pull Request
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: pnpm changeset:version
+          title: "Version Packages"
+          commit: "chore: version packages (beta)"
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+
+      - name: Create Beta GitHub Release
+        if: steps.changesets.outputs.hasChangesets == 'false'
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          VERSION=$(node -p "require('./package.json').version")
 
-      - name: PNPM Install
-        uses: ./.github/actions/pnpm-install
+          if ! echo "$VERSION" | grep -q "beta"; then
+            echo "Current version ($VERSION) is not a beta, skipping"
+            exit 0
+          fi
 
-      - name: Make dummy env for types
-        run: mv .env.example .env
+          TAG="v${VERSION}"
 
-      - name: Run tests
-        run: pnpm test:unit -- --run
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists, skipping"
+            exit 0
+          fi
 
-      - name: Run linting
-        run: pnpm lint
-
-      - name: Build
-        run: pnpm run build
-
-      - name: Create Release (patch)
-        if: inputs.release-type == 'patch'
-        run: pnpm run release -- --patch
+          git tag "$TAG"
+          git push origin "$TAG"
+          gh release create "$TAG" --title "$TAG" --generate-notes --prerelease
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
 
-      - name: Create Release (minor)
-        if: inputs.release-type == 'minor'
-        run: pnpm run release -- --minor
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  stable:
+    name: Stable Release
+    if: github.ref == 'refs/heads/prod' && github.repository_owner == 'SkyCryptWebsite'
+    runs-on: ubuntu-latest
 
-      - name: Create Release (major)
-        if: inputs.release-type == 'major'
-        run: pnpm run release -- --major
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      contents: write
+      pull-requests: write
 
-      - name: Create Prerelease
-        if: inputs.release-type == 'prerelease'
-        run: pnpm run release -- --prerelease=${{ inputs.prerelease-id }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PAT_TOKEN }}
 
-      - name: Sync GitHub Release
-        run: npx changelogen gh release
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm fetch && pnpm install --frozen-lockfile
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HUSKY: "0"
+
+      - name: Create Release Pull Request
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: pnpm changeset pre exit && pnpm changeset:version
+          title: "Version Packages (Stable)"
+          commit: "chore: version packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+
+      - name: Create Stable GitHub Release
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+
+          if echo "$VERSION" | grep -q "beta"; then
+            echo "Current version ($VERSION) is still a beta, skipping"
+            exit 0
+          fi
+
+          TAG="v${VERSION}"
+
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists, skipping"
+            exit 0
+          fi
+
+          git tag "$TAG"
+          git push origin "$TAG"
+          gh release create "$TAG" --title "$TAG" --generate-notes --latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}

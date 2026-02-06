@@ -3,15 +3,18 @@ name: Website
 on:
   push:
     paths: ["src/**", "Dockerfile", ".github/workflows/website.yml"]
-    paths-ignore:
-      - "CHANGELOG.md"
   workflow_dispatch:
 
 env:
   CONTAINER_REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  SERVER_API_URL: cupcake.shiiyu.moe
+  SHORT_SHA: 0000000
 
 jobs:
+  checks:
+    uses: ./.github/workflows/checks.yml
+
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
@@ -25,62 +28,31 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
-          languages: javascript
+          languages: javascript-typescript
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
-
-  formatting-checks:
-    name: Check linting (es-lint), formatting (prettier), and svelte checks (svelte-check)
-    runs-on: ubuntu-latest
-    steps:
-      - name: Git checkout
-        uses: actions/checkout@v4
-
-      - name: PNPM Install
-        uses: ./.github/actions/pnpm-install
-
-      - name: Make dummy env for types
-        run: |
-          echo "ls -a ."
-          ls -a .
-          mv .env.example .env
-
-      - name: Check linting, formatting, and svelte checks
-        run: pnpm lint
+        uses: github/codeql-action/analyze@v4
 
   build:
-    name: Vite Build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Git checkout
-        uses: actions/checkout@v4
-
-      - name: PNPM Install
-        uses: ./.github/actions/pnpm-install
-
-      - name: Make dummy env for types
-        run: |
-          echo "ls -a ."
-          ls -a .
-          mv .env.example .env
-
-      - name: Vite Build
-        run: pnpm run build
-
-  package:
-    name: Package into Container
-    runs-on: ubuntu-latest
-    needs: [analyze, formatting-checks, build]
     if: |
       (github.ref == 'refs/heads/prod' || github.ref == 'refs/heads/dev')
       && github.repository_owner == 'SkyCryptWebsite'
       && github.event_name != 'pull_request'
+    uses: ./.github/workflows/build.yml
+    with:
+      server-api-url: ${{ github.ref == 'refs/heads/prod' && 'sky.shiiyu.moe' || 'cupcake.shiiyu.moe' }}
+    secrets:
+      server-api-token: ${{ secrets.SERVER_API_TOKEN }}
+
+  package:
+    name: Package into Container
+    runs-on: ubuntu-latest
+    needs: [checks, analyze, build]
 
     permissions:
       packages: write
@@ -90,11 +62,14 @@ jobs:
 
     steps:
       - name: Git checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Assign short SHA
-        id: short_sha
-        run: echo "hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Re-assign server API URL if prod
+        if: github.ref == 'refs/heads/prod'
+        run: echo "SERVER_API_URL=sky.shiiyu.moe" >> $GITHUB_ENV
 
       - name: Registry login
         uses: docker/login-action@v3
@@ -116,7 +91,8 @@ jobs:
           context: .
           push: true
           build-args: |
-            PUBLIC_COMMIT_HASH=${{ steps.short_sha.outputs.hash }}
+            PUBLIC_COMMIT_HASH=${{ env.SHORT_SHA }}
+            PUBLIC_SERVER_API_URL=https://${{ env.SERVER_API_URL }}/api/
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
@@ -126,47 +102,3 @@ jobs:
           subject-name: ${{ env.CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
-
-  release:
-    name: Create Release
-    runs-on: ubuntu-latest
-    needs: [package]
-    if: |
-      (github.ref == 'refs/heads/prod' || github.ref == 'refs/heads/dev')
-      && github.repository_owner == 'SkyCryptWebsite'
-      && github.event_name != 'pull_request'
-
-    permissions:
-      contents: write
-
-    steps:
-      - name: Git checkout
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Configure Git
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: PNPM Install
-        uses: ./.github/actions/pnpm-install
-
-      - name: Create Prerelease (dev branch)
-        if: github.ref == 'refs/heads/dev'
-        run: pnpm run release -- --prerelease=beta
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create Release (prod branch)
-        if: github.ref == 'refs/heads/prod'
-        run: pnpm run release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Sync GitHub Release
-        run: pnpm dlx changelogen gh release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

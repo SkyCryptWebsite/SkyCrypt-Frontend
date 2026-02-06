@@ -1,17 +1,18 @@
 <script lang="ts">
   import { page } from "$app/state";
+  import { getTheme } from "$ctx";
   import type { ModelsEmbedData } from "$lib/shared/api/orval-generated";
   import themes from "$lib/shared/constants/themes";
   import { getLongDescription, getMetaTitle, getShortDescription } from "$lib/shared/embedGenerator";
-  import { theme as themeStore } from "$lib/stores/themes";
   import SvelteSeo from "svelte-seo";
 
   const { embedData }: { embedData: ModelsEmbedData } = $props();
   const isStatsPage = page.url.pathname.includes("/stats/");
+  const themeContext = getTheme();
 </script>
 
 <svelte:head>
-  <link rel="icon" href={isStatsPage ? `https://crafatar.com/avatars/${embedData.uuid}?size=32&overlay` : `https://vzge.me/bust/${embedData.uuid}?y=-40`} sizes="32x32" type="image/png" />
+  <link rel="icon" href={isStatsPage ? `https://nmsr.nickac.dev/face/${embedData.uuid}` : `https://nmsr.nickac.dev/bust/${embedData.uuid}?y=-20`} sizes="32x32" type="image/png" />
 </svelte:head>
 
 <SvelteSeo
@@ -27,7 +28,7 @@
     },
     images: [
       {
-        url: `https://vzge.me/bust/${embedData.uuid}?y=-40`,
+        url: `https://nmsr.nickac.dev/bust/${embedData.uuid}?y=-20`,
         width: 512,
         height: 512,
         alt: embedData.displayName
@@ -37,10 +38,10 @@
   }}
   twitter={{
     card: "summary",
-    image: `https://vzge.me/bust/${embedData.uuid}?y=-40`,
+    image: `https://nmsr.nickac.dev/bust/${embedData.uuid}?y=-20`,
     imageAlt: embedData.displayName,
     title: getMetaTitle(embedData),
     description: getLongDescription(embedData)
   }}
-  themeColor={themes.find((theme) => theme.id === $themeStore)?.light ? "#dbdbdb" : "#282828"}
+  themeColor={themes.find((theme) => theme.id === themeContext.current)?.light ? "#dbdbdb" : "#282828"}
   manifest="/manifest.webmanifest" />

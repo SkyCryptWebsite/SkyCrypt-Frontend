@@ -1,13 +1,11 @@
 <script lang="ts">
-  import { getHoverContext } from "$ctx";
+  import { resolve } from "$app/paths";
+  import { getFavorites, getHoverContext, getInternalState, getPreferences } from "$ctx";
   import { env } from "$env/dynamic/public";
   import Notice from "$lib/components/Notice.svelte";
   import { searchUser } from "$lib/shared/api/skycrypt-api.remote";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { favorites } from "$lib/stores/favorites";
-  import { content } from "$lib/stores/internal";
-  import { performanceMode } from "$lib/stores/preferences";
-  import { getContributors } from "$routes/ contributors.remote";
+  import { type Contributor, getContributors } from "$routes/ contributors.remote";
   import CodeXml from "@lucide/svelte/icons/code-xml";
   import GitPullRequestArrow from "@lucide/svelte/icons/git-pull-request-arrow";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
@@ -21,12 +19,16 @@
 
   const { PUBLIC_DISCORD_INVITE, PUBLIC_PATREON } = env;
 
-  let searchQuery = $state<string>("");
+  const preferences = getPreferences();
+  const favorites = getFavorites();
+
+  let searchQuery = $state<string>(null!);
   const searchQueryValidated = $derived(schema.safeParse({ query: searchQuery }));
 
   let searchUserRemoteFn = $state<RemoteQuery<never>>();
 
   const isHover = getHoverContext();
+  const internalState = getInternalState();
 
   const iconMapper: Record<Role, typeof CodeXml | typeof Server | typeof GitPullRequestArrow | typeof Star | string> = {
     [Role.MAINTAINER]: CodeXml,
@@ -85,8 +87,8 @@
   });
 </script>
 
-<main class="@container mx-auto mt-[48px] flex min-h-screen max-w-272 flex-col justify-center gap-6 pt-5 pr-[max(1.25rem+env(safe-area-inset-right))] pb-[max(1.25rem+env(safe-area-inset-bottom))] pl-[max(1.25rem+env(safe-area-inset-left))]">
-  <div class={cn("flex w-full flex-col justify-center gap-6 rounded-lg py-6 text-3xl", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
+<main class="@container mx-auto mt-12 flex max-w-272 flex-col justify-center gap-6 pt-5 pr-[max(1.25rem+env(safe-area-inset-right))] pb-[max(1.25rem+env(safe-area-inset-bottom))] pl-[max(1.25rem+env(safe-area-inset-left))]">
+  <div class={cn("flex w-full flex-col justify-center gap-6 rounded-lg py-6 text-3xl", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
     <div class="flex flex-col justify-center gap-2">
       <div class="flex flex-col gap-6">
         <label for="search" class="m-1 w-full text-center font-semibold">Show SkyBlock stats for</label>
@@ -94,7 +96,7 @@
         <input id="search" type="search" required autofocus placeholder="Enter username" class="relative h-16 grow bg-text/10 text-center font-normal text-text placeholder:text-text/80 focus-visible:outline-hidden" bind:value={searchQuery} onchange={() => (searchUserRemoteFn = searchUser({ username: searchQuery }))} />
       </div>
 
-      {#if !searchQueryValidated.success && searchQuery.length > 0}
+      {#if !searchQueryValidated.success && searchQuery != null && searchQuery.length > 0}
         <div class="text-center text-sm font-semibold text-text/80">
           {searchQueryValidated.error.issues[0].message}
         </div>
@@ -103,7 +105,7 @@
         <div class="text-center text-sm font-semibold text-text/80">{isHttpError(searchUserRemoteFn.error) ? searchUserRemoteFn.error.body.message : "Something went wrong"}</div>
       {/if}
     </div>
-    <Button.Root class="mx-auto flex w-full max-w-fit items-center justify-center rounded-3xl bg-icon px-6 py-3 text-base font-bold text-white uppercase transition-all duration-150 ease-out txt-shadow-[0_0_3px_oklch(0%_0_0/50%)] hover:scale-[1.015] disabled:opacity-50 dark:text-text" disabled={searchQuery.length > 0 && !searchQueryValidated.success}>
+    <Button.Root class="mx-auto flex w-full max-w-fit items-center justify-center rounded-3xl bg-icon px-6 py-3 text-base font-bold text-white uppercase transition-all duration-150 ease-out text-shadow-[0_0_3px_oklch(0%_0_0/50%)] hover:scale-[1.015] disabled:opacity-50 dark:text-text" disabled={searchQuery != null && searchQuery.length > 0 && !searchQueryValidated.success}>
       {#if searchUserRemoteFn?.loading}
         <LoaderCircle class="size-6 animate-spin" />
       {:else}
@@ -117,11 +119,11 @@
   {/if}
 
   <div class="grid grid-cols-1 gap-5 @xl:grid-cols-2 @5xl:grid-cols-3">
-    {#if $favorites.length === 0}
-      {@render profile({ id: "0", name: "No favorites set!", quote: "Why don't you set a favorite?" }, { tip: true })}
+    {#if favorites.current.length === 0}
+      {@render profile({ id: "0", username: "No favorites set!", quote: "Why don't you set a favorite?" }, { tip: true })}
     {:else}
-      {#each $favorites.reverse() as favorite, index (index)}
-        {@render profile({ id: favorite.uuid, name: favorite.ign, role: Role.FAVORITE }, { favorite: true })}
+      {#each favorites.current.reverse() as favorite, index (index)}
+        {@render profile({ id: favorite.uuid, username: favorite.ign, role: Role.FAVORITE, displayName: favorite.displayName }, { favorite: true })}
       {/each}
     {/if}
 
@@ -142,7 +144,7 @@
   </div>
 </main>
 
-{#snippet profile(user: { id: string; name: string; quote?: string; role?: Role }, options?: { tip?: boolean; favorite?: boolean })}
+{#snippet profile(user: Contributor, options?: { tip?: boolean; favorite?: boolean })}
   {#snippet tooltipContent()}
     <p class="font-semibold text-text/80 capitalize">
       {#if options?.favorite}
@@ -156,16 +158,16 @@
   {/snippet}
 
   <div class={cn("relative rounded-lg", { "transition-all duration-300 ease-out hover:scale-105": !options?.tip })}>
-    <Button.Root href={options?.tip ? "#" : `/stats/${user.id}`} class={cn("relative flex h-full min-w-0 items-center gap-4 rounded-lg p-5", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
-      <Avatar.Root class="size-16 shrink-0 rounded-lg bg-text/10">
-        <Avatar.Image loading="lazy" src={options?.tip ? "https://mc-heads.net/avatar/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40/64" : `https://crafatar.com/avatars/${user.id}?size=64&overlay`} alt={user.name} class="aspect-square size-16 rounded-lg [image-rendering:pixelated]" />
-        <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">
-          {user.name.slice(0, 2)}
+    <Button.Root href={options?.tip ? undefined : resolve("/stats/[ign]", { ign: user.id })} class={cn("relative flex h-full min-w-0 items-center gap-4 rounded-lg p-5 text-left", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
+      <Avatar.Root class="size-16 shrink-0">
+        <Avatar.Image loading="lazy" src={options?.tip ? "https://nmsr.nickac.dev/face/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40" : `https://nmsr.nickac.dev/face/${user.id}`} alt={user.username} class={cn("aspect-square size-16 [image-rendering:pixelated]", options?.tip ? "rounded-lg bg-text/10" : "")} />
+        <Avatar.Fallback class="flex h-full items-center justify-center rounded-lg bg-text/10 text-lg font-semibold text-text/60 uppercase">
+          {user.username?.slice(0, 2)}
         </Avatar.Fallback>
       </Avatar.Root>
       <div class="flex flex-col justify-center gap-0">
         <div class="text-lg font-semibold text-text">
-          {user.name}
+          {user.displayName ?? user.username}
         </div>
         {#if user.quote}
           <div class={cn("pr-4 text-sm font-medium text-pretty text-text/80", user.role === Role.TECHNOBLADE ? "italic" : "")}>{@html user.quote}</div>
@@ -179,9 +181,9 @@
           class="absolute right-3 bottom-3"
           onclick={() => {
             if (!options?.favorite) {
-              content.set(tooltipContent);
+              internalState.content = tooltipContent;
             } else {
-              favorites.set($favorites.filter((favorite) => favorite.uuid !== user.id));
+              favorites.current = favorites.current.filter((favorite) => favorite.uuid !== user.id);
             }
           }}>
           {#snippet child({ props })}
@@ -216,7 +218,7 @@
 {/snippet}
 
 {#snippet profileSkeleton()}
-  <div class={cn("relative flex min-w-0 items-center gap-2 rounded-lg p-5", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-[60%] dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
+  <div class={cn("relative flex min-w-0 items-center gap-2 rounded-lg p-5", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
     <div class="size-16 animate-pulse rounded-lg bg-text/10"></div>
     <div class="flex flex-col gap-1">
       <div class="h-6 w-24 animate-pulse rounded-lg bg-text/10"></div>
@@ -227,7 +229,7 @@
 {/snippet}
 
 {#snippet ctalink(href: string, text: { title: string; description: string }, img: { src: string; alt: string })}
-  <Button.Root {href} target="_blank" rel="noreferrer" class={cn("flex w-full items-center gap-4 rounded-lg p-4 transition-all duration-300 ease-out hover:scale-[1.05]", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-[60%] dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
+  <Button.Root {href} target="_blank" rel="noreferrer" class={cn("flex w-full items-center gap-4 rounded-lg p-4 transition-all duration-300 ease-out hover:scale-[1.05]", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
     <Avatar.Root class="size-12 shrink-0 rounded-lg select-none">
       <Avatar.Image loading="lazy" src={img.src} alt={img.alt} class="pointer-events-none size-12 rounded-lg" />
       <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">{img.alt.slice(0, 2)}</Avatar.Fallback>

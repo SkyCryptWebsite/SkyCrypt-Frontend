@@ -1,20 +1,25 @@
 import { prerender } from "$app/server";
-import { env } from "$env/dynamic/public";
-import ky from "ky";
+import type { ModelsPlayerResolve } from "$lib/shared/api/orval-generated";
+import { getUsernamePrerendered } from "$lib/shared/api/skycrypt-api.remote";
 import { Role } from "./enums";
 
-const { PUBLIC_SERVER_API_URL } = env;
+export interface Contributor extends ModelsPlayerResolve {
+  id: string;
+  quote?: string;
+  role?: Role;
+}
 
 export const getContributors = prerender(async () => {
-  const getUsername = async (uuid: string): Promise<string> => {
+  const getUsernames = async (uuid: string): Promise<ModelsPlayerResolve> => {
     try {
-      const { username } = await ky(`username/${uuid}`, {
-        prefixUrl: PUBLIC_SERVER_API_URL
-      }).json<{ username: string }>();
-      return username;
+      return await getUsernamePrerendered({ uuid });
     } catch (error) {
-      console.error(error);
-      return "???";
+      console.error("Something went wrong fetching contributor username for UUID:", uuid, error);
+      return {
+        displayName: "???",
+        uuid: uuid,
+        username: "???"
+      };
     }
   };
 
@@ -34,12 +39,13 @@ export const getContributors = prerender(async () => {
       { id: "b876ec32e396476ba1158438d83c67d4", quote: "Long live the Potato king!", role: Role.TECHNOBLADE }
     ];
 
-    const usernames = await Promise.all(ids.map(({ id }) => getUsername(id)));
+    const usernames = await Promise.all(ids.map(({ id }) => getUsernames(id)));
 
     return ids.map((contributor, index) => ({
       ...contributor,
-      name: usernames[index]
-    }));
+      name: usernames[index].username,
+      displayName: usernames[index].displayName
+    })) satisfies Contributor[];
   };
 
   return contributors();

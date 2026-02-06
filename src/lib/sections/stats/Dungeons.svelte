@@ -17,21 +17,31 @@
 
   let { order }: { order: number } = $props();
 
-  const profile = $derived(getProfileContext());
-  const profileUUID = $derived(profile.uuid);
-  const profileId = $derived(profile.profile_id);
+  const profile = $derived(getProfileContext().current);
+  const profileUUID = $derived(profile?.uuid);
+  const profileId = $derived(profile?.profile_id);
 
   const dungeons = $derived(await getDungeonsSection({ uuid: profileUUID!, profileId: profileId! }));
 
   function formatDuration(end: number) {
-    const duration = formatDurationDateFns(intervalToDuration({ start: 0, end }, { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) }), {
-      format: ["minutes", "seconds"],
-      delimiter: ":",
-      zero: true,
-      locale: {
-        formatDistance: (_token, count) => String(count).padStart(2, "0")
+    const interval = intervalToDuration({ start: 0, end }, { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) });
+
+    // Always extract and format both minutes and seconds
+    const minutes = interval.minutes ?? 0;
+    const seconds = interval.seconds ?? 0;
+
+    const duration = formatDurationDateFns(
+      { minutes, seconds },
+      {
+        format: ["minutes", "seconds"],
+        delimiter: ":",
+        zero: true,
+        locale: {
+          formatDistance: (_token, count) => String(count).padStart(2, "0")
+        }
       }
-    });
+    );
+
     if (duration === "") return "-";
     return duration;
   }
@@ -41,7 +51,7 @@
   {#if dungeons}
     <div class="space-y-4">
       {#if dungeons.level && dungeons.level.xp === 0}
-        <p class="space-x-0.5 leading-6">{profile.username} hasn't unlocked Dungeons yet.</p>
+        <p class="space-x-0.5 leading-6">{profile?.username} hasn't unlocked Dungeons yet.</p>
       {:else if dungeons}
         <div class="flex flex-col flex-wrap justify-start gap-x-4 gap-y-2 pt-4 sm:flex-row">
           {#if dungeons.level}
@@ -145,7 +155,7 @@
               </Collapsible.Root>
 
               {#if catacomb.best_run}
-                <Collapsible.Root class="px-5 pb-[2.5rem]">
+                <Collapsible.Root class="px-5 pb-10">
                   <Collapsible.Trigger class="group flex items-center gap-0.5">
                     <ChevronDown class="size-5 transition-all duration-300 ease-out group-data-[state=open]:-rotate-180" />
                     <SectionSubtitle class="my-0">Best run</SectionSubtitle>

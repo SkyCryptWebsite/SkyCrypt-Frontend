@@ -15,7 +15,10 @@
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
 
-  const data = $derived(getSkillsContext());
+  const tiers = ["diamond", "gold", "silver", "bronze"] as const;
+  type ColorSchema = Record<(typeof tiers)[number], { bg: string; text: string }>;
+
+  const data = $derived(getSkillsContext().skills);
   const fishing = $derived(data?.fishing);
   const fishingTools = $derived(fishing?.tools);
   const highestPriorityFishingTool = $derived(fishingTools?.highest_priority_tool);
@@ -116,7 +119,6 @@
           {@const trophyFishes = Object.entries(fishing.trophyFish.trophyFish)}
 
           <ScrollItems>
-            {@const tiers = ["diamond", "gold", "silver", "bronze"] as const}
             {@const colors = {
               bronze: {
                 bg: "bg-[oklch(55.23%_0.1295_59.21)]",
@@ -134,7 +136,7 @@
                 bg: "bg-[oklch(87.66%_0.1178_208.16)]",
                 text: "text-[oklch(87.66%_0.1178_208.16)]/80"
               }
-            } satisfies Record<(typeof tiers)[number], { bg: string; text: string }>}
+            } satisfies ColorSchema}
             {#each trophyFishes as [_, trophyFish], index (index)}
               {@const highestTier = tiers.find((tier) => (trophyFish[tier] ?? 0) > 0)}
               {@const highestTierColor = highestTier ? colors[highestTier].text : "text-text/60"}

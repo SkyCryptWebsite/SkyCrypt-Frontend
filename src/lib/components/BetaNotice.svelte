@@ -1,18 +1,18 @@
 <script lang="ts">
-  import { IsHover } from "$lib/hooks/is-hover.svelte";
+  import { getHoverContext, getPreferences } from "$ctx";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { performanceMode } from "$lib/stores/preferences";
   import CircleQuestionMark from "@lucide/svelte/icons/circle-question-mark";
   import TriangleAlert from "@lucide/svelte/icons/triangle-alert";
   import { Button, Dialog } from "bits-ui";
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
-  let isHover = $state(new IsHover());
+  const isHover = getHoverContext();
+  const preferences = getPreferences();
   let noticeOpen = $state(false);
 </script>
 
-<footer class="fixed -bottom-0.5 left-0 z-30 w-full p-[env(safe-area-inset-top,0)] pr-[max(0.625rem,env(safe-area-inset-right))] pb-[env(safe-area-inset-bottom,0)] pl-[max(0.625rem,env(safe-area-inset-left))] leading-[3rem]">
+<footer class="fixed -bottom-0.5 left-0 z-30 w-full p-[env(safe-area-inset-top,0)] pr-[max(0.625rem,env(safe-area-inset-right))] pb-[env(safe-area-inset-bottom,0)] pl-[max(0.625rem,env(safe-area-inset-left))] leading-12">
   <div class="relative mx-auto w-fit rounded-t-md border-2 border-yellow-300 bg-yellow-800 px-2.5 text-yellow-300">
     <p class="flex items-center gap-x-1.5"><TriangleAlert class="size-5" />This is the SkyCrypt development site</p>
     <Button.Root class="absolute -top-3 -right-2.5" onpointerdown={() => (noticeOpen = !noticeOpen)}>
@@ -31,14 +31,14 @@
 {#snippet desktopNotice()}
   <Dialog.Root bind:open={noticeOpen}>
     <Dialog.Portal>
-      <Dialog.Overlay forceMount class={cn("fixed inset-0 z-40", $performanceMode ? "bg-background-lore" : "backdrop-blur-lg backdrop-brightness-50")}>
+      <Dialog.Overlay forceMount class={cn("fixed inset-0 z-40", preferences.performanceMode ? "bg-background-lore" : "backdrop-blur-lg backdrop-brightness-50")}>
         {#snippet child({ props, open })}
           {#if open}
             <div {...props} transition:fade={{ duration: 150, easing: cubicOut }}></div>
           {/if}
         {/snippet}
       </Dialog.Overlay>
-      <Dialog.Content forceMount class={cn("fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg p-4 font-icomoon select-text", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}>
+      <Dialog.Content forceMount class={cn("fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg p-4 font-icomoon select-text", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}>
         {#snippet child({ props, open })}
           {#if open}
             <div {...props} transition:flyAndScale>

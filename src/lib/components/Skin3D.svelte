@@ -5,10 +5,10 @@
   import * as skinview3d from "skinview3d";
   import { onDestroy } from "svelte";
 
-  const ctx = getProfileContext();
-  const uuid = $derived(ctx.uuid);
+  const ctx = $derived(getProfileContext().current);
+  const uuid = $derived(ctx?.uuid);
 
-  let { class: className }: { class: string | undefined } = $props();
+  let { class: className, showStaticSkin }: { class: string | undefined; showStaticSkin: () => void } = $props();
   let viewer = $state<skinview3d.SkinViewer>();
   let minecraftAvatar = $state<HTMLCanvasElement>();
   let canvasIsLoading = $state<boolean>(true);
@@ -27,7 +27,24 @@
     if (loadedUuid === uuid) return;
     canvasIsLoading = true;
 
-    const cape = await ky.head(`https://crafatar.com/capes/${uuid}`).catch(() => ({ ok: false }));
+    const capeData = await ky(`https://mowojang.matdoes.dev/session/minecraft/profile/${uuid}`).json<{ properties: { name: string; value: string; signature?: string }[] }>();
+    const texturesProperty = capeData.properties.find((prop) => prop.name === "textures");
+
+    if (!texturesProperty) {
+      canvasIsLoading = false;
+      showStaticSkin();
+      return;
+    }
+
+    // Decode the Base64 value
+    const decodedValue = atob(texturesProperty.value);
+    const texturesJson = JSON.parse(decodedValue);
+    const skin = texturesJson.textures.SKIN;
+    if (skin?.url) skin.url = skin.url.replace(/^http:/, "https:");
+
+    const cape = texturesJson.textures.CAPE;
+    if (cape?.url) cape.url = cape.url.replace(/^http:/, "https:");
+    const hasCape = cape !== undefined;
 
     if (!viewer) {
       viewer = new skinview3d.SkinViewer({
@@ -39,9 +56,9 @@
       });
     }
 
-    await viewer.loadSkin(`https://crafatar.com/skins/${uuid}`);
-    if (cape.ok) {
-      await viewer.loadCape(`https://crafatar.com/capes/${uuid}`);
+    await viewer.loadSkin(skin.url);
+    if (hasCape) {
+      await viewer.loadCape(cape.url);
     } else {
       viewer.resetCape();
     }
@@ -56,7 +73,12 @@
   };
 
   $effect.pre(() => {
-    if (uuid) updateSkinViewer(uuid);
+    try {
+      if (uuid) updateSkinViewer(uuid);
+    } catch (e) {
+      showStaticSkin();
+      console.error("Error loading skin viewer:", e);
+    }
     updateViewerSize();
     return () => viewer?.dispose();
   });

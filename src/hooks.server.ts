@@ -1,39 +1,6 @@
-import { dev } from "$app/environment";
-import { env } from "$env/dynamic/public";
-import { contextLinesIntegration, extraErrorDataIntegration, handleErrorWithSentry, sentryHandle, init as sentryInit } from "@sentry/sveltekit";
+import { handleErrorWithSentry, sentryHandle } from "@sentry/sveltekit";
 import type { Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
-
-const { PUBLIC_SENTRY_DSN } = env;
-
-sentryInit({
-  dsn: PUBLIC_SENTRY_DSN,
-  tracesSampleRate: 0,
-
-  integrations: [contextLinesIntegration(), extraErrorDataIntegration()],
-
-  // Disable Sentry during development
-  enabled: !dev,
-  environment: dev ? "development" : "production",
-
-  beforeSend(event, hint) {
-    const error = event.exception?.values?.[0];
-    const status = (hint.originalException as { status?: number })?.status;
-
-    if (error && typeof error === "object") {
-      if (error.value?.includes("HttpError") || error.type === "SkyCryptError") {
-        return null; // Return null to prevent the event from being sent to Sentry
-      }
-    }
-
-    // Filter out 4xx client errors
-    if (status && status >= 400 && status < 500) {
-      return null; // Return null to prevent the event from being sent to Sentry
-    }
-
-    return event;
-  }
-});
 
 const headersHandler = (async ({ event, resolve }) => {
   const response = await resolve(event);
@@ -55,6 +22,8 @@ const headersHandler = (async ({ event, resolve }) => {
   return response;
 }) satisfies Handle;
 
-// Set caching headers for static assets
+// If you have a custom error handler, pass it to `handleErrorWithSentry`
 export const handleError = handleErrorWithSentry();
+
+// If you have custom handlers, make sure to place them after `sentryHandle()` in the `sequence` function.
 export const handle = sequence(sentryHandle(), headersHandler) satisfies Handle;

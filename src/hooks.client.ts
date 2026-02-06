@@ -1,46 +1,21 @@
 import { dev } from "$app/environment";
 import { env } from "$env/dynamic/public";
-import { browserTracingIntegration, contextLinesIntegration, extraErrorDataIntegration, handleErrorWithSentry, httpClientIntegration, init } from "@sentry/sveltekit";
+import * as Sentry from "@sentry/sveltekit";
+import { browserTracingIntegration, consoleLoggingIntegration, contextLinesIntegration, extraErrorDataIntegration, handleErrorWithSentry, httpClientIntegration } from "@sentry/sveltekit";
 
 const { PUBLIC_SENTRY_DSN } = env;
 
-init({
+Sentry.init({
   dsn: PUBLIC_SENTRY_DSN,
-
   tunnel: "/api/tunnel",
 
-  tracesSampleRate: 0,
+  // Enable logs to be sent to Sentry
+  enableLogs: true,
 
-  // This sets the sample rate to be 10%. You may want this to be 100% while
-  // in development and sample at a lower rate in production
-  replaysSessionSampleRate: 0,
+  // Enable debug
+  tracesSampleRate: 0.3,
 
-  // If the entire session is not sampled, use the below sample rate to sample
-  // sessions when an error occurs.
-  replaysOnErrorSampleRate: 0,
-
-  // Filter out specific errors before they are sent to Sentry
-  beforeSend(event, hint) {
-    const error = event.exception?.values?.[0];
-    const status = (hint.originalException as { status?: number })?.status;
-
-    if (error && typeof error === "object") {
-      if (error.value?.includes("HttpError") || error.type === "SkyCryptError") {
-        return null; // Return null to prevent the event from being sent to Sentry
-      }
-    }
-
-    // Filter out 4xx client errors
-    if (status && status >= 400 && status < 500) {
-      return null; // Return null to prevent the event from being sent to Sentry
-    }
-
-    return event;
-  },
-
-  // If you don't want to use Session Replay, just remove the line below:
-  integrations: [browserTracingIntegration(), httpClientIntegration(), contextLinesIntegration(), extraErrorDataIntegration()],
-
+  integrations: [browserTracingIntegration(), httpClientIntegration(), contextLinesIntegration(), extraErrorDataIntegration(), consoleLoggingIntegration()],
   enabled: !dev,
   environment: dev ? "development" : "production"
 });

@@ -1,8 +1,8 @@
 <script lang="ts">
+  import { getPreferences } from "$ctx";
   import type { ModelsSkill } from "$lib/shared/api/orval-generated";
   import { calculatePercentage, formatNumber } from "$lib/shared/helper";
   import { cn } from "$lib/shared/utils";
-  import { performanceMode } from "$lib/stores/preferences";
   import BarChartHorizontal from "@lucide/svelte/icons/bar-chart-horizontal";
   import { Avatar, Progress } from "bits-ui";
   import { format } from "numerable";
@@ -19,12 +19,13 @@
 
   const { hoverAction, isHovered } = createHover();
   const isMaxed = $derived(skillData.maxed);
+  const preferences = getPreferences();
 </script>
 
 <div class={cn("group relative flex grow basis-full flex-col sm:basis-1/3 sm:last:grow-0 sm:last:basis-1/2", !apiEnabled && "opacity-50 grayscale", className)} data-maxed={isMaxed} use:hoverAction>
-  <div class={cn("absolute bottom-0 left-0 z-10 flex size-9 items-center justify-center rounded-full p-1 drop-shadow-sm group-data-[maxed=false]:bg-icon group-data-[maxed=true]:bg-maxed", apiEnabled ? "" : "bg-gray-600", { "group-data-[maxed=true]:shine": !$performanceMode })}>
+  <div class={cn("absolute bottom-0 left-0 z-10 flex size-9 items-center justify-center rounded-full p-1 drop-shadow-sm group-data-[maxed=false]:bg-icon group-data-[maxed=true]:bg-maxed", apiEnabled ? "" : "bg-gray-600", { "group-data-[maxed=true]:shine": !preferences.performanceMode })}>
     <Avatar.Root class="select-none">
-      <Avatar.Image loading="lazy" class={cn("pointer-events-none size-[1.625rem] [image-rendering:pixelated]", !apiEnabled && "grayscale")} src={skillData.texture} alt={skill} />
+      <Avatar.Image loading="lazy" class={cn("pointer-events-none size-6.5 [image-rendering:pixelated]", !apiEnabled && "grayscale")} src={skillData.texture} alt={skill} />
       <Avatar.Fallback>
         <BarChartHorizontal class="pointer-events-none size-6" />
       </Avatar.Fallback>
@@ -40,7 +41,7 @@
   <Progress.Root value={skillData.xpCurrent} max={isMaxed ? skillData.xpCurrent : skillData.xpForNext} class={cn("relative ml-2 h-4 w-full overflow-hidden rounded-full", apiEnabled ? "bg-text/30" : "bg-gray-500")}>
     {#if apiEnabled}
       <div class="absolute z-10 flex h-full w-full justify-center">
-        <div class="text-xs font-semibold shadow-background/50 txt-shadow">
+        <div class="text-xs font-semibold shadow-background/50 text-shadow-md">
           {#if $isHovered && !isMaxed}
             {format(skillData.xpCurrent, "0,0")} / {format(skillData.xpForNext)}
           {:else if !isMaxed}

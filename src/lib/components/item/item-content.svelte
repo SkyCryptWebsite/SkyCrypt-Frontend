@@ -1,16 +1,14 @@
 <script lang="ts">
-  import { getPacksContext } from "$ctx";
+  import { getPacksContext, getWikiOrder, type WikiOrderData } from "$ctx";
   import ContainedItem from "$lib/components/ContainedItem.svelte";
   import type { ModelsStrippedItem } from "$lib/shared/api/orval-generated";
   import { getRarityClass, removeFormatting, renderLore } from "$lib/shared/helper";
   import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
   import { cn } from "$lib/shared/utils";
-  import { wikiOrderPreferences } from "$lib/stores/wiki";
   import Image from "@lucide/svelte/icons/image";
   import Info from "@lucide/svelte/icons/info";
   import TriangleAlert from "@lucide/svelte/icons/triangle-alert";
   import { Avatar, Button } from "bits-ui";
-  import { derived as derivedStore } from "svelte/store";
 
   type Props = {
     piece: ModelsStrippedItem;
@@ -19,6 +17,8 @@
 
   let { piece, isDrawer }: Props = $props();
 
+  const wikiOrderContext = getWikiOrder();
+
   const skyblockItem = $derived(piece);
   const itemName = $derived(piece?.display_name);
   const itemNameHtml = $derived(itemName ? renderLore(itemName) : "");
@@ -26,30 +26,29 @@
   const bgColor = $derived(getRarityClass(piece?.rarity ?? ("common".toLowerCase() as string), "bg"));
   const enchanted = $derived(skyblockItem?.texture_path?.includes("/api/leather/") ? false : skyblockItem && "shiny" in skyblockItem ? skyblockItem.shiny : false);
   const hasColor = $derived(skyblockItem?.lore?.some((lore) => lore.includes("Color:")) ?? false);
-  const packsContext = $derived(getPacksContext());
-  const packs = $derived(packsContext.packs);
+  const packs = $derived(getPacksContext().packs);
   const packData = $derived(packs?.find((pack) => pack.id === skyblockItem?.texture_pack));
 
-  // Get the wiki link for the itemf
-  export const wikiInfo = derivedStore<typeof wikiOrderPreferences, { url: string; name: string } | undefined>(wikiOrderPreferences, ($wikiOrderPreferences) => {
+  // Get the wiki link for the item
+  const wikiInfo = $derived.by<Omit<WikiOrderData, "id"> | undefined>(() => {
     const wiki = skyblockItem?.wiki;
     if (!wiki) return undefined;
 
     // Try to get the preferred wiki link first, then fall back to any available link
-    const preference = $wikiOrderPreferences[0].name.toLowerCase();
+    const preference = wikiOrderContext.current[0].name.toLowerCase();
 
     // Type-safe approach: check if the preference is a valid key
     if (preference === "fandom" && wiki.fandom) {
-      return { url: wiki.fandom, name: "Fandom" };
+      return { link: wiki.fandom, name: "Fandom" };
     } else if (preference === "official" && wiki.official) {
-      return { url: wiki.official, name: "Official" };
+      return { link: wiki.official, name: "Official" };
     }
 
     // If no preferred links are available, return any available link or null
     if (wiki.fandom) {
-      return { url: wiki.fandom, name: "Fandom" };
+      return { link: wiki.fandom, name: "Fandom" };
     } else if (wiki.official) {
-      return { url: wiki.official, name: "Official" };
+      return { link: wiki.official, name: "Official" };
     }
 
     return undefined;
@@ -146,8 +145,8 @@
           </Button.Root>
         {/if}
 
-        {#if $wikiInfo}
-          <Button.Root href={$wikiInfo.url} target="_blank" class="flex shrink items-center justify-center rounded-[0.625rem] bg-text/5 p-2 whitespace-nowrap transition-colors ease-out hover:bg-text/8">
+        {#if wikiInfo}
+          <Button.Root href={wikiInfo.link} target="_blank" class="flex shrink items-center justify-center rounded-[0.625rem] bg-text/5 p-2 whitespace-nowrap transition-colors ease-out hover:bg-text/8">
             <Info class="mr-2 ml-2 size-6 p-0" />
           </Button.Root>
         {/if}

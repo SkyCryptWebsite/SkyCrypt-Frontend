@@ -1,16 +1,18 @@
 <script lang="ts">
+  import { getPreferences } from "$ctx";
   import { env } from "$env/dynamic/public";
   import { cn } from "$lib/shared/utils";
-  import { performanceMode } from "$lib/stores/preferences";
   import CircleAlert from "@lucide/svelte/icons/circle-alert";
   import CircleX from "@lucide/svelte/icons/circle-x";
   import Info from "@lucide/svelte/icons/info";
   import RotateCcw from "@lucide/svelte/icons/rotate-ccw";
+  import * as Sentry from "@sentry/sveltekit";
   import { isHttpError, type HttpError } from "@sveltejs/kit";
   import { Button } from "bits-ui";
   import type { Snippet } from "svelte";
 
   const { PUBLIC_DISCORD_INVITE } = env;
+  const preferences = getPreferences();
 
   type Props = {
     title: string;
@@ -24,11 +26,14 @@
   let { title, children, type, class: className, error: fullError, retry }: Props = $props();
 
   $effect(() => {
-    if (fullError) console.error(fullError);
+    if (fullError) {
+      Sentry.captureException(fullError);
+      console.error(fullError);
+    }
   });
 </script>
 
-<div class={cn("space-y-5 rounded-lg p-6 data-[type=error]:text-red-200 data-[type=info]:text-blue-200 data-[type=warning]:text-yellow-200 @[75rem]/parent:p-8", $performanceMode ? "data-[type=error]:bg-red-800 data-[type=info]:bg-blue-800 data-[type=warning]:bg-yellow-800" : "backdrop-blur-sm data-[type=error]:bg-red-700/5 data-[type=info]:bg-blue-700/5 data-[type=warning]:bg-yellow-700/5", className)} data-type={type}>
+<div class={cn("space-y-5 rounded-lg p-6 data-[type=error]:text-red-200 data-[type=info]:text-blue-200 data-[type=warning]:text-yellow-200 @[75rem]/parent:p-8", preferences.performanceMode ? "data-[type=error]:bg-red-800 data-[type=info]:bg-blue-800 data-[type=warning]:bg-yellow-800" : "backdrop-blur-sm data-[type=error]:bg-red-700/5 data-[type=info]:bg-blue-700/5 data-[type=warning]:bg-yellow-700/5", className)} data-type={type}>
   <div class="justify-starts flex items-center gap-2">
     {#if type === "error"}
       <CircleX class="size-8" />

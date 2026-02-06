@@ -1,6 +1,7 @@
 import { sentrySvelteKit } from "@sentry/sveltekit";
 import { sveltekit } from "@sveltejs/kit/vite";
 import tailwindcss from "@tailwindcss/vite";
+import { webdriverio } from "@vitest/browser-webdriverio";
 import devtoolsJson from "vite-plugin-devtools-json";
 import { defineConfig } from "vitest/config";
 
@@ -9,8 +10,9 @@ export default defineConfig({
     sentrySvelteKit({
       sourceMapsUploadOptions: {
         org: "skycrypt",
-        project: "javascript-sveltekit"
-      }
+        project: "skycrypt-sveltekit"
+      },
+      adapter: "node"
     }),
     tailwindcss(),
     sveltekit(),
@@ -24,10 +26,9 @@ export default defineConfig({
         extends: "./vite.config.ts",
         test: {
           name: "client",
-          environment: "browser",
           browser: {
             enabled: true,
-            provider: "webdriverio",
+            provider: webdriverio(),
             instances: [{ browser: "chrome" }],
             headless: true
           },

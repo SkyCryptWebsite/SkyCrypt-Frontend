@@ -11,11 +11,17 @@
   import { slide } from "svelte/transition";
 
   let openState = $state(false);
-  const profile = $derived(getProfileContext());
-  const profileUUID = $derived(profile.uuid);
-  const profileId = $derived(profile.profile_id);
+  const profile = $derived(getProfileContext().current);
+  const profileUUID = $derived(profile?.uuid);
+  const profileId = $derived(profile?.profile_id);
 
   let stats = $state<RemoteQuery<ModelsStats>>();
+
+  $effect(() => {
+    if (openState) {
+      stats = getAdditionalStats({ uuid: profileUUID!, profileId: profileId! });
+    }
+  });
 </script>
 
 <div class="stats flex flex-col">
@@ -32,15 +38,15 @@
           {#if stats?.error}
             <Notice title="An unexpected error has occurred" type="error" error={stats.error.message} />
           {/if}
-          <div {...props} transition:slide={{ duration: 300, easing: cubicOut, axis: "y" }}>
-            {#if stats?.current}
-              {#each Object.entries(stats.current) as [statName, statData], index (index)}
+          {#if stats?.current?.stats}
+            <div {...props} transition:slide|global={{ duration: 300, easing: cubicOut, axis: "y" }}>
+              {#each Object.entries(stats.current.stats) as [statName, statData], index (index)}
                 {#if statData.total > 0}
                   <Stat stat={statName} {statData} />
                 {/if}
               {/each}
-            {/if}
-          </div>
+            </div>
+          {/if}
         {/if}
       {/snippet}
     </Collapsible.Content>

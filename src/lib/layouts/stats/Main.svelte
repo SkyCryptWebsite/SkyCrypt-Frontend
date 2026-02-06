@@ -3,10 +3,11 @@
   import { replaceState } from "$app/navigation";
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
-  import { getHoverContext, setProfileContext } from "$ctx";
+  import { getHoverContext, getInternalState, getPreferences, getProfileContext, getRecentSearches, ProfileContext, setProfileContext } from "$ctx";
   import Item from "$lib/components/Item.svelte";
   import ItemContent from "$lib/components/item/item-content.svelte";
   import Navbar from "$lib/components/Navbar.svelte";
+  import Skin3D from "$lib/components/Skin3D.svelte";
   import AdditionalStats from "$lib/layouts/stats/AdditionalStats.svelte";
   import PlayerProfile from "$lib/layouts/stats/PlayerProfile.svelte";
   import Skills from "$lib/layouts/stats/Skills.svelte";
@@ -14,106 +15,114 @@
   import Sections from "$lib/sections/Sections.svelte";
   import type { ModelsStatsOutput } from "$lib/shared/api/orval-generated";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { itemContent, itemContentSpecial, showItem } from "$lib/stores/internal";
-  import { performanceMode, showGlint } from "$lib/stores/preferences";
-  import { recentSearches } from "$lib/stores/searches";
-  import GripVertical from "@lucide/svelte/icons/grip-vertical";
   import Image from "@lucide/svelte/icons/image";
-  import { Avatar, Collapsible, Dialog } from "bits-ui";
-  import { Pane, PaneGroup, PaneResizer } from "paneforge";
-  import { tick, untrack } from "svelte";
+  import { Avatar, Dialog } from "bits-ui";
+  import { Pane } from "paneforge";
+  import { onDestroy, tick, untrack } from "svelte";
   import { cubicOut } from "svelte/easing";
-  import { fade, slide } from "svelte/transition";
+  import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
 
   const { data: ctx }: { data: ModelsStatsOutput } = $props();
 
   const isHover = getHoverContext();
+  const preferences = getPreferences();
+  const recentSearches = getRecentSearches();
+  const internalState = getInternalState();
 
   const profile = $derived(ctx);
 
-  let rightSize = $state(0);
-  let leftSize = $state(0);
-  let skinCollapsed = $state(false);
-  let leftPane = $state<Pane>(null!);
-  let innerWidth = $state(0);
-  let defaultLeftPanel = $derived(Math.ceil((300 / innerWidth) * 100));
-  let defaultRightPanel = $derived(Math.ceil((700 / innerWidth) * 100));
+  let showStaticSkin = $state(false);
+  let _rightSize = $state(0);
+  let _leftSize = $state(0);
+  let _skinCollapsed = $state(false);
+  let _leftPane = $state<Pane>(null!);
+  let innerWidth = $state(window.innerWidth);
+  let _defaultLeftPanel = $derived(Math.ceil((300 / innerWidth) * 100));
+  let _defaultRightPanel = $derived(Math.ceil((700 / innerWidth) * 100));
+
+  const abortController = new AbortController();
 
   // Initialize the profile context
-  setProfileContext(ctx);
+  const profileClass = new ProfileContext();
+  setProfileContext(profileClass);
 
-  // Update the profile context when the data changes
-  $effect(() => {
-    const abortController = new AbortController();
-    // setProfileContext(ctx);
+  function rewriteURL() {
+    if (!(ctx as ModelsStatsOutput)) return;
 
-    recentSearches.update((searches) => {
-      if (!ctx) return searches;
+    const { username, profile_cute_name } = ctx;
+    if (!username) return;
 
-      const { username, uuid } = ctx;
-      if (!username || !uuid) return searches;
+    const current = page.url.pathname;
+    const wanted = `/stats/${username}/${profile_cute_name || ""}`;
 
+    // Update the URL to match the username and cute name
+    if (current !== wanted) {
+      // Only proceed if not aborted
+      if (!abortController.signal.aborted) {
+        tick()
+          .then(() => {
+            if (!abortController.signal.aborted) {
+              replaceState(
+                resolve("/stats/[ign]/[[profile]]", {
+                  ign: username,
+                  profile: profile_cute_name || ""
+                }),
+                page.state
+              );
+            }
+          })
+          .catch(() => {});
+      }
+    }
+  }
+
+  $effect.pre(() => {
+    if (!ctx) return;
+
+    const { username, uuid } = ctx;
+    if (!username || !uuid) return;
+
+    untrack(() => {
       // Find existing search by username/IGN and update with UUID
-      const existingIndex = searches.findIndex((search) => search.ign.toLowerCase() === username.toLowerCase());
+      const existingIndex = recentSearches.current.findIndex((search) => search.ign.toLowerCase() === username.toLowerCase());
 
       if (existingIndex !== -1) {
-        // Update existing search with UUID
-        searches[existingIndex] = {
-          ...searches[existingIndex],
+        // Update existing search with UUID and update IGN in case it changed casing
+        recentSearches.current[existingIndex] = {
+          ...recentSearches.current[existingIndex],
+          ign: username,
           uuid: uuid
         };
       }
-
-      return searches;
     });
+  });
 
-    untrack(() => {
-      if (!(ctx as ModelsStatsOutput)) return;
+  // Update the profile context when the data changes
+  $effect.pre(() => {
+    profileClass.current = profile;
+  });
 
-      const { username, profile_cute_name } = ctx;
-      if (!username) return;
+  $effect(() => {
+    rewriteURL();
+  });
 
-      const current = page.url.pathname;
-      const wanted = `/stats/${username}/${profile_cute_name || ""}`;
-
-      // Update the URL to match the username and cute name
-      if (current !== wanted) {
-        // Only proceed if not aborted
-        if (!abortController.signal.aborted) {
-          tick()
-            .then(() => {
-              if (!abortController.signal.aborted) {
-                replaceState(
-                  resolve("/stats/[ign]/[[profile]]", {
-                    ign: username,
-                    profile: profile_cute_name || ""
-                  }),
-                  page.state
-                );
-              }
-            })
-            .catch(() => {});
-        }
-      }
-    });
-
-    return () => {
-      abortController.abort();
-    };
+  onDestroy(() => {
+    abortController.abort();
   });
 </script>
 
 <svelte:head>
   <link rel="canonical" href={`https://sky.shiiyu.moe/stats/${profile.uuid}/${profile.profile_id}`} />
-  <link rel="icon" href="https://crafatar.com/avatars/{profile.uuid}?size=32&overlay" sizes="32x32" type="image/png" />
+  <link rel="icon" href="https://nmsr.nickac.dev/face/{profile.uuid}" sizes="32x32" type="image/png" />
   <title>{profile.displayName} | SkyCrypt</title>
 </svelte:head>
 
 <svelte:window bind:innerWidth />
 
 <div class="@container/parent relative">
-  <PaneGroup id="panes" direction="horizontal" autoSaveId="paneConfig" class="relative w-full !overflow-x-clip !overflow-y-visible">
+  <!-- TODO: Re-enable paneforge once this is fixed: https://github.com/svecosystem/paneforge/issues/89 -->
+  <!-- <PaneGroup id="panes" direction="horizontal" autoSaveId="paneConfig" class="relative w-full !overflow-x-clip !overflow-y-visible">
     {#if innerWidth >= 1024}
       <div class="group/pane contents">
         <Pane
@@ -136,11 +145,11 @@
           <div class="relative flex h-full items-center justify-center">
             <div class="fixed top-1/2 z-10 -translate-y-1/2">
               {#if !skinCollapsed}
-                {#if $performanceMode}
+                {#if preferences.performanceMode}
                   <Avatar.Root>
                     {#snippet child({ props })}
                       <div transition:fade={{ duration: 300, easing: cubicOut }} {...props}>
-                        <Avatar.Image loading="lazy" src="https://vzge.me/full/832/{profile.uuid}.webp?no=shadow&y=-3" alt="{profile.username}'s avatar" class="max-h-[32rem] object-cover" />
+                        <Avatar.Image loading="lazy" src="https://nmsr.nickac.dev/fullbody/{profile.uuid}?no=shadow" alt="{profile.username}'s avatar" class="max-h-[32rem] object-cover" />
                         <Avatar.Fallback>
                           <Image class="size-24 object-cover text-text" />
                         </Avatar.Fallback>
@@ -175,34 +184,58 @@
       onResize={(size) => {
         rightSize = size;
       }}>
-      <div class={cn("fixed top-0 right-0 h-dvh w-(--width)", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")} style="--width: {skinCollapsed ? 100 : rightSize}%"></div>
+      <div class={cn("fixed top-0 right-0 h-dvh w-(--width)", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")} style="--width: {skinCollapsed ? 100 : rightSize}%"></div>
       <main data-vaul-drawer-wrapper class="@container relative mx-auto mt-12">
-        <Collapsible.Root class="space-y-5 p-4 @[75rem]/parent:p-8">
-          <Collapsible.Trigger class="bg-text/10 mx-auto mt-3.5 w-full rounded-full p-2.5 text-xs font-semibold uppercase">{profile.displayName}'s Overview</Collapsible.Trigger>
-          <Collapsible.Content forceMount={true} class="space-y-5">
-            {#snippet child({ props, open })}
-              {#if open}
-                <div {...props} transition:slide={{ duration: 300, easing: cubicOut, axis: "y" }}>
-                  <PlayerProfile />
-                  <Skills />
-                  <Stats />
-                  <AdditionalStats />
-                </div>
-              {/if}
-            {/snippet}
-          </Collapsible.Content>
-        </Collapsible.Root>
+        <div class="space-y-5 p-4 @[75rem]/parent:p-8">
+          <PlayerProfile />
+          <Skills />
+          <Stats />
+          <AdditionalStats />
+        </div>
 
         <Navbar>
           <Sections />
         </Navbar>
       </main>
     </Pane>
-  </PaneGroup>
+  </PaneGroup> -->
+  <!-- TODO: See the paneforge todo above  -->
+  <div class="@container fixed top-1/2 left-0 z-10 hidden h-dvh w-[30vw] -translate-y-1/2 @[75rem]/parent:block">
+    {#if preferences.performanceMode && !showStaticSkin}
+      <Avatar.Root class="flex size-full items-center justify-center">
+        {#snippet child({ props })}
+          <div transition:fade={{ duration: 300, easing: cubicOut }} {...props}>
+            <Avatar.Image loading="lazy" src="https://nmsr.nickac.dev/fullbody/{profile.uuid}?no=shadow" alt="{profile.username}'s avatar" class="max-h-128 object-cover" />
+            <Avatar.Fallback>
+              <Image class="size-24 object-cover text-text" />
+            </Avatar.Fallback>
+          </div>
+        {/snippet}
+      </Avatar.Root>
+    {:else if browser && innerWidth >= 1024}
+      <Skin3D showStaticSkin={() => (showStaticSkin = true)} class="h-full" />
+    {/if}
+  </div>
+
+  <div class={cn("fixed top-0 right-0 min-h-dvh w-full @[75rem]/parent:w-[calc(100%-30vw)]", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")}></div>
+  <main data-vaul-drawer-wrapper class="@container relative mx-auto mt-12 @[75rem]/parent:ml-[30vw]">
+    {#if getProfileContext().current}
+      <div class="space-y-5 p-4 @[75rem]/parent:p-8">
+        <PlayerProfile />
+        <Skills />
+        <Stats />
+        <AdditionalStats />
+      </div>
+
+      <Navbar>
+        <Sections />
+      </Navbar>
+    {/if}
+  </main>
 </div>
 
 {#if isHover.current}
-  <Dialog.Root bind:open={$showItem}>
+  <Dialog.Root bind:open={internalState.showItem}>
     <Dialog.Portal>
       <Dialog.Overlay forceMount class="fixed inset-0 z-40 bg-black/80">
         {#snippet child({ props, open })}
@@ -215,7 +248,7 @@
         {#snippet child({ props, open })}
           {#if open}
             <div {...props} transition:flyAndScale>
-              <ItemContent piece={$itemContent!} />
+              <ItemContent piece={internalState.itemContent!} />
             </div>
           {/if}
         {/snippet}
@@ -223,10 +256,10 @@
     </Dialog.Portal>
   </Dialog.Root>
   <Dialog.Root
-    bind:open={() => $itemContentSpecial !== undefined, (open) => open}
+    bind:open={() => internalState.itemContentSpecial !== undefined, (open) => open}
     onOpenChange={(open) => {
       if (!open) {
-        itemContentSpecial.set(undefined);
+        internalState.itemContentSpecial = undefined;
       }
     }}>
     <Dialog.Portal>
@@ -249,21 +282,21 @@
     </Dialog.Portal>
   </Dialog.Root>
 {:else}
-  <Drawer.Root bind:open={$showItem} shouldScaleBackground={true} setBackgroundColorOnScale={false}>
+  <Drawer.Root bind:open={internalState.showItem} shouldScaleBackground={true} setBackgroundColorOnScale={false}>
     <Drawer.Portal>
       <Drawer.Overlay class="fixed inset-0 z-40 bg-black/80" />
       <Drawer.Content class="fixed right-0 bottom-0 left-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px] bg-background-lore">
-        <ItemContent piece={$itemContent!} isDrawer={true} />
+        <ItemContent piece={internalState.itemContent!} isDrawer={true} />
       </Drawer.Content>
     </Drawer.Portal>
   </Drawer.Root>
   <Drawer.Root
-    bind:open={() => $itemContentSpecial !== undefined, (open) => open}
+    bind:open={() => internalState.itemContentSpecial !== undefined, (open) => open}
     shouldScaleBackground={false}
     setBackgroundColorOnScale={false}
     onOpenChange={(open) => {
       if (!open) {
-        itemContentSpecial.set(undefined);
+        internalState.itemContentSpecial = undefined;
       }
     }}>
     <Drawer.Portal>
@@ -275,7 +308,7 @@
   </Drawer.Root>
 {/if}
 
-{#if $showGlint}
+{#if preferences.showGlint}
   <svg xmlns="http://www.w3.org/2000/svg" height="0" width="0" class="fixed">
     <filter id="enchanted-glint">
       <feImage href="/img/enchanted-glint.avif"></feImage>
@@ -286,17 +319,17 @@
 {/if}
 
 {#snippet containedItems()}
-  {#if $itemContentSpecial}
+  {#if internalState.itemContentSpecial}
     <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 @md:gap-1.5 @xl:gap-2">
-      {#if $itemContentSpecial.containsItems && $itemContentSpecial.containsItems.length !== 0}
-        {#each $itemContentSpecial.containsItems as containedItem, index (index)}
+      {#if internalState.itemContentSpecial.containsItems && internalState.itemContentSpecial.containsItems.length !== 0}
+        {#each internalState.itemContentSpecial.containsItems as containedItem, index (index)}
           {#if index > 0}
             {#if index % 54 === 0}
               <hr class="col-span-full h-4 border-0" />
             {/if}
           {/if}
           {#if containedItem.texture_path}
-            <div class="flex aspect-square items-center justify-center rounded-sm bg-text/4" onclick={() => itemContentSpecial.set(undefined)} role="none">
+            <div class="flex aspect-square items-center justify-center rounded-sm bg-text/4" onclick={() => (internalState.itemContentSpecial = undefined)} role="none">
               <Item piece={containedItem} isInventory={true} showRecombobulated={false} showCount={true} />
             </div>
           {:else}

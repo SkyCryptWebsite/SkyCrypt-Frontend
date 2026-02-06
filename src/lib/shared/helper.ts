@@ -112,6 +112,7 @@ export function uniqBy<T>(arr: T[], key: string): T[] {
  * @returns {string} The path to the stats page
  */
 export function validateURL(url: string): boolean {
+  if (!url || url.trim() === "") return false;
   const urlSegments = url.trim().split("/");
   if (urlSegments.length < 1) {
     console.error("Please enter a Minecraft username or UUID");

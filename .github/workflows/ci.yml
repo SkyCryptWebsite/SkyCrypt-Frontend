@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  changeset:
+    name: Changeset Check
+    if: ${{ !startsWith(github.head_ref, 'changeset-release/') }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm fetch && pnpm install --frozen-lockfile
+        env:
+          HUSKY: "0"
+
+      - name: Check for changeset
+        run: pnpm changeset status --since=origin/${{ github.base_ref }}
+
+  checks:
+    if: github.event.pull_request.head.repo.fork == true
+    uses: ./.github/workflows/checks.yml
+
+  tests:
+    if: github.event.pull_request.head.repo.fork == true
+    uses: ./.github/workflows/test.yml
+
+  build:
+    if: github.event.pull_request.head.repo.fork == true
+    uses: ./.github/workflows/build.yml
