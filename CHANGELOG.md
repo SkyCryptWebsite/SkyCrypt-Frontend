@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.0-beta.2
+
+### Minor Changes
+
+- Added minecraft styled tooltips ([#252](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/252))
+
 ## 3.1.0-beta.1
 
 ### Patch Changes
