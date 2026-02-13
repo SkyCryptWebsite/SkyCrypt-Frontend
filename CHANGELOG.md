@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.1
+
+### Patch Changes
+
+- Refactor how bots and embeds are handled to prevent getting flagged for "cloaking" ([#261](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/261))
+
 ## 3.1.1-beta.0
 
 ### Patch Changes
