@@ -17,13 +17,14 @@
   type Props = {
     title: string;
     children?: Snippet;
+    text?: string;
     type: "error" | "warning" | "info";
     class?: string;
     error?: Error | HttpError | unknown;
     retry?: () => void;
   };
 
-  let { title, children, type, class: className, error: fullError, retry }: Props = $props();
+  let { title, children, text, type, class: className, error: fullError, retry }: Props = $props();
 
   $effect(() => {
     if (fullError) {
@@ -47,7 +48,11 @@
     <h3 class="text-2xl font-semibold">{title}</h3>
   </div>
 
-  {@render children?.()}
+  {#if children}
+    {@render children?.()}
+  {:else if text}
+    <p>{text}</p>
+  {/if}
 
   {#if type === "error"}
     {#if isHttpError(fullError)}

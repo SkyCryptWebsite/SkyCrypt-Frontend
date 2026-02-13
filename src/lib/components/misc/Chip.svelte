@@ -32,9 +32,10 @@
     children?: Snippet;
     progress?: Snippet;
     tooltip?: Snippet;
+    tooltipContent?: string;
   };
 
-  let { animationOptions = { animate: false }, image, class: classNames, children, progress, tooltip }: Props = $props();
+  let { animationOptions = { animate: false }, image, class: classNames, children, progress, tooltip, tooltipContent }: Props = $props();
 
   let targetNode = $state<HTMLDivElement>()!;
   let hasBeenInViewport = $state(false);
@@ -75,13 +76,17 @@
     {/snippet}
   </Tooltip.Trigger>
   <Tooltip.Portal>
-    {#if tooltip && isHover.current}
+    {#if (tooltip || tooltipContent) && isHover.current}
       <Tooltip.Content forceMount class="z-50 rounded-lg bg-background-grey p-4" sideOffset={6} side="top" align="center">
         {#snippet child({ wrapperProps, props, open })}
           {#if open}
             <div {...wrapperProps}>
               <div {...props} transition:flyAndScale>
-                {@render tooltip()}
+                {#if tooltip}
+                  {@render tooltip()}
+                {:else if tooltipContent}
+                  {tooltipContent}
+                {/if}
                 <Tooltip.Arrow />
               </div>
             </div>

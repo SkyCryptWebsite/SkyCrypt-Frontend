@@ -1,5 +1,6 @@
 <script lang="ts">
   import SectionTitle from "$lib/components/sections/SectionTitle.svelte";
+  import SectionSubtitle from "$lib/components/sections/SectionSubtitle.svelte";
   import type { SectionName } from "$lib/sections/types";
   import { cn } from "$lib/shared/utils";
   import type { Snippet } from "svelte";
@@ -10,17 +11,20 @@
     order?: number;
     children?: Snippet;
     subtitle?: Snippet;
+    subtitleText?: string;
   };
 
-  let { id, class: className, order, children, subtitle }: Props = $props();
+  let { id, class: className, order, children, subtitle, subtitleText }: Props = $props();
 </script>
 
 <section {id} class={cn("order-(--order) mx-auto scroll-m-32", className)} style="--order: {order};">
   <div class="flex items-center justify-between">
-    {#if !subtitle}
-      <SectionTitle>{id.replaceAll("_", " ")}</SectionTitle>
-    {:else}
+    {#if subtitle}
       {@render subtitle()}
+    {:else if subtitleText}
+      <SectionSubtitle>{subtitleText}</SectionSubtitle>
+    {:else}
+      <SectionTitle>{id.replaceAll("_", " ")}</SectionTitle>
     {/if}
   </div>
   {@render children?.()}
