@@ -3,15 +3,14 @@
   import AdditionStat from "$lib/components/stats/AdditionStat.svelte";
   import GardenPlotGrid from "$lib/components/stats/GardenPlotGrid.svelte";
   import Chip from "$lib/components/misc/Chip.svelte";
-  import Notice from "$lib/components/notices/Notice.svelte";
   import ScrollItems from "$lib/components/misc/ScrollItems.svelte";
   import SectionSubtitle from "$lib/components/sections/SectionSubtitle.svelte";
+  import SectionBoundary from "$lib/components/sections/SectionBoundary.svelte";
   import { type ModelsGarden } from "$lib/shared/api/orval-generated";
   import { getGarden } from "$lib/shared/api/skycrypt-api.remote";
   import { calculatePercentage, formatNumber, getRarityClass } from "$lib/shared/helper";
   import { cn } from "$lib/shared/utils";
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
-  import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import { Collapsible, Progress } from "bits-ui";
   import { format } from "numerable";
 
@@ -30,77 +29,72 @@
     {#if gardenLocked}
       <p>This player does not have the Garden unlocked.</p>
     {:else}
-      <svelte:boundary>
-        {#snippet pending()}
-          <LoaderCircle class="animate-spin text-icon" />
-        {/snippet}
-        {#snippet failed(err, retry)}
-          <Notice title="An unexpected error has occurred" type="error" error={err} {retry} />
-        {/snippet}
-        {@const garden = await getGarden({ profileId: profileId! })}
-        {#if garden}
-          {@const hasMaxed = garden.level?.maxed ?? false}
-          <div class="mt-2">
-            <AdditionStat text="Level" data="{garden.level?.level} / {garden.level?.maxLevel}" maxed={hasMaxed} asterisk={true}>
-              <h3 class="font-bold text-text/85">
-                XP:
-                <span class="text-text">
-                  {format(garden.level?.xp)}
-                </span>
-              </h3>
-              <h3 class="font-bold text-text/85">Progress to next level:</h3>
-              <Progress.Root value={garden.level?.xpCurrent} max={hasMaxed ? garden.level?.xpCurrent : garden.level?.xpForNext} class="relative h-4 w-full overflow-hidden rounded-full bg-text/30">
-                <div class="absolute z-10 flex h-full w-full justify-center">
-                  <div class="text-xs font-semibold shadow-background/50 text-shadow-md">
-                    {formatNumber(garden.level?.xpCurrent ?? 0)} / {formatNumber(garden.level?.xpForNext ?? 0)}
-                    XP
+      <SectionBoundary promise={getGarden({ profileId: profileId! })}>
+        {#snippet children(garden)}
+          {#if garden}
+            {@const hasMaxed = garden.level?.maxed ?? false}
+            <div class="mt-2">
+              <AdditionStat text="Level" data="{garden.level?.level} / {garden.level?.maxLevel}" maxed={hasMaxed} asterisk={true}>
+                <h3 class="font-bold text-text/85">
+                  XP:
+                  <span class="text-text">
+                    {format(garden.level?.xp)}
+                  </span>
+                </h3>
+                <h3 class="font-bold text-text/85">Progress to next level:</h3>
+                <Progress.Root value={garden.level?.xpCurrent} max={hasMaxed ? garden.level?.xpCurrent : garden.level?.xpForNext} class="relative h-4 w-full overflow-hidden rounded-full bg-text/30">
+                  <div class="absolute z-10 flex h-full w-full justify-center">
+                    <div class="text-xs font-semibold shadow-background/50 text-shadow-md">
+                      {formatNumber(garden.level?.xpCurrent ?? 0)} / {formatNumber(garden.level?.xpForNext ?? 0)}
+                      XP
+                    </div>
                   </div>
-                </div>
-                <div class="h-full w-full flex-1 rounded-full bg-skillbar transition-all duration-300 ease-out data-[maxed=true]:bg-maxedbar" style={`transform: translateX(-${100 - parseFloat(calculatePercentage(garden.level?.xpCurrent ?? 0, hasMaxed ? (garden.level?.xpCurrent ?? 0) : (garden.level?.xpForNext ?? 0)))}%)`} data-maxed={hasMaxed}></div>
-              </Progress.Root>
-            </AdditionStat>
-            <AdditionStat text="Composter" data={Object.values(garden.composter ?? {}).join(" / ")} asterisk={true} maxed={Object.values(garden.composter ?? {}).every((value) => value === 25)}>
-              {#each Object.entries(garden.composter ?? {}) as [key, value], index (index)}
-                <h3 class="font-bold text-text/85">
-                  <span class="capitalize">{key.replaceAll("_", " ")}</span>:
-                  <span class="text-text">
-                    {value}
-                  </span>
-                </h3>
-              {/each}
-            </AdditionStat>
-            <AdditionStat text="Visitors" data={format(garden.visitors?.completed)} asterisk={true}>
-              {#each Object.entries(garden.visitors?.visitors ?? {}) as [key, value], index (index)}
-                <h3 class="font-bold text-text/85">
-                  <span class={cn("capitalize", getRarityClass(key, "text"))}>{key}</span>:
-                  <span class="text-text">
-                    {format(value.completed)}
-                  </span>
-                </h3>
-              {/each}
-            </AdditionStat>
-            <AdditionStat text="Unique Visitors" data={garden.visitors?.uniqueVisitors ?? 0} asterisk={true}>
-              {#each Object.entries(garden.visitors?.visitors ?? {}) as [key, value], index (index)}
-                <h3 class="font-bold text-text/85">
-                  <span class={cn("capitalize", getRarityClass(key, "text"))}>{key}</span>:
-                  <span class="text-text">
-                    {format(value.unique)}
-                  </span>
-                </h3>
-              {/each}
-            </AdditionStat>
-          </div>
-          <div class="mt-5">
-            {@render milestones(garden)}
-          </div>
-          <div class="mt-5">
-            {@render upgrades(garden)}
-          </div>
-          <div class="mt-5">
-            <GardenPlotGrid plot={garden.plot} />
-          </div>
-        {/if}
-      </svelte:boundary>
+                  <div class="h-full w-full flex-1 rounded-full bg-skillbar transition-all duration-300 ease-out data-[maxed=true]:bg-maxedbar" style={`transform: translateX(-${100 - parseFloat(calculatePercentage(garden.level?.xpCurrent ?? 0, hasMaxed ? (garden.level?.xpCurrent ?? 0) : (garden.level?.xpForNext ?? 0)))}%)`} data-maxed={hasMaxed}></div>
+                </Progress.Root>
+              </AdditionStat>
+              <AdditionStat text="Composter" data={Object.values(garden.composter ?? {}).join(" / ")} asterisk={true} maxed={Object.values(garden.composter ?? {}).every((value) => value === 25)}>
+                {#each Object.entries(garden.composter ?? {}) as [key, value], index (index)}
+                  <h3 class="font-bold text-text/85">
+                    <span class="capitalize">{key.replaceAll("_", " ")}</span>:
+                    <span class="text-text">
+                      {value}
+                    </span>
+                  </h3>
+                {/each}
+              </AdditionStat>
+              <AdditionStat text="Visitors" data={format(garden.visitors?.completed)} asterisk={true}>
+                {#each Object.entries(garden.visitors?.visitors ?? {}) as [key, value], index (index)}
+                  <h3 class="font-bold text-text/85">
+                    <span class={cn("capitalize", getRarityClass(key, "text"))}>{key}</span>:
+                    <span class="text-text">
+                      {format(value.completed)}
+                    </span>
+                  </h3>
+                {/each}
+              </AdditionStat>
+              <AdditionStat text="Unique Visitors" data={garden.visitors?.uniqueVisitors ?? 0} asterisk={true}>
+                {#each Object.entries(garden.visitors?.visitors ?? {}) as [key, value], index (index)}
+                  <h3 class="font-bold text-text/85">
+                    <span class={cn("capitalize", getRarityClass(key, "text"))}>{key}</span>:
+                    <span class="text-text">
+                      {format(value.unique)}
+                    </span>
+                  </h3>
+                {/each}
+              </AdditionStat>
+            </div>
+            <div class="mt-5">
+              {@render milestones(garden)}
+            </div>
+            <div class="mt-5">
+              {@render upgrades(garden)}
+            </div>
+            <div class="mt-5">
+              <GardenPlotGrid plot={garden.plot} />
+            </div>
+          {/if}
+        {/snippet}
+      </SectionBoundary>
     {/if}
   </Collapsible.Content>
 </Collapsible.Root>
