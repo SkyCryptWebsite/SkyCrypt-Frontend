@@ -5,6 +5,7 @@
   import type { Contributor } from "$routes/ contributors.remote";
   import { Avatar, Button, Tooltip } from "bits-ui";
   import { Role } from "$routes/enums";
+  import type { Component } from "svelte";
 
   interface Props {
     user: Contributor;
@@ -12,20 +13,13 @@
       tip?: boolean;
       favorite?: boolean;
     };
-    iconMapper: Record<Role, any>;
+    iconMapper: Record<Role, Component | string>;
   }
 
   let { user, options, iconMapper }: Props = $props();
 
   const favorites = getFavorites();
   const internalState = getInternalState();
-
-  function createTooltipContent() {
-    return {
-      favorite: options?.favorite,
-      role: user.role
-    };
-  }
 </script>
 
 {#snippet tooltipContent()}

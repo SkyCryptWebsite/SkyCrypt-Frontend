@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { resolve } from "$app/paths";
-  import { getFavorites, getInternalState, getPreferences } from "$ctx";
+  import { getFavorites, getPreferences } from "$ctx";
   import { env } from "$env/dynamic/public";
   import ContributorCard from "$lib/components/misc/ContributorCard.svelte";
   import ContributorCardSkeleton from "$lib/components/misc/ContributorCardSkeleton.svelte";

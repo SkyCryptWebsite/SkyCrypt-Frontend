@@ -8,9 +8,6 @@
   import { getProfileStats } from "$lib/shared/api/skycrypt-api.remote";
   import { cn } from "$lib/shared/utils";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
-  import type { PageServerData } from "./$types";
-
-  const { data }: { data: PageServerData } = $props();
 
   const preferences = getPreferences();
   const internalState = getInternalState();

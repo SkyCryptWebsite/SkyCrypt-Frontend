@@ -5,8 +5,6 @@
   import Skillbar from "$lib/components/stats/Skillbar.svelte";
   import DungeonCataCard from "$lib/components/stats/DungeonCataCard.svelte";
   import { getDungeonsSection } from "$lib/shared/api/skycrypt-api.remote";
-  import { tz } from "@date-fns/tz";
-  import { formatDate, formatDistanceToNowStrict, formatDuration as formatDurationDateFns, intervalToDuration } from "date-fns";
   import { format } from "numerable";
 
   let { order }: { order: number } = $props();
@@ -16,29 +14,6 @@
   const profileId = $derived(profile?.profile_id);
 
   const dungeons = $derived(await getDungeonsSection({ uuid: profileUUID!, profileId: profileId! }));
-
-  function formatDuration(end: number) {
-    const interval = intervalToDuration({ start: 0, end }, { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) });
-
-    // Always extract and format both minutes and seconds
-    const minutes = interval.minutes ?? 0;
-    const seconds = interval.seconds ?? 0;
-
-    const duration = formatDurationDateFns(
-      { minutes, seconds },
-      {
-        format: ["minutes", "seconds"],
-        delimiter: ":",
-        zero: true,
-        locale: {
-          formatDistance: (_token, count) => String(count).padStart(2, "0")
-        }
-      }
-    );
-
-    if (duration === "") return "-";
-    return duration;
-  }
 </script>
 
 <Section id="Dungeons" {order}>

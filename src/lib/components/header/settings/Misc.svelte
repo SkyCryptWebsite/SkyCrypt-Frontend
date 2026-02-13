@@ -71,6 +71,7 @@
         {#snippet icon()}
           <Fan class="size-6 h-lh shrink-0 will-change-transform data-[performance=false]:animate-spin-slow data-[performance=true]:animate-spin" data-performance={preferences.performanceMode} />
         {/snippet}
+        <!-- eslint-disable-next-line svelte/no-useless-children-snippet -->
         {#snippet children()}
           <Tooltip.Provider delayDuration={0}>
             <Tooltip.Root>

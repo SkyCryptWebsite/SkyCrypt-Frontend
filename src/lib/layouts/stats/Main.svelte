@@ -4,7 +4,6 @@
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
   import { getHoverContext, getInternalState, getPreferences, getProfileContext, getRecentSearches, ProfileContext, setProfileContext } from "$ctx";
-  import Item from "$lib/components/item/Item.svelte";
   import ContainedItemsGrid from "$lib/components/item/ContainedItemsGrid.svelte";
   import ItemContent from "$lib/components/item/item-content.svelte";
   import Navbar from "$lib/components/misc/Navbar.svelte";
