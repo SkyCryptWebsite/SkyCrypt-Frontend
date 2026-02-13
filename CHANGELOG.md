@@ -1,5 +1,19 @@
 # Changelog
 
+## 3.1.0
+
+### Minor Changes
+
+- Migrate to changesets from changelogen ([#246](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/246))
+
+- Added minecraft styled tooltips ([#254](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/254))
+
+### Patch Changes
+
+- Changeset for PR #243 ([#246](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/246))
+
+- Use totalAmount instead of amount for collections ([#246](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/246))
+
 ## 3.1.0-beta.2
 
 ### Minor Changes
