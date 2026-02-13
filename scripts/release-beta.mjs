@@ -42,7 +42,21 @@ run('git config user.name "github-actions[bot]"');
 run('git config user.email "github-actions[bot]@users.noreply.github.com"');
 run("git checkout -B changeset-release/dev origin/dev");
 
-runOptional("pnpm changeset pre enter beta");
+const preStatePath = path.join(changesetDir, "pre.json");
+let inPreMode = false;
+
+if (fs.existsSync(preStatePath)) {
+  try {
+    const preState = JSON.parse(fs.readFileSync(preStatePath, "utf8"));
+    inPreMode = preState?.mode === "pre";
+  } catch {
+    inPreMode = false;
+  }
+}
+
+if (!inPreMode) {
+  runOptional("pnpm changeset pre enter beta");
+}
 run("pnpm changeset:version");
 
 try {
