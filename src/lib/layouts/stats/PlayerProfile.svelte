@@ -1,7 +1,7 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
   import { getFavorites, getHoverContext, getPreferences, getProfileContext } from "$ctx";
-  import ApiNotice from "$lib/components/APINotice.svelte";
+  import ApiNotice from "$lib/components/notices/APINotice.svelte";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import Ban from "@lucide/svelte/icons/ban";
   import ChevronLeft from "@lucide/svelte/icons/chevron-left";

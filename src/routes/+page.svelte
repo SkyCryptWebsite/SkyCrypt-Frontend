@@ -2,7 +2,7 @@
   import { resolve } from "$app/paths";
   import { getFavorites, getHoverContext, getInternalState, getPreferences } from "$ctx";
   import { env } from "$env/dynamic/public";
-  import Notice from "$lib/components/Notice.svelte";
+  import Notice from "$lib/components/notices/Notice.svelte";
   import { searchUser } from "$lib/shared/api/skycrypt-api.remote";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import { type Contributor, getContributors } from "$routes/ contributors.remote";

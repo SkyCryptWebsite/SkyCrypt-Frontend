@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getHoverContext, getPreferences, getProfileContext } from "$ctx";
-  import AdditionStat from "$lib/components/AdditionStat.svelte";
+  import AdditionStat from "$lib/components/stats/AdditionStat.svelte";
   import { type SkycryptSrcModelsNetworthResult } from "$lib/shared/api/orval-generated";
   import { getNetworth } from "$lib/shared/api/skycrypt-api.remote";
   import { calculatePercentage, formatNumber } from "$lib/shared/helper";

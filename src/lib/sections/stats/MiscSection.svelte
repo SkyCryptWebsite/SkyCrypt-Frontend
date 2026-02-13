@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getProfileContext, MiscContext, setMiscContext } from "$ctx";
-  import Section from "$lib/components/Section.svelte";
+  import Section from "$lib/components/sections/Section.svelte";
   import { getMiscSection } from "$lib/shared/api/skycrypt-api.remote";
   import Auctions from "./misc/auctions.svelte";
   import Claimed from "./misc/claimed.svelte";

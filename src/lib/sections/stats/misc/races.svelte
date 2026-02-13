@@ -1,8 +1,8 @@
 <!-- <script lang="ts">
   import { getMiscContext } from "$ctx";
-  import AdditionStat from "$lib/components/AdditionStat.svelte";
-  import ScrollItems from "$lib/components/scroll-items.svelte";
-  import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
+  import AdditionStat from "$lib/components/stats/AdditionStat.svelte";
+  import ScrollItems from "$lib/components/misc/ScrollItems.svelte";
+  import SectionSubtitle from "$lib/components/sections/SectionSubtitle.svelte";
   import { format } from "numerable";
 
   const misc = $derived(getMiscContext());

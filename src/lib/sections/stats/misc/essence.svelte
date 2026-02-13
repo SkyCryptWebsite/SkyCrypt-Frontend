@@ -1,8 +1,8 @@
 <script lang="ts">
   import { getMiscContext } from "$ctx";
-  import Chip from "$lib/components/Chip.svelte";
-  import ScrollItems from "$lib/components/scroll-items.svelte";
-  import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
+  import Chip from "$lib/components/misc/Chip.svelte";
+  import ScrollItems from "$lib/components/misc/ScrollItems.svelte";
+  import SectionSubtitle from "$lib/components/sections/SectionSubtitle.svelte";
   import { cn } from "$lib/shared/utils";
   import { format } from "numerable";
 

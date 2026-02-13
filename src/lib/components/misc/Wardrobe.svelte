@@ -1,6 +1,6 @@
 <script lang="ts">
-  import EmptyEquipment from "$lib/components/EmptyEquipment.svelte";
-  import Item from "$lib/components/Item.svelte";
+  import EmptyEquipment from "$lib/components/item/EmptyEquipment.svelte";
+  import Item from "$lib/components/item/Item.svelte";
   import type { ModelsStrippedItem } from "$lib/shared/api/orval-generated";
 
   const { wardrobeItems }: { wardrobeItems: ModelsStrippedItem[] } = $props();

@@ -1,10 +1,10 @@
 <script lang="ts">
   import { getProfileContext } from "$ctx";
-  import AdditionStat from "$lib/components/AdditionStat.svelte";
-  import ScrollItems from "$lib/components/scroll-items.svelte";
-  import Section from "$lib/components/Section.svelte";
-  import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
-  import Skillbar from "$lib/components/Skillbar.svelte";
+  import AdditionStat from "$lib/components/stats/AdditionStat.svelte";
+  import ScrollItems from "$lib/components/misc/ScrollItems.svelte";
+  import Section from "$lib/components/sections/Section.svelte";
+  import SectionSubtitle from "$lib/components/sections/SectionSubtitle.svelte";
+  import Skillbar from "$lib/components/stats/Skillbar.svelte";
   import { type ModelsFormattedDungeonFloor } from "$lib/shared/api/orval-generated";
   import { getDungeonsSection } from "$lib/shared/api/skycrypt-api.remote";
   import { formatNumber } from "$lib/shared/helper";

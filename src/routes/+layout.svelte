@@ -6,7 +6,7 @@
   import { initInternalState } from "$ctx/internal.svelte";
   import Header from "$lib/components/header/Header.svelte";
   import { SettingsTab } from "$lib/components/header/types";
-  import PerformanceMode from "$lib/components/PerformanceMode.svelte";
+  import PerformanceMode from "$lib/components/misc/PerformanceMode.svelte";
   import { IsHover } from "$lib/hooks/is-hover.svelte";
   import { IsMobile } from "$lib/hooks/is-mobile.svelte";
   import { getPacks, searchUser } from "$lib/shared/api/skycrypt-api.remote";
@@ -203,7 +203,7 @@
   }} />
 
 {#if page.url.origin.includes("cupcake") || dev}
-  {#await import("$lib/components/BetaNotice.svelte") then { default: BetaNotice }}
+  {#await import("$lib/components/notices/BetaNotice.svelte") then { default: BetaNotice }}
     <BetaNotice />
   {/await}
 {/if}

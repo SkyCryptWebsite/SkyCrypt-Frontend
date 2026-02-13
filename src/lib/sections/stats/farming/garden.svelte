@@ -1,10 +1,10 @@
 <script lang="ts">
   import { getHoverContext, getInternalState, getProfileContext } from "$ctx";
-  import AdditionStat from "$lib/components/AdditionStat.svelte";
-  import Chip from "$lib/components/Chip.svelte";
-  import Notice from "$lib/components/Notice.svelte";
-  import ScrollItems from "$lib/components/scroll-items.svelte";
-  import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
+  import AdditionStat from "$lib/components/stats/AdditionStat.svelte";
+  import Chip from "$lib/components/misc/Chip.svelte";
+  import Notice from "$lib/components/notices/Notice.svelte";
+  import ScrollItems from "$lib/components/misc/ScrollItems.svelte";
+  import SectionSubtitle from "$lib/components/sections/SectionSubtitle.svelte";
   import { type ModelsGarden } from "$lib/shared/api/orval-generated";
   import { getGarden } from "$lib/shared/api/skycrypt-api.remote";
   import { calculatePercentage, formatNumber, getRarityClass, renderLore } from "$lib/shared/helper";

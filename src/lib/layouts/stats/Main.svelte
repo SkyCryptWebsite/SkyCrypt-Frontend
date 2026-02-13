@@ -4,10 +4,10 @@
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
   import { getHoverContext, getInternalState, getPreferences, getProfileContext, getRecentSearches, ProfileContext, setProfileContext } from "$ctx";
-  import Item from "$lib/components/Item.svelte";
+  import Item from "$lib/components/item/Item.svelte";
   import ItemContent from "$lib/components/item/item-content.svelte";
-  import Navbar from "$lib/components/Navbar.svelte";
-  import Skin3D from "$lib/components/Skin3D.svelte";
+  import Navbar from "$lib/components/misc/Navbar.svelte";
+  import Skin3D from "$lib/components/misc/Skin3D.svelte";
   import AdditionalStats from "$lib/layouts/stats/AdditionalStats.svelte";
   import PlayerProfile from "$lib/layouts/stats/PlayerProfile.svelte";
   import Skills from "$lib/layouts/stats/Skills.svelte";
@@ -157,7 +157,7 @@
                     {/snippet}
                   </Avatar.Root>
                 {:else if browser && innerWidth >= 1024}
-                  {#await import('$lib/components/Skin3D.svelte') then { default: Skin3D }}
+                   {#await import('$lib/components/misc/Skin3D.svelte') then { default: Skin3D }}
                     <Skin3D class="h-full" />
                   {/await}
                 {/if}

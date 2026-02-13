@@ -1,10 +1,10 @@
 <script lang="ts">
   import { getInternalState, getPreferences, getProfileContext } from "$ctx";
   import { env } from "$env/dynamic/public";
-  import Item from "$lib/components/Item.svelte";
-  import Notice from "$lib/components/Notice.svelte";
+  import Item from "$lib/components/item/Item.svelte";
+  import Notice from "$lib/components/notices/Notice.svelte";
   import ScrollAreaPrimitive from "$lib/components/ScrollAreaPrimitive.svelte";
-  import Section from "$lib/components/Section.svelte";
+  import Section from "$lib/components/sections/Section.svelte";
   import { type ModelsStrippedItem } from "$lib/shared/api/orval-generated";
   import { getInventorySection, searchInventorySection } from "$lib/shared/api/skycrypt-api.remote";
   import { renderLore, shouldShine } from "$lib/shared/helper";
