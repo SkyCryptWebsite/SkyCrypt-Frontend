@@ -5,6 +5,7 @@
   import { page } from "$app/state";
   import { getHoverContext, getInternalState, getPreferences, getProfileContext, getRecentSearches, ProfileContext, setProfileContext } from "$ctx";
   import Item from "$lib/components/item/Item.svelte";
+  import ContainedItemsGrid from "$lib/components/item/ContainedItemsGrid.svelte";
   import ItemContent from "$lib/components/item/item-content.svelte";
   import Navbar from "$lib/components/misc/Navbar.svelte";
   import Skin3D from "$lib/components/misc/Skin3D.svelte";
@@ -274,7 +275,9 @@
         {#snippet child({ props, open })}
           {#if open}
             <div {...props} transition:flyAndScale>
-              {@render containedItems()}
+              {#if internalState.itemContentSpecial?.containsItems}
+                <ContainedItemsGrid items={internalState.itemContentSpecial.containsItems} onclose={() => (internalState.itemContentSpecial = undefined)} />
+              {/if}
             </div>
           {/if}
         {/snippet}
@@ -302,7 +305,9 @@
     <Drawer.Portal>
       <Drawer.Overlay class="fixed inset-0 z-40 bg-black/80" />
       <Drawer.Content class="fixed right-0 bottom-0 left-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px] bg-background-lore">
-        {@render containedItems()}
+        {#if internalState.itemContentSpecial?.containsItems}
+          <ContainedItemsGrid items={internalState.itemContentSpecial.containsItems} onclose={() => (internalState.itemContentSpecial = undefined)} />
+        {/if}
       </Drawer.Content>
     </Drawer.Portal>
   </Drawer.Root>
@@ -317,26 +322,3 @@
     </filter>
   </svg>
 {/if}
-
-{#snippet containedItems()}
-  {#if internalState.itemContentSpecial}
-    <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 @md:gap-1.5 @xl:gap-2">
-      {#if internalState.itemContentSpecial.containsItems && internalState.itemContentSpecial.containsItems.length !== 0}
-        {#each internalState.itemContentSpecial.containsItems as containedItem, index (index)}
-          {#if index > 0}
-            {#if index % 54 === 0}
-              <hr class="col-span-full h-4 border-0" />
-            {/if}
-          {/if}
-          {#if containedItem.texture_path}
-            <div class="flex aspect-square items-center justify-center rounded-sm bg-text/4" onclick={() => (internalState.itemContentSpecial = undefined)} role="none">
-              <Item piece={containedItem} isInventory={true} showRecombobulated={false} showCount={true} />
-            </div>
-          {:else}
-            <div class="aspect-square rounded-sm bg-text/4"></div>
-          {/if}
-        {/each}
-      {/if}
-    </div>
-  {/if}
-{/snippet}

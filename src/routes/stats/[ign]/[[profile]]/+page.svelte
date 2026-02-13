@@ -3,7 +3,6 @@
   import { page } from "$app/state";
   import { getInternalState, getPreferences } from "$ctx";
   import Notice from "$lib/components/notices/Notice.svelte";
-  import SEO from "$lib/components/misc/SEO.svelte";
   import Main from "$lib/layouts/stats/Main.svelte";
   import type { SectionName } from "$lib/sections/types";
   import { getProfileStats } from "$lib/shared/api/skycrypt-api.remote";
@@ -40,7 +39,7 @@
   });
 </script>
 
-<SEO embedData={data.embed} />
+<!-- <SEO embedData={data.embed} /> -->
 
 <svelte:boundary>
   {#snippet pending()}
