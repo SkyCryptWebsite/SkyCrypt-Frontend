@@ -130,8 +130,10 @@
     if (type === "leave" || type === "link") return;
     loading = true;
     if (!searchQueryValidated.success) return;
-    if (searchQuery.trim() !== "") {
-      recentSearches.current = [...new Set([{ ign: searchQuery.trim() }, ...recentSearches.current])].slice(0, 5);
+    const trimmedQuery = searchQuery.trim();
+    if (trimmedQuery !== "") {
+      const normalizedQuery = trimmedQuery.toLowerCase();
+      recentSearches.current = [{ ign: trimmedQuery }, ...recentSearches.current.filter((search) => search.ign.toLowerCase() !== normalizedQuery)].slice(0, 5);
     }
     setTimeout(() => {
       loading = false;
