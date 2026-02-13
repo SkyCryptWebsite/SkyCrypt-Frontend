@@ -40,27 +40,25 @@
   });
 </script>
 
-{#if data.isBot && data.embed}
-  <SEO embedData={data.embed} />
-{:else}
-  <svelte:boundary>
-    {#snippet pending()}
-      <div class="flex h-screen items-center justify-center">
-        <div class={cn("rounded-lg bg-text/5 p-6", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-sm")}>
-          <div class="flex items-center gap-2">
-            <LoaderCircle class="size-5 animate-spin text-text/60" />
-            <span class="font-semibold text-text/80">Loading profile...</span>
-          </div>
+<SEO embedData={data.embed} />
+
+<svelte:boundary>
+  {#snippet pending()}
+    <div class="flex h-screen items-center justify-center">
+      <div class={cn("rounded-lg bg-text/5 p-6", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-sm")}>
+        <div class="flex items-center gap-2">
+          <LoaderCircle class="size-5 animate-spin text-text/60" />
+          <span class="font-semibold text-text/80">Loading profile...</span>
         </div>
       </div>
-    {/snippet}
+    </div>
+  {/snippet}
 
-    <Main data={await getProfileStats({ uuid: page.params.ign || "", profileId: page.params.profile || "" })} />
+  <Main data={await getProfileStats({ uuid: page.params.ign || "", profileId: page.params.profile || "" })} />
 
-    {#snippet failed(err, reset)}
-      <div class="flex h-screen items-center justify-center">
-        <Notice title="An unexpected error has occurred" type="error" error={err} retry={reset} />
-      </div>
-    {/snippet}
-  </svelte:boundary>
-{/if}
+  {#snippet failed(err, reset)}
+    <div class="flex h-screen items-center justify-center">
+      <Notice title="An unexpected error has occurred" type="error" error={err} retry={reset} />
+    </div>
+  {/snippet}
+</svelte:boundary>
