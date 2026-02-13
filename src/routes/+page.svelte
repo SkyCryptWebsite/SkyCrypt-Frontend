@@ -1,18 +1,21 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
-  import { getFavorites, getHoverContext, getInternalState, getPreferences } from "$ctx";
+  import { getFavorites, getInternalState, getPreferences } from "$ctx";
   import { env } from "$env/dynamic/public";
+  import ContributorCard from "$lib/components/misc/ContributorCard.svelte";
+  import ContributorCardSkeleton from "$lib/components/misc/ContributorCardSkeleton.svelte";
+  import CtaCard from "$lib/components/misc/CtaCard.svelte";
   import Notice from "$lib/components/notices/Notice.svelte";
   import { searchUser } from "$lib/shared/api/skycrypt-api.remote";
-  import { cn, flyAndScale } from "$lib/shared/utils";
-  import { type Contributor, getContributors } from "$routes/ contributors.remote";
+  import { cn } from "$lib/shared/utils";
+  import { getContributors } from "$routes/ contributors.remote";
   import CodeXml from "@lucide/svelte/icons/code-xml";
   import GitPullRequestArrow from "@lucide/svelte/icons/git-pull-request-arrow";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import Server from "@lucide/svelte/icons/server";
   import Star from "@lucide/svelte/icons/star";
   import { isHttpError, type RemoteQuery } from "@sveltejs/kit";
-  import { Avatar, Button, Tooltip } from "bits-ui";
+  import { Button } from "bits-ui";
   import { onMount } from "svelte";
   import { Role } from "./enums";
   import { schema } from "./schema";
@@ -26,9 +29,6 @@
   const searchQueryValidated = $derived(schema.safeParse({ query: searchQuery }));
 
   let searchUserRemoteFn = $state<RemoteQuery<never>>();
-
-  const isHover = getHoverContext();
-  const internalState = getInternalState();
 
   const iconMapper: Record<Role, typeof CodeXml | typeof Server | typeof GitPullRequestArrow | typeof Star | string> = {
     [Role.MAINTAINER]: CodeXml,
@@ -115,22 +115,22 @@
   </div>
 
   {#if selectedCta}
-    {@render ctalink(selectedCta.href, selectedCta.text, selectedCta.img)}
+    <CtaCard href={selectedCta.href} text={selectedCta.text} img={selectedCta.img} />
   {/if}
 
   <div class="grid grid-cols-1 gap-5 @xl:grid-cols-2 @5xl:grid-cols-3">
     {#if favorites.current.length === 0}
-      {@render profile({ id: "0", username: "No favorites set!", quote: "Why don't you set a favorite?" }, { tip: true })}
+      <ContributorCard user={{ id: "0", username: "No favorites set!", quote: "Why don't you set a favorite?" }} options={{ tip: true }} {iconMapper} />
     {:else}
       {#each favorites.current.reverse() as favorite, index (index)}
-        {@render profile({ id: favorite.uuid, username: favorite.ign, role: Role.FAVORITE, displayName: favorite.displayName }, { favorite: true })}
+        <ContributorCard user={{ id: favorite.uuid, username: favorite.ign, role: Role.FAVORITE, displayName: favorite.displayName }} options={{ favorite: true }} {iconMapper} />
       {/each}
     {/if}
 
     <svelte:boundary>
       {#snippet pending()}
         {#each new Array(3 * 4) as _, index (index)}
-          {@render profileSkeleton()}
+          <ContributorCardSkeleton />
         {/each}
       {/snippet}
       {#snippet failed(err, retry)}
@@ -138,108 +138,8 @@
       {/snippet}
 
       {#each await getContributors() as contributor (contributor.id)}
-        {@render profile(contributor)}
+        <ContributorCard user={contributor} {iconMapper} />
       {/each}
     </svelte:boundary>
   </div>
 </main>
-
-{#snippet profile(user: Contributor, options?: { tip?: boolean; favorite?: boolean })}
-  {#snippet tooltipContent()}
-    <p class="font-semibold text-text/80 capitalize">
-      {#if options?.favorite}
-        Favorited
-      {:else if user.role}
-        SkyCrypt {Role[user.role].toLowerCase()}
-      {:else}
-        Unknown
-      {/if}
-    </p>
-  {/snippet}
-
-  <div class={cn("relative rounded-lg", { "transition-all duration-300 ease-out hover:scale-105": !options?.tip })}>
-    <Button.Root href={options?.tip ? undefined : resolve("/stats/[ign]", { ign: user.id })} class={cn("relative flex h-full min-w-0 items-center gap-4 rounded-lg p-5 text-left", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
-      <Avatar.Root class="size-16 shrink-0">
-        <Avatar.Image loading="lazy" src={options?.tip ? "https://nmsr.nickac.dev/face/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40" : `https://nmsr.nickac.dev/face/${user.id}`} alt={user.username} class={cn("aspect-square size-16 [image-rendering:pixelated]", options?.tip ? "rounded-lg bg-text/10" : "")} />
-        <Avatar.Fallback class="flex h-full items-center justify-center rounded-lg bg-text/10 text-lg font-semibold text-text/60 uppercase">
-          {user.username?.slice(0, 2)}
-        </Avatar.Fallback>
-      </Avatar.Root>
-      <div class="flex flex-col justify-center gap-0">
-        <div class="text-lg font-semibold text-text">
-          {user.displayName ?? user.username}
-        </div>
-        {#if user.quote}
-          <div class={cn("pr-4 text-sm font-medium text-pretty text-text/80", user.role === Role.TECHNOBLADE ? "italic" : "")}>{@html user.quote}</div>
-        {/if}
-      </div>
-    </Button.Root>
-    {#if user.role}
-      {@const Icon = iconMapper[user.role]}
-      <Tooltip.Root>
-        <Tooltip.Trigger
-          class="absolute right-3 bottom-3"
-          onclick={() => {
-            if (!options?.favorite) {
-              internalState.content = tooltipContent;
-            } else {
-              favorites.current = favorites.current.filter((favorite) => favorite.uuid !== user.id);
-            }
-          }}>
-          {#snippet child({ props })}
-            <div {...props} tabindex="0" role="button">
-              {#if typeof Icon === "string"}
-                <img src={Icon} alt="Technoblade Icon" class="size-5" />
-              {:else}
-                <Icon class={cn("size-5", options?.favorite ? "fill-[oklch(75.25%_0.0023_17.21)] stroke-[oklch(75.25%_0.0023_17.21)]" : "text-text/60")} />
-              {/if}
-            </div>
-          {/snippet}
-        </Tooltip.Trigger>
-        <Tooltip.Portal>
-          {#if isHover.current}
-            <Tooltip.Content forceMount class="rounded-lg bg-background-grey p-4" sideOffset={6} side="top" align="center">
-              {#snippet child({ wrapperProps, props, open })}
-                {#if open}
-                  <div {...wrapperProps}>
-                    <div {...props} transition:flyAndScale>
-                      <Tooltip.Arrow />
-                      {@render tooltipContent()}
-                    </div>
-                  </div>
-                {/if}
-              {/snippet}
-            </Tooltip.Content>
-          {/if}
-        </Tooltip.Portal>
-      </Tooltip.Root>
-    {/if}
-  </div>
-{/snippet}
-
-{#snippet profileSkeleton()}
-  <div class={cn("relative flex min-w-0 items-center gap-2 rounded-lg p-5", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
-    <div class="size-16 animate-pulse rounded-lg bg-text/10"></div>
-    <div class="flex flex-col gap-1">
-      <div class="h-6 w-24 animate-pulse rounded-lg bg-text/10"></div>
-      <div class="h-3 w-44 animate-pulse rounded-lg bg-text/10"></div>
-    </div>
-    <div class="absolute right-3 bottom-3 size-5 animate-pulse rounded-lg bg-text/10"></div>
-  </div>
-{/snippet}
-
-{#snippet ctalink(href: string, text: { title: string; description: string }, img: { src: string; alt: string })}
-  <Button.Root {href} target="_blank" rel="noreferrer" class={cn("flex w-full items-center gap-4 rounded-lg p-4 transition-all duration-300 ease-out hover:scale-[1.05]", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
-    <Avatar.Root class="size-12 shrink-0 rounded-lg select-none">
-      <Avatar.Image loading="lazy" src={img.src} alt={img.alt} class="pointer-events-none size-12 rounded-lg" />
-      <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">{img.alt.slice(0, 2)}</Avatar.Fallback>
-    </Avatar.Root>
-    <div>
-      <div class="font-semibold">
-        <span class="text-text/70">SkyCrypt's</span>
-        <span class="text-link">{text.title}</span>
-      </div>
-      <div class="font-medium text-text/90 opacity-85">{text.description}</div>
-    </div>
-  </Button.Root>
-{/snippet}
