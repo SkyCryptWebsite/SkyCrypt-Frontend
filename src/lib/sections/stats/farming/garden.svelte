@@ -1,28 +1,24 @@
 <script lang="ts">
-  import { getHoverContext, getInternalState, getProfileContext } from "$ctx";
+  import { getProfileContext } from "$ctx";
   import AdditionStat from "$lib/components/stats/AdditionStat.svelte";
+  import GardenPlotGrid from "$lib/components/stats/GardenPlotGrid.svelte";
   import Chip from "$lib/components/misc/Chip.svelte";
   import Notice from "$lib/components/notices/Notice.svelte";
   import ScrollItems from "$lib/components/misc/ScrollItems.svelte";
   import SectionSubtitle from "$lib/components/sections/SectionSubtitle.svelte";
   import { type ModelsGarden } from "$lib/shared/api/orval-generated";
   import { getGarden } from "$lib/shared/api/skycrypt-api.remote";
-  import { calculatePercentage, formatNumber, getRarityClass, renderLore } from "$lib/shared/helper";
-  import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
-  import { cn, flyAndScale } from "$lib/shared/utils";
+  import { calculatePercentage, formatNumber, getRarityClass } from "$lib/shared/helper";
+  import { cn } from "$lib/shared/utils";
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
-  import Image from "@lucide/svelte/icons/image";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
-  import { Avatar, Collapsible, Progress, Tooltip } from "bits-ui";
+  import { Collapsible, Progress } from "bits-ui";
   import { format } from "numerable";
 
   const profile = $derived(getProfileContext().current);
   const profileId = $derived(profile?.profile_id);
   const gardenLocked = $derived((profile?.skyblock_level?.level ?? 0) <= 5);
   let sectionOpen: boolean = $state(false);
-
-  const isHover = getHoverContext();
-  const internalState = getInternalState();
 </script>
 
 <Collapsible.Root bind:open={sectionOpen}>
@@ -101,73 +97,13 @@
             {@render upgrades(garden)}
           </div>
           <div class="mt-5">
-            {@render plots(garden)}
+            <GardenPlotGrid plot={garden.plot} />
           </div>
         {/if}
       </svelte:boundary>
     {/if}
   </Collapsible.Content>
 </Collapsible.Root>
-
-{#snippet plots(garden: ModelsGarden)}
-  {@const allMaxed = garden.plot?.unlocked === garden.plot?.total}
-  <div class="mb-3 flex items-center gap-1 text-base font-semibold uppercase">
-    <h3 class="text-xl">Plots</h3>
-    {#if allMaxed}
-      <span class="text-gold">Max!</span>
-    {:else}
-      <span class="text-text/80">({garden.plot?.unlocked} / {garden.plot?.total} max)</span>
-    {/if}
-  </div>
-
-  <div class="space-y-0.5">
-    {#if garden.plot?.unlocked != null && garden.plot?.total != null}
-      <AdditionStat text="Unlocked Plots" data={`${garden.plot.unlocked}/${garden.plot?.total}`} maxed={garden.plot.unlocked === garden.plot.total} />
-    {/if}
-    {#if garden.plot?.barnSkin}
-      <AdditionStat text="Barn Skin" data={garden.plot.barnSkin} />
-    {/if}
-  </div>
-  {#if garden.plot}
-    <div class="@container relative mt-3 mb-0 rounded-lg bg-background/30 p-5">
-      <div class="grid grid-cols-[repeat(5,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
-        {#each garden.plot.layout as plot, index (index)}
-          {#snippet tooltipContent()}
-            {#if plot.display_name}
-              <p {@attach animateObfuscatedText}>{@html renderLore(plot.display_name)}</p>
-            {/if}
-          {/snippet}
-          <Tooltip.Root disableCloseOnTriggerClick={false}>
-            <Tooltip.Trigger onclick={() => (internalState.content = tooltipContent)}>
-              <Avatar.Root class="flex aspect-square items-center justify-center rounded-sm bg-text/4 p-1">
-                <Avatar.Image src={plot.texture_path} class="h-auto w-14 select-none [image-rendering:pixelated]" />
-                <Avatar.Fallback>
-                  <Image class="size-full" />
-                </Avatar.Fallback>
-              </Avatar.Root>
-            </Tooltip.Trigger>
-            <Tooltip.Portal>
-              {#if isHover.current}
-                <Tooltip.Content forceMount class="z-50 rounded-lg bg-background-grey p-4 font-semibold text-text/80" sideOffset={6} side="top" align="center">
-                  {#snippet child({ wrapperProps, props, open })}
-                    {#if open}
-                      <div {...wrapperProps}>
-                        <div {...props} transition:flyAndScale>
-                          <Tooltip.Arrow />
-                          {@render tooltipContent()}
-                        </div>
-                      </div>
-                    {/if}
-                  {/snippet}
-                </Tooltip.Content>
-              {/if}
-            </Tooltip.Portal>
-          </Tooltip.Root>
-        {/each}
-      </div>
-    </div>
-  {/if}
-{/snippet}
 
 {#snippet upgrades(garden: ModelsGarden)}
   {#if garden.cropUpgrades}
