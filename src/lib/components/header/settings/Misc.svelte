@@ -12,11 +12,12 @@
   import Rainbow from "@lucide/svelte/icons/rainbow";
   import Settings2 from "@lucide/svelte/icons/settings-2";
   import Sparkle from "@lucide/svelte/icons/sparkle";
-  import { Button, Label, Separator, Switch, Tabs, Tooltip } from "bits-ui";
+  import { Button, Separator, Tabs, Tooltip } from "bits-ui";
   import { dndzone, SHADOW_ITEM_MARKER_PROPERTY_NAME } from "svelte-dnd-action";
   import { flip } from "svelte/animate";
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
+  import SettingToggleRow from "./SettingToggleRow.svelte";
 
   const preferences = getPreferences();
   const wikiOrderContext = getWikiOrder();
@@ -66,88 +67,56 @@
           </div>
         </div>
       </div>
-      <Label.Root for="performance" class="flex items-center justify-between gap-4 rounded-lg bg-text/5 p-2">
-        <div class="flex items-start gap-2">
+      <SettingToggleRow id="performance" title="Performance Mode" description="Disables blur, transparency and backdrop effects for better performance on low-end devices." checked={preferences.performanceMode} onCheckedChange={() => (preferences.performanceMode = !preferences.performanceMode)}>
+        {#snippet icon()}
           <Fan class="size-6 h-lh shrink-0 will-change-transform data-[performance=false]:animate-spin-slow data-[performance=true]:animate-spin" data-performance={preferences.performanceMode} />
-          <div class="flex flex-col">
-            <Tooltip.Provider delayDuration={0}>
-              <Tooltip.Root>
-                <Tooltip.Trigger class="flex items-center gap-1">
-                  <h4 class="font-semibold text-text/90">Performance Mode</h4>
-                  <CircleQuestionMark class="size-4 h-lh text-text/60" />
-                </Tooltip.Trigger>
-                <Tooltip.Portal>
-                  <Tooltip.Content forceMount class={cn("z-50 flex w-full max-w-lg flex-col space-y-2 overflow-hidden rounded-lg p-4 select-text", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}>
-                    {#snippet child({ wrapperProps, props, open })}
-                      {#if open}
-                        <div {...wrapperProps}>
-                          <div {...props} transition:flyAndScale>
-                            <p>You might not need this! We've noticed that often the reason for low performance is due to Graphics Acceleration being disabled in the browser settings.</p>
-                            <p>Harware Acceleration gives the browsers access to your GPU for rendering, which can significantly improve performance; especially with opacity and blur effects.</p>
-                            <p>
-                              Enable <a href="https://www.google.com/search?q=enable+graphics+acceleration+in+%5Bbrowser%5D" target="_blank" rel="noopener noreferrer" class="text-icon underline">Graphics Acceleration</a> in your browser settings first, and if you still experience performance issues, then consider enabling Performance Mode.
-                            </p>
-                            <Tooltip.Arrow />
-                          </div>
+        {/snippet}
+        {#snippet children()}
+          <Tooltip.Provider delayDuration={0}>
+            <Tooltip.Root>
+              <Tooltip.Trigger class="flex items-center gap-1">
+                <CircleQuestionMark class="size-4 h-lh text-text/60" />
+              </Tooltip.Trigger>
+              <Tooltip.Portal>
+                <Tooltip.Content forceMount class={cn("z-50 flex w-full max-w-lg flex-col space-y-2 overflow-hidden rounded-lg p-4 select-text", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}>
+                  {#snippet child({ wrapperProps, props, open })}
+                    {#if open}
+                      <div {...wrapperProps}>
+                        <div {...props} transition:flyAndScale>
+                          <p>You might not need this! We've noticed that often the reason for low performance is due to Graphics Acceleration being disabled in the browser settings.</p>
+                          <p>Harware Acceleration gives the browsers access to your GPU for rendering, which can significantly improve performance; especially with opacity and blur effects.</p>
+                          <p>
+                            Enable <a href="https://www.google.com/search?q=enable+graphics+acceleration+in+%5Bbrowser%5D" target="_blank" rel="noopener noreferrer" class="text-icon underline">Graphics Acceleration</a> in your browser settings first, and if you still experience performance issues, then consider enabling Performance Mode.
+                          </p>
+                          <Tooltip.Arrow />
                         </div>
-                      {/if}
-                    {/snippet}
-                  </Tooltip.Content>
-                </Tooltip.Portal>
-              </Tooltip.Root>
-            </Tooltip.Provider>
-            <p class="text-text/60">Disables blur, transparency and backdrop effects for better performance on low-end devices.</p>
-          </div>
-        </div>
-        <Switch.Root id="performance" checked={preferences.performanceMode} class="peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30" onCheckedChange={() => (preferences.performanceMode = !preferences.performanceMode)}>
-          <Switch.Thumb class="pointer-events-none block size-4 shrink-0 rounded-full bg-text transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
-        </Switch.Root>
-      </Label.Root>
+                      </div>
+                    {/if}
+                  {/snippet}
+                </Tooltip.Content>
+              </Tooltip.Portal>
+            </Tooltip.Root>
+          </Tooltip.Provider>
+        {/snippet}
+      </SettingToggleRow>
 
-      <Label.Root for="glint" class="flex items-center justify-between gap-4 rounded-lg bg-text/5 p-2">
-        <div class="flex items-start gap-2">
+      <SettingToggleRow id="glint" title="Show Glint" description="Show the enchantment glint effect on enchanted items." checked={preferences.showGlint} onCheckedChange={() => (preferences.showGlint = !preferences.showGlint)}>
+        {#snippet icon()}
           <Sparkle class="size-6 h-lh shrink-0" />
-          <div class="flex flex-col">
-            <h4 class="font-semibold text-text/90">Show Glint</h4>
-            <p class="text-text/60">Show the enchantment glint effect on enchanted items.</p>
-          </div>
-        </div>
-        <Switch.Root id="glint" checked={preferences.showGlint} class="peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30" onCheckedChange={() => (preferences.showGlint = !preferences.showGlint)}>
-          <Switch.Thumb class="pointer-events-none block size-4 shrink-0 rounded-full bg-text transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
-        </Switch.Root>
-      </Label.Root>
+        {/snippet}
+      </SettingToggleRow>
 
-      <Label.Root for="mctooltip" class="flex items-center justify-between gap-4 rounded-lg bg-text/5 p-2">
-        <div class="flex items-start gap-2">
+      <SettingToggleRow id="mctooltip" title="Minecraft Styled Tooltips" description="Enable Minecraft styled tooltips for items." checked={preferences.mctooltip} onCheckedChange={() => (preferences.mctooltip = !preferences.mctooltip)}>
+        {#snippet icon()}
           <Pickaxe class="size-6 h-lh shrink-0" />
-          <div class="flex flex-col">
-            <h4 class="font-semibold text-text/90">Minecraft Styled Tooltips</h4>
-            <p class="text-text/60">Enable Minecraft styled tooltips for items.</p>
-          </div>
-        </div>
-        <Switch.Root id="mctooltip" checked={preferences.mctooltip} class="peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30" onCheckedChange={() => (preferences.mctooltip = !preferences.mctooltip)}>
-          <Switch.Thumb class="pointer-events-none block size-4 shrink-0 rounded-full bg-text transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
-        </Switch.Root>
-      </Label.Root>
+        {/snippet}
+      </SettingToggleRow>
 
-      <Label.Root for="rainbow" class="flex items-center justify-between gap-4 rounded-lg bg-text/5 p-2">
-        <div class="flex items-start gap-2">
+      <SettingToggleRow id="rainbow" title="Rainbow Colors" titleClass="group-data-[rainbow=true]/html:chroma-gradient" description="Enable rainbow colors animation for maxed enchants on items." checked={preferences.rainbowEnchantments} onCheckedChange={() => (preferences.rainbowEnchantments = !preferences.rainbowEnchantments)}>
+        {#snippet icon()}
           <Rainbow class="size-6 h-lh shrink-0" />
-          <div class="flex flex-col">
-            <h4 class="font-semibold text-text/90 group-data-[rainbow=true]/html:chroma-gradient">Rainbow Colors</h4>
-            <p class="text-text/60">Enable rainbow colors animation for maxed enchants on items.</p>
-          </div>
-        </div>
-        <Switch.Root
-          id="rainbow"
-          checked={preferences.rainbowEnchantments}
-          class="peer inline-flex h-6 min-h-6 w-10 shrink-0 cursor-pointer items-center rounded-full px-0 transition-colors ease-out data-[state=checked]:bg-icon data-[state=unchecked]:bg-text/30"
-          onCheckedChange={() => {
-            preferences.rainbowEnchantments = !preferences.rainbowEnchantments;
-          }}>
-          <Switch.Thumb class="pointer-events-none block size-4 shrink-0 rounded-full bg-text transition-transform ease-out data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-1" />
-        </Switch.Root>
-      </Label.Root>
+        {/snippet}
+      </SettingToggleRow>
 
       <div class="flex items-center justify-between gap-4 rounded-lg bg-text/5 p-2">
         <div class="flex items-start gap-2">
