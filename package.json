@@ -25,7 +25,9 @@
     "test:unit": "vitest",
     "changeset": "changeset",
     "changeset:version": "changeset version",
-    "changeset:tag": "changeset tag"
+    "changeset:tag": "changeset tag",
+    "release:beta": "node scripts/release-beta.mjs",
+    "release:stable": "node scripts/release-stable.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.8",
