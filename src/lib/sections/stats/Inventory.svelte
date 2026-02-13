@@ -2,17 +2,18 @@
   import { getInternalState, getPreferences, getProfileContext } from "$ctx";
   import { env } from "$env/dynamic/public";
   import Item from "$lib/components/item/Item.svelte";
+  import InventoryGrid from "$lib/components/item/InventoryGrid.svelte";
+  import InventorySearch from "$lib/components/item/InventorySearch.svelte";
   import Notice from "$lib/components/notices/Notice.svelte";
   import ScrollAreaPrimitive from "$lib/components/ScrollAreaPrimitive.svelte";
   import Section from "$lib/components/sections/Section.svelte";
   import { type ModelsStrippedItem } from "$lib/shared/api/orval-generated";
-  import { getInventorySection, searchInventorySection } from "$lib/shared/api/skycrypt-api.remote";
+  import { getInventorySection } from "$lib/shared/api/skycrypt-api.remote";
   import { renderLore, shouldShine } from "$lib/shared/helper";
   import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
   import Image from "@lucide/svelte/icons/image";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import { Avatar, ScrollArea, Tabs } from "bits-ui";
-  import { Debounced } from "runed";
   import { cubicOut } from "svelte/easing";
   import { crossfade, fade } from "svelte/transition";
 
@@ -34,8 +35,6 @@
   const profile = $derived(getProfileContext().current);
   const profileId = $derived(profile?.profile_id);
   const uuid = $derived(profile?.uuid);
-
-  const debouncedSearchValue = $state(new Debounced(() => searchValue, 300));
 
   const tabs = $derived<Tabs[]>([
     {
@@ -151,13 +150,11 @@
       {#if openTab === "backpack" || openTab === "museum"}
         {@render multipleInventorySection()}
       {:else if openTab == "search"}
-        {@render searchSection()}
-      {:else}
-        {@render inventorySection()}
-        <!-- {:else if !tab.loading && !tab.error}
-        <p class="mt-2 space-x-0.5 text-center leading-6">
-          No items found in the {openTab.replaceAll("_", " ")}.
-        </p> -->
+        {#if uuid && profileId}
+          <InventorySearch bind:search={searchValue} {uuid} {profileId} {itemSnippet} />
+        {/if}
+      {:else if uuid && profileId}
+        <InventoryGrid {uuid} {profileId} inventoryId={openTab} gap={tab.gap} {itemSnippet} />
       {/if}
     </Tabs.Content>
   </Tabs.Root>
@@ -173,44 +170,6 @@
 
 {#snippet gap()}
   <hr class="col-span-full h-4 border-0" />
-{/snippet}
-
-{#snippet searchSection()}
-  <input
-    type="search"
-    placeholder="Search all inventories"
-    class="mx-auto mt-4 block w-full max-w-52 rounded-lg bg-text/10 px-2 py-2 font-normal text-text placeholder:text-text/80 focus-visible:outline-none"
-    bind:value={searchValue}
-    onkeydown={(e) => {
-      e.stopPropagation();
-    }} />
-  <svelte:boundary>
-    {#snippet pending()}
-      <LoaderCircle class="mx-auto mt-4 animate-spin text-icon" />
-    {/snippet}
-    {#snippet failed(err, retry)}
-      <Notice title="An unexpected error has occurred" type="error" error={err} {retry} />
-    {/snippet}
-    {#if debouncedSearchValue.current === "" || !debouncedSearchValue.current}{:else}
-      {@const items = await searchInventorySection({ uuid: uuid!, profileId: profileId!, inventoryId: "search", query: debouncedSearchValue.current })}
-
-      {#if !items || items.length === 0}
-        <p class="mx-auto w-fit leading-6">No items found.</p>
-      {:else if debouncedSearchValue.current !== ""}
-        <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
-          {#each items as item, index (index)}
-            {#if item}
-              <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!preferences.performanceMode && shouldShine(item)}>
-                {@render itemSnippet(item)}
-              </div>
-            {:else}
-              {@render emptyItem()}
-            {/if}
-          {/each}
-        </div>
-      {/if}
-    {/if}
-  </svelte:boundary>
 {/snippet}
 
 {#snippet multipleInventorySection()}
@@ -280,44 +239,5 @@
         {/each}
       {/if}
     </Tabs.Root>
-  </svelte:boundary>
-{/snippet}
-
-{#snippet inventorySection()}
-  <svelte:boundary>
-    {@const items = await getInventorySection({ uuid: uuid!, profileId: profileId!, inventoryId: openTab })}
-    {#snippet pending()}
-      <LoaderCircle class="mx-auto mt-4 animate-spin text-icon" />
-    {/snippet}
-    {#snippet failed(err, retry)}
-      <Notice title="An unexpected error has occurred" type="error" error={err} {retry} />
-    {/snippet}
-
-    {#if items?.length ?? 0 > 0}
-      <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
-        {#each items as item, index (index)}
-          {#if index > 0}
-            {#if index % tab.gap === 0}
-              {@render gap()}
-            {/if}
-          {/if}
-          {#if item.texture_path}
-            <div class="relative flex aspect-square items-center justify-center rounded-sm bg-text/4 data-[shine=true]:shine" data-shine={!preferences.performanceMode && shouldShine(item)}>
-              {#if tab.id === "inventory"}
-                {@render itemSnippet({ ...item, rarity: item.rarity ?? "uncommon" } as ModelsStrippedItem)}
-              {:else}
-                {@render itemSnippet(item)}
-              {/if}
-            </div>
-          {:else}
-            {@render emptyItem()}
-          {/if}
-        {/each}
-      </div>
-    {:else}
-      <p class="mt-2 space-x-0.5 text-center leading-6">
-        No items found in the {openTab.replaceAll("_", " ")}.
-      </p>
-    {/if}
   </svelte:boundary>
 {/snippet}
