@@ -3,11 +3,15 @@
   import { page } from "$app/state";
   import { getInternalState, getPreferences } from "$ctx";
   import Notice from "$lib/components/Notice.svelte";
+  import SEO from "$lib/components/SEO.svelte";
   import Main from "$lib/layouts/stats/Main.svelte";
   import type { SectionName } from "$lib/sections/types";
   import { getProfileStats } from "$lib/shared/api/skycrypt-api.remote";
   import { cn } from "$lib/shared/utils";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
+  import type { PageServerData } from "./$types";
+
+  const { data }: { data: PageServerData } = $props();
 
   const preferences = getPreferences();
   const internalState = getInternalState();
@@ -36,23 +40,27 @@
   });
 </script>
 
-<svelte:boundary>
-  {#snippet pending()}
-    <div class="flex h-screen items-center justify-center">
-      <div class={cn("rounded-lg bg-text/5 p-6", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-sm")}>
-        <div class="flex items-center gap-2">
-          <LoaderCircle class="size-5 animate-spin text-text/60" />
-          <span class="font-semibold text-text/80">Loading profile...</span>
+{#if data.isBot && data.embed}
+  <SEO embedData={data.embed} />
+{:else}
+  <svelte:boundary>
+    {#snippet pending()}
+      <div class="flex h-screen items-center justify-center">
+        <div class={cn("rounded-lg bg-text/5 p-6", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-sm")}>
+          <div class="flex items-center gap-2">
+            <LoaderCircle class="size-5 animate-spin text-text/60" />
+            <span class="font-semibold text-text/80">Loading profile...</span>
+          </div>
         </div>
       </div>
-    </div>
-  {/snippet}
+    {/snippet}
 
-  <Main data={await getProfileStats({ uuid: page.params.ign || "", profileId: page.params.profile || "" })} />
+    <Main data={await getProfileStats({ uuid: page.params.ign || "", profileId: page.params.profile || "" })} />
 
-  {#snippet failed(err, reset)}
-    <div class="flex h-screen items-center justify-center">
-      <Notice title="An unexpected error has occurred" type="error" error={err} retry={reset} />
-    </div>
-  {/snippet}
-</svelte:boundary>
+    {#snippet failed(err, reset)}
+      <div class="flex h-screen items-center justify-center">
+        <Notice title="An unexpected error has occurred" type="error" error={err} retry={reset} />
+      </div>
+    {/snippet}
+  </svelte:boundary>
+{/if}

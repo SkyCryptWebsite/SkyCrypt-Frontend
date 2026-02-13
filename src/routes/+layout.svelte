@@ -60,7 +60,7 @@
 
   const position = writable<ToasterProps["position"]>("bottom-right");
   const theme = writable<ToasterProps["theme"]>("dark");
-  const noEmbedUrls = ["/og/", "/stats/"];
+  const noEmbedUrls = ["/stats/"];
   const packs = new PacksContext();
 
   function updateOnlineStatus() {
