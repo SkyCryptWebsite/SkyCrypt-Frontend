@@ -41,21 +41,14 @@ jobs:
         env:
           HUSKY: "0"
 
-      - name: Enter pre-release mode
-        run: pnpm changeset pre enter beta 2>/dev/null || true
-
-      - name: Create Release Pull Request
-        id: changesets
-        uses: changesets/action@v1
-        with:
-          version: pnpm changeset:version
-          title: "Version Packages"
-          commit: "chore: version packages (beta)"
+      - name: Prepare Beta Release
+        id: beta_prep
+        run: node scripts/release-beta.mjs
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
 
       - name: Create Beta GitHub Release
-        if: steps.changesets.outputs.hasChangesets == 'false'
+        if: steps.beta_prep.outputs.release_ready == 'true'
         run: |
           VERSION=$(node -p "require('./package.json').version")
 
@@ -110,18 +103,14 @@ jobs:
         env:
           HUSKY: "0"
 
-      - name: Create Release Pull Request
-        id: changesets
-        uses: changesets/action@v1
-        with:
-          version: pnpm changeset pre exit && pnpm changeset:version
-          title: "Version Packages (Stable)"
-          commit: "chore: version packages"
+      - name: Prepare Stable Release
+        id: stable_prep
+        run: node scripts/release-stable.mjs
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
 
       - name: Create Stable GitHub Release
-        if: steps.changesets.outputs.hasChangesets == 'false'
+        if: steps.stable_prep.outputs.release_ready == 'true'
         run: |
           VERSION=$(node -p "require('./package.json').version")
 
