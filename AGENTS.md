@@ -24,7 +24,7 @@ After completing the code, ask the user if they want a playground link. Only cal
 
 # SKYCRYPT-FRONTEND
 
-**Generated:** 2026-02-13 | **Commit:** 87b7aeb9 | **Branch:** dev
+**Generated:** 2026-02-14 | **Commit:** 4e935d86 | **Branch:** dev
 
 ## OVERVIEW
 
@@ -40,15 +40,13 @@ src/
 │   ├── sections/      # Domain logic (Provider-Consumer pattern, lazy-loaded)
 │   ├── shared/        # API client, constants, mc-text parser, utils
 │   ├── hooks/         # Svelte 5 rune hooks (.svelte.ts): IsMobile, IsHover
-│   ├── theming/       # Theme utilities
 │   └── types/         # TypeScript definitions (barrel: index.ts)
 ├── context/           # Reactive state (createContext pattern, PersistedState)
 ├── routes/            # SvelteKit routing
 │   ├── stats/[ign]/[[profile]]/  # Main profile view
 │   └── api/tunnel/               # Sentry envelope proxy
 ├── plugins/           # Tailwind plugin (theme CSS var injection)
-├── tests/             # Vitest browser tests
-└── params/            # Route param matchers
+└── tests/             # Vitest browser tests
 static/
 ├── img/               # Sea creatures, themes, textures
 └── fonts/             # Icomoon icons, Montserrat
@@ -64,9 +62,10 @@ static/
 | Add context/state | `src/context/`              | createContext pattern, runed PersistedState    |
 | Minecraft text    | `src/lib/shared/mc-text/`   | § code → HTML parser                           |
 | Constants         | `src/lib/shared/constants/` | Game data, themes, rarities, stats             |
-| Route params      | `src/routes/schema.ts`      | Valibot schemas for search validation          |
+| Search schemas    | `src/routes/schema.ts`      | zod schemas for search validation              |
 | Theming           | `src/plugins/themes.ts`     | Tailwind plugin injecting `:root[data-theme]`  |
 | Page layout       | `src/lib/layouts/stats/`    | Main.svelte = composition root                 |
+| Context init      | `src/routes/+layout.svelte` | Single point for ALL context initialization    |
 
 ## CONVENTIONS
 
@@ -93,7 +92,6 @@ static/
 import { ... } from '$lib';         // src/lib
 import { ... } from '$ctx';         // src/context
 import { ... } from '$types';       // src/lib/types
-import { ... } from '$params';      // src/params
 import { ... } from '$routes';      // src/routes
 import { ... } from '$constants';   // src/lib/server/constants
 import { ... } from '$db';          // src/db
@@ -131,6 +129,12 @@ All content injection uses Svelte 5 snippets. No `<slot>` usage.
 - MC color CSS vars: `--§a` (green), `--§b` (aqua), `--§c` (red), etc. in `app.css`
 - Theme plugin: `src/plugins/themes.ts` → `:root[data-theme="..."]` CSS vars
 
+### Formatting
+
+- Prettier: double quotes, no trailing comma, `printWidth: 999999`, `bracketSameLine: true`
+- `svelteStrictMode: true` — enforces Svelte best practices
+- Conventional commits enforced via commitlint + simple-git-hooks
+
 ## ANTI-PATTERNS
 
 | Forbidden                            | Reason                                             |
@@ -148,7 +152,8 @@ All content injection uses Svelte 5 snippets. No `<slot>` usage.
 - Paneforge library disabled — tracking svecosystem/paneforge#89
 - Svelte preloading disabled — upstream svelte#17304
 - `@ts-expect-error` in +layout.svelte for SvelteSeo openGraph types
-- Some section types (potions, races) awaiting backend ModelsMiscOutput update
+- Potions/Races sections disabled — awaiting backend ModelsMiscOutput update
+- Essence Shop — TODO in MiscSection.svelte
 
 ## COMMANDS
 
@@ -167,11 +172,11 @@ pnpm changeset    # Create changeset for versioning
 ## BUILD & CI
 
 - **Node 24**, **pnpm 10**, **rolldown-vite** (Vite overridden via pnpm overrides)
-- GitHub Actions: checks → test → build → Docker (ghcr.io)
-- Docker: multi-stage (node:22-alpine), adapter-node, port 3000
-- Sentry: sourcemap upload via sentrySvelteKit plugin
-- Changesets: beta (dev branch) + stable (prod branch), automated releases
-- simple-git-hooks + commitlint for commit message enforcement
+- GitHub Actions: ci.yml (PRs) → checks + test + build; website.yml (push) → checks + CodeQL + build + Docker
+- Docker: multi-stage node:22-alpine, adapter-node, port 3000. ARGs: PUBLIC_COMMIT_HASH, PUBLIC_SERVER_API_URL
+- Sentry: client init in hooks.client.ts, server in instrumentation.server.ts, tunnel at /api/tunnel
+- Changesets: beta (dev branch) + stable (prod branch), @svitejs/changesets-changelog-github-compact
+- simple-git-hooks + commitlint for conventional commit enforcement
 - Build needs `.env` (CI copies `.env.example`); PUBLIC\_\* vars exposed to client
 
 ## ROUTING
@@ -182,13 +187,16 @@ pnpm changeset    # Create changeset for versioning
 /api/tunnel                      → POST: Sentry envelope proxy
 ```
 
-- Single root layout: +layout.svelte initializes ALL contexts (preferences, theme, favorites, packs, searches, internal state)
+- Single root layout: +layout.svelte initializes ALL contexts
 - Stats page: server load (embed data) + client-side getProfileStats()
 - Error pages: root +error.svelte + stats-specific +error.svelte
+- No +layout.server.ts, +layout.ts, or +page.ts files — keep routing simple
 
 ## NOTES
 
 - Vitest dual-env: `*.svelte.spec.ts` (browser/WebDriverIO), `*.spec.ts` (node)
-- Tailwind v4 with custom theme plugin and nice-colors-dark
-- Experimental SvelteKit features enabled: remoteFunctions, tracing, instrumentation
+- Tailwind v4 with custom theme plugin (src/plugins/themes.ts) and nice-colors-dark
+- Experimental SvelteKit features: remoteFunctions, tracing, instrumentation
 - CSRF trusted origins: cupcake.shiiyu.moe, sky.shiiyu.moe
+- TSConfig: strict, bundler moduleResolution, verbatimModuleSyntax
+- Barrel exports at: components/\*, context, types, shared/constants/themes, shared/mc-text

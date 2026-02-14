@@ -9,8 +9,8 @@ Domain-specific profile sections lazy-loaded by Sections.svelte orchestrator. Ea
 ```
 sections/
 ├── Sections.svelte    # Orchestrator — COMPONENTS map + dynamic import + Tabs
-├── constants.ts       # Section registry array (ordering)
-├── types.ts           # SectionName union type
+├── constants.ts       # Section registry array (controls tab ordering)
+├── types.ts           # SectionName union type + SectionID type
 └── stats/
     ├── Gear.svelte            # Equipment & wardrobe
     ├── Accessories.svelte     # Accessory bag
@@ -25,8 +25,15 @@ sections/
     ├── Slayer.svelte          # Slayer bosses
     ├── SkillsSection.svelte   # Skills (sets SkillsContext)
     ├── MiscSection.svelte     # Misc stats (sets MiscContext)
-    └── [section]/             # Sub-components per section
-        └── *.svelte           # e.g., skills/mining.svelte
+    ├── farming/
+    │   └── garden.svelte      # Garden plot data
+    ├── misc/                  # 15 sub-components for MiscSection
+    │   ├── auctions, claimed, damage, dragons, endstone
+    │   ├── essence, gifts, jerry, kills, mythological
+    │   ├── pet, potions, races, uncategorized, upgrades
+    └── skills/                # 4 sub-components for SkillsSection
+        ├── combat.svelte, farming.svelte
+        ├── fishing.svelte, mining.svelte
 ```
 
 ## WHERE TO LOOK

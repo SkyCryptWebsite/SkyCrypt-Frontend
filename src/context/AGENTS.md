@@ -2,7 +2,7 @@
 
 ## OVERVIEW
 
-Reactive state management via Svelte 5 runes. All app contexts initialized in root `+layout.svelte`.
+Reactive state management via Svelte 5 runes. All contexts initialized in root `+layout.svelte`.
 
 ## STRUCTURE
 
@@ -10,7 +10,7 @@ Reactive state management via Svelte 5 runes. All app contexts initialized in ro
 context/
 ├── createContext.svelte.ts    # Core: ProfileContext, SkillsContext, MiscContext, PacksContext, etc.
 ├── preferences.svelte.ts      # PersistedState: section order, performance, glint, keybinds
-├── themes.svelte.ts           # PersistedState: theme ID + changeTheme (manipulates document.dataset)
+├── themes.svelte.ts           # PersistedState: theme ID + changeTheme (sets document.dataset.theme/mode)
 ├── favorites.svelte.ts        # PersistedState: {uuid, ign, displayName?}[]
 ├── searches.svelte.ts         # PersistedState: recent searches
 ├── packs.svelte.ts            # PersistedState: disabled resource packs
@@ -56,8 +56,8 @@ let name = $derived(profile.current?.name);
 | SkillsContext  | volatile  | ModelsSkillsOutput                                                                |
 | MiscContext    | volatile  | ModelsMiscOutput                                                                  |
 | PacksContext   | volatile  | ModelsResourcePackConfig[]                                                        |
-| MobileContext  | volatile  | IsMobile (MediaQuery)                                                             |
-| HoverContext   | volatile  | IsHover (MediaQuery)                                                              |
+| MobileContext  | volatile  | IsMobile (MediaQuery rune hook)                                                   |
+| HoverContext   | volatile  | IsHover (MediaQuery rune hook)                                                    |
 | InternalState  | volatile  | UI state (tabs, modals, settings)                                                 |
 | Preferences    | persisted | sectionOrder, performanceMode, keybind, showGlint, rainbowEnchantments, mctooltip |
 | Theme          | persisted | theme ID string                                                                   |
