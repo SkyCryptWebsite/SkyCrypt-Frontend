@@ -121,7 +121,7 @@
     {#if favorites.current.length === 0}
       <ContributorCard user={{ id: "0", username: "No favorites set!", quote: "Why don't you set a favorite?" }} options={{ tip: true }} {iconMapper} />
     {:else}
-      {#each favorites.current.reverse() as favorite, index (index)}
+      {#each favorites.current.toReversed() as favorite, index (index)}
         <ContributorCard user={{ id: favorite.uuid, username: favorite.ign, role: Role.FAVORITE, displayName: favorite.displayName }} options={{ favorite: true }} {iconMapper} />
       {/each}
     {/if}
