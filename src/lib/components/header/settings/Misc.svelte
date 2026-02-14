@@ -71,34 +71,31 @@
         {#snippet icon()}
           <Fan class="size-6 h-lh shrink-0 will-change-transform data-[performance=false]:animate-spin-slow data-[performance=true]:animate-spin" data-performance={preferences.performanceMode} />
         {/snippet}
-        <!-- eslint-disable-next-line svelte/no-useless-children-snippet -->
-        {#snippet children()}
-          <Tooltip.Provider delayDuration={0}>
-            <Tooltip.Root>
-              <Tooltip.Trigger class="flex items-center gap-1">
-                <CircleQuestionMark class="size-4 h-lh text-text/60" />
-              </Tooltip.Trigger>
-              <Tooltip.Portal>
-                <Tooltip.Content forceMount class={cn("z-50 flex w-full max-w-lg flex-col space-y-2 overflow-hidden rounded-lg p-4 select-text", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}>
-                  {#snippet child({ wrapperProps, props, open })}
-                    {#if open}
-                      <div {...wrapperProps}>
-                        <div {...props} transition:flyAndScale>
-                          <p>You might not need this! We've noticed that often the reason for low performance is due to Graphics Acceleration being disabled in the browser settings.</p>
-                          <p>Harware Acceleration gives the browsers access to your GPU for rendering, which can significantly improve performance; especially with opacity and blur effects.</p>
-                          <p>
-                            Enable <a href="https://www.google.com/search?q=enable+graphics+acceleration+in+%5Bbrowser%5D" target="_blank" rel="noopener noreferrer" class="text-icon underline">Graphics Acceleration</a> in your browser settings first, and if you still experience performance issues, then consider enabling Performance Mode.
-                          </p>
-                          <Tooltip.Arrow />
-                        </div>
+        <Tooltip.Provider delayDuration={0}>
+          <Tooltip.Root>
+            <Tooltip.Trigger class="flex items-center gap-1">
+              <CircleQuestionMark class="size-4 h-lh text-text/60" />
+            </Tooltip.Trigger>
+            <Tooltip.Portal>
+              <Tooltip.Content forceMount class={cn("z-50 flex w-full max-w-lg flex-col space-y-2 overflow-hidden rounded-lg p-4 select-text", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}>
+                {#snippet child({ wrapperProps, props, open })}
+                  {#if open}
+                    <div {...wrapperProps}>
+                      <div {...props} transition:flyAndScale>
+                        <p>You might not need this! We've noticed that often the reason for low performance is due to Graphics Acceleration being disabled in the browser settings.</p>
+                        <p>Graphics Acceleration gives the browsers access to your GPU for rendering, which can significantly improve performance; especially with opacity and blur effects.</p>
+                        <p>
+                          Enable <a href="https://www.google.com/search?q=enable+graphics+acceleration+in+%5Bbrowser%5D" target="_blank" rel="noopener noreferrer" class="text-icon underline">Graphics Acceleration</a> in your browser settings first, and if you still experience performance issues, then consider enabling Performance Mode.
+                        </p>
+                        <Tooltip.Arrow />
                       </div>
-                    {/if}
-                  {/snippet}
-                </Tooltip.Content>
-              </Tooltip.Portal>
-            </Tooltip.Root>
-          </Tooltip.Provider>
-        {/snippet}
+                    </div>
+                  {/if}
+                {/snippet}
+              </Tooltip.Content>
+            </Tooltip.Portal>
+          </Tooltip.Root>
+        </Tooltip.Provider>
       </SettingToggleRow>
 
       <SettingToggleRow id="glint" title="Show Glint" description="Show the enchantment glint effect on enchanted items." checked={preferences.showGlint} onCheckedChange={() => (preferences.showGlint = !preferences.showGlint)}>
