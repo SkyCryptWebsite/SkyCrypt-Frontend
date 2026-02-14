@@ -5,6 +5,7 @@ export interface TestContextConfig {
     current: boolean;
   };
   internalState?: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     content?: any;
     showItem?: boolean;
     settingsOpen?: boolean;

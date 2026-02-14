@@ -2,7 +2,7 @@ import { sections } from "$lib/sections/constants";
 import type { SectionID } from "$lib/sections/types";
 import { flushSync, untrack } from "svelte";
 import { afterEach, beforeEach, describe, it } from "vitest";
-import { PreferencesContext, getPreferences, initPreferences } from "./preferences.svelte";
+import { PreferencesContext } from "./preferences.svelte";
 
 describe.concurrent("PreferencesContext Tests", () => {
   beforeEach(() => {
@@ -216,6 +216,7 @@ describe.concurrent("PreferencesContext Tests", () => {
         const prefs = new PreferencesContext();
 
         untrack(() => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const invalid = { id: 999, name: "Invalid" as any };
           prefs.sectionOrder = [sections[0], invalid, sections[1]];
           flushSync();

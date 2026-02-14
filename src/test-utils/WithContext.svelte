@@ -6,7 +6,9 @@
   import { MockIsHover } from "./test-wrapper.svelte";
 
   interface Props {
-    component: Component;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    component: Component<any>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     componentProps?: Record<string, any>;
     hoverEnabled?: boolean;
     withTooltipProvider?: boolean;
@@ -17,6 +19,7 @@
 
   // svelte-ignore state_referenced_locally
   const mockHover = new MockIsHover(hoverEnabled);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setHoverContext(mockHover as any);
   initInternalState();
 </script>
