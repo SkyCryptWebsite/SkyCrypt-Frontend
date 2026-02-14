@@ -114,3 +114,5 @@ vite.config.ts.timestamp-*
 # Playwright
 test-results
 coverage/
+playwright-report/
+test-results/
