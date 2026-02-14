@@ -53,6 +53,7 @@
     "@types/relaxed-json": "^1.0.4",
     "@types/upng-js": "^2.1.5",
     "@vitest/browser-playwright": "^4.0.18",
+    "@vitest/coverage-v8": "4.0.18",
     "@vitest/ui": "^4.0.18",
     "bits-ui": "^2.15.5",
     "clsx": "^2.1.1",

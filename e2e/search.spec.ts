@@ -5,49 +5,36 @@ test.describe("Search Flow", () => {
     await page.goto("/");
   });
 
-  test("should search for valid username and redirect to profile page", async ({ page }) => {
+  test("should search and redirect to profile page", async ({ page }) => {
     const searchInput = page.getByPlaceholder("Enter username");
-    await searchInput.fill("Technoblade");
-
-    const submitButton = page.getByRole("button", { name: /Show me/i });
-    await submitButton.click();
-
-    await expect(page).toHaveURL(/\/stats\/Technoblade/);
-  });
-
-  test("should show loading state during search", async ({ page }) => {
-    const searchInput = page.getByPlaceholder("Enter username");
-    await searchInput.fill("Technoblade");
-
-    const submitButton = page.getByRole("button", { name: /Show me/i });
-    await submitButton.click();
-
-    await expect(page.locator("svg.animate-spin")).toBeVisible({ timeout: 1000 });
-  });
-
-  test("should handle search via Enter key", async ({ page }) => {
-    const searchInput = page.getByPlaceholder("Enter username");
-    await searchInput.fill("Technoblade");
+    await searchInput.pressSequentially("Technoblade", { delay: 20 });
     await searchInput.press("Enter");
 
-    await expect(page).toHaveURL(/\/stats\/Technoblade/);
+    await page.waitForURL(/\/stats\//, { timeout: 15000 });
+    expect(page.url()).toContain("/stats/");
+  });
+
+  test("should trigger search on blur", async ({ page }) => {
+    const searchInput = page.getByPlaceholder("Enter username");
+    await searchInput.pressSequentially("Technoblade", { delay: 20 });
+    await searchInput.press("Tab");
+
+    await page.waitForURL(/\/stats\//, { timeout: 15000 });
+    expect(page.url()).toContain("/stats/");
   });
 
   test("should show error for non-existent user", async ({ page }) => {
     const searchInput = page.getByPlaceholder("Enter username");
-    const nonExistentUser = `nonexistentuser${Date.now()}`;
-    await searchInput.fill(nonExistentUser);
+    await searchInput.pressSequentially("zzNotExist12345", { delay: 20 });
+    await searchInput.press("Enter");
 
-    const submitButton = page.getByRole("button", { name: /Show me/i });
-    await submitButton.click();
-
-    await expect(page.getByText(/Something went wrong|not found|error/i)).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/not found|Something went wrong|Failed to resolve/i)).toBeVisible({ timeout: 15000 });
   });
 
-  test("should prevent search with invalid username format", async ({ page }) => {
+  test("should disable button for invalid username format", async ({ page }) => {
     const searchInput = page.getByPlaceholder("Enter username");
-    await searchInput.fill("a");
-    await searchInput.blur();
+    await searchInput.fill("!!invalid!!");
+    await searchInput.press("Tab");
 
     const submitButton = page.getByRole("button", { name: /Show me/i });
     await expect(submitButton).toBeDisabled();

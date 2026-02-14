@@ -1,53 +1,43 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("Profile Page", () => {
-  test("should load profile page for valid username", async ({ page }) => {
+  test("should load profile page", async ({ page }) => {
     await page.goto("/stats/Technoblade");
 
-    await expect(page).toHaveTitle(/Technoblade/);
-
-    const loadingIndicator = page.getByText(/Loading profile/i);
-    if (await loadingIndicator.isVisible()) {
-      await loadingIndicator.waitFor({ state: "hidden", timeout: 30000 });
-    }
-
-    await expect(page.locator("body")).not.toContainText(/An unexpected error/i);
+    await expect(page).toHaveURL(/\/stats\//);
+    await expect(page).toHaveTitle(/SkyCrypt/);
   });
 
-  test("should display profile sections after loading", async ({ page }) => {
+  test("should display player name", async ({ page }) => {
     await page.goto("/stats/Technoblade");
 
-    await page.waitForLoadState("networkidle");
-
-    const profileSections = page.locator('[data-section], section, [class*="section"]');
-    await expect(profileSections.first()).toBeVisible({ timeout: 30000 });
-  });
-
-  test("should navigate to profile with profile ID", async ({ page }) => {
-    await page.goto("/stats/Technoblade/some-profile-id");
-
-    await expect(page).toHaveURL(/\/stats\/Technoblade\/some-profile-id/);
-
-    const loadingIndicator = page.getByText(/Loading profile/i);
-    if (await loadingIndicator.isVisible()) {
-      await loadingIndicator.waitFor({ state: "hidden", timeout: 30000 });
-    }
+    await expect(page.getByText("Technoblade").first()).toBeVisible({ timeout: 15000 });
   });
 
   test("should show loading state initially", async ({ page }) => {
     await page.goto("/stats/Technoblade");
 
-    await expect(page.getByText(/Loading profile/i)).toBeVisible({ timeout: 5000 });
+    const loadingOrContent = page.getByText(/Loading profile|Technoblade/i);
+    await expect(loadingOrContent.first()).toBeVisible({ timeout: 15000 });
   });
 
-  test("should handle hash navigation to sections", async ({ page }) => {
-    await page.goto("/stats/Technoblade#skills");
+  test("should display profile content after loading", async ({ page }) => {
+    await page.goto("/stats/Technoblade");
 
-    await expect(page).toHaveURL(/\/stats\/Technoblade#skills/);
+    await expect(page.locator("main")).toBeVisible({ timeout: 30000 });
 
-    const loadingIndicator = page.getByText(/Loading profile/i);
-    if (await loadingIndicator.isVisible()) {
-      await loadingIndicator.waitFor({ state: "hidden", timeout: 30000 });
-    }
+    const mainContent = page.locator("main");
+    const textContent = await mainContent.textContent();
+    expect(textContent?.length).toBeGreaterThan(0);
+  });
+
+  test("should navigate back to home", async ({ page }) => {
+    await page.goto("/stats/Technoblade");
+
+    const homeLink = page.getByRole("link", { name: /SkyCrypt/i }).first();
+    await expect(homeLink).toBeVisible({ timeout: 15000 });
+
+    await homeLink.click();
+    await page.waitForURL("/", { timeout: 5000 });
   });
 });

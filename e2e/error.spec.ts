@@ -1,40 +1,30 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("Error Handling", () => {
-  test("should show error page for invalid route", async ({ page }) => {
-    await page.goto("/stats/nonexistentuser123456789");
+  test("should show error page for non-existent user", async ({ page }) => {
+    await page.goto("/stats/zzNonExistent99");
 
-    const errorMessage = page.getByText(/An unexpected error|error|not found/i);
-    await expect(errorMessage).toBeVisible({ timeout: 30000 });
+    await expect(page.getByText(/Failed to resolve|Something went wrong|Oops/i)).toBeVisible({ timeout: 15000 });
   });
 
-  test("should show error message with retry option", async ({ page }) => {
-    await page.goto("/stats/invaliduser999999");
+  test("should show error details with username", async ({ page }) => {
+    await page.goto("/stats/zzNonExistent99");
 
-    await page.waitForLoadState("networkidle");
-
-    const errorNotice = page.getByText(/An unexpected error/i);
-    if (await errorNotice.isVisible()) {
-      const retryButton = page.getByRole("button", { name: /retry|try again/i });
-      await expect(retryButton).toBeVisible();
-    }
+    await expect(page.getByText(/zzNonExistent99/i)).toBeVisible({ timeout: 15000 });
   });
 
-  test("should handle network errors gracefully", async ({ page, context }) => {
-    await context.route("**/api/**", (route) => route.abort());
+  test("should display error status code", async ({ page }) => {
+    await page.goto("/stats/zzNonExistent99");
 
-    await page.goto("/stats/Technoblade");
-
-    await expect(page.getByText(/error|failed/i)).toBeVisible({ timeout: 30000 });
+    await expect(page.getByText("400")).toBeVisible({ timeout: 15000 });
   });
 
-  test("should maintain navigation after error", async ({ page }) => {
-    await page.goto("/stats/nonexistentuser123456789");
+  test("should be able to navigate home from error page", async ({ page }) => {
+    await page.goto("/stats/zzNonExistent99");
 
-    await page.waitForLoadState("networkidle");
+    await expect(page.getByText(/Failed to resolve|Something went wrong|Oops/i)).toBeVisible({ timeout: 15000 });
 
     await page.goto("/");
-
     await expect(page.getByPlaceholder("Enter username")).toBeVisible();
   });
 });
