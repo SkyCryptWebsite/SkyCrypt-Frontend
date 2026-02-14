@@ -1,25 +1,26 @@
 <script lang="ts">
   import { getPreferences, getFavorites, getRecentSearches } from "$ctx";
-  import { cn } from "$lib/shared/utils";
   import { Avatar, Command } from "bits-ui";
+  import { commandItemClass } from "./command-utils";
 
-  // Props kept for API clarity but sourced from context
-  const {
-    ign = "",
-    _searchQuery = "",
-    _searchUserRemoteFn,
-    _searchQueryValidated
-  }: {
-    ign?: string;
-    _searchQuery?: string;
-    _searchUserRemoteFn?: unknown;
-    _searchQueryValidated?: Record<string, unknown>;
-  } = $props();
+  const { ign = "" }: { ign?: string } = $props();
 
   const preferences = getPreferences();
   const favorites = getFavorites();
   const recentSearches = getRecentSearches();
 </script>
+
+{#snippet playerItem(item: { ign: string; uuid?: string })}
+  <Command.LinkItem value={item.ign} href="/stats/{item.ign}" class={commandItemClass(preferences.performanceMode)} keywords={[item.ign, item.uuid, "profile", "player", "favorite", "favorites"].filter(Boolean) as string[]}>
+    <Avatar.Root class="size-4 shrink-0 bg-text/10">
+      <Avatar.Image loading="lazy" src={item.uuid ? `https://nmsr.nickac.dev/face/${item.uuid}` : "https://nmsr.nickac.dev/face/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40"} alt={item.ign} class="aspect-square size-4 [image-rendering:pixelated]" />
+      <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">
+        {item.ign.slice(0, 2)}
+      </Avatar.Fallback>
+    </Avatar.Root>
+    {item.ign}
+  </Command.LinkItem>
+{/snippet}
 
 {#if recentSearches.current.length !== 0}
   <Command.Group>
@@ -27,15 +28,7 @@
     <Command.GroupItems>
       {#each recentSearches.current.slice(0, 5) as recentSearch, index (index)}
         {#if !ign || recentSearch.ign !== ign}
-          <Command.LinkItem value={recentSearch.ign} href="/stats/{recentSearch.ign}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[recentSearch.ign, "profile", "player", "favorite", "favorites"]}>
-            <Avatar.Root class="size-4 shrink-0 bg-text/10">
-              <Avatar.Image loading="lazy" src={recentSearch.uuid ? `https://nmsr.nickac.dev/face/${recentSearch.uuid}` : "https://nmsr.nickac.dev/face/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40"} alt={recentSearch.ign} class="aspect-square size-4 [image-rendering:pixelated]" />
-              <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">
-                {recentSearch.ign.slice(0, 2)}
-              </Avatar.Fallback>
-            </Avatar.Root>
-            {recentSearch.ign}
-          </Command.LinkItem>
+          {@render playerItem(recentSearch)}
         {/if}
       {/each}
     </Command.GroupItems>
@@ -52,15 +45,7 @@
     <Command.GroupItems>
       {#each favorites.current.slice(0, 5) as favorite, index (index)}
         {#if !ign || favorite.ign !== ign}
-          <Command.LinkItem value={favorite.ign} href="/stats/{favorite.ign}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[favorite.ign, favorite.uuid, "profile", "player", "favorite", "favorites"]}>
-            <Avatar.Root class="size-4 shrink-0 bg-text/10">
-              <Avatar.Image loading="lazy" src={`https://nmsr.nickac.dev/face/${favorite.uuid}`} alt={favorite.ign} class="aspect-square size-4 [image-rendering:pixelated]" />
-              <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">
-                {favorite.ign.slice(0, 2)}
-              </Avatar.Fallback>
-            </Avatar.Root>
-            {favorite.ign}
-          </Command.LinkItem>
+          {@render playerItem(favorite)}
         {/if}
       {/each}
     </Command.GroupItems>

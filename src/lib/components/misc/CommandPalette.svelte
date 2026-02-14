@@ -12,6 +12,7 @@
   import { schema } from "../../../routes/schema";
   import CommandSearchGroup from "./CommandSearchGroup.svelte";
   import CommandSettingsGroup from "./CommandSettingsGroup.svelte";
+  import { commandItemClass } from "./command-utils";
 
   let { ign = "", loading = $bindable(false) } = $props();
 
@@ -100,7 +101,7 @@
                     {/if}
                   </Command.Empty>
 
-                  <CommandSearchGroup {ign} _searchQuery={searchQuery} _searchUserRemoteFn={searchUserRemoteFn} _searchQueryValidated={searchQueryValidated} />
+                  <CommandSearchGroup {ign} />
 
                   {#if searchQuery.length}
                     <Command.Separator class="bg-foreground/5 h-px w-full" />
@@ -109,7 +110,7 @@
                       <Command.GroupItems>
                         <Command.Item
                           value="search"
-                          class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}
+                          class={commandItemClass(preferences.performanceMode)}
                           keywords={[searchQuery, "search", "find", "profile"]}
                           onSelect={() => {
                             searchUserRemoteFn = searchUser({ username: searchQuery });
