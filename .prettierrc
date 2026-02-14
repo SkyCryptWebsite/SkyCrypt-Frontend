@@ -6,7 +6,14 @@
   "bracketSameLine": true,
   "printWidth": 999999,
   "plugins": ["prettier-plugin-svelte", "prettier-plugin-tailwindcss"],
-  "overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }],
+  "overrides": [
+    {
+      "files": "*.svelte",
+      "options": {
+        "parser": "svelte"
+      }
+    }
+  ],
   "svelteStrictMode": true,
   "tailwindStylesheet": "./src/app.css",
   "tailwindAttributes": ["class", "class:*", "class:name"],

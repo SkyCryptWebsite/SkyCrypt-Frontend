@@ -4,8 +4,7 @@
   import { page, updated } from "$app/state";
   import { initDisabledPacks, initFavorites, initInternalState, initPreferences, initRecentSearches, initTheme, initWikiOrder, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
   import Header from "$lib/components/header/Header.svelte";
-  import { CommandPalette } from "$lib/components/misc";
-  import { PerformanceMode } from "$lib/components/misc";
+  import { CommandPalette, PerformanceMode } from "$lib/components/misc";
   import { IsHover } from "$lib/hooks/is-hover.svelte";
   import { IsMobile } from "$lib/hooks/is-mobile.svelte";
   import { getPacks } from "$lib/shared/api/skycrypt-api.remote";
@@ -26,13 +25,10 @@
   let isHover = $state(new IsHover());
   let toastId: string | number = $state(0);
   let commandLoading = $state(false);
-
   const { ign } = $derived(page.params);
-
   const preferences = initPreferences();
   const themeContext = initTheme();
   const internalState = initInternalState();
-
   const position = writable<ToasterProps["position"]>("bottom-right");
   const theme = writable<ToasterProps["theme"]>("dark");
   const noEmbedUrls = ["/stats/"];
@@ -41,9 +37,11 @@
   function updateOnlineStatus() {
     toast.dismiss(toastId);
     toastId = toast.loading("Checking connection status...");
+
     setTimeout(() => {
       if (navigator.onLine) {
         toast.dismiss(toastId);
+
         toastId = toast.success("You are now online!", {
           icon: Wifi,
           description: "Connection has been restored!",
@@ -51,6 +49,7 @@
         });
       } else {
         toast.dismiss(toastId);
+
         toastId = toast.error("You are now offline!", {
           icon: WifiOff,
           description: "Please check your connection and try again.",
@@ -71,7 +70,6 @@
   initWikiOrder();
   initFavorites();
   initRecentSearches();
-
   setMobileContext(isMobile);
   setHoverContext(isHover);
   setPacksContext(packs);
@@ -84,7 +82,9 @@
 
   beforeNavigate(({ type }) => {
     if (type === "leave" || type === "link") return;
+
     commandLoading = true;
+
     setTimeout(() => {
       commandLoading = false;
       internalState.openCommand = false;
@@ -100,11 +100,13 @@
   $effect(() => {
     const packsDataRemoteFunction = getPacks();
     const packsData = packsDataRemoteFunction.current;
+
     if (packsData) packs.packs = packsData;
   });
 </script>
 
 <svelte:document onkeydown={handleKeydown} />
+
 <svelte:window
   onresize={() => {
     if (window.innerWidth <= 600) {
@@ -145,6 +147,7 @@
   class="sm:mr-8"
   toastOptions={{
     class: cn("gap-2! font-semibold! group rounded-lg! text-text/80! border-none!", preferences.performanceMode ? "bg-background-grey!" : "backdrop-blur-lg! backdrop-brightness-50! bg-transparent!"),
+
     classes: {
       closeButton: "text-text/80! border-none! hover:opacity-60! bg-background-grey! hover:bg-background-grey!",
       description: "text-pretty! font-medium!",
@@ -165,11 +168,9 @@
 <div class="pointer-events-none fixed inset-0 z-[-1] h-dvh w-screen [background-image:var(--bg-url)] bg-cover bg-scroll bg-center bg-no-repeat"></div>
 
 <Header />
-
 <Tooltip.Provider delayDuration={0}>
   {@render children()}
 </Tooltip.Provider>
-
 <CommandPalette {ign} bind:loading={commandLoading} />
 
 {#if !isHover.current}
@@ -182,6 +183,7 @@
     }}>
     <Drawer.Portal>
       <Drawer.Overlay class="fixed inset-0 z-40 bg-black/80" />
+
       <Drawer.Content class="fixed right-0 bottom-0 left-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px] bg-background-lore">
         <div class="mx-auto w-full max-w-md overflow-auto p-6">
           {@render internalState.content?.()}
