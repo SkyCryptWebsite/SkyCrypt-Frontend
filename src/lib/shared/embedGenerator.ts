@@ -34,7 +34,7 @@ const slayerEmojis = {
 function getLongDescription(embedData: ModelsEmbedData) {
   let output = "";
 
-  if (embedData === undefined) {
+  if (embedData == null) {
     return output;
   }
 
@@ -67,7 +67,7 @@ function getLongDescription(embedData: ModelsEmbedData) {
     for (const skillGroup of sortedSkills) {
       for (const skill of skillGroup) {
         const data = skills[skill as keyof typeof skills];
-        if (data === undefined) {
+        if (data == null) {
           continue;
         }
 
@@ -88,7 +88,7 @@ function getLongDescription(embedData: ModelsEmbedData) {
 
     output += `${skillEmojis["dungeons"]} ${embedData.dungeons.dungeoneering ?? 0} `;
     const classes = embedData.dungeons.classes;
-    if (classes !== undefined) {
+    if (classes != null) {
       for (const [dclass, data] of Object.entries(classes)) {
         output += `${skillEmojis[dclass]} ${data ?? 0} `;
       }
