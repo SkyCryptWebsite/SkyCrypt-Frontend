@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { cn } from "$lib/shared/utils";
   import { Label, Switch } from "bits-ui";
   import type { Snippet } from "svelte";
 
@@ -29,11 +30,11 @@
     <div class="flex flex-col">
       {#if children}
         <div class="flex items-center gap-1">
-          <h4 class="font-semibold text-text/90 {titleClass}">{title}</h4>
+          <h4 class={cn("font-semibold text-text/90", titleClass)}>{title}</h4>
           {@render children()}
         </div>
       {:else}
-        <h4 class="font-semibold text-text/90 {titleClass}">{title}</h4>
+        <h4 class={cn("font-semibold text-text/90", titleClass)}>{title}</h4>
       {/if}
       <p class="text-text/60">{description}</p>
     </div>
