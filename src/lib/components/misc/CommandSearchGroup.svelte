@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getPreferences, getFavorites, getRecentSearches } from "$ctx";
   import { Avatar, Command } from "bits-ui";
-  import { commandItemClass } from "./command-utils";
+  import { cn } from "$lib/shared/utils";
 
   const { ign = "" }: { ign?: string } = $props();
 
@@ -11,7 +11,7 @@
 </script>
 
 {#snippet playerItem(item: { ign: string; uuid?: string })}
-  <Command.LinkItem value={item.ign} href="/stats/{item.ign}" class={commandItemClass(preferences.performanceMode)} keywords={[item.ign, item.uuid, "profile", "player", "favorite", "favorites"].filter(Boolean) as string[]}>
+  <Command.LinkItem value={item.ign} href="/stats/{item.ign}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[item.ign, item.uuid, "profile", "player", "favorite", "favorites"].filter(Boolean) as string[]}>
     <Avatar.Root class="size-4 shrink-0 bg-text/10">
       <Avatar.Image loading="lazy" src={item.uuid ? `https://nmsr.nickac.dev/face/${item.uuid}` : "https://nmsr.nickac.dev/face/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40"} alt={item.ign} class="aspect-square size-4 [image-rendering:pixelated]" />
       <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">

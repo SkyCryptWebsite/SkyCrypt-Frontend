@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getPreferences, getInternalState } from "$ctx";
+  import { getInternalState, getPreferences } from "$ctx";
   import { searchUser } from "$lib/shared/api/skycrypt-api.remote";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import CircleAlert from "@lucide/svelte/icons/circle-alert";
@@ -12,12 +12,11 @@
   import { schema } from "../../../routes/schema";
   import CommandSearchGroup from "./CommandSearchGroup.svelte";
   import CommandSettingsGroup from "./CommandSettingsGroup.svelte";
-  import { commandItemClass } from "./command-utils";
 
   let { ign = "", loading = $bindable(false) } = $props();
 
   let commandInput = $state<HTMLElement>(null!);
-  let commandValue = $state<string | undefined>();
+  let commandValue = $state<string | undefined>(null!);
   let searchQuery = $state<string>("");
   let searchUserRemoteFn = $state<RemoteQuery<never>>();
 
@@ -110,7 +109,7 @@
                       <Command.GroupItems>
                         <Command.Item
                           value="search"
-                          class={commandItemClass(preferences.performanceMode)}
+                          class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}
                           keywords={[searchQuery, "search", "find", "profile"]}
                           onSelect={() => {
                             searchUserRemoteFn = searchUser({ username: searchQuery });

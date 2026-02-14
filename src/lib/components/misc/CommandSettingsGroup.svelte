@@ -10,7 +10,8 @@
   import Pickaxe from "@lucide/svelte/icons/pickaxe";
   import Sparkle from "@lucide/svelte/icons/sparkle";
   import { Command } from "bits-ui";
-  import { commandItemClass, type SettingsConfigItem } from "./command-utils";
+  import type { SettingsConfigItem } from "./command-utils";
+  import { cn } from "$lib/shared/utils";
 
   const { closeCommand }: { closeCommand: () => void } = $props();
 
@@ -101,7 +102,7 @@
     {#each SETTINGS_ITEMS as item (item.value)}
       <Command.Item
         value={item.value}
-        class={commandItemClass(preferences.performanceMode)}
+        class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}
         keywords={item.keywords}
         onSelect={() => {
           if (item.type === "tab") {

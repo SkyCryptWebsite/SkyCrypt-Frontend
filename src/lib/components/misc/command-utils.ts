@@ -1,12 +1,5 @@
-import { cn } from "$lib/shared/utils";
-import type { Component } from "svelte";
 import type { SettingsTab } from "$lib/components/header/types";
-
-export const COMMAND_ITEM_CLASS = "flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none";
-
-export function commandItemClass(performanceMode: boolean): string {
-  return cn(COMMAND_ITEM_CLASS, performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey");
-}
+import type { Component } from "svelte";
 
 type SettingsTabItem = {
   type: "tab";

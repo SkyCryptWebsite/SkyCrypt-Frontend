@@ -12,4 +12,4 @@ export { default as SEO } from "./SEO.svelte";
 export { default as Wardrobe } from "./Wardrobe.svelte";
 // Skin3D excluded — dynamically imported for code-splitting
 
-export { commandItemClass, COMMAND_ITEM_CLASS, type SettingsConfigItem } from "./command-utils";
+export type { SettingsConfigItem } from "./command-utils";
