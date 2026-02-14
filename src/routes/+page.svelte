@@ -122,7 +122,7 @@
     {#if favorites.current.length === 0}
       {@render profile({ id: "0", username: "No favorites set!", quote: "Why don't you set a favorite?" }, { tip: true })}
     {:else}
-      {#each favorites.current.reverse() as favorite, index (index)}
+      {#each [...favorites.current].reverse() as favorite, index (index)}
         {@render profile({ id: favorite.uuid, username: favorite.ign, role: Role.FAVORITE, displayName: favorite.displayName }, { favorite: true })}
       {/each}
     {/if}
