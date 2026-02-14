@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getInternalState, getPreferences } from "$ctx";
-  import Notice from "$lib/components/Notice.svelte";
+  import { Notice } from "$lib/components/notices";
   import type { SectionName } from "$lib/sections/types";
   import { titleCase } from "$lib/shared/helper";
   import { cn } from "$lib/shared/utils";

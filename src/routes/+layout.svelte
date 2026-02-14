@@ -2,59 +2,34 @@
   import { browser, dev } from "$app/environment";
   import { beforeNavigate } from "$app/navigation";
   import { page, updated } from "$app/state";
-  import { initDisabledPacks, initFavorites, initPreferences, initRecentSearches, initTheme, initWikiOrder, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
-  import { initInternalState } from "$ctx/internal.svelte";
+  import { initDisabledPacks, initFavorites, initInternalState, initPreferences, initRecentSearches, initTheme, initWikiOrder, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
   import Header from "$lib/components/header/Header.svelte";
-  import { SettingsTab } from "$lib/components/header/types";
-  import PerformanceMode from "$lib/components/PerformanceMode.svelte";
+  import { CommandPalette } from "$lib/components/misc";
+  import { PerformanceMode } from "$lib/components/misc";
   import { IsHover } from "$lib/hooks/is-hover.svelte";
   import { IsMobile } from "$lib/hooks/is-mobile.svelte";
-  import { getPacks, searchUser } from "$lib/shared/api/skycrypt-api.remote";
+  import { getPacks } from "$lib/shared/api/skycrypt-api.remote";
   import themes from "$lib/shared/constants/themes";
-  import { cn, flyAndScale } from "$lib/shared/utils";
-  import BookOpenText from "@lucide/svelte/icons/book-open-text";
-  import CircleAlert from "@lucide/svelte/icons/circle-alert";
-  import Fan from "@lucide/svelte/icons/fan";
-  import Keyboard from "@lucide/svelte/icons/keyboard";
-  import ListOrdered from "@lucide/svelte/icons/list-ordered";
-  import LoaderCircle from "@lucide/svelte/icons/loader-circle";
-  import PackageOpen from "@lucide/svelte/icons/package-open";
-  import PaintBucket from "@lucide/svelte/icons/paint-bucket";
-  import Pickaxe from "@lucide/svelte/icons/pickaxe";
-  import Search from "@lucide/svelte/icons/search";
-  import Sparkle from "@lucide/svelte/icons/sparkle";
+  import { cn } from "$lib/shared/utils";
   import Wifi from "@lucide/svelte/icons/wifi";
   import WifiOff from "@lucide/svelte/icons/wifi-off";
-  import { isHttpError, type RemoteQuery } from "@sveltejs/kit";
-  import { Avatar, Button, Command, computeCommandScore, Dialog, Tooltip } from "bits-ui";
+  import { Tooltip } from "bits-ui";
   import { onMount, type Snippet } from "svelte";
   import SvelteSeo from "svelte-seo";
   import { toast, Toaster, type ToasterProps } from "svelte-sonner";
-  import { cubicOut } from "svelte/easing";
   import { writable } from "svelte/store";
-  import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
   import "../app.css";
-  import { schema } from "./schema";
 
   let { children }: { children: Snippet } = $props();
   let isMobile = $state(new IsMobile());
   let isHover = $state(new IsHover());
   let toastId: string | number = $state(0);
-  let commandInput = $state<HTMLElement>(null!);
-  let loading = $state(false);
-  let commandValue = $state(null!);
-
-  let searchQuery = $state<string>("");
-  const searchQueryValidated = $derived(schema.safeParse({ query: searchQuery }));
-
-  let searchUserRemoteFn = $state<RemoteQuery<never>>();
+  let commandLoading = $state(false);
 
   const { ign } = $derived(page.params);
 
   const preferences = initPreferences();
-  const favorites = initFavorites();
-  const recentSearches = initRecentSearches();
   const themeContext = initTheme();
   const internalState = initInternalState();
 
@@ -92,29 +67,10 @@
     }
   }
 
-  function customFilter(commandValue: string, search: string, commandKeywords?: string[]): number {
-    const score = computeCommandScore(commandValue, search, commandKeywords);
-    // Always show the actions and search commands
-    if (commandValue === "search" || commandValue === "actions") {
-      return 0.98; // High score to ensure these commands are always shown
-    }
-    return score;
-  }
-
-  function closeCommand() {
-    internalState.openCommand = false;
-    commandValue = null!;
-    searchQuery = "";
-  }
-
-  function handleSettingTab(tab: SettingsTab) {
-    internalState.settingsTab = tab;
-    closeCommand();
-    internalState.settingsOpen = true;
-  }
-
   initDisabledPacks();
   initWikiOrder();
+  initFavorites();
+  initRecentSearches();
 
   setMobileContext(isMobile);
   setHoverContext(isHover);
@@ -128,15 +84,9 @@
 
   beforeNavigate(({ type }) => {
     if (type === "leave" || type === "link") return;
-    loading = true;
-    if (!searchQueryValidated.success) return;
-    const trimmedQuery = searchQuery.trim();
-    if (trimmedQuery !== "") {
-      const normalizedQuery = trimmedQuery.toLowerCase();
-      recentSearches.current = [{ ign: trimmedQuery }, ...recentSearches.current.filter((search) => search.ign.toLowerCase() !== normalizedQuery)].slice(0, 5);
-    }
+    commandLoading = true;
     setTimeout(() => {
-      loading = false;
+      commandLoading = false;
       internalState.openCommand = false;
     }, 1000);
   });
@@ -203,7 +153,7 @@
   }} />
 
 {#if page.url.origin.includes("cupcake") || dev}
-  {#await import("$lib/components/BetaNotice.svelte") then { default: BetaNotice }}
+  {#await import("$lib/components/notices/BetaNotice.svelte") then { default: BetaNotice }}
     <BetaNotice />
   {/await}
 {/if}
@@ -220,32 +170,7 @@
   {@render children()}
 </Tooltip.Provider>
 
-<Dialog.Root bind:open={internalState.openCommand}>
-  <Dialog.Portal>
-    <Dialog.Overlay forceMount class={cn("fixed inset-0 z-40", preferences.performanceMode ? "bg-background-lore" : "backdrop-blur-lg backdrop-brightness-50")}>
-      {#snippet child({ props, open })}
-        {#if open}
-          <div {...props} transition:fade={{ duration: 150, easing: cubicOut }}></div>
-        {/if}
-      {/snippet}
-    </Dialog.Overlay>
-    <Dialog.Content
-      forceMount
-      class={cn("fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg font-icomoon select-text", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}
-      onOpenAutoFocus={(e) => {
-        e.preventDefault();
-        commandInput?.focus();
-      }}>
-      {#snippet child({ props, open })}
-        {#if open}
-          <div {...props} transition:flyAndScale>
-            {@render command()}
-          </div>
-        {/if}
-      {/snippet}
-    </Dialog.Content>
-  </Dialog.Portal>
-</Dialog.Root>
+<CommandPalette {ign} bind:loading={commandLoading} />
 
 {#if !isHover.current}
   <Drawer.Root
@@ -265,200 +190,3 @@
     </Drawer.Portal>
   </Drawer.Root>
 {/if}
-
-{#snippet command()}
-  <div class="relative flex h-full w-4/5 items-center justify-start overflow-clip rounded-[1.125rem] bg-background/20 @[38rem]:w-full">
-    <input type="search" required class="hidden" bind:value={searchQuery} />
-  </div>
-  <Command.Root bind:value={commandValue} class="flex h-full w-full flex-col divide-y divide-icon/30 self-start overflow-hidden rounded-lg" filter={customFilter}>
-    <div class="flex h-12 items-center">
-      <Button.Root
-        type="button"
-        class="flex aspect-square h-full  items-center justify-center text-text"
-        onclick={() => {
-          searchUserRemoteFn = searchUser({ username: searchQuery });
-        }}>
-        {#if !searchQueryValidated.success && searchQuery.length > 0}
-          <CircleAlert class="size-4" />
-        {:else if searchUserRemoteFn?.loading || loading}
-          <LoaderCircle class="size-4 animate-spin" />
-        {:else}
-          <Search class="size-4" />
-        {/if}
-      </Button.Root>
-      <Command.Input
-        class="inline-flex h-12 w-full truncate rounded-tl-lg rounded-tr-lg pr-4 text-base text-text transition-colors ease-out placeholder:text-text/50 focus:ring-0 focus:outline-hidden"
-        placeholder="Search for something..."
-        type="search"
-        required
-        bind:value={searchQuery}
-        bind:ref={commandInput}
-        onkeydown={(e) => {
-          if (commandValue && commandValue !== "search") return;
-          const k = e.key.toLowerCase();
-          if (k === "enter" || k === "search") {
-            e.preventDefault();
-            searchUserRemoteFn = searchUser({ username: searchQuery });
-          }
-        }} />
-    </div>
-
-    <Command.List class="max-h-120 overflow-x-hidden overflow-y-auto px-2 pb-2">
-      <Command.Viewport>
-        <Command.Empty class="text-muted-foreground flex w-full items-center justify-center pt-8 pb-6 text-sm">
-          {#if searchUserRemoteFn?.error}
-            {isHttpError(searchUserRemoteFn.error) ? searchUserRemoteFn.error.body.message : "Something went wrong"}
-          {:else}
-            Press Enter to search
-          {/if}
-        </Command.Empty>
-
-        {#if recentSearches.current.length !== 0}
-          <Command.Group>
-            <Command.GroupHeading class="text-muted-foreground px-3 pt-4 pb-2 text-xs">Recent Searches</Command.GroupHeading>
-            <Command.GroupItems>
-              {#each recentSearches.current.slice(0, 5) as recentSearch, index (index)}
-                {#if !ign || recentSearch.ign !== ign}
-                  <Command.LinkItem value={recentSearch.ign} href="/stats/{recentSearch.ign}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[recentSearch.ign, "profile", "player", "favorite", "favorites"]}>
-                    <Avatar.Root class="size-4 shrink-0 bg-text/10">
-                      <Avatar.Image loading="lazy" src={recentSearch.uuid ? `https://nmsr.nickac.dev/face/${recentSearch.uuid}` : "https://nmsr.nickac.dev/face/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40"} alt={recentSearch.ign} class="aspect-square size-4 [image-rendering:pixelated]" />
-                      <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">
-                        {recentSearch.ign.slice(0, 2)}
-                      </Avatar.Fallback>
-                    </Avatar.Root>
-                    {recentSearch.ign}
-                  </Command.LinkItem>
-                {/if}
-              {/each}
-            </Command.GroupItems>
-          </Command.Group>
-        {/if}
-        <Command.Separator class="bg-foreground/5 h-px w-full" />
-        {#if favorites.current.length !== 0 && (!ign || !favorites.current.some((f) => f.ign === ign))}
-          <Command.Group>
-            <Command.GroupHeading class="text-muted-foreground px-3 pt-4 pb-2 text-xs">Favorites</Command.GroupHeading>
-            <Command.GroupItems>
-              {#each favorites.current.slice(0, 5) as favorite, index (index)}
-                {#if !ign || favorite.ign !== ign}
-                  <Command.LinkItem value={favorite.ign} href="/stats/{favorite.ign}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[favorite.ign, favorite.uuid, "profile", "player", "favorite", "favorites"]}>
-                    <Avatar.Root class="size-4 shrink-0 bg-text/10">
-                      <Avatar.Image loading="lazy" src={`https://nmsr.nickac.dev/face/${favorite.uuid}`} alt={favorite.ign} class="aspect-square size-4 [image-rendering:pixelated]" />
-                      <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">
-                        {favorite.ign.slice(0, 2)}
-                      </Avatar.Fallback>
-                    </Avatar.Root>
-                    {favorite.ign}
-                  </Command.LinkItem>
-                {/if}
-              {/each}
-            </Command.GroupItems>
-          </Command.Group>
-        {/if}
-        <Command.Separator class="bg-foreground/5 h-px w-full" />
-
-        {#if searchQuery.length}
-          <Command.Group>
-            <Command.GroupHeading class="text-muted-foreground px-3 pt-4 pb-2 text-xs">Actions</Command.GroupHeading>
-            <Command.GroupItems>
-              <Command.Item
-                value="search"
-                class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}
-                keywords={[searchQuery, "search", "find", "profile"]}
-                onSelect={() => {
-                  searchUserRemoteFn = searchUser({ username: searchQuery });
-                }}>
-                {#if searchUserRemoteFn?.loading || loading}
-                  <LoaderCircle class="size-4 animate-spin" />
-                {:else}
-                  <Search class="size-4 text-text" />
-                {/if}
-
-                {#if searchUserRemoteFn?.error}
-                  {isHttpError(searchUserRemoteFn.error) ? searchUserRemoteFn.error.body.message : "Something went wrong"}
-                {:else}
-                  Search for {searchQuery}
-                {/if}
-              </Command.Item>
-            </Command.GroupItems>
-          </Command.Group>
-        {/if}
-        <Command.Separator class="bg-foreground/5 h-px w-full" />
-
-        <Command.Group>
-          <Command.GroupHeading class="text-muted-foreground px-3 pt-4 pb-2 text-xs">Settings</Command.GroupHeading>
-          <Command.GroupItems>
-            <Command.Item value="packs" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["packs", "change", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Packs)}>
-              <div class="rounded-lg bg-icon/80 p-1">
-                <PackageOpen class="size-4" />
-              </div>
-              Change Packs
-            </Command.Item>
-            <Command.Item value="themes" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["themes", "change", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Themes)}>
-              <div class="rounded-lg bg-icon/80 p-1">
-                <PaintBucket class="size-4" />
-              </div>
-              Change Theme
-            </Command.Item>
-            <Command.Item value="section-order" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["order", "change", "section", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Order)}>
-              <div class="rounded-lg bg-icon/80 p-1">
-                <ListOrdered class="size-4" />
-              </div>
-              Change Section Order
-            </Command.Item>
-            <Command.Item value="wiki-order" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["order", "misc", "change", "wiki", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Misc)}>
-              <div class="rounded-lg bg-icon/80 p-1">
-                <BookOpenText class="size-4" />
-              </div>
-              Change Wiki Order
-            </Command.Item>
-            <Command.Item value="keybind" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={["keybind", "misc", "change", "command", "settings"]} onSelect={() => handleSettingTab(SettingsTab.Misc)}>
-              <div class="rounded-lg bg-icon/80 p-1">
-                <Keyboard class="size-4" />
-              </div>
-              Change Command Keybind
-            </Command.Item>
-            <Command.Item
-              value="performance-mode"
-              class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}
-              keywords={["performance", "mode", "toggle", "settings"]}
-              onSelect={() => {
-                preferences.performanceMode = !preferences.performanceMode;
-                closeCommand();
-              }}>
-              <div class="rounded-lg bg-icon/80 p-1">
-                <Fan class="size-4 will-change-transform data-[performance=false]:animate-spin-slow data-[performance=true]:animate-spin" data-performance={preferences.performanceMode} />
-              </div>
-              Toggle Performance Mode
-            </Command.Item>
-            <Command.Item
-              value="glint"
-              class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}
-              keywords={["glint", "toggle", "settings"]}
-              onSelect={() => {
-                preferences.showGlint = !preferences.showGlint;
-                closeCommand();
-              }}>
-              <div class="rounded-lg bg-icon/80 p-1">
-                <Sparkle class="size-4" />
-              </div>
-              Toggle Glint
-            </Command.Item>
-            <Command.Item
-              value="mctooltip"
-              class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}
-              keywords={["mctooltip", "minecraft", "tooltip", "toggle", "settings"]}
-              onSelect={() => {
-                preferences.mctooltip = !preferences.mctooltip;
-                closeCommand();
-              }}>
-              <div class="rounded-lg bg-icon/80 p-1">
-                <Pickaxe class="size-4" />
-              </div>
-              Toggle Minecraft-style Tooltips
-            </Command.Item>
-          </Command.GroupItems>
-        </Command.Group>
-      </Command.Viewport>
-    </Command.List>
-  </Command.Root>
-{/snippet}

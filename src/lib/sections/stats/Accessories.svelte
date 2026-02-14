@@ -1,10 +1,10 @@
 <script lang="ts">
   import { getProfileContext } from "$ctx";
-  import AdditionStat from "$lib/components/AdditionStat.svelte";
-  import Bonus from "$lib/components/Bonus.svelte";
-  import Item from "$lib/components/Item.svelte";
-  import Section from "$lib/components/Section.svelte";
-  import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
+  import { AdditionStat } from "$lib/components/stats";
+  import { Bonus } from "$lib/components/stats";
+  import { Item } from "$lib/components/item";
+  import { Section } from "$lib/components/sections";
+  import { SectionSubtitle } from "$lib/components/sections";
   import Items from "$lib/layouts/stats/Items.svelte";
   import { getAccessoriesSection } from "$lib/shared/api/skycrypt-api.remote";
   import { RARITY_COLORS } from "$lib/shared/constants/rarities";

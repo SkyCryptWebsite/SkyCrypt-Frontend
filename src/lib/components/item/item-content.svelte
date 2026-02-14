@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getPacksContext, getPreferences, getWikiOrder, type WikiOrderData } from "$ctx";
-  import ContainedItem from "$lib/components/ContainedItem.svelte";
+  import ContainedItem from "./ContainedItem.svelte";
   import type { ModelsStrippedItem } from "$lib/shared/api/orval-generated";
   import { getRarityClass, removeFormatting, renderLore } from "$lib/shared/helper";
   import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";

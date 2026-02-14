@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getProfileContext } from "$ctx";
-  import Notice from "$lib/components/Notice.svelte";
-  import Stat from "$lib/components/Stat.svelte";
+  import { Notice } from "$lib/components/notices";
+  import { Stat } from "$lib/components/stats";
   import type { ModelsStats } from "$lib/shared/api/orval-generated";
   import { getAdditionalStats } from "$lib/shared/api/skycrypt-api.remote";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";

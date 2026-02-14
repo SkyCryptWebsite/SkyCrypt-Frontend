@@ -2,16 +2,12 @@
   import { afterNavigate } from "$app/navigation";
   import { page } from "$app/state";
   import { getInternalState, getPreferences } from "$ctx";
-  import Notice from "$lib/components/Notice.svelte";
-  import SEO from "$lib/components/SEO.svelte";
+  import { Notice } from "$lib/components/notices";
   import Main from "$lib/layouts/stats/Main.svelte";
   import type { SectionName } from "$lib/sections/types";
   import { getProfileStats } from "$lib/shared/api/skycrypt-api.remote";
   import { cn } from "$lib/shared/utils";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
-  import type { PageServerData } from "./$types";
-
-  const { data }: { data: PageServerData } = $props();
 
   const preferences = getPreferences();
   const internalState = getInternalState();
@@ -40,7 +36,7 @@
   });
 </script>
 
-<SEO embedData={data.embed} />
+<!-- <SEO embedData={data.embed} /> -->
 
 <svelte:boundary>
   {#snippet pending()}
