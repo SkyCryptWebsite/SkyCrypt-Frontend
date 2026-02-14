@@ -194,7 +194,7 @@ pnpm changeset    # Create changeset for versioning
 
 ## NOTES
 
-- Vitest dual-env: `*.svelte.spec.ts` (browser/WebDriverIO), `*.spec.ts` (node)
+- Vitest dual-env: `*.svelte.spec.ts` (browser/playwright), `*.spec.ts` (node)
 - Tailwind v4 with custom theme plugin (src/plugins/themes.ts) and nice-colors-dark
 - Experimental SvelteKit features: remoteFunctions, tracing, instrumentation
 - CSRF trusted origins: cupcake.shiiyu.moe, sky.shiiyu.moe
