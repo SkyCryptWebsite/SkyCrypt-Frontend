@@ -1,9 +1,9 @@
 <script lang="ts">
   import { getProfileContext } from "$ctx";
-  import AdditionStat from "$lib/components/stats/AdditionStat.svelte";
-  import Section from "$lib/components/sections/Section.svelte";
-  import Skillbar from "$lib/components/stats/Skillbar.svelte";
-  import DungeonCataCard from "$lib/components/stats/DungeonCataCard.svelte";
+  import { AdditionStat } from "$lib/components/stats";
+  import { Section } from "$lib/components/sections";
+  import { Skillbar } from "$lib/components/stats";
+  import { DungeonCataCard } from "$lib/components/stats";
   import { getDungeonsSection } from "$lib/shared/api/skycrypt-api.remote";
   import { format } from "numerable";
 

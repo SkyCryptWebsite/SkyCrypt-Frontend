@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getProfileContext } from "$ctx";
-  import Skillbar from "$lib/components/stats/Skillbar.svelte";
+  import { Skillbar } from "$lib/components/stats";
 
   const profile = $derived(getProfileContext().current);
 </script>

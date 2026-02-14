@@ -4,8 +4,8 @@
   import { page, updated } from "$app/state";
   import { initDisabledPacks, initFavorites, initInternalState, initPreferences, initRecentSearches, initTheme, initWikiOrder, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
   import Header from "$lib/components/header/Header.svelte";
-  import CommandPalette from "$lib/components/misc/CommandPalette.svelte";
-  import PerformanceMode from "$lib/components/misc/PerformanceMode.svelte";
+  import { CommandPalette } from "$lib/components/misc";
+  import { PerformanceMode } from "$lib/components/misc";
   import { IsHover } from "$lib/hooks/is-hover.svelte";
   import { IsMobile } from "$lib/hooks/is-mobile.svelte";
   import { getPacks } from "$lib/shared/api/skycrypt-api.remote";

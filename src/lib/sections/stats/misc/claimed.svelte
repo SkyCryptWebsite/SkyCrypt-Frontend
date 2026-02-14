@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getMiscContext } from "$ctx";
-  import AdditionStat from "$lib/components/stats/AdditionStat.svelte";
-  import SectionSubtitle from "$lib/components/sections/SectionSubtitle.svelte";
+  import { AdditionStat } from "$lib/components/stats";
+  import { SectionSubtitle } from "$lib/components/sections";
   import Items from "$lib/layouts/stats/Items.svelte";
   import { tz } from "@date-fns/tz";
   import { formatDate, formatDistanceToNowStrict } from "date-fns";

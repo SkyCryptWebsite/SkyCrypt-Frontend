@@ -2,7 +2,7 @@
   import { afterNavigate } from "$app/navigation";
   import { page } from "$app/state";
   import { getInternalState, getPreferences } from "$ctx";
-  import Notice from "$lib/components/notices/Notice.svelte";
+  import { Notice } from "$lib/components/notices";
   import Main from "$lib/layouts/stats/Main.svelte";
   import type { SectionName } from "$lib/sections/types";
   import { getProfileStats } from "$lib/shared/api/skycrypt-api.remote";

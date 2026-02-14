@@ -1,7 +1,7 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
   import { getFavorites, getHoverContext, getPreferences, getProfileContext } from "$ctx";
-  import ApiNotice from "$lib/components/notices/APINotice.svelte";
+  import { APINotice } from "$lib/components/notices";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import Ban from "@lucide/svelte/icons/ban";
   import ChevronLeft from "@lucide/svelte/icons/chevron-left";
@@ -172,7 +172,7 @@
               {#if open}
                 <div {...wrapperProps}>
                   <div {...props} transition:flyAndScale>
-                    <ApiNotice />
+                    <APINotice />
                     <Popover.Arrow class="text-icon! [&>svg[data-arrow]]:text-icon" />
                   </div>
                 </div>

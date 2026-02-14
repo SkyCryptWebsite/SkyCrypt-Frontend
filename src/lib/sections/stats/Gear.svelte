@@ -1,11 +1,11 @@
 <script lang="ts">
   import { getProfileContext } from "$ctx";
-  import Bonus from "$lib/components/stats/Bonus.svelte";
-  import EmptyEquipment from "$lib/components/item/EmptyEquipment.svelte";
-  import Item from "$lib/components/item/Item.svelte";
+  import { Bonus } from "$lib/components/stats";
+  import { EmptyEquipment } from "$lib/components/item";
+  import { Item } from "$lib/components/item";
   import ScrollAreaPrimitive from "$lib/components/ScrollAreaPrimitive.svelte";
-  import Section from "$lib/components/sections/Section.svelte";
-  import Wardrobe from "$lib/components/misc/Wardrobe.svelte";
+  import { Section } from "$lib/components/sections";
+  import { Wardrobe } from "$lib/components/misc";
   import Items from "$lib/layouts/stats/Items.svelte";
   import { getGearSection } from "$lib/shared/api/skycrypt-api.remote";
   import { getRarityClass, renderLore } from "$lib/shared/helper";

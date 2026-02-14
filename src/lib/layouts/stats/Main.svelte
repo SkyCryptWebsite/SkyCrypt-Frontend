@@ -4,9 +4,9 @@
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
   import { getHoverContext, getInternalState, getPreferences, getProfileContext, getRecentSearches, ProfileContext, setProfileContext } from "$ctx";
-  import ContainedItemsGrid from "$lib/components/item/ContainedItemsGrid.svelte";
-  import ItemContent from "$lib/components/item/item-content.svelte";
-  import Navbar from "$lib/components/misc/Navbar.svelte";
+  import { ContainedItemsGrid } from "$lib/components/item";
+  import { ItemContent } from "$lib/components/item";
+  import { Navbar } from "$lib/components/misc";
   import Skin3D from "$lib/components/misc/Skin3D.svelte";
   import AdditionalStats from "$lib/layouts/stats/AdditionalStats.svelte";
   import PlayerProfile from "$lib/layouts/stats/PlayerProfile.svelte";

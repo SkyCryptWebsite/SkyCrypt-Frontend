@@ -1,6 +1,6 @@
 <script lang="ts" generics="T">
   import type { Snippet } from "svelte";
-  import Notice from "$lib/components/notices/Notice.svelte";
+  import { Notice } from "$lib/components/notices";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
 
   let { promise, children }: { promise: Promise<T>; children: Snippet<[T]> } = $props();

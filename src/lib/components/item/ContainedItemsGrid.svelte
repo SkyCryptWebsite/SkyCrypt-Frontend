@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getInternalState } from "$ctx";
-  import Item from "$lib/components/item/Item.svelte";
+  import { Item } from "$lib/components/item";
   import type { ModelsStrippedItem } from "$lib/shared/api/orval-generated";
 
   type Props = {

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getHoverContext, getInternalState, getPreferences } from "$ctx";
-  import ItemContent from "$lib/components/item/item-content.svelte";
+  import { ItemContent } from "$lib/components/item";
   import type { ModelsStrippedItem } from "$lib/shared/api/orval-generated";
   import { RARITIES, RARITY_COLORS } from "$lib/shared/constants/rarities";
   import { getRarityClass, shouldShine } from "$lib/shared/helper";

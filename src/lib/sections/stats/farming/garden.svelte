@@ -1,11 +1,11 @@
 <script lang="ts">
   import { getProfileContext } from "$ctx";
-  import AdditionStat from "$lib/components/stats/AdditionStat.svelte";
-  import GardenPlotGrid from "$lib/components/stats/GardenPlotGrid.svelte";
-  import Chip from "$lib/components/misc/Chip.svelte";
-  import ScrollItems from "$lib/components/misc/ScrollItems.svelte";
-  import SectionSubtitle from "$lib/components/sections/SectionSubtitle.svelte";
-  import SectionBoundary from "$lib/components/sections/SectionBoundary.svelte";
+  import { AdditionStat } from "$lib/components/stats";
+  import { GardenPlotGrid } from "$lib/components/stats";
+  import { Chip } from "$lib/components/misc";
+  import { ScrollItems } from "$lib/components/misc";
+  import { SectionSubtitle } from "$lib/components/sections";
+  import { SectionBoundary } from "$lib/components/sections";
   import { type ModelsGarden } from "$lib/shared/api/orval-generated";
   import { getGarden } from "$lib/shared/api/skycrypt-api.remote";
   import { calculatePercentage, formatNumber, getRarityClass } from "$lib/shared/helper";

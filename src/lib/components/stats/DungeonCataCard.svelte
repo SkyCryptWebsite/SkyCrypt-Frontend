@@ -1,7 +1,7 @@
 <script lang="ts">
-  import AdditionStat from "$lib/components/stats/AdditionStat.svelte";
-  import ScrollItems from "$lib/components/misc/ScrollItems.svelte";
-  import SectionSubtitle from "$lib/components/sections/SectionSubtitle.svelte";
+  import { AdditionStat } from "$lib/components/stats";
+  import { ScrollItems } from "$lib/components/misc";
+  import { SectionSubtitle } from "$lib/components/sections";
   import { type ModelsFormattedDungeonFloor } from "$lib/shared/api/orval-generated";
   import { formatNumber } from "$lib/shared/helper";
   import { tz } from "@date-fns/tz";

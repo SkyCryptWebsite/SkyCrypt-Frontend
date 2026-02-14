@@ -1,5 +1,5 @@
 <script lang="ts">
-  import AdditionStat from "$lib/components/stats/AdditionStat.svelte";
+  import { AdditionStat } from "$lib/components/stats";
   import { type SkycryptSrcModelsNetworthResult } from "$lib/shared/api/orval-generated";
   import { formatNumber } from "$lib/shared/helper";
   import { format as numberFormat } from "numerable";

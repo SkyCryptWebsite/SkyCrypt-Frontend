@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getPreferences } from "$ctx";
-  import SectionBoundary from "$lib/components/sections/SectionBoundary.svelte";
+  import { SectionBoundary } from "$lib/components/sections";
   import { type ModelsStrippedItem } from "$lib/shared/api/orval-generated";
   import { searchInventorySection } from "$lib/shared/api/skycrypt-api.remote";
   import { shouldShine } from "$lib/shared/helper";

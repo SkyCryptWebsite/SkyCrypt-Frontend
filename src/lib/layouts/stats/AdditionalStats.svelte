@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getHoverContext, getPreferences, getProfileContext } from "$ctx";
-  import AdditionStat from "$lib/components/stats/AdditionStat.svelte";
-  import NetworthCard from "$lib/components/stats/NetworthCard.svelte";
+  import { AdditionStat } from "$lib/components/stats";
+  import { NetworthCard } from "$lib/components/stats";
   import { getNetworth } from "$lib/shared/api/skycrypt-api.remote";
   import { calculatePercentage, formatNumber } from "$lib/shared/helper";
   import { cn, flyAndScale } from "$lib/shared/utils";

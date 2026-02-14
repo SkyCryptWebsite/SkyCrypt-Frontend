@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getHoverContext, getInternalState } from "$ctx";
-  import AdditionStat from "$lib/components/stats/AdditionStat.svelte";
+  import { AdditionStat } from "$lib/components/stats";
   import { type ModelsPlotLayout } from "$lib/shared/api/orval-generated";
   import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
   import { renderLore } from "$lib/shared/helper";

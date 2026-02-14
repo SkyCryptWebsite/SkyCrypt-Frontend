@@ -1,9 +1,9 @@
 <script lang="ts">
   import { getProfileContext } from "$ctx";
-  import AdditionStat from "$lib/components/stats/AdditionStat.svelte";
-  import Bonus from "$lib/components/stats/Bonus.svelte";
-  import ScrollItems from "$lib/components/misc/ScrollItems.svelte";
-  import Section from "$lib/components/sections/Section.svelte";
+  import { AdditionStat } from "$lib/components/stats";
+  import { Bonus } from "$lib/components/stats";
+  import { ScrollItems } from "$lib/components/misc";
+  import { Section } from "$lib/components/sections";
   import { getSlayerSection } from "$lib/shared/api/skycrypt-api.remote";
   import { calculatePercentage } from "$lib/shared/helper";
   import Image from "@lucide/svelte/icons/image";

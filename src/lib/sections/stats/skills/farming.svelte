@@ -1,10 +1,10 @@
 <script lang="ts">
   import { getSkillsContext } from "$ctx";
-  import AdditionStat from "$lib/components/stats/AdditionStat.svelte";
-  import Chip from "$lib/components/misc/Chip.svelte";
-  import Item from "$lib/components/item/Item.svelte";
-  import ScrollItems from "$lib/components/misc/ScrollItems.svelte";
-  import SectionSubtitle from "$lib/components/sections/SectionSubtitle.svelte";
+  import { AdditionStat } from "$lib/components/stats";
+  import { Chip } from "$lib/components/misc";
+  import { Item } from "$lib/components/item";
+  import { ScrollItems } from "$lib/components/misc";
+  import { SectionSubtitle } from "$lib/components/sections";
   import Items from "$lib/layouts/stats/Items.svelte";
   import Garden from "$lib/sections/stats/farming/garden.svelte";
   import { formatNumber, renderLore } from "$lib/shared/helper";

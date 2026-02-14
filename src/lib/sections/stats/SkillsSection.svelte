@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getProfileContext, setSkillsContext, SkillsContext } from "$ctx";
-  import Notice from "$lib/components/notices/Notice.svelte";
-  import Section from "$lib/components/sections/Section.svelte";
+  import { Notice } from "$lib/components/notices";
+  import { Section } from "$lib/components/sections";
   import { getSkillsSection } from "$lib/shared/api/skycrypt-api.remote";
   import Enchanting from "./skills/enchanting.svelte";
   import Farming from "./skills/farming.svelte";
