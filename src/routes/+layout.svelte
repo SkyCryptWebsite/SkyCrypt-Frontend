@@ -2,10 +2,9 @@
   import { browser, dev } from "$app/environment";
   import { beforeNavigate } from "$app/navigation";
   import { page, updated } from "$app/state";
-  import { initDisabledPacks, initPreferences, initTheme, initWikiOrder, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
-  import { initInternalState } from "$ctx/internal.svelte";
-  import CommandPalette from "$lib/components/misc/CommandPalette.svelte";
+  import { initDisabledPacks, initFavorites, initInternalState, initPreferences, initRecentSearches, initTheme, initWikiOrder, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
   import Header from "$lib/components/header/Header.svelte";
+  import CommandPalette from "$lib/components/misc/CommandPalette.svelte";
   import PerformanceMode from "$lib/components/misc/PerformanceMode.svelte";
   import { IsHover } from "$lib/hooks/is-hover.svelte";
   import { IsMobile } from "$lib/hooks/is-mobile.svelte";
@@ -70,6 +69,8 @@
 
   initDisabledPacks();
   initWikiOrder();
+  initFavorites();
+  initRecentSearches();
 
   setMobileContext(isMobile);
   setHoverContext(isHover);
