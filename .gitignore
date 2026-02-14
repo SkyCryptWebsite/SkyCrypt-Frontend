@@ -113,3 +113,4 @@ vite.config.ts.timestamp-*
 .env.sentry-build-plugin
 # Playwright
 test-results
+coverage/

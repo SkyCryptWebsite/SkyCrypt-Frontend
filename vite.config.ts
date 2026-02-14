@@ -19,6 +19,11 @@ export default defineConfig({
   build: { sourcemap: true },
   test: {
     expect: { requireAssertions: true },
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "html"],
+      reportsDirectory: "./coverage"
+    },
     projects: [
       {
         extends: "./vite.config.ts",
