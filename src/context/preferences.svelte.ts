@@ -105,10 +105,10 @@ export class PreferencesContext {
       this.keybind = value;
     });
     loadOldStorageKey("showGlint", (value: boolean) => {
-      this.showGlint = value;
+      this.showGlint = typeof value === "string" ? value === "true" : value;
     });
     loadOldStorageKey("rainbowEnchantments", (value: boolean) => {
-      this.rainbowEnchantments = value;
+      this.rainbowEnchantments = typeof value === "string" ? value === "true" : value;
     });
   }
 }
