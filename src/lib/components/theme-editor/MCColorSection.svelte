@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { ThemeV3 } from "$lib/shared/themes/schema";
   import { MC_PALETTES, paletteNames } from "$lib/shared/themes/presets";
+  import type { ThemeV3 } from "$lib/shared/themes/schema";
   import { Label } from "bits-ui";
 
   let { workingTheme } = $props<{
@@ -36,17 +36,17 @@
       value={workingTheme.minecraft.palette}
       onchange={(e) => {
         const val = e.currentTarget.value;
-        if (val) workingTheme.minecraft.palette = val as any;
+        if (val) workingTheme.minecraft.palette = val;
       }}
       class="flex h-10 w-full items-center justify-between rounded-lg border border-text/10 bg-text/5 px-3 py-2 text-sm text-text transition-colors hover:bg-text/10 focus:ring-2 focus:ring-link focus:ring-offset-2 focus:outline-none">
-      {#each paletteNames as name}
+      {#each paletteNames as name, index (index)}
         <option value={name}>{name}</option>
       {/each}
     </select>
   </div>
 
   <div class="grid grid-cols-4 gap-3 sm:grid-cols-8">
-    {#each mcCodes as code}
+    {#each mcCodes as code, index (index)}
       {@const effectiveColor = getEffectiveColor(code)}
       <div class="flex flex-col gap-1.5">
         <div class="flex items-center justify-between">

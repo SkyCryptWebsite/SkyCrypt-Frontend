@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { ThemeV3, ColorBackground, StripesBackground } from "$lib/shared/themes/schema";
-  import { Label, RadioGroup } from "bits-ui";
+  import type { ColorBackground, StripesBackground, ThemeV3 } from "$lib/shared/themes/schema";
   import Check from "@lucide/svelte/icons/check";
   import ImageIcon from "@lucide/svelte/icons/image";
+  import { Label, RadioGroup } from "bits-ui";
 
   let { workingTheme } = $props<{
     workingTheme: ThemeV3;
@@ -35,7 +35,7 @@
     <h3 class="text-sm font-bold tracking-wider text-text/60 uppercase">Skillbar Background</h3>
 
     <RadioGroup.Root value={workingTheme.backgrounds.skillbar.type} onValueChange={(v) => setBackgroundType("skillbar", v as "color" | "stripes")} class="flex gap-4">
-      {#each backgroundTypes as type}
+      {#each backgroundTypes as type, index (index)}
         <div class="flex items-center gap-2">
           <RadioGroup.Item value={type.value} id={`skillbar-${type.value}`} class="group flex size-4 items-center justify-center rounded-full border border-text/20 bg-text/5 text-link transition-all hover:bg-text/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-link focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-link data-[state=checked]:bg-link data-[state=checked]:text-background">
             <Check class="size-2.5 opacity-0 transition-opacity group-data-[state=checked]:opacity-100" />
@@ -76,7 +76,7 @@
     <h3 class="text-sm font-bold tracking-wider text-text/60 uppercase">Maxedbar Background</h3>
 
     <RadioGroup.Root value={workingTheme.backgrounds.maxedbar.type} onValueChange={(v) => setBackgroundType("maxedbar", v as "color" | "stripes")} class="flex gap-4">
-      {#each backgroundTypes as type}
+      {#each backgroundTypes as type, index (index)}
         <div class="flex items-center gap-2">
           <RadioGroup.Item value={type.value} id={`maxedbar-${type.value}`} class="group flex size-4 items-center justify-center rounded-full border border-text/20 bg-text/5 text-link transition-all hover:bg-text/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-link focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-link data-[state=checked]:bg-link data-[state=checked]:text-background">
             <Check class="size-2.5 opacity-0 transition-opacity group-data-[state=checked]:opacity-100" />

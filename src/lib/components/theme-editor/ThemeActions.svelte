@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { getTheme, getInternalState } from "$ctx";
+  import { getInternalState } from "$ctx";
   import type { ThemeV3 } from "$lib/shared/themes/schema";
   import { getThemeShareURL } from "$lib/shared/themes/sharing";
-  import { Button, Label } from "bits-ui";
-  import Save from "@lucide/svelte/icons/save";
   import RotateCcw from "@lucide/svelte/icons/rotate-ccw";
+  import Save from "@lucide/svelte/icons/save";
   import Share2 from "@lucide/svelte/icons/share-2";
   import X from "@lucide/svelte/icons/x";
+  import { Button, Label } from "bits-ui";
 
   let { workingTheme, onReset, onSave } = $props<{
     workingTheme: ThemeV3;

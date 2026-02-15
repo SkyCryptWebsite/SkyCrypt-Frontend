@@ -1,5 +1,5 @@
 import { describe, it } from "vitest";
-import { MC_PALETTES, paletteNames, getPaletteColors } from "./presets";
+import { getPaletteColors, MC_PALETTES, paletteNames } from "./presets";
 
 describe.concurrent("Minecraft Palette Tests", () => {
   describe.concurrent("MC_PALETTES Structure", () => {
@@ -54,8 +54,8 @@ describe.concurrent("Minecraft Palette Tests", () => {
     it("should have all palette values as valid OKLCH strings", ({ expect }) => {
       const oklchRegex = /^oklch\([\d.]+ [\d.]+ [\d.]+\)$/;
 
-      Object.entries(MC_PALETTES).forEach(([paletteName, palette]) => {
-        Object.entries(palette).forEach(([code, color]) => {
+      Object.entries(MC_PALETTES).forEach(([_paletteName, palette]) => {
+        Object.entries(palette).forEach(([_code, color]) => {
           expect(color).toMatch(oklchRegex);
         });
       });
@@ -156,7 +156,7 @@ describe.concurrent("Minecraft Palette Tests", () => {
 
   describe.concurrent("Palette Color Validation", () => {
     it("should have distinct colors for each code within a palette", ({ expect }) => {
-      Object.entries(MC_PALETTES).forEach(([paletteName, palette]) => {
+      Object.entries(MC_PALETTES).forEach(([_paletteName, palette]) => {
         const colorValues = Object.values(palette);
         const uniqueColors = new Set(colorValues);
 
@@ -177,8 +177,8 @@ describe.concurrent("Minecraft Palette Tests", () => {
     it("should have consistent OKLCH format across all palettes", ({ expect }) => {
       const oklchRegex = /^oklch\(([\d.]+) ([\d.]+) ([\d.]+)\)$/;
 
-      Object.entries(MC_PALETTES).forEach(([paletteName, palette]) => {
-        Object.entries(palette).forEach(([code, color]) => {
+      Object.entries(MC_PALETTES).forEach(([_paletteName, palette]) => {
+        Object.entries(palette).forEach(([_code, color]) => {
           const match = color.match(oklchRegex);
           expect(match).not.toBeNull();
 

@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { getTheme, getInternalState } from "$ctx";
-  import { ThemeEngine } from "$lib/shared/themes/engine";
+  import { getInternalState, getTheme } from "$ctx";
   import { DEFAULT_THEME } from "$lib/shared/themes/defaults";
+  import { ThemeEngine } from "$lib/shared/themes/engine";
   import { partialThemeV3Schema, type ThemeV3 } from "$lib/shared/themes/schema";
   import { Tabs } from "bits-ui";
-  import ColorSection from "./ColorSection.svelte";
   import BackgroundSection from "./BackgroundSection.svelte";
+  import ColorSection from "./ColorSection.svelte";
   import MCColorSection from "./MCColorSection.svelte";
   import ThemeActions from "./ThemeActions.svelte";
 
@@ -113,7 +113,7 @@
         <label for="fork-select" class="text-xs font-bold text-text/60 uppercase">Start From</label>
         <select id="fork-select" onchange={(e) => handleFork(e.currentTarget.value)} class="flex h-10 w-full items-center justify-between rounded-lg border border-text/10 bg-text/5 px-3 py-2 text-sm text-text transition-colors hover:bg-text/10 focus:ring-2 focus:ring-link focus:ring-offset-2 focus:outline-none">
           <option value="" disabled selected>Select a theme...</option>
-          {#each themeContext.allThemes as theme}
+          {#each themeContext.allThemes as theme, index (index)}
             <option value={theme.id}>{theme.name}</option>
           {/each}
         </select>

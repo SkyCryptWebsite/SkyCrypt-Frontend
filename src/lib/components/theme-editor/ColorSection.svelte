@@ -23,11 +23,11 @@
 </script>
 
 <div class="flex flex-col gap-6 p-4">
-  {#each GROUPS as group}
+  {#each GROUPS as group, index (index)}
     <div class="flex flex-col gap-3">
       <h3 class="text-sm font-bold tracking-wider text-text/60 uppercase">{group.name}</h3>
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {#each group.keys as key}
+        {#each group.keys as key, index (index)}
           <div class="flex flex-col gap-1.5">
             <div class="flex items-center justify-between">
               <Label.Root for={`color-${key}`} class="text-xs font-semibold text-text/80">{formatKey(key)}</Label.Root>
