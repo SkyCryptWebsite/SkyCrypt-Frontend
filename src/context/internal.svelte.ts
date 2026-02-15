@@ -12,6 +12,8 @@ interface InternalStateData {
   itemContentSpecial: ModelsStrippedItem | undefined;
   content: Snippet | undefined;
   openCommand: boolean;
+  themeEditorOpen: boolean;
+  themeEditorId: string | null;
   settingsOpen: boolean;
   settingsTab: SettingsTab;
 }
@@ -24,6 +26,8 @@ export class InternalStateContext {
     itemContentSpecial: undefined,
     content: undefined,
     openCommand: false,
+    themeEditorOpen: false,
+    themeEditorId: null,
     settingsOpen: false,
     settingsTab: SettingsTab.Packs
   });
@@ -74,6 +78,22 @@ export class InternalStateContext {
 
   set openCommand(value: boolean) {
     this.#data.openCommand = value;
+  }
+
+  get themeEditorOpen() {
+    return this.#data.themeEditorOpen;
+  }
+
+  set themeEditorOpen(value: boolean) {
+    this.#data.themeEditorOpen = value;
+  }
+
+  get themeEditorId() {
+    return this.#data.themeEditorId;
+  }
+
+  set themeEditorId(value: string | null) {
+    this.#data.themeEditorId = value;
   }
 
   get settingsOpen() {
