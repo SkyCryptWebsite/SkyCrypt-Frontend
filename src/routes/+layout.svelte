@@ -5,10 +5,10 @@
   import { initDisabledPacks, initFavorites, initInternalState, initPreferences, initRecentSearches, initTheme, initWikiOrder, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
   import Header from "$lib/components/header/Header.svelte";
   import { CommandPalette, PerformanceMode } from "$lib/components/misc";
+  import ThemeEditor from "$lib/components/theme-editor/ThemeEditor.svelte";
   import { IsHover } from "$lib/hooks/is-hover.svelte";
   import { IsMobile } from "$lib/hooks/is-mobile.svelte";
   import { getPacks } from "$lib/shared/api/skycrypt-api.remote";
-  import themes from "$lib/shared/constants/themes";
   import { cn } from "$lib/shared/utils";
   import Wifi from "@lucide/svelte/icons/wifi";
   import WifiOff from "@lucide/svelte/icons/wifi-off";
@@ -17,6 +17,7 @@
   import SvelteSeo from "svelte-seo";
   import { toast, Toaster, type ToasterProps } from "svelte-sonner";
   import { writable } from "svelte/store";
+  import { fly } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
   import "../app.css";
 
@@ -136,7 +137,7 @@
       // @ts-expect-error It accepts any property
       image: "/img/app-icons/svg.svg"
     }}
-    themeColor={themes.find((theme) => theme.id === themeContext.current)?.light ? "#dbdbdb" : "#282828"}
+    themeColor={themeContext.activeTheme?.light ? "#dbdbdb" : "#282828"}
     manifest="/manifest.webmanifest" />
 {/if}
 
@@ -172,6 +173,26 @@
   {@render children()}
 </Tooltip.Provider>
 <CommandPalette {ign} bind:loading={commandLoading} />
+
+{#if internalState.themeEditorOpen && !isMobile.current}
+  <div class="fixed top-0 left-0 z-50 h-dvh w-[30vw] border-r border-text/10 bg-background/80 shadow-2xl backdrop-blur-xl" transition:fly={{ x: -300, duration: 300 }}>
+    <ThemeEditor />
+  </div>
+{/if}
+
+{#if isMobile.current}
+  <Drawer.Root bind:open={internalState.themeEditorOpen} shouldScaleBackground={true}>
+    <Drawer.Portal>
+      <Drawer.Overlay class="fixed inset-0 z-40 bg-black/80" />
+      <Drawer.Content class="fixed right-0 bottom-0 left-0 z-50 flex h-[90dvh] flex-col rounded-t-[10px] bg-background-lore outline-none">
+        <div class="mx-auto mt-4 mb-4 h-1.5 w-12 flex-shrink-0 rounded-full bg-text/10"></div>
+        <div class="flex-1 overflow-hidden">
+          <ThemeEditor />
+        </div>
+      </Drawer.Content>
+    </Drawer.Portal>
+  </Drawer.Root>
+{/if}
 
 {#if !isHover.current}
   <Drawer.Root
