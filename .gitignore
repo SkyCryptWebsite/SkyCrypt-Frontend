@@ -116,3 +116,6 @@ test-results
 coverage/
 playwright-report/
 test-results/
+
+# Sisyphus planning artifacts
+.sisyphus/
