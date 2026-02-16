@@ -2,11 +2,23 @@ import { browser } from "$app/environment";
 import { loadOldStorageKey } from "$ctx/utils";
 import { DEFAULT_THEME, mergeThemeWithDefaults, ThemeEngine, type ThemeV3 } from "$lib/shared/themes";
 import { FIRST_PARTY_THEMES } from "$lib/shared/themes/first-party";
+import * as devalue from "devalue";
 import { PersistedState } from "runed";
 import { createContext, untrack } from "svelte";
 
+const devalueSerializer = {
+  serialize: devalue.stringify,
+  deserialize: <T>(value: string): T | undefined => {
+    try {
+      return devalue.parse(value) as T;
+    } catch {
+      return undefined;
+    }
+  }
+};
+
 export class ThemeContext {
-  #themes = new PersistedState<ThemeV3[]>("skycryptThemes", []);
+  #themes = new PersistedState<ThemeV3[]>("skycryptThemes", [], { serializer: devalueSerializer });
   #activeId = new PersistedState<string>("skycryptActiveTheme", "default");
 
   constructor() {
@@ -46,7 +58,7 @@ export class ThemeContext {
   }
 
   get allThemes(): ThemeV3[] {
-    return [...FIRST_PARTY_THEMES, ...this.userThemes, DEFAULT_THEME];
+    return [...FIRST_PARTY_THEMES, ...this.userThemes];
   }
 
   get userThemes(): ThemeV3[] {
@@ -54,19 +66,19 @@ export class ThemeContext {
   }
 
   saveTheme(theme: ThemeV3): void {
-    if (this.isFirstParty(theme.id)) {
-      console.warn(`Cannot save first-party theme: ${theme.id}`);
+    if (this.isFirstParty(theme.metadata.id)) {
+      console.warn(`Cannot save first-party theme: ${theme.metadata.id}`);
       return;
     }
 
-    const existingIndex = this.#themes.current.findIndex((t) => t.id === theme.id);
+    const existingIndex = this.#themes.current.findIndex((t) => t.metadata.id === theme.metadata.id);
 
     if (existingIndex >= 0) {
       const updated = [...this.#themes.current];
       updated[existingIndex] = {
         ...theme,
-        meta: {
-          ...theme.meta,
+        metadata: {
+          ...theme.metadata,
           updatedAt: Date.now()
         }
       };
@@ -76,7 +88,8 @@ export class ThemeContext {
         ...this.#themes.current,
         {
           ...theme,
-          meta: {
+          metadata: {
+            ...theme.metadata,
             createdAt: Date.now(),
             updatedAt: Date.now(),
             version: 1
@@ -92,7 +105,7 @@ export class ThemeContext {
       return;
     }
 
-    this.#themes.current = this.#themes.current.filter((t) => t.id !== id);
+    this.#themes.current = this.#themes.current.filter((t) => t.metadata.id !== id);
 
     if (this.activeThemeId === id) {
       this.activeThemeId = "default";
@@ -106,9 +119,10 @@ export class ThemeContext {
     const duplicateId = `${id}-copy-${Date.now()}`;
     const duplicate: ThemeV3 = {
       ...original,
-      id: duplicateId,
-      name: `${original.name} (Copy)`,
-      meta: {
+      metadata: {
+        ...original.metadata,
+        id: duplicateId,
+        name: `${original.metadata.name} (Copy)`,
         createdAt: Date.now(),
         updatedAt: Date.now(),
         version: 1
@@ -120,16 +134,16 @@ export class ThemeContext {
   }
 
   isFirstParty(id: string): boolean {
-    return id === "default" || FIRST_PARTY_THEMES.some((t) => t.id === id);
+    return id === "default" || FIRST_PARTY_THEMES.some((t) => t.metadata.id === id);
   }
 
   #resolveTheme(id: string): ThemeV3 | null {
     if (id === "default") return DEFAULT_THEME;
 
-    const firstParty = FIRST_PARTY_THEMES.find((t) => t.id === id);
+    const firstParty = FIRST_PARTY_THEMES.find((t) => t.metadata.id === id);
     if (firstParty) return firstParty;
 
-    const userTheme = this.#themes.current.find((t) => t.id === id);
+    const userTheme = this.#themes.current.find((t) => t.metadata.id === id);
     if (userTheme) return mergeThemeWithDefaults(userTheme);
 
     return null;

@@ -1,13 +1,16 @@
-import { describe, it, expect } from "vitest";
-import { encodeTheme, decodeTheme, parseThemeFromURL } from "$lib/shared/themes/sharing";
 import { DEFAULT_THEME } from "$lib/shared/themes/defaults";
+import { decodeTheme, encodeTheme, parseThemeFromURL } from "$lib/shared/themes/sharing";
+import { describe, expect, it } from "vitest";
 
 describe("Theme Sharing", () => {
   describe("encodeTheme / decodeTheme", () => {
     it("should roundtrip a theme with overrides", async () => {
       const testTheme = {
         ...DEFAULT_THEME,
-        name: "Test Theme",
+        metadata: {
+          ...DEFAULT_THEME.metadata,
+          name: "Test Theme"
+        },
         colors: {
           ...DEFAULT_THEME.colors,
           icon: "oklch(0.5 0.1 100)"
@@ -26,7 +29,7 @@ describe("Theme Sharing", () => {
       expect(decoded).not.toBeNull();
       expect(decoded!.colors.icon).toBe("oklch(0.5 0.1 100)");
       expect(decoded!.colors.link).toBe(DEFAULT_THEME.colors.link);
-      expect(decoded!.name).toBe("Test Theme");
+      expect(decoded!.metadata.name).toBe("Test Theme");
     });
 
     it("should produce compact strings for minimal changes", async () => {
@@ -74,20 +77,20 @@ describe("Theme Sharing", () => {
       };
 
       const encoded = await encodeTheme(testTheme);
-      const url = `https://example.com/page#theme=${encoded}`;
+      const url = `https://example.com/page?theme=${encoded}`;
       const parsed = await parseThemeFromURL(url);
 
       expect(parsed).not.toBeNull();
       expect(parsed!.colors.icon).toBe("oklch(0.5 0.1 100)");
     });
 
-    it("should return null for URL without hash", async () => {
+    it("should return null for URL without theme param", async () => {
       const result = await parseThemeFromURL("https://example.com/page");
       expect(result).toBeNull();
     });
 
-    it("should return null for URL with invalid hash", async () => {
-      const result = await parseThemeFromURL("https://example.com/page#theme=invalid");
+    it("should return null for URL with invalid theme param", async () => {
+      const result = await parseThemeFromURL("https://example.com/page?theme=invalid");
       expect(result).toBeNull();
     });
   });

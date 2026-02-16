@@ -1,7 +1,8 @@
-import type { ThemeV3, PartialThemeV3 } from "./schema";
-import { partialThemeV3Schema } from "./schema";
+import * as devalue from "devalue";
 import { DEFAULT_THEME } from "./defaults";
 import { mergeThemeWithDefaults } from "./engine";
+import type { PartialThemeV3, ThemeV3 } from "./schema";
+import { partialThemeV3Schema } from "./schema";
 
 /**
  * URL-based theme sharing utilities
@@ -15,10 +16,30 @@ import { mergeThemeWithDefaults } from "./engine";
 function stripDefaults(theme: ThemeV3, defaults: ThemeV3): PartialThemeV3 {
   const partial: PartialThemeV3 = {};
 
+  // Metadata
+  const metadataDiffs: Partial<ThemeV3["metadata"]> = {};
+  let hasMetadataDiffs = false;
+
+  if (theme.metadata.id !== defaults.metadata.id) {
+    metadataDiffs.id = theme.metadata.id;
+    hasMetadataDiffs = true;
+  }
+  if (theme.metadata.name !== defaults.metadata.name) {
+    metadataDiffs.name = theme.metadata.name;
+    hasMetadataDiffs = true;
+  }
+  if (theme.metadata.author !== defaults.metadata.author) {
+    metadataDiffs.author = theme.metadata.author;
+    hasMetadataDiffs = true;
+  }
+  if (theme.metadata.version !== defaults.metadata.version) {
+    metadataDiffs.version = theme.metadata.version;
+    hasMetadataDiffs = true;
+  }
+
+  if (hasMetadataDiffs) partial.metadata = metadataDiffs;
+
   // Top-level primitives
-  if (theme.id !== defaults.id) partial.id = theme.id;
-  if (theme.name !== defaults.name) partial.name = theme.name;
-  if (theme.author !== defaults.author) partial.author = theme.author;
   if (theme.light !== defaults.light) partial.light = theme.light;
 
   // Colors (nested object)
@@ -37,20 +58,17 @@ function stripDefaults(theme: ThemeV3, defaults: ThemeV3): PartialThemeV3 {
   const backgroundDiffs: Partial<ThemeV3["backgrounds"]> = {};
   let hasBackgroundDiffs = false;
 
-  // Skillbar
-  if (JSON.stringify(theme.backgrounds.skillbar) !== JSON.stringify(defaults.backgrounds.skillbar)) {
+  if (devalue.stringify(theme.backgrounds.skillbar) !== devalue.stringify(defaults.backgrounds.skillbar)) {
     backgroundDiffs.skillbar = theme.backgrounds.skillbar;
     hasBackgroundDiffs = true;
   }
 
-  // Maxedbar
-  if (JSON.stringify(theme.backgrounds.maxedbar) !== JSON.stringify(defaults.backgrounds.maxedbar)) {
+  if (devalue.stringify(theme.backgrounds.maxedbar) !== devalue.stringify(defaults.backgrounds.maxedbar)) {
     backgroundDiffs.maxedbar = theme.backgrounds.maxedbar;
     hasBackgroundDiffs = true;
   }
 
-  // Page background
-  if (JSON.stringify(theme.backgrounds.page) !== JSON.stringify(defaults.backgrounds.page)) {
+  if (devalue.stringify(theme.backgrounds.page) !== devalue.stringify(defaults.backgrounds.page)) {
     backgroundDiffs.page = theme.backgrounds.page;
     hasBackgroundDiffs = true;
   }
@@ -66,7 +84,7 @@ function stripDefaults(theme: ThemeV3, defaults: ThemeV3): PartialThemeV3 {
     hasMinecraftDiffs = true;
   }
 
-  if (JSON.stringify(theme.minecraft.overrides) !== JSON.stringify(defaults.minecraft.overrides)) {
+  if (devalue.stringify(theme.minecraft.overrides) !== devalue.stringify(defaults.minecraft.overrides)) {
     minecraftDiffs.overrides = theme.minecraft.overrides;
     hasMinecraftDiffs = true;
   }
@@ -76,11 +94,6 @@ function stripDefaults(theme: ThemeV3, defaults: ThemeV3): PartialThemeV3 {
   // Enchanted glint (optional field)
   if (theme.enchantedGlint !== defaults.enchantedGlint) {
     partial.enchantedGlint = theme.enchantedGlint;
-  }
-
-  // Meta (only include version if changed, timestamps are ephemeral)
-  if (theme.meta.version !== defaults.meta.version) {
-    partial.meta = { version: theme.meta.version };
   }
 
   return partial;
@@ -128,7 +141,7 @@ export async function encodeTheme(theme: ThemeV3): Promise<string> {
   const partial = stripDefaults(theme, DEFAULT_THEME);
 
   // 2. JSON stringify
-  const json = JSON.stringify(partial);
+  const json = devalue.stringify(partial);
 
   // 3. Compress using browser-native CompressionStream
   const encoder = new TextEncoder();
@@ -173,7 +186,7 @@ export async function decodeTheme(hash: string): Promise<ThemeV3 | null> {
     const json = decoder.decode(decompressedData);
 
     // 3. Parse JSON
-    const parsed = JSON.parse(json);
+    const parsed = devalue.parse(json);
 
     // 4. Validate with Zod
     const result = partialThemeV3Schema.safeParse(parsed);
@@ -191,11 +204,11 @@ export async function decodeTheme(hash: string): Promise<ThemeV3 | null> {
  * Generate shareable URL with encoded theme in hash fragment
  *
  * @param theme - Full theme to share
- * @returns Full URL with #theme=<encoded> hash
+ * @returns URL with ?theme=<encoded> hash
  */
 export async function getThemeShareURL(theme: ThemeV3): Promise<string> {
   const encoded = await encodeTheme(theme);
-  return `${window.location.origin}${window.location.pathname}#theme=${encoded}`;
+  return `${window.location.origin}?theme=${encoded}`;
 }
 
 /**
@@ -206,7 +219,7 @@ export async function getThemeShareURL(theme: ThemeV3): Promise<string> {
  * @returns Full theme or null if invalid
  */
 export async function parseThemeFromURL(url: string): Promise<ThemeV3 | null> {
-  const match = url.match(/#theme=([^&]+)/);
+  const match = url.match(/\?theme=([^&]+)/);
   if (!match) return null;
 
   return await decodeTheme(match[1]);
