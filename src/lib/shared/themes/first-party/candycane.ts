@@ -1,9 +1,6 @@
 import type { ThemeV3 } from "../schema";
 
 export const candycaneTheme = {
-  id: "candycane",
-  name: "Candy Cane Theme",
-  author: "Cookie_Wookie_7",
   schema: 3,
   light: true,
   colors: {
@@ -42,7 +39,10 @@ export const candycaneTheme = {
     palette: "nice-light",
     overrides: undefined
   },
-  meta: {
+  metadata: {
+    id: "candycane",
+    name: "Candy Cane Theme",
+    author: "Cookie_Wookie_7",
     createdAt: Date.now(),
     updatedAt: Date.now(),
     version: 1

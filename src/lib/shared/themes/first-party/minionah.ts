@@ -1,9 +1,6 @@
 import type { ThemeV3 } from "../schema";
 
 export const minionahTheme = {
-  id: "minionah",
-  name: "MinionAH Theme",
-  author: "DarthGigi",
   schema: 3,
   light: false,
   colors: {
@@ -35,7 +32,10 @@ export const minionahTheme = {
     palette: "nice-dark",
     overrides: undefined
   },
-  meta: {
+  metadata: {
+    id: "minionah",
+    name: "MinionAH Theme",
+    author: "DarthGigi",
     createdAt: Date.now(),
     updatedAt: Date.now(),
     version: 1

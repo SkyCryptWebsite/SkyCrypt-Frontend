@@ -1,9 +1,6 @@
 import type { ThemeV3 } from "../schema";
 
 export const lightTheme = {
-  id: "default-light",
-  name: "Default Light Theme",
-  author: "SkyCrypt Team",
   schema: 3,
   light: true,
   colors: {
@@ -38,7 +35,10 @@ export const lightTheme = {
     palette: "nice-light",
     overrides: undefined
   },
-  meta: {
+  metadata: {
+    id: "default-light",
+    name: "Default Light Theme",
+    author: "SkyCrypt Team",
     createdAt: Date.now(),
     updatedAt: Date.now(),
     version: 1

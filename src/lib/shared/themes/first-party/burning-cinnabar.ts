@@ -1,9 +1,6 @@
 import type { ThemeV3 } from "../schema";
 
 export const burningCinnabarTheme = {
-  id: "burning-cinnabar",
-  name: "Burning Cinnabar Theme",
-  author: "rainbowcraft2",
   schema: 3,
   light: false,
   colors: {
@@ -38,7 +35,10 @@ export const burningCinnabarTheme = {
     palette: "nice-dark",
     overrides: undefined
   },
-  meta: {
+  metadata: {
+    id: "burning-cinnabar",
+    name: "Burning Cinnabar Theme",
+    author: "rainbowcraft2",
     createdAt: Date.now(),
     updatedAt: Date.now(),
     version: 1

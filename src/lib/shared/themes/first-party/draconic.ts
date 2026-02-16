@@ -1,9 +1,6 @@
 import type { ThemeV3 } from "../schema";
 
 export const draconicTheme = {
-  id: "draconic",
-  name: "Draconic Purple Theme",
-  author: "rainbowcraft2",
   schema: 3,
   light: false,
   colors: {
@@ -38,7 +35,10 @@ export const draconicTheme = {
     palette: "nice-dark",
     overrides: undefined
   },
-  meta: {
+  metadata: {
+    id: "draconic",
+    name: "Draconic Purple Theme",
+    author: "rainbowcraft2",
     createdAt: Date.now(),
     updatedAt: Date.now(),
     version: 1

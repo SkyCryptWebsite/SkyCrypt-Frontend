@@ -1,9 +1,6 @@
 import type { ThemeV3 } from "../schema";
 
 export const warpwingTheme = {
-  id: "warpwing",
-  name: "Forest Walk",
-  author: "WarpWing",
   schema: 3,
   light: false,
   colors: {
@@ -38,7 +35,10 @@ export const warpwingTheme = {
     palette: "nice-dark",
     overrides: undefined
   },
-  meta: {
+  metadata: {
+    id: "warpwing",
+    name: "Forest Walk",
+    author: "WarpWing",
     createdAt: Date.now(),
     updatedAt: Date.now(),
     version: 1

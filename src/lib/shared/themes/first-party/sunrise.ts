@@ -1,9 +1,6 @@
 import type { ThemeV3 } from "../schema";
 
 export const sunriseTheme = {
-  id: "sunrise",
-  name: "Sunrise Orange Theme",
-  author: "rainbowcraft2",
   schema: 3,
   light: true,
   colors: {
@@ -38,7 +35,10 @@ export const sunriseTheme = {
     palette: "nice-light",
     overrides: undefined
   },
-  meta: {
+  metadata: {
+    id: "sunrise",
+    name: "Sunrise Orange Theme",
+    author: "rainbowcraft2",
     createdAt: Date.now(),
     updatedAt: Date.now(),
     version: 1

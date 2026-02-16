@@ -1,9 +1,6 @@
 import type { ThemeV3 } from "../schema";
 
 export const aprilFools2024Theme = {
-  id: "april-fools-2024",
-  name: "April Fools 2024 Theme",
-  author: "DuckySoLucky",
   schema: 3,
   light: false,
   colors: {
@@ -42,7 +39,10 @@ export const aprilFools2024Theme = {
     palette: "nice-dark",
     overrides: undefined
   },
-  meta: {
+  metadata: {
+    id: "april-fools-2024",
+    name: "April Fools 2024 Theme",
+    author: "DuckySoLucky",
     createdAt: Date.now(),
     updatedAt: Date.now(),
     version: 1

@@ -1,9 +1,6 @@
 import type { ThemeV3 } from "../schema";
 
 export const defaultTheme = {
-  id: "default",
-  name: "Default Theme",
-  author: "SkyCrypt Team",
   schema: 3,
   light: false,
   colors: {
@@ -12,7 +9,7 @@ export const defaultTheme = {
     hover: "oklch(83.81% 0.2303 149.89)",
     maxed: "oklch(72.84% 0.1506 75.86)",
     gold: "oklch(82.84% 0.1548 78.27)",
-    logo: "oklch(68.48% 0.2338 351.45)",
+    logo: "oklch(77.42% 0.2301 146.782)",
     text: "oklch(1 0 0)",
     background: "oklch(0 0 0)",
     header: "oklch(0.28 0 0)",
@@ -38,7 +35,10 @@ export const defaultTheme = {
     palette: "nice-dark",
     overrides: undefined
   },
-  meta: {
+  metadata: {
+    id: "default",
+    name: "Default Theme",
+    author: "SkyCrypt Team",
     createdAt: Date.now(),
     updatedAt: Date.now(),
     version: 1

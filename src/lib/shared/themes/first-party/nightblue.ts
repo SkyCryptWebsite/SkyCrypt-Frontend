@@ -1,9 +1,6 @@
 import type { ThemeV3 } from "../schema";
 
 export const nightblueTheme = {
-  id: "nightblue",
-  name: "Night Blue Theme",
-  author: "8KCoffeeWizard",
   schema: 3,
   light: false,
   colors: {
@@ -38,7 +35,10 @@ export const nightblueTheme = {
     palette: "nice-dark",
     overrides: undefined
   },
-  meta: {
+  metadata: {
+    id: "nightblue",
+    name: "Night Blue Theme",
+    author: "8KCoffeeWizard",
     createdAt: Date.now(),
     updatedAt: Date.now(),
     version: 1

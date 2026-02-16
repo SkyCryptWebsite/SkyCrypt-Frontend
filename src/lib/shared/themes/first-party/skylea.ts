@@ -1,9 +1,6 @@
 import type { ThemeV3 } from "../schema";
 
 export const skyleaTheme = {
-  id: "skylea",
-  name: "sky.lea.moe",
-  author: "LeaPhant",
   schema: 3,
   light: false,
   colors: {
@@ -39,7 +36,10 @@ export const skyleaTheme = {
     overrides: undefined
   },
   enchantedGlint: "https://sky.shiiyu.moe/img/enchanted-glint-legacy.avif",
-  meta: {
+  metadata: {
+    id: "skylea",
+    name: "sky.lea.moe",
+    author: "LeaPhant",
     createdAt: Date.now(),
     updatedAt: Date.now(),
     version: 1
