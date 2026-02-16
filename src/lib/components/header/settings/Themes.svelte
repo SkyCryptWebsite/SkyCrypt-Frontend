@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { changeTheme, getInternalState, getTheme } from "$ctx";
+  import { getInternalState, getTheme } from "$ctx";
   import { SettingsTab } from "$lib/components/header/types";
   import { getThemeIcons } from "$lib/shared/api/themes.remote";
   import { FIRST_PARTY_THEMES } from "$lib/shared/themes/first-party";
@@ -12,7 +12,6 @@
   import Plus from "@lucide/svelte/icons/plus";
   import Trash2 from "@lucide/svelte/icons/trash-2";
   import { Avatar, Button, Dialog, Label, RadioGroup, Tabs } from "bits-ui";
-  import { flushSync } from "svelte";
   import { toast } from "svelte-sonner";
 
   const themeContext = getTheme();
@@ -66,15 +65,7 @@
     </div>
   </div>
 
-  <RadioGroup.Root
-    class="mt-4 flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto"
-    bind:value={themeContext.current}
-    onValueChange={(v) => {
-      if (!document.startViewTransition) changeTheme(v, themeContext);
-      document.startViewTransition(() => {
-        flushSync(() => changeTheme(v, themeContext));
-      });
-    }}>
+  <RadioGroup.Root class="mt-4 flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto" bind:value={themeContext.current}>
     <h5 class="text-sm font-semibold text-text/60">Official Themes</h5>
     {#each FIRST_PARTY_THEMES as theme (theme.metadata.id)}
       {#await getThemeIcons({ color: theme.colors.logo, invert: theme.light }) then iconSvg}
