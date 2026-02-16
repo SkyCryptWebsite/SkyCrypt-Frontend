@@ -1,6 +1,6 @@
 <script lang="ts">
   import { browser, dev } from "$app/environment";
-  import { beforeNavigate } from "$app/navigation";
+  import { beforeNavigate, replaceState } from "$app/navigation";
   import { page, updated } from "$app/state";
   import { initDisabledPacks, initFavorites, initInternalState, initPreferences, initRecentSearches, initTheme, initWikiOrder, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
   import Header from "$lib/components/header/Header.svelte";
@@ -9,6 +9,7 @@
   import { IsHover } from "$lib/hooks/is-hover.svelte";
   import { IsMobile } from "$lib/hooks/is-mobile.svelte";
   import { getPacks } from "$lib/shared/api/skycrypt-api.remote";
+  import { parseThemeFromURL } from "$lib/shared/themes/sharing";
   import { cn } from "$lib/shared/utils";
   import Wifi from "@lucide/svelte/icons/wifi";
   import WifiOff from "@lucide/svelte/icons/wifi-off";
@@ -16,6 +17,7 @@
   import { onMount, type Snippet } from "svelte";
   import SvelteSeo from "svelte-seo";
   import { toast, Toaster, type ToasterProps } from "svelte-sonner";
+  import { SvelteURLSearchParams } from "svelte/reactivity";
   import { writable } from "svelte/store";
   import { fly } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
@@ -98,6 +100,48 @@
     }
   });
 
+  $effect.pre(() => {
+    const urlParams = new SvelteURLSearchParams(window.location.search);
+    const themeParam = urlParams.get("theme");
+    if (themeParam) {
+      toast.promise(
+        parseThemeFromURL(window.location.href)
+          .then((decoded) => {
+            if (decoded) {
+              themeContext.saveTheme(decoded);
+              internalState.themeEditorId = decoded.metadata.id;
+              internalState.themeEditorOpen = true;
+            }
+          })
+          .catch((err) => {
+            console.error("Failed to decode theme from URL:", err);
+          })
+          .finally(() => {
+            // Clean up URL to prevent re-parsing on reload
+            urlParams.delete("theme");
+            const newUrl = `${page.url.pathname}${urlParams.toString() ? "?" + urlParams.toString() : ""}${page.url.hash}`;
+            // eslint-disable-next-line svelte/no-navigation-without-resolve
+            replaceState(newUrl, page.state);
+          }),
+        {
+          loading: "Importing theme...",
+          success: "Theme imported successfully!",
+          error: "Failed to import theme."
+        }
+      );
+    }
+    return () => {
+      // Clean up URL on unmount just in case
+      const urlParams = new SvelteURLSearchParams(window.location.search);
+      if (urlParams.has("theme")) {
+        urlParams.delete("theme");
+        const newUrl = `${page.url.pathname}${urlParams.toString() ? "?" + urlParams.toString() : ""}${page.url.hash}`;
+        // eslint-disable-next-line svelte/no-navigation-without-resolve
+        replaceState(newUrl, page.state);
+      }
+    };
+  });
+
   $effect(() => {
     const packsDataRemoteFunction = getPacks();
     const packsData = packsDataRemoteFunction.current;
@@ -175,7 +219,7 @@
 <CommandPalette {ign} bind:loading={commandLoading} />
 
 {#if internalState.themeEditorOpen && !isMobile.current}
-  <div class="fixed top-0 left-0 z-50 h-dvh w-[30vw] border-r border-text/10 bg-background/80 shadow-2xl backdrop-blur-xl" transition:fly={{ x: -300, duration: 300 }}>
+  <div class={cn("fixed top-12 left-0 isolate z-40 h-[calc(100dvh-3rem)] w-[30vw]", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")} transition:fly={{ x: -300, duration: 300 }}>
     <ThemeEditor />
   </div>
 {/if}
@@ -185,7 +229,7 @@
     <Drawer.Portal>
       <Drawer.Overlay class="fixed inset-0 z-40 bg-black/80" />
       <Drawer.Content class="fixed right-0 bottom-0 left-0 z-50 flex h-[90dvh] flex-col rounded-t-[10px] bg-background-lore outline-none">
-        <div class="mx-auto mt-4 mb-4 h-1.5 w-12 flex-shrink-0 rounded-full bg-text/10"></div>
+        <div class="mx-auto mt-4 mb-4 h-1.5 w-12 shrink-0 rounded-full bg-text/10"></div>
         <div class="flex-1 overflow-hidden">
           <ThemeEditor />
         </div>

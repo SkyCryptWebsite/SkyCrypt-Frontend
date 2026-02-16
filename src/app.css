@@ -299,6 +299,14 @@
   [data-arrow] {
     @apply text-background-grey;
   }
+
+  ::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+
+  ::-webkit-color-swatch {
+    border: none;
+  }
 }
 
 @utility nice-colors-dark {

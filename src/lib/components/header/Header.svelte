@@ -1,13 +1,15 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { getInternalState, getPreferences } from "$ctx";
+  import { getInternalState, getPreferences, getTheme } from "$ctx";
   import HeaderInfo from "$lib/components/header/Info.svelte";
   import Settings from "$lib/components/header/settings";
+  import { getThemeIcons } from "$lib/shared/api/themes.remote";
   import Search from "@lucide/svelte/icons/search";
   import { Avatar, Button } from "bits-ui";
 
   const preferences = getPreferences();
   const internalState = getInternalState();
+  const theme = getTheme();
 </script>
 
 <header class="@container fixed top-0 left-0 z-30 h-12 w-full overflow-clip bg-header px-2.5 pt-[env(safe-area-inset-top,0)] pr-[max(0.625rem,env(safe-area-inset-right))] pb-[env(safe-area-inset-bottom,0)] pl-[max(0.625rem,env(safe-area-inset-left))] leading-[3rem]">
@@ -15,7 +17,18 @@
     <div class="flex gap-2">
       <Button.Root href="/" class="flex items-center justify-center gap-2 font-bold" data-sveltekit-preload="hover">
         <Avatar.Root class="size-6 shrink-0 rounded-lg select-none">
-          <Avatar.Image loading="lazy" src="/img/app-icons/svg.svg" alt="SkyCrypt" class="pointer-events-none h-6 select-none" />
+          <svelte:boundary>
+            <Avatar.Image loading="lazy" src="data:image/svg+xml;base64,{btoa(await getThemeIcons({ color: theme.activeTheme?.colors.logo, invert: theme.activeTheme?.light }))}" alt="SkyCrypt" class="pointer-events-none h-6 select-none" />
+
+            {#snippet pending()}
+              <Avatar.Image loading="lazy" src="/img/app-icons/svg.svg" alt="SkyCrypt" class="pointer-events-none h-6 select-none" />
+            {/snippet}
+
+            {#snippet failed()}
+              <Avatar.Image loading="lazy" src="/img/app-icons/svg.svg" alt="SkyCrypt" class="pointer-events-none h-6 select-none" />
+            {/snippet}
+          </svelte:boundary>
+
           <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">SC</Avatar.Fallback>
         </Avatar.Root>
         SkyCrypt
