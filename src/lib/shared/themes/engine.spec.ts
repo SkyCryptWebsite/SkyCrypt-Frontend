@@ -1,6 +1,6 @@
 import { describe, it } from "vitest";
-import { mergeThemeWithDefaults } from "./engine";
 import { DEFAULT_THEME } from "./defaults";
+import { mergeThemeWithDefaults } from "./engine";
 
 describe.concurrent("Theme Engine Tests", () => {
   describe.concurrent("mergeThemeWithDefaults", () => {
@@ -17,9 +17,9 @@ describe.concurrent("Theme Engine Tests", () => {
       expect(merged.colors.link).toBe(DEFAULT_THEME.colors.link);
       expect(merged.colors.hover).toBe(DEFAULT_THEME.colors.hover);
       expect(merged.colors.text).toBe(DEFAULT_THEME.colors.text);
-      expect(merged.id).toBe(DEFAULT_THEME.id);
-      expect(merged.name).toBe(DEFAULT_THEME.name);
-      expect(merged.author).toBe(DEFAULT_THEME.author);
+      expect(merged.metadata.id).toBe(DEFAULT_THEME.metadata.id);
+      expect(merged.metadata.name).toBe(DEFAULT_THEME.metadata.name);
+      expect(merged.metadata.author).toBe(DEFAULT_THEME.metadata.author);
       expect(merged.schema).toBe(3);
     });
 
@@ -31,9 +31,11 @@ describe.concurrent("Theme Engine Tests", () => {
       const customLink = "oklch(0.9 0.2 100)";
 
       const partial = {
-        id: customId,
-        name: customName,
-        author: customAuthor,
+        metadata: {
+          id: customId,
+          name: customName,
+          author: customAuthor
+        },
         colors: {
           icon: customIcon,
           link: customLink
@@ -42,9 +44,9 @@ describe.concurrent("Theme Engine Tests", () => {
 
       const merged = mergeThemeWithDefaults(partial);
 
-      expect(merged.id).toBe(customId);
-      expect(merged.name).toBe(customName);
-      expect(merged.author).toBe(customAuthor);
+      expect(merged.metadata.id).toBe(customId);
+      expect(merged.metadata.name).toBe(customName);
+      expect(merged.metadata.author).toBe(customAuthor);
       expect(merged.colors.icon).toBe(customIcon);
       expect(merged.colors.link).toBe(customLink);
     });
@@ -87,26 +89,26 @@ describe.concurrent("Theme Engine Tests", () => {
     it("should handle empty partial theme", ({ expect }) => {
       const merged = mergeThemeWithDefaults({});
 
-      expect(merged.id).toBe(DEFAULT_THEME.id);
-      expect(merged.name).toBe(DEFAULT_THEME.name);
+      expect(merged.metadata.id).toBe(DEFAULT_THEME.metadata.id);
+      expect(merged.metadata.name).toBe(DEFAULT_THEME.metadata.name);
       expect(merged.colors).toEqual(DEFAULT_THEME.colors);
       expect(merged.backgrounds).toEqual(DEFAULT_THEME.backgrounds);
       expect(merged.minecraft).toEqual(DEFAULT_THEME.minecraft);
     });
 
-    it("should merge meta timestamps correctly", ({ expect }) => {
+    it("should merge metadata timestamps correctly", ({ expect }) => {
       const customCreatedAt = 1234567890;
       const partial = {
-        meta: {
+        metadata: {
           createdAt: customCreatedAt
         }
       };
 
       const merged = mergeThemeWithDefaults(partial);
 
-      expect(merged.meta.createdAt).toBe(customCreatedAt);
-      expect(merged.meta.updatedAt).toBe(DEFAULT_THEME.meta.updatedAt);
-      expect(merged.meta.version).toBe(DEFAULT_THEME.meta.version);
+      expect(merged.metadata.createdAt).toBe(customCreatedAt);
+      expect(merged.metadata.updatedAt).toBe(DEFAULT_THEME.metadata.updatedAt);
+      expect(merged.metadata.version).toBe(DEFAULT_THEME.metadata.version);
     });
 
     it("should handle stripes background override", ({ expect }) => {

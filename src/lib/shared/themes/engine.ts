@@ -1,6 +1,6 @@
 import { DEFAULT_THEME } from "./defaults";
 import { getPaletteColors } from "./presets";
-import type { ThemeV3, PartialThemeV3 } from "./schema";
+import type { PartialThemeV3, ThemeV3 } from "./schema";
 
 /**
  * Deep merge partial theme with DEFAULT_THEME
@@ -27,9 +27,9 @@ export function mergeThemeWithDefaults(partial: PartialThemeV3): ThemeV3 {
       palette: partial.minecraft?.palette ?? DEFAULT_THEME.minecraft.palette,
       overrides: partial.minecraft?.overrides ?? DEFAULT_THEME.minecraft.overrides
     },
-    meta: {
-      ...DEFAULT_THEME.meta,
-      ...partial.meta
+    metadata: {
+      ...DEFAULT_THEME.metadata,
+      ...partial.metadata
     }
   };
 
@@ -48,7 +48,7 @@ export class ThemeEngine {
     const root = document.documentElement;
 
     // Set data attributes
-    root.dataset.theme = theme.id;
+    root.dataset.theme = theme.metadata.id;
     root.dataset.mode = theme.light ? "light" : "dark";
 
     // Set dark/light classes
@@ -98,14 +98,14 @@ export class ThemeEngine {
 
     // Apply page background
     if (theme.backgrounds.page?.url) {
-      root.style.setProperty("--bg-url", `url(${theme.backgrounds.page.url})`);
+      root.style.setProperty("--bg-url", `url(/api/image-proxy?url=${encodeURIComponent(theme.backgrounds.page.url)})`);
     } else {
       root.style.removeProperty("--bg-url");
     }
 
     // Apply enchanted glint
     if (theme.enchantedGlint) {
-      root.style.setProperty("--enchanted-glint", `url(${theme.enchantedGlint})`);
+      root.style.setProperty("--enchanted-glint", `url(/api/image-proxy?url=${encodeURIComponent(theme.enchantedGlint)})`);
     } else {
       root.style.removeProperty("--enchanted-glint");
     }

@@ -1,6 +1,6 @@
 import { describe, it } from "vitest";
-import { themeV3Schema, partialThemeV3Schema } from "./schema";
 import { DEFAULT_THEME } from "./defaults";
+import { partialThemeV3Schema, themeV3Schema } from "./schema";
 
 describe.concurrent("Theme V3 Schema Validation", () => {
   describe.concurrent("themeV3Schema - Full Theme", () => {
@@ -9,7 +9,7 @@ describe.concurrent("Theme V3 Schema Validation", () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.data.schema).toBe(3);
-        expect(result.data.id).toBe("default");
+        expect(result.data.metadata.id).toBe("default");
       }
     });
 

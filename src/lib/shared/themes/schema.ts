@@ -59,9 +59,6 @@ const backgroundSchema = z.discriminatedUnion("type", [colorBackgroundSchema, st
  * Use `.partial()` for user theme overrides that only modify specific fields.
  */
 export const themeV3Schema = z.object({
-  id: z.string().min(1, "Theme ID is required"),
-  name: z.string().min(1, "Theme name is required"),
-  author: z.string().min(1, "Author is required"),
   schema: z.literal(3),
   light: z.boolean().default(false),
   colors: z.object({
@@ -98,7 +95,10 @@ export const themeV3Schema = z.object({
       .optional()
   }),
   enchantedGlint: httpsUrlSchema.optional(),
-  meta: z.object({
+  metadata: z.object({
+    id: z.string().min(1, "Theme ID is required"),
+    name: z.string().min(1, "Theme name is required"),
+    author: z.string().min(1, "Author is required"),
     createdAt: z.number().int().positive(),
     updatedAt: z.number().int().positive(),
     version: z.number().int().positive().default(1)
@@ -106,9 +106,6 @@ export const themeV3Schema = z.object({
 });
 
 export const partialThemeV3Schema = z.object({
-  id: z.string().min(1).optional(),
-  name: z.string().min(1).optional(),
-  author: z.string().min(1).optional(),
   schema: z.literal(3).optional(),
   light: z.boolean().optional(),
   colors: z
@@ -151,8 +148,11 @@ export const partialThemeV3Schema = z.object({
     })
     .optional(),
   enchantedGlint: httpsUrlSchema.optional(),
-  meta: z
+  metadata: z
     .object({
+      id: z.string().min(1).optional(),
+      name: z.string().min(1).optional(),
+      author: z.string().min(1).optional(),
       createdAt: z.number().int().positive().optional(),
       updatedAt: z.number().int().positive().optional(),
       version: z.number().int().positive().optional()
