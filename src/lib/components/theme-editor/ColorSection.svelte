@@ -1,8 +1,9 @@
 <script lang="ts">
+  import { hexToOklch, oklchToHex } from "$lib/shared/themes/color-utils";
   import type { ThemeV3 } from "$lib/shared/themes/schema";
   import { Label } from "bits-ui";
 
-  let { workingTheme } = $props<{
+  let { workingTheme = $bindable() } = $props<{
     workingTheme: ThemeV3;
   }>();
 
@@ -29,11 +30,15 @@
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {#each group.keys as key, index (index)}
           <div class="flex flex-col gap-1.5">
-            <div class="flex items-center justify-between">
-              <Label.Root for={`color-${key}`} class="text-xs font-semibold text-text/80">{formatKey(key)}</Label.Root>
-              <div class="size-4 rounded border border-text/10 shadow-sm" style:background-color={workingTheme.colors[key]}></div>
-            </div>
-            <input id={`color-${key}`} type="text" bind:value={workingTheme.colors[key]} class="w-full rounded-md border border-text/10 bg-text/5 px-2 py-1.5 font-mono text-xs text-text transition-colors focus:border-link focus:bg-text/10 focus:outline-none" placeholder="oklch(L C H)" />
+            <Label.Root for={`color-${key}`} class="text-xs font-semibold text-text/80">{formatKey(key)}</Label.Root>
+            <input
+              id={`color-${key}`}
+              type="color"
+              value={oklchToHex(workingTheme.colors[key])}
+              oninput={(e) => {
+                workingTheme.colors[key] = hexToOklch(e.currentTarget.value);
+              }}
+              class="h-8 w-full cursor-pointer rounded-md border border-text/10 bg-text/5 transition-colors focus:border-link focus:outline-none" />
           </div>
         {/each}
       </div>

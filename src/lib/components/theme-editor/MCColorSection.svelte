@@ -1,9 +1,15 @@
 <script lang="ts">
+  import { hexToOklch, oklchToHex } from "$lib/shared/themes/color-utils";
   import { MC_PALETTES, paletteNames } from "$lib/shared/themes/presets";
   import type { ThemeV3 } from "$lib/shared/themes/schema";
-  import { Label } from "bits-ui";
+  import { flyAndScale } from "$lib/shared/utils";
+  import CheckIcon from "@lucide/svelte/icons/check";
+  import ChevronsDown from "@lucide/svelte/icons/chevrons-down";
+  import ChevronsUp from "@lucide/svelte/icons/chevrons-up";
+  import ChevronsUpDown from "@lucide/svelte/icons/chevrons-up-down";
+  import { Label, Select } from "bits-ui";
 
-  let { workingTheme } = $props<{
+  let { workingTheme = $bindable() } = $props<{
     workingTheme: ThemeV3;
   }>();
 
@@ -31,29 +37,57 @@
 <div class="flex flex-col gap-6 p-4">
   <div class="flex flex-col gap-2">
     <Label.Root for="mc-palette" class="text-sm font-bold tracking-wider text-text/60 uppercase">Palette Preset</Label.Root>
-    <select
-      id="mc-palette"
-      value={workingTheme.minecraft.palette}
-      onchange={(e) => {
-        const val = e.currentTarget.value;
-        if (val) workingTheme.minecraft.palette = val;
-      }}
-      class="flex h-10 w-full items-center justify-between rounded-lg border border-text/10 bg-text/5 px-3 py-2 text-sm text-text transition-colors hover:bg-text/10 focus:ring-2 focus:ring-link focus:ring-offset-2 focus:outline-none">
-      {#each paletteNames as name, index (index)}
-        <option value={name}>{name}</option>
-      {/each}
-    </select>
+
+    <Select.Root type="single" onValueChange={(value) => (workingTheme.minecraft.palette = value)}>
+      <Select.Trigger id="mc-palette" class="flex items-center justify-between rounded-lg bg-text/10 p-2 text-left">
+        <span>{workingTheme.minecraft.palette || "Select a palette..."}</span>
+        <ChevronsUpDown class="size-4 text-text/60" />
+      </Select.Trigger>
+      <Select.Portal>
+        <Select.Content forceMount class="focus-override z-50 max-h-(--bits-select-content-available-height) w-(--bits-select-anchor-width) min-w-(--bits-select-anchor-width) rounded-lg bg-background-lore px-1 py-3 outline-hidden select-none data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1" sideOffset={10}>
+          {#snippet child({ open, props, wrapperProps })}
+            {#if open}
+              <div {...wrapperProps}>
+                <div {...props} transition:flyAndScale>
+                  <Select.ScrollUpButton class="flex w-full items-center justify-center">
+                    <ChevronsUp class="size-3" />
+                  </Select.ScrollUpButton>
+
+                  <Select.Viewport class="p-1">
+                    {#each paletteNames as name, index (index)}
+                      <Select.Item class="flex h-10 w-full items-center rounded-lg py-3 pr-1.5 pl-5 text-sm capitalize outline-hidden select-none data-disabled:opacity-50 data-highlighted:bg-background" label={name} value={name}>
+                        {#snippet children({ selected })}
+                          {name}
+
+                          {#if selected}
+                            <div class="ml-auto">
+                              <CheckIcon aria-label="check" />
+                            </div>
+                          {/if}
+                        {/snippet}
+                      </Select.Item>
+                    {/each}
+                    <Select.ScrollDownButton />
+                  </Select.Viewport>
+                  <Select.ScrollDownButton class="flex w-full items-center justify-center">
+                    <ChevronsDown class="size-3" />
+                  </Select.ScrollDownButton>
+                </div>
+              </div>
+            {/if}
+          {/snippet}
+        </Select.Content>
+      </Select.Portal>
+    </Select.Root>
   </div>
 
   <div class="grid grid-cols-4 gap-3 sm:grid-cols-8">
     {#each mcCodes as code, index (index)}
       {@const effectiveColor = getEffectiveColor(code)}
       <div class="flex flex-col gap-1.5">
-        <div class="flex items-center justify-between">
-          <Label.Root for={`mc-${code}`} class="text-xs font-bold text-text/80">§{code}</Label.Root>
-          <div class="size-4 rounded border border-text/10 shadow-sm" style:background-color={effectiveColor}></div>
-        </div>
-        <input id={`mc-${code}`} type="text" value={effectiveColor} oninput={(e) => setOverride(code, e.currentTarget.value)} class="w-full rounded-md border border-text/10 bg-text/5 px-1 py-1 font-mono text-[10px] text-text transition-colors focus:border-link focus:bg-text/10 focus:outline-none" />
+        <Label.Root for={`mc-${code}`} class="text-xs font-bold text-text/80">§{code}</Label.Root>
+
+        <input id={`mc-${code}`} type="color" value={oklchToHex(effectiveColor)} oninput={(e) => setOverride(code, hexToOklch(e.currentTarget.value))} class="h-8 w-full cursor-pointer rounded-md border border-text/10 bg-text/5 transition-colors focus:border-link focus:outline-none" />
       </div>
     {/each}
   </div>

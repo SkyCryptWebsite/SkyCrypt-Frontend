@@ -1,33 +1,20 @@
 <script lang="ts">
-  import type { ColorBackground, StripesBackground, ThemeV3 } from "$lib/shared/themes/schema";
+  import { hexToOklch, oklchToHex } from "$lib/shared/themes/color-utils";
+  import type { ThemeV3 } from "$lib/shared/themes/schema";
   import Check from "@lucide/svelte/icons/check";
   import ImageIcon from "@lucide/svelte/icons/image";
+  import Sparkles from "@lucide/svelte/icons/sparkles";
   import { Label, RadioGroup } from "bits-ui";
 
-  let { workingTheme } = $props<{
+  let { workingTheme = $bindable(), setBackgroundType } = $props<{
     workingTheme: ThemeV3;
+    setBackgroundType: (key: "skillbar" | "maxedbar", type: "color" | "stripes") => void;
   }>();
 
   const backgroundTypes = [
     { value: "color", label: "Solid Color" },
     { value: "stripes", label: "Stripes" }
   ];
-
-  function setBackgroundType(key: "skillbar" | "maxedbar", type: "color" | "stripes") {
-    if (type === "color") {
-      workingTheme.backgrounds[key] = {
-        type: "color",
-        color: "oklch(0.5 0.1 250)" // Default purple-ish
-      } as ColorBackground;
-    } else {
-      workingTheme.backgrounds[key] = {
-        type: "stripes",
-        angle: "45deg",
-        colors: ["oklch(0.5 0.1 250)", "oklch(0.4 0.1 250)"],
-        width: 10
-      } as StripesBackground;
-    }
-  }
 </script>
 
 <div class="flex flex-col gap-8 p-4">
@@ -48,7 +35,14 @@
     {#if workingTheme.backgrounds.skillbar.type === "color"}
       <div class="flex flex-col gap-1.5">
         <Label.Root for="skillbar-color" class="text-xs font-semibold text-text/80">Color</Label.Root>
-        <input id="skillbar-color" type="text" bind:value={workingTheme.backgrounds.skillbar.color} class="w-full rounded-md border border-text/10 bg-text/5 px-2 py-1.5 font-mono text-xs text-text transition-colors focus:border-link focus:outline-none" />
+        <input
+          id="skillbar-color"
+          type="color"
+          value={oklchToHex(workingTheme.backgrounds.skillbar.color)}
+          oninput={(e) => {
+            workingTheme.backgrounds.skillbar.color = hexToOklch(e.currentTarget.value);
+          }}
+          class="h-8 w-full cursor-pointer rounded-md border border-text/10 bg-text/5 transition-colors focus:border-link focus:outline-none" />
       </div>
     {:else}
       <div class="grid grid-cols-2 gap-3">
@@ -62,11 +56,25 @@
         </div>
         <div class="flex flex-col gap-1.5">
           <Label.Root for="skillbar-color1" class="text-xs font-semibold text-text/80">Color 1</Label.Root>
-          <input id="skillbar-color1" type="text" bind:value={workingTheme.backgrounds.skillbar.colors[0]} class="w-full rounded-md border border-text/10 bg-text/5 px-2 py-1.5 font-mono text-xs text-text transition-colors focus:border-link focus:outline-none" />
+          <input
+            id="skillbar-color1"
+            type="color"
+            value={oklchToHex(workingTheme.backgrounds.skillbar.colors[0])}
+            oninput={(e) => {
+              workingTheme.backgrounds.skillbar.colors[0] = hexToOklch(e.currentTarget.value);
+            }}
+            class="h-8 w-full cursor-pointer rounded-md border border-text/10 bg-text/5 transition-colors focus:border-link focus:outline-none" />
         </div>
         <div class="flex flex-col gap-1.5">
           <Label.Root for="skillbar-color2" class="text-xs font-semibold text-text/80">Color 2</Label.Root>
-          <input id="skillbar-color2" type="text" bind:value={workingTheme.backgrounds.skillbar.colors[1]} class="w-full rounded-md border border-text/10 bg-text/5 px-2 py-1.5 font-mono text-xs text-text transition-colors focus:border-link focus:outline-none" />
+          <input
+            id="skillbar-color2"
+            type="color"
+            value={oklchToHex(workingTheme.backgrounds.skillbar.colors[1])}
+            oninput={(e) => {
+              workingTheme.backgrounds.skillbar.colors[1] = hexToOklch(e.currentTarget.value);
+            }}
+            class="h-8 w-full cursor-pointer rounded-md border border-text/10 bg-text/5 transition-colors focus:border-link focus:outline-none" />
         </div>
       </div>
     {/if}
@@ -89,7 +97,14 @@
     {#if workingTheme.backgrounds.maxedbar.type === "color"}
       <div class="flex flex-col gap-1.5">
         <Label.Root for="maxedbar-color" class="text-xs font-semibold text-text/80">Color</Label.Root>
-        <input id="maxedbar-color" type="text" bind:value={workingTheme.backgrounds.maxedbar.color} class="w-full rounded-md border border-text/10 bg-text/5 px-2 py-1.5 font-mono text-xs text-text transition-colors focus:border-link focus:outline-none" />
+        <input
+          id="maxedbar-color"
+          type="color"
+          value={oklchToHex(workingTheme.backgrounds.maxedbar.color)}
+          oninput={(e) => {
+            workingTheme.backgrounds.maxedbar.color = hexToOklch(e.currentTarget.value);
+          }}
+          class="h-8 w-full cursor-pointer rounded-md border border-text/10 bg-text/5 transition-colors focus:border-link focus:outline-none" />
       </div>
     {:else}
       <div class="grid grid-cols-2 gap-3">
@@ -103,11 +118,25 @@
         </div>
         <div class="flex flex-col gap-1.5">
           <Label.Root for="maxedbar-color1" class="text-xs font-semibold text-text/80">Color 1</Label.Root>
-          <input id="maxedbar-color1" type="text" bind:value={workingTheme.backgrounds.maxedbar.colors[0]} class="w-full rounded-md border border-text/10 bg-text/5 px-2 py-1.5 font-mono text-xs text-text transition-colors focus:border-link focus:outline-none" />
+          <input
+            id="maxedbar-color1"
+            type="color"
+            value={oklchToHex(workingTheme.backgrounds.maxedbar.colors[0])}
+            oninput={(e) => {
+              workingTheme.backgrounds.maxedbar.colors[0] = hexToOklch(e.currentTarget.value);
+            }}
+            class="h-8 w-full cursor-pointer rounded-md border border-text/10 bg-text/5 transition-colors focus:border-link focus:outline-none" />
         </div>
         <div class="flex flex-col gap-1.5">
           <Label.Root for="maxedbar-color2" class="text-xs font-semibold text-text/80">Color 2</Label.Root>
-          <input id="maxedbar-color2" type="text" bind:value={workingTheme.backgrounds.maxedbar.colors[1]} class="w-full rounded-md border border-text/10 bg-text/5 px-2 py-1.5 font-mono text-xs text-text transition-colors focus:border-link focus:outline-none" />
+          <input
+            id="maxedbar-color2"
+            type="color"
+            value={oklchToHex(workingTheme.backgrounds.maxedbar.colors[1])}
+            oninput={(e) => {
+              workingTheme.backgrounds.maxedbar.colors[1] = hexToOklch(e.currentTarget.value);
+            }}
+            class="h-8 w-full cursor-pointer rounded-md border border-text/10 bg-text/5 transition-colors focus:border-link focus:outline-none" />
         </div>
       </div>
     {/if}
@@ -121,6 +150,7 @@
         <ImageIcon class="size-4 text-text/60" />
         <Label.Root for="page-bg-url" class="text-xs font-semibold text-text/80">Image URL</Label.Root>
       </div>
+      <p class="text-[10px] text-text/40">Must start with https://</p>
       <input
         id="page-bg-url"
         type="url"
@@ -133,10 +163,36 @@
             workingTheme.backgrounds.page = { url: val };
           }
         }}
-        class="w-full rounded-md border border-text/10 bg-text/5 px-2 py-1.5 font-mono text-xs text-text transition-colors invalid:border-red-500 invalid:text-red-500 focus:border-link focus:outline-none"
+        class="w-full rounded-md border border-text/10 bg-text/5 px-2 py-1.5 font-mono text-xs text-text transition-colors user-invalid:border-red-500 user-invalid:text-red-500 focus:border-link focus:outline-none"
         placeholder="https://imgur.com/..."
         pattern="^https://.*" />
-      <p class="text-[10px] text-text/40">Must start with https://</p>
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-4">
+    <h3 class="text-sm font-bold tracking-wider text-text/60 uppercase">Enchanted Glint</h3>
+
+    <div class="flex flex-col gap-1.5">
+      <div class="flex items-center gap-2">
+        <Sparkles class="size-4 text-text/60" />
+        <Label.Root for="enchanted-glint-url" class="text-xs font-semibold text-text/80">Glint Texture URL</Label.Root>
+      </div>
+      <p class="text-[10px] text-text/40">Custom enchanted glint texture. Must start with https://. Leave empty for default.</p>
+      <input
+        id="enchanted-glint-url"
+        type="url"
+        value={workingTheme.enchantedGlint ?? ""}
+        oninput={(e) => {
+          const val = e.currentTarget.value;
+          if (!val) {
+            workingTheme.enchantedGlint = undefined;
+          } else {
+            workingTheme.enchantedGlint = val;
+          }
+        }}
+        class="w-full rounded-md border border-text/10 bg-text/5 px-2 py-1.5 font-mono text-xs text-text transition-colors user-invalid:border-red-500 user-invalid:text-red-500 focus:border-link focus:outline-none"
+        placeholder="https://example.com/glint.png"
+        pattern="^https://.*" />
     </div>
   </div>
 </div>
