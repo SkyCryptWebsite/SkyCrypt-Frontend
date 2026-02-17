@@ -6,6 +6,7 @@ function loadOldStorageKey<T>(key: string, setter: (value: T) => void) {
       setter(value);
       localStorage.removeItem(key);
     } catch (e) {
+      console.warn(`Failed to parse localStorage item for key "${key}":`, e);
       // If JSON.parse fails, try using the raw string value
       setter(item as T);
       localStorage.removeItem(key);
