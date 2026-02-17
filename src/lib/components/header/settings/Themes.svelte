@@ -100,7 +100,7 @@
       <p class="text-text/40 italic">No custom themes yet. Create your own theme or import one from the community!</p>
     {:else}
       {#each themeContext.userThemes as theme (theme.metadata.id)}
-        {#await getThemeIcons({ color: theme.colors.logo, invert: theme.light }) then iconSvg}
+        {#await getThemeIcons({ color: theme.colors?.logo, invert: theme.light }) then iconSvg}
           {@const iconDataUrl = `data:image/svg+xml;base64,${btoa(iconSvg)}`}
           <Label.Root for={theme.metadata.id} class="flex items-center justify-between gap-2 rounded-lg bg-text/5 p-2">
             <div class="flex items-center gap-2">
