@@ -27,8 +27,9 @@ describe("Theme Sharing", () => {
       const decoded = await decodeTheme(encoded);
 
       expect(decoded).not.toBeNull();
-      expect(decoded!.colors.icon).toBe("oklch(0.5 0.1 100)");
-      expect(decoded!.colors.link).toBe(DEFAULT_THEME.colors.link);
+      expect(decoded!.colors?.icon).toBe("oklch(0.5 0.1 100)");
+      // link was same as default, so stripDefaults removed it; mergeThemeWithDefaults no longer fills from defaults
+      expect(decoded!.colors?.link).toBeUndefined();
       expect(decoded!.metadata.name).toBe("Test Theme");
     });
 
@@ -81,7 +82,7 @@ describe("Theme Sharing", () => {
       const parsed = await parseThemeFromURL(url);
 
       expect(parsed).not.toBeNull();
-      expect(parsed!.colors.icon).toBe("oklch(0.5 0.1 100)");
+      expect(parsed!.colors?.icon).toBe("oklch(0.5 0.1 100)");
     });
 
     it("should return null for URL without theme param", async () => {

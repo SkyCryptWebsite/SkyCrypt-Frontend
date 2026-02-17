@@ -4,7 +4,7 @@ import { mergeThemeWithDefaults } from "./engine";
 
 describe.concurrent("Theme Engine Tests", () => {
   describe.concurrent("mergeThemeWithDefaults", () => {
-    it("should fill missing fields from DEFAULT_THEME", ({ expect }) => {
+    it("should pass through provided colors without filling missing ones from defaults", ({ expect }) => {
       const partial = {
         colors: {
           icon: "oklch(0.5 0.2 100)"
@@ -13,10 +13,12 @@ describe.concurrent("Theme Engine Tests", () => {
 
       const merged = mergeThemeWithDefaults(partial);
 
-      expect(merged.colors.icon).toBe("oklch(0.5 0.2 100)");
-      expect(merged.colors.link).toBe(DEFAULT_THEME.colors.link);
-      expect(merged.colors.hover).toBe(DEFAULT_THEME.colors.hover);
-      expect(merged.colors.text).toBe(DEFAULT_THEME.colors.text);
+      expect(merged.colors?.icon).toBe("oklch(0.5 0.2 100)");
+      // Colors NOT provided should remain undefined (not filled from defaults)
+      expect(merged.colors?.link).toBeUndefined();
+      expect(merged.colors?.hover).toBeUndefined();
+      expect(merged.colors?.text).toBeUndefined();
+      // Metadata should still be filled from defaults
       expect(merged.metadata.id).toBe(DEFAULT_THEME.metadata.id);
       expect(merged.metadata.name).toBe(DEFAULT_THEME.metadata.name);
       expect(merged.metadata.author).toBe(DEFAULT_THEME.metadata.author);
@@ -47,11 +49,11 @@ describe.concurrent("Theme Engine Tests", () => {
       expect(merged.metadata.id).toBe(customId);
       expect(merged.metadata.name).toBe(customName);
       expect(merged.metadata.author).toBe(customAuthor);
-      expect(merged.colors.icon).toBe(customIcon);
-      expect(merged.colors.link).toBe(customLink);
+      expect(merged.colors?.icon).toBe(customIcon);
+      expect(merged.colors?.link).toBe(customLink);
     });
 
-    it("should merge nested backgrounds correctly", ({ expect }) => {
+    it("should pass through backgrounds without filling missing ones from defaults", ({ expect }) => {
       const partial = {
         backgrounds: {
           skillbar: {
@@ -63,11 +65,12 @@ describe.concurrent("Theme Engine Tests", () => {
 
       const merged = mergeThemeWithDefaults(partial);
 
-      expect(merged.backgrounds.skillbar.type).toBe("color");
-      if (merged.backgrounds.skillbar.type === "color") {
+      expect(merged.backgrounds?.skillbar?.type).toBe("color");
+      if (merged.backgrounds?.skillbar?.type === "color") {
         expect(merged.backgrounds.skillbar.color).toBe("oklch(0.5 0.1 100)");
       }
-      expect(merged.backgrounds.maxedbar).toEqual(DEFAULT_THEME.backgrounds.maxedbar);
+      // maxedbar was not provided, so it should be undefined
+      expect(merged.backgrounds?.maxedbar).toBeUndefined();
     });
 
     it("should merge minecraft palette and overrides", ({ expect }) => {
@@ -91,8 +94,9 @@ describe.concurrent("Theme Engine Tests", () => {
 
       expect(merged.metadata.id).toBe(DEFAULT_THEME.metadata.id);
       expect(merged.metadata.name).toBe(DEFAULT_THEME.metadata.name);
-      expect(merged.colors).toEqual(DEFAULT_THEME.colors);
-      expect(merged.backgrounds).toEqual(DEFAULT_THEME.backgrounds);
+      // Colors and backgrounds should be undefined when not provided
+      expect(merged.colors).toBeUndefined();
+      expect(merged.backgrounds).toBeUndefined();
       expect(merged.minecraft).toEqual(DEFAULT_THEME.minecraft);
     });
 
@@ -125,8 +129,8 @@ describe.concurrent("Theme Engine Tests", () => {
 
       const merged = mergeThemeWithDefaults(partial);
 
-      expect(merged.backgrounds.maxedbar.type).toBe("stripes");
-      if (merged.backgrounds.maxedbar.type === "stripes") {
+      expect(merged.backgrounds?.maxedbar?.type).toBe("stripes");
+      if (merged.backgrounds?.maxedbar?.type === "stripes") {
         expect(merged.backgrounds.maxedbar.angle).toBe("90deg");
         expect(merged.backgrounds.maxedbar.colors).toEqual(["oklch(0.7 0.2 100)", "oklch(0.8 0.1 200)"]);
         expect(merged.backgrounds.maxedbar.width).toBe(10);
@@ -145,7 +149,7 @@ describe.concurrent("Theme Engine Tests", () => {
 
       const merged = mergeThemeWithDefaults(partial);
 
-      expect(merged.backgrounds.page?.url).toBe(customUrl);
+      expect(merged.backgrounds?.page?.url).toBe(customUrl);
     });
 
     it("should handle enchantedGlint override", ({ expect }) => {
