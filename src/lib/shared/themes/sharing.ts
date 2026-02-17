@@ -42,38 +42,42 @@ function stripDefaults(theme: ThemeV3, defaults: ThemeV3): PartialThemeV3 {
   // Top-level primitives
   if (theme.light !== defaults.light) partial.light = theme.light;
 
-  // Colors (nested object)
-  const colorDiffs: Partial<ThemeV3["colors"]> = {};
-  let hasColorDiffs = false;
-  for (const key in theme.colors) {
-    const k = key as keyof ThemeV3["colors"];
-    if (theme.colors[k] !== defaults.colors[k]) {
-      colorDiffs[k] = theme.colors[k];
-      hasColorDiffs = true;
+  if (theme.colors) {
+    const defaultColors = defaults.colors ?? {};
+    const colorDiffs: Partial<NonNullable<ThemeV3["colors"]>> = {};
+    let hasColorDiffs = false;
+    for (const key in theme.colors) {
+      const k = key as keyof NonNullable<ThemeV3["colors"]>;
+      if (theme.colors[k] !== defaultColors[k]) {
+        colorDiffs[k] = theme.colors[k];
+        hasColorDiffs = true;
+      }
     }
-  }
-  if (hasColorDiffs) partial.colors = colorDiffs;
-
-  // Backgrounds (nested with discriminated unions)
-  const backgroundDiffs: Partial<ThemeV3["backgrounds"]> = {};
-  let hasBackgroundDiffs = false;
-
-  if (devalue.stringify(theme.backgrounds.skillbar) !== devalue.stringify(defaults.backgrounds.skillbar)) {
-    backgroundDiffs.skillbar = theme.backgrounds.skillbar;
-    hasBackgroundDiffs = true;
+    if (hasColorDiffs) partial.colors = colorDiffs;
   }
 
-  if (devalue.stringify(theme.backgrounds.maxedbar) !== devalue.stringify(defaults.backgrounds.maxedbar)) {
-    backgroundDiffs.maxedbar = theme.backgrounds.maxedbar;
-    hasBackgroundDiffs = true;
-  }
+  if (theme.backgrounds) {
+    const defaultBackgrounds = defaults.backgrounds ?? {};
+    const backgroundDiffs: Partial<NonNullable<ThemeV3["backgrounds"]>> = {};
+    let hasBackgroundDiffs = false;
 
-  if (devalue.stringify(theme.backgrounds.page) !== devalue.stringify(defaults.backgrounds.page)) {
-    backgroundDiffs.page = theme.backgrounds.page;
-    hasBackgroundDiffs = true;
-  }
+    if (theme.backgrounds.skillbar && devalue.stringify(theme.backgrounds.skillbar) !== devalue.stringify(defaultBackgrounds.skillbar)) {
+      backgroundDiffs.skillbar = theme.backgrounds.skillbar;
+      hasBackgroundDiffs = true;
+    }
 
-  if (hasBackgroundDiffs) partial.backgrounds = backgroundDiffs;
+    if (theme.backgrounds.maxedbar && devalue.stringify(theme.backgrounds.maxedbar) !== devalue.stringify(defaultBackgrounds.maxedbar)) {
+      backgroundDiffs.maxedbar = theme.backgrounds.maxedbar;
+      hasBackgroundDiffs = true;
+    }
+
+    if (devalue.stringify(theme.backgrounds.page) !== devalue.stringify(defaultBackgrounds.page)) {
+      backgroundDiffs.page = theme.backgrounds.page;
+      hasBackgroundDiffs = true;
+    }
+
+    if (hasBackgroundDiffs) partial.backgrounds = backgroundDiffs;
+  }
 
   // Minecraft (nested with optional overrides)
   const minecraftDiffs: Partial<ThemeV3["minecraft"]> = {};
