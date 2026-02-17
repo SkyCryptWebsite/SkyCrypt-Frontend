@@ -5,6 +5,10 @@ import { z } from "zod";
  *
  * Comprehensive schema covering all ~40+ CSS variables for SkyCrypt themes.
  * Organized into logical groups: colors, backgrounds, minecraft, enchantedGlint, meta.
+ *
+ * Color and background properties are OPTIONAL — when omitted, the CSS cascade
+ * provides the correct values (e.g., the `light` utility class in app.css).
+ * Only DEFAULT_THEME is expected to have all properties fully specified.
  */
 
 // --- Helper Validators ---
@@ -50,41 +54,50 @@ const stripesBackgroundSchema = z.object({
  */
 const backgroundSchema = z.discriminatedUnion("type", [colorBackgroundSchema, stripesBackgroundSchema]);
 
+// --- Color Schema (individual properties optional) ---
+
+const colorsSchema = z.object({
+  icon: oklchColorSchema.optional(),
+  link: oklchColorSchema.optional(),
+  hover: oklchColorSchema.optional(),
+  maxed: oklchColorSchema.optional(),
+  gold: oklchColorSchema.optional(),
+  logo: oklchColorSchema.optional(),
+  text: oklchColorSchema.optional(),
+  background: oklchColorSchema.optional(),
+  header: oklchColorSchema.optional(),
+  greyBackground: oklchColorSchema.optional(),
+  loreBackground: oklchColorSchema.optional(),
+  bg: oklchColorSchema.optional(),
+  mctooltipBg: oklchColorSchema.optional()
+});
+
+// --- Background Container Schema (individual properties optional) ---
+
+const backgroundsSchema = z.object({
+  skillbar: backgroundSchema.optional(),
+  maxedbar: backgroundSchema.optional(),
+  page: z
+    .object({
+      url: httpsUrlSchema
+    })
+    .optional()
+});
+
 // --- Main Theme Schema ---
 
 /**
  * Theme V3 Schema
  *
- * ALL fields are required for a complete theme (DEFAULT_THEME).
- * Use `.partial()` for user theme overrides that only modify specific fields.
+ * Color and background properties are individually optional.
+ * When a CSS property is omitted, it won't be applied to the DOM,
+ * allowing the CSS cascade (e.g., app.css light/dark defaults) to take effect.
  */
 export const themeV3Schema = z.object({
   schema: z.literal(3),
   light: z.boolean().default(false),
-  colors: z.object({
-    icon: oklchColorSchema,
-    link: oklchColorSchema,
-    hover: oklchColorSchema,
-    maxed: oklchColorSchema,
-    gold: oklchColorSchema,
-    logo: oklchColorSchema,
-    text: oklchColorSchema,
-    background: oklchColorSchema,
-    header: oklchColorSchema,
-    greyBackground: oklchColorSchema,
-    loreBackground: oklchColorSchema,
-    bg: oklchColorSchema,
-    mctooltipBg: oklchColorSchema
-  }),
-  backgrounds: z.object({
-    skillbar: backgroundSchema,
-    maxedbar: backgroundSchema,
-    page: z
-      .object({
-        url: httpsUrlSchema
-      })
-      .optional()
-  }),
+  colors: colorsSchema.optional(),
+  backgrounds: backgroundsSchema.optional(),
   minecraft: z.object({
     palette: z.enum(["nice-dark", "nice-light", "true-colors", "april-fools-2024"]).default("nice-dark"),
     overrides: z
@@ -105,37 +118,15 @@ export const themeV3Schema = z.object({
   })
 });
 
+/**
+ * Partial theme schema for URL sharing / user overrides.
+ * ALL fields are optional including metadata.
+ */
 export const partialThemeV3Schema = z.object({
   schema: z.literal(3).optional(),
   light: z.boolean().optional(),
-  colors: z
-    .object({
-      icon: oklchColorSchema.optional(),
-      link: oklchColorSchema.optional(),
-      hover: oklchColorSchema.optional(),
-      maxed: oklchColorSchema.optional(),
-      gold: oklchColorSchema.optional(),
-      logo: oklchColorSchema.optional(),
-      text: oklchColorSchema.optional(),
-      background: oklchColorSchema.optional(),
-      header: oklchColorSchema.optional(),
-      greyBackground: oklchColorSchema.optional(),
-      loreBackground: oklchColorSchema.optional(),
-      bg: oklchColorSchema.optional(),
-      mctooltipBg: oklchColorSchema.optional()
-    })
-    .optional(),
-  backgrounds: z
-    .object({
-      skillbar: backgroundSchema.optional(),
-      maxedbar: backgroundSchema.optional(),
-      page: z
-        .object({
-          url: httpsUrlSchema
-        })
-        .optional()
-    })
-    .optional(),
+  colors: colorsSchema.optional(),
+  backgrounds: backgroundsSchema.optional(),
   minecraft: z
     .object({
       palette: z.enum(["nice-dark", "nice-light", "true-colors", "april-fools-2024"]).optional(),
@@ -163,6 +154,17 @@ export const partialThemeV3Schema = z.object({
 export type ThemeV3 = z.infer<typeof themeV3Schema>;
 
 export type PartialThemeV3 = z.infer<typeof partialThemeV3Schema>;
+
+/**
+ * Theme colors type — all properties optional.
+ * When a property is undefined, the CSS cascade provides the value.
+ */
+export type ThemeColors = z.infer<typeof colorsSchema>;
+
+/**
+ * Convenience type: a color key name
+ */
+export type ThemeColorKey = keyof ThemeColors;
 
 export type ThemeBackground = z.infer<typeof backgroundSchema>;
 
