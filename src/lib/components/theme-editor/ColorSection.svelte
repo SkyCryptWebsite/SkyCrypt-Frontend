@@ -1,6 +1,7 @@
 <script lang="ts">
+  import { DEFAULT_THEME } from "$lib/shared/themes/defaults";
   import { hexToOklch, oklchToHex } from "$lib/shared/themes/color-utils";
-  import type { ThemeV3 } from "$lib/shared/themes/schema";
+  import type { ThemeColorKey, ThemeV3 } from "$lib/shared/themes/schema";
   import { Label } from "bits-ui";
 
   let { workingTheme = $bindable() } = $props<{
@@ -21,6 +22,17 @@
   function formatKey(key: string) {
     return key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase());
   }
+
+  function getColorValue(key: ThemeColorKey): string {
+    return workingTheme.colors?.[key] ?? DEFAULT_THEME.colors?.[key] ?? "oklch(0.5 0 0)";
+  }
+
+  function setColorValue(key: ThemeColorKey, hex: string) {
+    if (!workingTheme.colors) {
+      workingTheme.colors = {};
+    }
+    workingTheme.colors[key] = hexToOklch(hex);
+  }
 </script>
 
 <div class="flex flex-col gap-6 p-4">
@@ -34,9 +46,9 @@
             <input
               id="color-{key}"
               type="color"
-              value={oklchToHex(workingTheme.colors[key])}
+              value={oklchToHex(getColorValue(key))}
               oninput={(e) => {
-                workingTheme.colors[key] = hexToOklch(e.currentTarget.value);
+                setColorValue(key, e.currentTarget.value);
               }}
               class="h-8 w-full cursor-pointer rounded-md border border-text/10 bg-text/5 transition-colors focus:border-link focus:outline-none" />
           </div>

@@ -29,19 +29,35 @@
   let jsonString = $state(untrack(() => JSON.stringify(workingTheme, null, 2)));
   let jsonError = $state<string | null>(null);
 
+  /**
+   * Ensure a theme has complete colors and backgrounds for editor binding.
+   * Fills missing properties from DEFAULT_THEME so all inputs have values.
+   */
+  function ensureEditorDefaults(theme: ThemeV3): ThemeV3 {
+    return {
+      ...theme,
+      colors: { ...DEFAULT_THEME.colors, ...theme.colors },
+      backgrounds: {
+        skillbar: theme.backgrounds?.skillbar ?? DEFAULT_THEME.backgrounds!.skillbar!,
+        maxedbar: theme.backgrounds?.maxedbar ?? DEFAULT_THEME.backgrounds!.maxedbar!,
+        page: theme.backgrounds?.page ?? DEFAULT_THEME.backgrounds?.page
+      }
+    };
+  }
+
   // Initial state: copy of active theme or default
   function getInitialTheme(): ThemeV3 {
     if (internalState.themeEditorId) {
       const existing = themeContext.allThemes.find((t) => t.metadata.id === internalState.themeEditorId);
       if (existing) {
-        return devalue.parse(devalue.stringify(existing));
+        return ensureEditorDefaults(devalue.parse(devalue.stringify(existing)));
       }
     }
     // Fallback to active theme if valid, else default
     if (themeContext.activeTheme) {
-      return devalue.parse(devalue.stringify(themeContext.activeTheme));
+      return ensureEditorDefaults(devalue.parse(devalue.stringify(themeContext.activeTheme)));
     }
-    return devalue.parse(devalue.stringify(DEFAULT_THEME));
+    return ensureEditorDefaults(devalue.parse(devalue.stringify(DEFAULT_THEME)));
   }
 
   function handleReset() {
@@ -98,6 +114,9 @@
   }
 
   function setBackgroundType(key: "skillbar" | "maxedbar", type: "color" | "stripes") {
+    if (!workingTheme.backgrounds) {
+      workingTheme.backgrounds = {};
+    }
     if (type === "color") {
       workingTheme.backgrounds[key] = {
         type: "color",
