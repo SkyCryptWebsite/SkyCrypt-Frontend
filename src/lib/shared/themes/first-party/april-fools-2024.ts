@@ -1,22 +1,17 @@
 import type { ThemeV3 } from "../schema";
+import { defaultTheme } from "./default";
 
 export const aprilFools2024Theme = {
   schema: 3,
-  light: false,
+  light: defaultTheme.light,
   colors: {
+    ...defaultTheme.colors,
     icon: "oklch(68.5% 0.2336 351.46)",
     link: "oklch(68.5% 0.2336 351.46)",
     hover: "oklch(68.5% 0.2336 351.46)",
     maxed: "oklch(66.55% 0.1962 10.02)",
     gold: "oklch(56.4% 0.095 238.43)",
-    logo: "oklch(68.5% 0.2336 351.46)",
-    text: "oklch(1 0 0)",
-    background: "oklch(0 0 0)",
-    header: "oklch(0.28 0 0)",
-    greyBackground: "oklch(0.24 0 0)",
-    loreBackground: "oklch(0.17 0 0 / 0.9)",
-    bg: "oklch(0.18 0 0)",
-    mctooltipBg: "oklch(12.142% 0.05582 328.352 / 0.93)"
+    logo: "oklch(68.5% 0.2336 351.46)"
   },
   backgrounds: {
     skillbar: {
@@ -35,10 +30,7 @@ export const aprilFools2024Theme = {
       url: "https://sky.shiiyu.moe/img/themes/april-fools-2024/bg.avif"
     }
   },
-  minecraft: {
-    palette: "nice-dark",
-    overrides: undefined
-  },
+  minecraft: defaultTheme.minecraft,
   metadata: {
     id: "april-fools-2024",
     name: "April Fools 2024 Theme",

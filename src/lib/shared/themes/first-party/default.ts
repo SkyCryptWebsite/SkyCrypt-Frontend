@@ -32,7 +32,7 @@ export const defaultTheme = {
     }
   },
   minecraft: {
-    palette: "nice-dark",
+    palette: "nice-light",
     overrides: undefined
   },
   metadata: {

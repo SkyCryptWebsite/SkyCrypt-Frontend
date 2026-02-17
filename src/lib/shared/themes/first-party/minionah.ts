@@ -1,22 +1,17 @@
 import type { ThemeV3 } from "../schema";
+import { defaultTheme } from "./default";
 
 export const minionahTheme = {
   schema: 3,
-  light: false,
+  light: defaultTheme.light,
   colors: {
+    ...defaultTheme.colors,
     icon: "oklch(37.05% 0 0)",
     link: "oklch(92.34% 0 0)",
     hover: "oklch(98.48% 0 0)",
     maxed: "oklch(72.84% 0.1506 75.86)",
     gold: "oklch(72.84% 0.1506 75.86)",
-    logo: "oklch(26.97% 0 0)",
-    text: "oklch(1 0 0)",
-    background: "oklch(0 0 0)",
-    header: "oklch(0.28 0 0)",
-    greyBackground: "oklch(0.24 0 0)",
-    loreBackground: "oklch(0.17 0 0 / 0.9)",
-    bg: "oklch(0.18 0 0)",
-    mctooltipBg: "oklch(12.142% 0.05582 328.352 / 0.93)"
+    logo: "oklch(26.97% 0 0)"
   },
   backgrounds: {
     skillbar: {
@@ -28,10 +23,7 @@ export const minionahTheme = {
       color: "oklch(69.69% 0.1423 76.74)"
     }
   },
-  minecraft: {
-    palette: "nice-dark",
-    overrides: undefined
-  },
+  minecraft: defaultTheme.minecraft,
   metadata: {
     id: "minionah",
     name: "MinionAH Theme",
