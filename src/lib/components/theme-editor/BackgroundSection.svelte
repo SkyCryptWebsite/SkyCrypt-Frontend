@@ -24,10 +24,10 @@
     <RadioGroup.Root value={workingTheme.backgrounds.skillbar.type} onValueChange={(v) => setBackgroundType("skillbar", v as "color" | "stripes")} class="flex gap-4">
       {#each backgroundTypes as type, index (index)}
         <div class="flex items-center gap-2">
-          <RadioGroup.Item value={type.value} id={`skillbar-${type.value}`} class="group flex size-4 items-center justify-center rounded-full border border-text/20 bg-text/5 text-link transition-all hover:bg-text/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-link focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-link data-[state=checked]:bg-link data-[state=checked]:text-background">
+          <RadioGroup.Item value={type.value} id="skillbar-{type.value}" class="group flex size-4 items-center justify-center rounded-full border border-text/20 bg-text/5 text-link transition-all hover:bg-text/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-link focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-link data-[state=checked]:bg-link data-[state=checked]:text-background">
             <Check class="size-2.5 opacity-0 transition-opacity group-data-[state=checked]:opacity-100" />
           </RadioGroup.Item>
-          <Label.Root for={`skillbar-${type.value}`} class="cursor-pointer text-sm font-medium text-text/80">{type.label}</Label.Root>
+          <Label.Root for="skillbar-{type.value}" class="cursor-pointer text-sm font-medium text-text/80">{type.label}</Label.Root>
         </div>
       {/each}
     </RadioGroup.Root>
@@ -86,10 +86,10 @@
     <RadioGroup.Root value={workingTheme.backgrounds.maxedbar.type} onValueChange={(v) => setBackgroundType("maxedbar", v as "color" | "stripes")} class="flex gap-4">
       {#each backgroundTypes as type, index (index)}
         <div class="flex items-center gap-2">
-          <RadioGroup.Item value={type.value} id={`maxedbar-${type.value}`} class="group flex size-4 items-center justify-center rounded-full border border-text/20 bg-text/5 text-link transition-all hover:bg-text/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-link focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-link data-[state=checked]:bg-link data-[state=checked]:text-background">
+          <RadioGroup.Item value={type.value} id="maxedbar-{type.value}" class="group flex size-4 items-center justify-center rounded-full border border-text/20 bg-text/5 text-link transition-all hover:bg-text/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-link focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-link data-[state=checked]:bg-link data-[state=checked]:text-background">
             <Check class="size-2.5 opacity-0 transition-opacity group-data-[state=checked]:opacity-100" />
           </RadioGroup.Item>
-          <Label.Root for={`maxedbar-${type.value}`} class="cursor-pointer text-sm font-medium text-text/80">{type.label}</Label.Root>
+          <Label.Root for="maxedbar-{type.value}" class="cursor-pointer text-sm font-medium text-text/80">{type.label}</Label.Root>
         </div>
       {/each}
     </RadioGroup.Root>

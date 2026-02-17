@@ -85,9 +85,9 @@
     {#each mcCodes as code, index (index)}
       {@const effectiveColor = getEffectiveColor(code)}
       <div class="flex flex-col gap-1.5">
-        <Label.Root for={`mc-${code}`} class="text-xs font-bold text-text/80">§{code}</Label.Root>
+        <Label.Root for="mc-${code}" class="text-xs font-bold text-text/80">§{code}</Label.Root>
 
-        <input id={`mc-${code}`} type="color" value={oklchToHex(effectiveColor)} oninput={(e) => setOverride(code, hexToOklch(e.currentTarget.value))} class="h-8 w-full cursor-pointer rounded-md border border-text/10 bg-text/5 transition-colors focus:border-link focus:outline-none" />
+        <input id="mc-${code}" type="color" value={oklchToHex(effectiveColor)} oninput={(e) => setOverride(code, hexToOklch(e.currentTarget.value))} class="h-8 w-full cursor-pointer rounded-md border border-text/10 bg-text/5 transition-colors focus:border-link focus:outline-none" />
       </div>
     {/each}
   </div>

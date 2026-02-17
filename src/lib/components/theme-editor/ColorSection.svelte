@@ -30,9 +30,9 @@
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {#each group.keys as key, index (index)}
           <div class="flex flex-col gap-1.5">
-            <Label.Root for={`color-${key}`} class="text-xs font-semibold text-text/80">{formatKey(key)}</Label.Root>
+            <Label.Root for="color-{key}" class="text-xs font-semibold text-text/80">{formatKey(key)}</Label.Root>
             <input
-              id={`color-${key}`}
+              id="color-{key}"
               type="color"
               value={oklchToHex(workingTheme.colors[key])}
               oninput={(e) => {
