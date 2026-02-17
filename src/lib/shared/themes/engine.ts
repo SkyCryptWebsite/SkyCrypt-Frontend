@@ -1,57 +1,63 @@
 import { DEFAULT_THEME } from "./defaults";
 import { getPaletteColors } from "./presets";
-import type { PartialThemeV3, ThemeV3 } from "./schema";
+import type { PartialThemeV3, ThemeBackground, ThemeColorKey, ThemeV3 } from "./schema";
 
-/**
- * Deep merge partial theme with DEFAULT_THEME
- * Reconstructs full ThemeV3 from user overrides
- */
+const COLOR_CSS_MAP: Record<ThemeColorKey, string> = {
+  icon: "--icon",
+  link: "--link",
+  hover: "--hover",
+  maxed: "--maxed",
+  gold: "--gold",
+  logo: "--logo",
+  text: "--text",
+  background: "--background",
+  header: "--header",
+  greyBackground: "--grey_background",
+  loreBackground: "--lore_background",
+  bg: "--bg",
+  mctooltipBg: "--mctooltip-bg"
+};
+
 export function mergeThemeWithDefaults(partial: PartialThemeV3): ThemeV3 {
-  const merged: ThemeV3 = {
-    ...DEFAULT_THEME,
-    ...partial,
-    colors: {
-      ...DEFAULT_THEME.colors,
-      ...partial.colors
-    },
-    backgrounds: {
-      ...DEFAULT_THEME.backgrounds,
-      ...partial.backgrounds,
-      skillbar: partial.backgrounds?.skillbar ?? DEFAULT_THEME.backgrounds.skillbar,
-      maxedbar: partial.backgrounds?.maxedbar ?? DEFAULT_THEME.backgrounds.maxedbar,
-      page: partial.backgrounds?.page ?? DEFAULT_THEME.backgrounds.page
-    },
+  return {
+    schema: 3,
+    light: partial.light ?? DEFAULT_THEME.light,
+    colors: partial.colors,
+    backgrounds: partial.backgrounds,
     minecraft: {
-      ...DEFAULT_THEME.minecraft,
-      ...partial.minecraft,
       palette: partial.minecraft?.palette ?? DEFAULT_THEME.minecraft.palette,
       overrides: partial.minecraft?.overrides ?? DEFAULT_THEME.minecraft.overrides
     },
+    enchantedGlint: partial.enchantedGlint,
     metadata: {
       ...DEFAULT_THEME.metadata,
       ...partial.metadata
     }
   };
-
-  return merged;
 }
 
-/**
- * ThemeEngine: Applies theme CSS variables to DOM
- */
+function applyBackgroundVar(root: HTMLElement, cssVar: string, bg: ThemeBackground | undefined): void {
+  if (!bg) {
+    root.style.removeProperty(cssVar);
+    return;
+  }
+
+  if (bg.type === "color") {
+    root.style.setProperty(cssVar, bg.color);
+  } else {
+    const { angle, colors, width } = bg;
+    root.style.setProperty(cssVar, `repeating-linear-gradient(${angle}, ${colors[0]} 0px, ${colors[0]} ${width}px, ${colors[1]} ${width}px, ${colors[1]} ${width * 2}px)`);
+  }
+}
+
 export class ThemeEngine {
-  /**
-   * Apply theme to document root
-   */
   static applyTheme(theme: ThemeV3): void {
-    if (typeof document === "undefined") return; // SSR guard
+    if (typeof document === "undefined") return;
     const root = document.documentElement;
 
-    // Set data attributes
     root.dataset.theme = theme.metadata.id;
     root.dataset.mode = theme.light ? "light" : "dark";
 
-    // Set dark/light classes
     if (theme.light) {
       root.classList.remove("dark");
       root.classList.add("light");
@@ -60,50 +66,29 @@ export class ThemeEngine {
       root.classList.add("dark");
     }
 
-    // Apply color CSS variables
-    root.style.setProperty("--icon", theme.colors.icon);
-    root.style.setProperty("--link", theme.colors.link);
-    root.style.setProperty("--hover", theme.colors.hover);
-    root.style.setProperty("--maxed", theme.colors.maxed);
-    root.style.setProperty("--gold", theme.colors.gold);
-    root.style.setProperty("--logo", theme.colors.logo);
-    root.style.setProperty("--text", theme.colors.text);
-    root.style.setProperty("--background", theme.colors.background);
-    root.style.setProperty("--header", theme.colors.header);
-    root.style.setProperty("--grey_background", theme.colors.greyBackground);
-    root.style.setProperty("--lore_background", theme.colors.loreBackground);
-    root.style.setProperty("--bg", theme.colors.bg);
-    root.style.setProperty("--mctooltip-bg", theme.colors.mctooltipBg);
+    for (const [key, cssVar] of Object.entries(COLOR_CSS_MAP)) {
+      const value = theme.colors?.[key as ThemeColorKey];
+      if (value) {
+        root.style.setProperty(cssVar, value);
+      } else {
+        root.style.removeProperty(cssVar);
+      }
+    }
 
-    // Apply Minecraft palette colors (§0-§f)
     const mcColors = getPaletteColors(theme.minecraft.palette, theme.minecraft.overrides);
-    Object.entries(mcColors).forEach(([code, color]) => {
+    for (const [code, color] of Object.entries(mcColors)) {
       root.style.setProperty(`--${code}`, color);
-    });
-
-    // Apply background styles
-    if (theme.backgrounds.skillbar.type === "color") {
-      root.style.setProperty("--skillbar", theme.backgrounds.skillbar.color);
-    } else {
-      const { angle, colors, width } = theme.backgrounds.skillbar;
-      root.style.setProperty("--skillbar", `repeating-linear-gradient(${angle}, ${colors[0]} 0px, ${colors[0]} ${width}px, ${colors[1]} ${width}px, ${colors[1]} ${width * 2}px)`);
     }
 
-    if (theme.backgrounds.maxedbar.type === "color") {
-      root.style.setProperty("--maxedbar", theme.backgrounds.maxedbar.color);
-    } else {
-      const { angle, colors, width } = theme.backgrounds.maxedbar;
-      root.style.setProperty("--maxedbar", `repeating-linear-gradient(${angle}, ${colors[0]} 0px, ${colors[0]} ${width}px, ${colors[1]} ${width}px, ${colors[1]} ${width * 2}px)`);
-    }
+    applyBackgroundVar(root, "--skillbar", theme.backgrounds?.skillbar);
+    applyBackgroundVar(root, "--maxedbar", theme.backgrounds?.maxedbar);
 
-    // Apply page background
-    if (theme.backgrounds.page?.url) {
+    if (theme.backgrounds?.page?.url) {
       root.style.setProperty("--bg-url", `url(/api/image-proxy?url=${encodeURIComponent(theme.backgrounds.page.url)})`);
     } else {
       root.style.removeProperty("--bg-url");
     }
 
-    // Apply enchanted glint
     if (theme.enchantedGlint) {
       root.style.setProperty("--enchanted-glint", `url(/api/image-proxy?url=${encodeURIComponent(theme.enchantedGlint)})`);
     } else {
