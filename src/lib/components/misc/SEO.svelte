@@ -2,7 +2,6 @@
   import { page } from "$app/state";
   import { getTheme } from "$ctx";
   import type { ModelsEmbedData } from "$lib/shared/api/orval-generated";
-  import themes from "$lib/shared/constants/themes";
   import { getLongDescription, getMetaTitle, getShortDescription } from "$lib/shared/embedGenerator";
   import SvelteSeo from "svelte-seo";
 
@@ -43,5 +42,5 @@
     title: getMetaTitle(embedData),
     description: getLongDescription(embedData)
   }}
-  themeColor={themes.find((theme) => theme.id === themeContext.current)?.light ? "#dbdbdb" : "#282828"}
+  themeColor={themeContext.activeTheme?.light ? "#dbdbdb" : "#282828"}
   manifest="/manifest.webmanifest" />

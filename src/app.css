@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@plugin "./plugins/themes.ts";
 @source "app.html";
 @source inline("{group-data-[rainbow=false]/html:,}{text-,bg-}minecraft-{0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f}");
 @custom-variant dark (&:where(.dark, .dark *));
@@ -161,25 +160,28 @@
   /* For color preview to work you need to have the 'naumovs.color-highlight' extension installed */
   :root {
     /* Icon Green (used for Skill Icons, Underlines etc.) */
-    /* --icon: oklch(0.74 0.21 147.69) */
+    --icon: oklch(73.62% 0.2129 147.69);
 
     /* Link Green (used for Links, Unclaimed Slayers, Crafted Minions etc.) */
-    /* --link: oklch(0.82 0.25 146.24) */
+    --link: oklch(81.56% 0.2459 146.24);
 
     /* Hover Green (used only for link hovers) */
-    /* --hover: oklch(0.84 0.23 149.89) */
+    --hover: oklch(83.81% 0.2303 149.89);
 
     /* Skill Bar Green (used for Skill Progress Bars) */
-    /* --skillbar: oklch(0.64 0.17 150.18) */
+    --skillbar: oklch(63.98% 0.1731 150.18);
 
     /* Maxed Bar Gold (used for Maxed Progress Bars) */
-    /* --maxedbar: oklch(0.70 0.14 76.74) */
+    --maxedbar: oklch(69.69% 0.1423 76.74);
 
     /* Maxed Gold (used for Maxed things etc.) */
-    /* --maxed: oklch(0.73 0.15 75.86) */
+    --maxed: oklch(72.84% 0.1506 75.86);
 
     /* Golden Text (used for Golden Text) */
-    /* --gold: oklch(0.83 0.15 78.27) */
+    --gold: oklch(82.84% 0.1548 78.27);
+
+    /* Header Logo */
+    --logo: oklch(68.48% 0.2338 351.45);
 
     /* Most of the text */
     --text: oklch(1 0 0);
@@ -195,14 +197,29 @@
     /* used when --bg can't be used */
     --bg: oklch(0.18 0 0);
 
-    /* Header Logo */
-    --logo: url(/img/app-icons/svg.svg);
-
     /* Normal Background */
-    --bg: url(/img/bg.avif);
+    --bg-url: url(/img/bg.avif);
 
     /* Minecraft Tooltip */
     --mctooltip-bg: oklch(12.142% 0.05582 328.352 / 0.93);
+
+    /* Minecraft color codes (nice-dark palette) */
+    --§0: oklch(0 0 0);
+    --§1: oklch(0.32 0.14 264.6);
+    --§2: oklch(0.64 0.22 142.5);
+    --§3: oklch(0.58 0.1 194.78);
+    --§4: oklch(0.42 0.17 28.49);
+    --§5: oklch(0.5 0.23 328.34);
+    --§6: oklch(0.71 0.15 72.75);
+    --§7: oklch(0.5 0 0);
+    --§8: oklch(0.31 0 0);
+    --§9: oklch(0.51 0.25 273.16);
+    --§a: oklch(0.7 0.2 143.13);
+    --§b: oklch(0.69 0.11 211.66);
+    --§c: oklch(0.56 0.17 24.75);
+    --§d: oklch(0.7 0.19 338.3);
+    --§e: oklch(0.84 0.17 93.53);
+    --§f: oklch(0.66 0 0);
 
     color-scheme: dark;
   }
@@ -281,6 +298,14 @@
 
   [data-arrow] {
     @apply text-background-grey;
+  }
+
+  ::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+
+  ::-webkit-color-swatch {
+    border: none;
   }
 }
 
