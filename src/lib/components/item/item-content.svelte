@@ -1,6 +1,5 @@
 <script lang="ts">
   import { getPacksContext, getPreferences, getWikiOrder, type WikiOrderData } from "$ctx";
-  import ContainedItem from "./ContainedItem.svelte";
   import type { ModelsStrippedItem } from "$lib/shared/api/orval-generated";
   import { getRarityClass, removeFormatting, renderLore } from "$lib/shared/helper";
   import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
@@ -9,6 +8,7 @@
   import Info from "@lucide/svelte/icons/info";
   import TriangleAlert from "@lucide/svelte/icons/triangle-alert";
   import { Avatar, Button } from "bits-ui";
+  import ContainedItem from "./ContainedItem.svelte";
 
   type Props = {
     piece: ModelsStrippedItem;

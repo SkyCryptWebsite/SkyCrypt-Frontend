@@ -1,7 +1,7 @@
 // Hex ↔ OKLCH color conversion using culori
 // Outputs absolute L format (0-1 range) for backward compatibility with saved themes
 
-import { formatHex, converter, parse } from "culori";
+import { converter, formatHex, parse } from "culori";
 
 const toOklch = converter("oklch");
 

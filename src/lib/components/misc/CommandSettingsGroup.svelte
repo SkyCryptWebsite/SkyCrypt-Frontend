@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { getPreferences, getInternalState } from "$ctx";
+  import { getInternalState, getPreferences } from "$ctx";
   import { SettingsTab } from "$lib/components/header/types";
+  import { cn } from "$lib/shared/utils";
   import BookOpenText from "@lucide/svelte/icons/book-open-text";
   import Fan from "@lucide/svelte/icons/fan";
   import Keyboard from "@lucide/svelte/icons/keyboard";
@@ -11,7 +12,6 @@
   import Sparkle from "@lucide/svelte/icons/sparkle";
   import { Command } from "bits-ui";
   import type { SettingsConfigItem } from "./command-utils";
-  import { cn } from "$lib/shared/utils";
 
   const { closeCommand }: { closeCommand: () => void } = $props();
 

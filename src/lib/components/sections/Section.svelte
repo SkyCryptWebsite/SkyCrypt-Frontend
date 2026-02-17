@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { SectionTitle } from "$lib/components/sections";
-  import { SectionSubtitle } from "$lib/components/sections";
+  import { SectionSubtitle, SectionTitle } from "$lib/components/sections";
   import type { SectionName } from "$lib/sections/types";
   import { cn } from "$lib/shared/utils";
   import type { Snippet } from "svelte";

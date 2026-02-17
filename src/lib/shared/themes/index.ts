@@ -1,5 +1,5 @@
-export { themeV3Schema, partialThemeV3Schema, type ThemeV3, type PartialThemeV3, type ThemeColors, type ThemeColorKey, type ThemeBackground, type ColorBackground, type StripesBackground } from "./schema";
 export { DEFAULT_THEME } from "./defaults";
-export { ThemeEngine, mergeThemeWithDefaults } from "./engine";
-export { MC_PALETTES, paletteNames, getPaletteColors } from "./presets";
-export { encodeTheme, decodeTheme, getThemeShareURL, parseThemeFromURL } from "./sharing";
+export { mergeThemeWithDefaults, ThemeEngine } from "./engine";
+export { getPaletteColors, MC_PALETTES, paletteNames } from "./presets";
+export { partialThemeV3Schema, themeV3Schema, type ColorBackground, type PartialThemeV3, type StripesBackground, type ThemeBackground, type ThemeColorKey, type ThemeColors, type ThemeV3 } from "./schema";
+export { decodeTheme, encodeTheme, getThemeShareURL, parseThemeFromURL } from "./sharing";

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getMiscContext } from "$ctx";
-  import { AdditionStat } from "$lib/components/stats";
   import { SectionSubtitle } from "$lib/components/sections";
+  import { AdditionStat } from "$lib/components/stats";
   import Items from "$lib/layouts/stats/Items.svelte";
   import { titleCase } from "$lib/shared/helper";
   import { format } from "numerable";

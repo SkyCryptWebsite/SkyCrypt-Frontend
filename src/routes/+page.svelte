@@ -1,9 +1,7 @@
 <script lang="ts">
   import { getFavorites, getPreferences } from "$ctx";
   import { env } from "$env/dynamic/public";
-  import { ContributorCard } from "$lib/components/misc";
-  import { ContributorCardSkeleton } from "$lib/components/misc";
-  import { CtaCard } from "$lib/components/misc";
+  import { ContributorCard, ContributorCardSkeleton, CtaCard } from "$lib/components/misc";
   import { Notice } from "$lib/components/notices";
   import { searchUser } from "$lib/shared/api/skycrypt-api.remote";
   import { cn } from "$lib/shared/utils";

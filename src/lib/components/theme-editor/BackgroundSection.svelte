@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { DEFAULT_THEME } from "$lib/shared/themes/defaults";
   import { hexToOklch, oklchToHex } from "$lib/shared/themes/color-utils";
+  import { DEFAULT_THEME } from "$lib/shared/themes/defaults";
   import type { ThemeV3 } from "$lib/shared/themes/schema";
   import Check from "@lucide/svelte/icons/check";
   import ImageIcon from "@lucide/svelte/icons/image";

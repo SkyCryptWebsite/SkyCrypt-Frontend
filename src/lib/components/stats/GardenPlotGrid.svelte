@@ -2,11 +2,11 @@
   import { getHoverContext, getInternalState } from "$ctx";
   import { AdditionStat } from "$lib/components/stats";
   import { type ModelsPlotLayout } from "$lib/shared/api/orval-generated";
-  import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
   import { renderLore } from "$lib/shared/helper";
+  import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
   import { flyAndScale } from "$lib/shared/utils";
-  import { Avatar, Tooltip } from "bits-ui";
   import Image from "@lucide/svelte/icons/image";
+  import { Avatar, Tooltip } from "bits-ui";
 
   let { plot }: { plot: ModelsPlotLayout | undefined } = $props();
 

@@ -1,11 +1,10 @@
 <script lang="ts">
   import { getSkillsContext } from "$ctx";
-  import { AdditionStat } from "$lib/components/stats";
-  import { Chip } from "$lib/components/misc";
   import { Item } from "$lib/components/item";
+  import { Chip, ScrollItems } from "$lib/components/misc";
   import { Notice } from "$lib/components/notices";
-  import { ScrollItems } from "$lib/components/misc";
   import { SectionSubtitle } from "$lib/components/sections";
+  import { AdditionStat } from "$lib/components/stats";
   import Items from "$lib/layouts/stats/Items.svelte";
   import { renderLore } from "$lib/shared/helper";
   import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";

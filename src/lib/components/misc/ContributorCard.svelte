@@ -3,8 +3,8 @@
   import { getFavorites, getInternalState } from "$ctx";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import type { Contributor } from "$routes/ contributors.remote";
-  import { Avatar, Button, Tooltip } from "bits-ui";
   import { Role } from "$routes/enums";
+  import { Avatar, Button, Tooltip } from "bits-ui";
   import type { Component } from "svelte";
 
   interface Props {

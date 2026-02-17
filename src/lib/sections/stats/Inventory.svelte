@@ -1,12 +1,9 @@
 <script lang="ts">
   import { getInternalState, getPreferences, getProfileContext } from "$ctx";
   import { env } from "$env/dynamic/public";
-  import { Item } from "$lib/components/item";
-  import { InventoryGrid } from "$lib/components/item";
-  import { InventorySearch } from "$lib/components/item";
+  import { InventoryGrid, InventorySearch, Item } from "$lib/components/item";
   import ScrollAreaPrimitive from "$lib/components/ScrollAreaPrimitive.svelte";
-  import { Section } from "$lib/components/sections";
-  import { SectionBoundary } from "$lib/components/sections";
+  import { Section, SectionBoundary } from "$lib/components/sections";
   import { type ModelsStrippedItem } from "$lib/shared/api/orval-generated";
   import { getInventorySection } from "$lib/shared/api/skycrypt-api.remote";
   import { renderLore, shouldShine } from "$lib/shared/helper";

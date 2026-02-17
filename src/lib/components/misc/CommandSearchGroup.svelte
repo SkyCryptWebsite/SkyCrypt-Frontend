@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { getPreferences, getFavorites, getRecentSearches } from "$ctx";
-  import { Avatar, Command } from "bits-ui";
+  import { getFavorites, getPreferences, getRecentSearches } from "$ctx";
   import { cn } from "$lib/shared/utils";
+  import { Avatar, Command } from "bits-ui";
 
   const { ign = "" }: { ign?: string } = $props();
 

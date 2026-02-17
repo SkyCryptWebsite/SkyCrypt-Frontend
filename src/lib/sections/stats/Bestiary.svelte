@@ -1,9 +1,8 @@
 <script lang="ts">
   import { getProfileContext } from "$ctx";
-  import { AdditionStat } from "$lib/components/stats";
-  import { Chip } from "$lib/components/misc";
-  import { ScrollItems } from "$lib/components/misc";
+  import { Chip, ScrollItems } from "$lib/components/misc";
   import { Section } from "$lib/components/sections";
+  import { AdditionStat } from "$lib/components/stats";
   import Items from "$lib/layouts/stats/Items.svelte";
   import { getBestiarySection } from "$lib/shared/api/skycrypt-api.remote";
   import { cn } from "$lib/shared/utils";
