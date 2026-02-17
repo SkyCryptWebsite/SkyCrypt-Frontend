@@ -88,7 +88,7 @@
     <Items subtitle="Wardrobe">
       <div class="max-w-full">
         <!-- min height was calc by: each piece of armor was 72px with a 8px gap and scrollbar was 2.5px and some more for gap for scrollbar -->
-        <ScrollAreaPrimitive class="relative min-h-[335px]" type="auto" orientation="horizontal">
+        <ScrollAreaPrimitive class="relative min-h-83.75" type="auto" orientation="horizontal">
           {#snippet viewportChildren()}
             <div class="flex flex-row gap-6 md:gap-3">
               {#each firstWardrobeItems as _, i (i)}

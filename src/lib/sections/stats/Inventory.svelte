@@ -115,7 +115,7 @@
   });
 </script>
 
-<Section id="Inventory" {order} class="min-h-[600px]">
+<Section id="Inventory" {order} class="min-h-150">
   <Tabs.Root bind:value={openTab} class="@container relative mb-0 rounded-lg bg-background/30 p-5 pt-4">
     <Tabs.List>
       <ScrollAreaPrimitive viewClass="border-b border-icon" orientation="horizontal">
