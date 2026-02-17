@@ -15,7 +15,7 @@
 <header class="@container fixed top-0 left-0 z-30 h-12 w-full overflow-clip bg-header px-2.5 pt-[env(safe-area-inset-top,0)] pr-[max(0.625rem,env(safe-area-inset-right))] pb-[env(safe-area-inset-bottom,0)] pl-[max(0.625rem,env(safe-area-inset-left))] leading-12">
   <div class="flex h-full w-full justify-center @md:justify-between">
     <div class="flex gap-2">
-      <Button.Root href="/" class="flex items-center justify-center gap-2 font-bold" data-sveltekit-preload="hover">
+      <Button.Root href="/" class="flex items-center justify-center gap-2 font-bold" data-sveltekit-preload-data="hover">
         <Avatar.Root class="size-6 shrink-0 rounded-lg select-none">
           <svelte:boundary>
             <Avatar.Image loading="lazy" src="data:image/svg+xml;base64,{btoa(await getThemeIcons({ color: theme.activeTheme?.colors?.logo, invert: theme.activeTheme?.light }))}" alt="SkyCrypt" class="pointer-events-none h-6 select-none" />
