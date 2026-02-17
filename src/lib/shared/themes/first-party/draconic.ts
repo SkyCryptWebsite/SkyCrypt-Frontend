@@ -5,14 +5,12 @@ export const draconicTheme = {
   schema: 3,
   light: defaultTheme.light,
   colors: {
-    ...defaultTheme.colors,
     icon: "oklch(64.46% 0.1986 315.35)",
     link: "oklch(52.22% 0.1464 298.72)",
     hover: "oklch(64.46% 0.1986 315.35)",
     logo: "oklch(59.96% 0.1826 315.91)"
   },
   backgrounds: {
-    ...defaultTheme.backgrounds,
     skillbar: {
       type: "color",
       color: "oklch(64.46% 0.1986 315.35)"

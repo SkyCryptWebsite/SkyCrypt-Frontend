@@ -5,7 +5,6 @@ export const minionahTheme = {
   schema: 3,
   light: defaultTheme.light,
   colors: {
-    ...defaultTheme.colors,
     icon: "oklch(37.05% 0 0)",
     link: "oklch(92.34% 0 0)",
     hover: "oklch(98.48% 0 0)",

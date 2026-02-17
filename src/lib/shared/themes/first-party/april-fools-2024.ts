@@ -5,7 +5,6 @@ export const aprilFools2024Theme = {
   schema: 3,
   light: defaultTheme.light,
   colors: {
-    ...defaultTheme.colors,
     icon: "oklch(68.5% 0.2336 351.46)",
     link: "oklch(68.5% 0.2336 351.46)",
     hover: "oklch(68.5% 0.2336 351.46)",

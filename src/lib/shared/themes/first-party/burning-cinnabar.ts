@@ -5,14 +5,12 @@ export const burningCinnabarTheme = {
   schema: 3,
   light: defaultTheme.light,
   colors: {
-    ...defaultTheme.colors,
     icon: "oklch(56.79% 0.1979 28.72)",
     link: "oklch(56.79% 0.1979 28.72)",
     hover: "oklch(61.45% 0.1933 27.92)",
     logo: "oklch(49.37% 0.1887 21.44)"
   },
   backgrounds: {
-    ...defaultTheme.backgrounds,
     skillbar: {
       type: "color",
       color: "oklch(61.45% 0.1933 27.92)"

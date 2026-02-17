@@ -5,14 +5,12 @@ export const nightblueTheme = {
   schema: 3,
   light: defaultTheme.light,
   colors: {
-    ...defaultTheme.colors,
     icon: "oklch(74.84% 0.14695169052401735 238.28643418420637)",
     link: "oklch(90.41% 0.1549417047860022 192.7359326767159)",
     hover: "oklch(69.38% 0.1207 214.05)",
     logo: "oklch(61.34% 0.1543 245.78)"
   },
   backgrounds: {
-    ...defaultTheme.backgrounds,
     skillbar: {
       type: "color",
       color: "oklch(74.84% 0.14695169052401735 238.28643418420637)"

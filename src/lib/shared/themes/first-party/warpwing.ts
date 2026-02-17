@@ -5,14 +5,12 @@ export const warpwingTheme = {
   schema: 3,
   light: defaultTheme.light,
   colors: {
-    ...defaultTheme.colors,
     icon: "oklch(67.48% 0.1158 207.35)",
     link: "oklch(67.48% 0.1158 207.35)",
     hover: "oklch(67.48% 0.1158 207.35)",
     logo: "oklch(53.96% 0.0886 205.04)"
   },
   backgrounds: {
-    ...defaultTheme.backgrounds,
     skillbar: {
       type: "color",
       color: "oklch(67.48% 0.1158 207.35)"

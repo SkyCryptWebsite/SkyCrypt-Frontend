@@ -5,7 +5,6 @@ export const lightTheme = {
   schema: 3,
   light: true,
   colors: {
-    ...defaultTheme.colors,
     icon: "oklch(67.18% 0.2125 144.8)",
     link: "oklch(75.19% 0.2293 145.93)",
     hover: "oklch(81.61% 0.2465 146.18)",

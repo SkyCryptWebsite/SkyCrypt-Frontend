@@ -5,7 +5,6 @@ export const candycaneTheme = {
   schema: 3,
   light: true,
   colors: {
-    ...defaultTheme.colors,
     icon: "oklch(52.68% 0.2161 29.23)",
     link: "oklch(53.47% 0.2194 29.23)",
     hover: "oklch(59.05% 0.2423 29.23)",
