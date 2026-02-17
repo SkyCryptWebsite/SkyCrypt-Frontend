@@ -86,7 +86,7 @@ export class ThemeEngine {
     if (theme.backgrounds?.page?.url) {
       root.style.setProperty("--bg-url", `url(/api/image-proxy?url=${encodeURIComponent(theme.backgrounds.page.url)})`);
     } else {
-      root.style.removeProperty("--bg-url");
+      root.style.setProperty("--bg-url", "none");
     }
 
     if (theme.enchantedGlint) {
