@@ -8,6 +8,7 @@
     "command-palette-extraction",
     "extracted-snippets-refactor",
     "organized-components-move",
+    "runtime-theme-engine",
     "string-shorthand-props"
   ]
 }

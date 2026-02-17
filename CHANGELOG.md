@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.2.0-beta.1
+
+### Minor Changes
+
+- Add runtime theme engine V3 with visual editor, replacing old build-time JSON theme system. Users can now create, edit, share, and manage custom themes directly on the website. Includes Zod schema validation, URL-based compressed sharing, MC color palette presets, live preview, and migration of all 11 first-party themes to the new V3 format. ([#269](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/269))
+
 ## 3.1.2-beta.0
 
 ### Patch Changes
