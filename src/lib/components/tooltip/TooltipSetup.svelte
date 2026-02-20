@@ -17,7 +17,7 @@
           {#snippet child({ wrapperProps, props, open })}
             {#if open}
               <div {...wrapperProps}>
-                <div {...props} transition:flyAndScale>
+                <div {...props} transition:flyAndScale|global>
                   {#if payload?.children}
                     {@render payload.children()}
                   {:else if payload?.tooltipContent}
