@@ -12,7 +12,7 @@
   "git.autofetch": true,
   "svelte.enable-ts-plugin": true,
   "svelte.plugin.svelte.defaultScriptLanguage": "ts",
-  "tailwindCSS.classAttributes": ["class", "class:*", "class:name"],
+  "tailwindCSS.classAttributes": ["class", "class:*", "class:name", "payload"],
   "tailwindCSS.emmetCompletions": true,
   "tailwindCSS.classFunctions": ["cn", "clsx"],
   "tailwindCSS.includeLanguages": {

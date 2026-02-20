@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { getHoverContext, getInternalState } from "$ctx";
+  import { genericTooltipTether, getInternalState } from "$ctx";
   import type { ModelsStatsInfo } from "$lib/shared/api/orval-generated";
   import { STATS_DATA } from "$lib/shared/constants/stats";
-  import { cn, flyAndScale } from "$lib/shared/utils";
+  import { cn } from "$lib/shared/utils";
   import { Tooltip } from "bits-ui";
   import { format } from "numerable";
 
@@ -17,37 +17,27 @@
   let open = $state(false);
   let iconRef = $state<HTMLElement | null>(null);
 
-  const isHover = getHoverContext();
   const internalState = getInternalState();
 </script>
 
-<div>
-  <Tooltip.Root bind:open>
-    <Tooltip.Trigger class={cn(`my-0 flex items-center gap-1 text-sm font-bold whitespace-nowrap ${STATS_DATA[stat].color}`, className)} onpointerdown={() => (open = !open)} onclick={() => (internalState.content = tooltipContent)}>
-      <div bind:this={iconRef} class="inline-block font-icomoon text-base">{STATS_DATA[stat].symbol}</div>
-      <span class="capitalize">{stat.replace(/_/g, " ")}</span>
-      <span class="text-text">
-        {format(statData.total)}{#if STATS_DATA[stat]?.percent}%{/if}
-      </span>
-    </Tooltip.Trigger>
-    <Tooltip.Portal>
-      {#if isHover.current}
-        <Tooltip.Content forceMount class="z-50 space-y-4 rounded-lg bg-background-grey p-4 text-sm" sideOffset={0} side="top" align="center" customAnchor={iconRef}>
-          {#snippet child({ wrapperProps, props, open })}
-            {#if open}
-              <div {...wrapperProps}>
-                <div {...props} transition:flyAndScale>
-                  {@render tooltipContent()}
-                  <Tooltip.Arrow />
-                </div>
-              </div>
-            {/if}
-          {/snippet}
-        </Tooltip.Content>
-      {/if}
-    </Tooltip.Portal>
-  </Tooltip.Root>
-</div>
+<Tooltip.Trigger
+  class={cn("my-0 flex items-center gap-1 text-sm font-bold whitespace-nowrap ", STATS_DATA[stat].color, className)}
+  onpointerdown={() => (open = !open)}
+  onclick={() => (internalState.content = tooltipContent)}
+  tether={genericTooltipTether}
+  payload={{
+    class: "z-50 space-y-4 rounded-lg bg-background-grey p-4 text-sm",
+    side: "top",
+    align: "center",
+    customAnchor: iconRef,
+    children: tooltipContent
+  }}>
+  <div bind:this={iconRef} class="inline-block font-icomoon text-base">{STATS_DATA[stat].symbol}</div>
+  <span class="capitalize">{stat.replace(/_/g, " ")}</span>
+  <span class="text-text">
+    {format(statData.total)}{#if STATS_DATA[stat]?.percent}%{/if}
+  </span>
+</Tooltip.Trigger>
 
 {#snippet tooltipContent()}
   <div>
