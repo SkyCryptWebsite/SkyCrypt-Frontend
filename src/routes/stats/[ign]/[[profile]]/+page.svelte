@@ -43,30 +43,25 @@
 
 <SEO embedData={data.embed} />
 
-<div class="@container/parent relative">
-  <svelte:boundary>
-    {#snippet pending()}
-      <div class={cn("fixed top-0 right-0 min-h-dvh w-full @[75rem]/parent:w-[calc(100%-30vw)]", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")}></div>
-      <main data-vaul-drawer-wrapper class="@container relative mx-auto mt-12 @[75rem]/parent:ml-[30vw]">
-        <div class="flex h-screen items-center justify-center">
-          <div class={cn("rounded-lg bg-text/5 p-6", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-sm")}>
-            <div class="flex items-center gap-2">
-              <LoaderCircle class="size-5 animate-spin text-text/60" />
-              <span class="font-semibold text-text/80">Loading profile...</span>
-            </div>
-          </div>
+<svelte:boundary>
+  {#snippet pending()}
+    <div class="flex h-screen items-center justify-center">
+      <div class={cn("rounded-lg bg-text/5 p-6", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-sm")}>
+        <div class="flex items-center gap-2">
+          <LoaderCircle class="size-5 animate-spin text-text/60" />
+          <span class="font-semibold text-text/80">Loading profile...</span>
         </div>
-      </main>
-    {/snippet}
-
-    <Main data={await getProfileStats({ uuid: page.params.ign || "", profileId: page.params.profile || "" })} />
-
-    {#snippet failed(err, reset)}
-      <div class="flex h-screen items-center justify-center">
-        <Notice title="An unexpected error has occurred" type="error" error={err} retry={reset} />
       </div>
-    {/snippet}
-  </svelte:boundary>
-</div>
+    </div>
+  {/snippet}
+
+  <Main data={await getProfileStats({ uuid: page.params.ign || "", profileId: page.params.profile || "" })} />
+
+  {#snippet failed(err, reset)}
+    <div class="flex h-screen items-center justify-center">
+      <Notice title="An unexpected error has occurred" type="error" error={err} retry={reset} />
+    </div>
+  {/snippet}
+</svelte:boundary>
 
 <TooltipSetup />
