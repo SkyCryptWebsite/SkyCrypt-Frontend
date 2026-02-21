@@ -39,6 +39,7 @@
 <!-- Describe how you tested your changes -->
 
 - [ ] I have tested these changes locally
+- [ ] I have added tests that prove my changes work as expected
 
 ### Test Environment
 
@@ -58,6 +59,9 @@
 - [ ] I have performed a self-review of my own code
 - [ ] My changes generate no new warnings or errors
 - [ ] Any dependent changes have been merged and published
+- [ ] I have added necessary documentation (if appropriate)
+- [ ] I have added tests that prove my changes work as expected
+- [ ] I have added changesets if my changes should be reflected in the changelog
 
 ### Code Quality Checks
 

@@ -12,10 +12,8 @@ export default defineConfig({
           path: "./src/lib/shared/api/mutator/custom-instance.ts",
           name: "customFetch"
         }
-      }
-    },
-    hooks: {
-      afterAllFilesWrite: "prettier --write"
+      },
+      prettier: true
     }
   },
   skycryptZod: {
@@ -24,10 +22,8 @@ export default defineConfig({
       target: "./src/lib/shared/api/orval-generated-zod.ts",
       client: "zod",
       tsconfig: "./tsconfig.json",
-      fileExtension: ".zod.ts"
-    },
-    hooks: {
-      afterAllFilesWrite: "prettier --write"
+      fileExtension: ".zod.ts",
+      prettier: true
     }
   }
 });

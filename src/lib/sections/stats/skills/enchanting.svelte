@@ -1,9 +1,8 @@
 <script lang="ts">
   import { getSkillsContext } from "$ctx";
-  import AdditionStat from "$lib/components/AdditionStat.svelte";
-  import Chip from "$lib/components/Chip.svelte";
-  import ScrollItems from "$lib/components/scroll-items.svelte";
-  import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
+  import { Chip, ScrollItems } from "$lib/components/misc";
+  import { SectionSubtitle } from "$lib/components/sections";
+  import { AdditionStat } from "$lib/components/stats";
   import { tz } from "@date-fns/tz";
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
   import { Collapsible } from "bits-ui";

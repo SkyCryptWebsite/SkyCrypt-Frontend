@@ -1,11 +1,10 @@
 <script lang="ts">
   import { getProfileContext } from "$ctx";
-  import Bonus from "$lib/components/Bonus.svelte";
-  import EmptyEquipment from "$lib/components/EmptyEquipment.svelte";
-  import Item from "$lib/components/Item.svelte";
+  import { EmptyEquipment, Item } from "$lib/components/item";
+  import { Wardrobe } from "$lib/components/misc";
   import ScrollAreaPrimitive from "$lib/components/ScrollAreaPrimitive.svelte";
-  import Section from "$lib/components/Section.svelte";
-  import Wardrobe from "$lib/components/Wardrobe.svelte";
+  import { Section } from "$lib/components/sections";
+  import { Bonus } from "$lib/components/stats";
   import Items from "$lib/layouts/stats/Items.svelte";
   import { getGearSection } from "$lib/shared/api/skycrypt-api.remote";
   import { getRarityClass, renderLore } from "$lib/shared/helper";
@@ -88,7 +87,7 @@
     <Items subtitle="Wardrobe">
       <div class="max-w-full">
         <!-- min height was calc by: each piece of armor was 72px with a 8px gap and scrollbar was 2.5px and some more for gap for scrollbar -->
-        <ScrollAreaPrimitive class="relative min-h-[335px]" type="auto" orientation="horizontal">
+        <ScrollAreaPrimitive class="relative min-h-83.75" type="auto" orientation="horizontal">
           {#snippet viewportChildren()}
             <div class="flex flex-row gap-6 md:gap-3">
               {#each firstWardrobeItems as _, i (i)}

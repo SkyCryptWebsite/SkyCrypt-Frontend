@@ -1,0 +1,15 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "skycrypt-frontend": "3.1.1"
+  },
+  "changesets": [
+    "command-palette-extraction",
+    "extracted-snippets-refactor",
+    "fruity-snakes-juggle",
+    "organized-components-move",
+    "runtime-theme-engine",
+    "string-shorthand-props"
+  ]
+}

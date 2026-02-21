@@ -4,7 +4,7 @@ Before contributing to SkyCrypt, make sure you install the development environme
 
 ## Prerequisite Software
 
-- [Node.js](https://nodejs.org) (at least v22, as of October 2025)
+- [Node.js](https://nodejs.org) (at least v24, as of February 2026)
 - [pnpm](https://pnpm.io/) (Package manager)
 - [Nginx](https://www.nginx.com/) (Optional but an ideal choice for full deployment)
 
@@ -59,6 +59,7 @@ When you are ready to submit your changes, please create a pull request (PR) on 
 - Your code is well formatted and follows the project's coding style. Run `pnpm lint` to check for linting errors. If there are any `prettier` errors, run `pnpm format` to fix them. If there are any `eslint` or `svelte-check` errors, fix them manually.
 - Your code builds successfully. Run `pnpm build` to check for build errors.
 - Your PR has a clear title and description explaining the changes you made.
+- Your PR includes changesets if necessary. If your PR includes changes that should be reflected in the changelog, please include a changeset. You can do this by running `pnpm changeset` and following the prompts.
 
 ### Commit Message Format
 
@@ -78,6 +79,8 @@ The scope is optional but recommended for better categorization.
 - `fix: resolve rendering issue`
 - `docs: update contributing guidelines`
 
+**Commit Type Reference**: See [.github/CONVENTIONAL_COMMITS.md](.github/CONVENTIONAL_COMMITS.md) for a quick reference guide.
+
 ### Automated Releases
 
 Releases are created automatically based on the branch:
@@ -85,13 +88,11 @@ Releases are created automatically based on the branch:
 - **dev branch** → Creates prereleases (e.g., `v0.1.0-beta.1`) and deploys to cupcake.shiiyu.moe
 - **prod branch** → Creates stable releases (e.g., `v0.1.0`) and deploys to sky.shiiyu.moe
 
-The version bump is determined automatically by your commit types:
+The version bump is determined automatically by changesets:
 
-- `fix:` commits → patch version (0.0.1 → 0.0.2)
-- `feat:` commits → minor version (0.0.1 → 0.1.0)
-- Breaking changes (`feat!:` or `BREAKING CHANGE:`) → major version (0.0.1 → 1.0.0)
-
-**Commit Type Reference**: See [.github/CONVENTIONAL_COMMITS.md](.github/CONVENTIONAL_COMMITS.md) for a quick reference guide.
+- `patch` patch version (0.0.1 → 0.0.2)
+- `minor` minor version (0.0.1 → 0.1.0)
+- `major` major version (0.0.1 → 1.0.0)
 
 ## Issues
 

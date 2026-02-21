@@ -1,12 +1,9 @@
 <script lang="ts">
   import { getProfileContext } from "$ctx";
-  import AdditionStat from "$lib/components/AdditionStat.svelte";
-  import Bonus from "$lib/components/Bonus.svelte";
-  import Chip from "$lib/components/Chip.svelte";
-  import Item from "$lib/components/Item.svelte";
-  import ScrollItems from "$lib/components/scroll-items.svelte";
-  import Section from "$lib/components/Section.svelte";
-  import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
+  import { Item } from "$lib/components/item";
+  import { Chip, ScrollItems } from "$lib/components/misc";
+  import { Section, SectionSubtitle } from "$lib/components/sections";
+  import { AdditionStat, Bonus } from "$lib/components/stats";
   import Items from "$lib/layouts/stats/Items.svelte";
   import { getRiftSection } from "$lib/shared/api/skycrypt-api.remote";
   import { cn } from "$lib/shared/utils";

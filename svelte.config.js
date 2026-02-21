@@ -6,23 +6,12 @@ const config = {
   // Consult https://svelte.dev/docs/kit/integrations
   // for more information about preprocessors
   preprocess: vitePreprocess(),
-  compilerOptions: {
-    experimental: {
-      async: true
-    }
-  },
-
+  compilerOptions: { experimental: { async: true } },
   kit: {
     experimental: {
       remoteFunctions: true,
-
-      tracing: {
-        server: true
-      },
-
-      instrumentation: {
-        server: true
-      }
+      tracing: { server: true },
+      instrumentation: { server: true }
     },
     adapter: adapter(),
     alias: {
@@ -48,16 +37,18 @@ const config = {
     },
     version: {
       name: process.env.PUBLIC_COMMIT_HASH || Date.now().toString(),
-      pollInterval:
-        // in ms
-        1000 * 60 // 1 minute
+      // in ms
+      pollInterval: 1000 * 60 // 1 minute
     }
   },
+
   // Hide build warnings from node_modules
   onwarn: (warning, handler) => {
     if (warning.filename?.includes("node_modules")) return;
+
     handler(warning);
   },
+
   vitePlugin: {
     // Can be removed once Svelte 6 is released, as `true` will be the default
     dynamicCompileOptions({ _filename, _compileOptions }) {

@@ -1,4 +1,4 @@
-FROM node:22-alpine AS builder
+FROM node:24-alpine AS builder
 
 RUN apk add git
 ENV PNPM_HOME="/pnpm"
@@ -26,7 +26,7 @@ RUN pnpm run prepare
 RUN pnpm run build
 RUN pnpm prune --production
 
-FROM node:22-alpine
+FROM node:24-alpine
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"

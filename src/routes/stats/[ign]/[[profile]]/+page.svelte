@@ -2,14 +2,15 @@
   import { afterNavigate } from "$app/navigation";
   import { page } from "$app/state";
   import { getInternalState, getPreferences } from "$ctx";
-  import Notice from "$lib/components/Notice.svelte";
-  import SEO from "$lib/components/SEO.svelte";
+  import { SEO } from "$lib/components/misc";
+  import { Notice } from "$lib/components/notices";
+  import TooltipSetup from "$lib/components/tooltip/TooltipSetup.svelte";
   import Main from "$lib/layouts/stats/Main.svelte";
   import type { SectionName } from "$lib/sections/types";
   import { getProfileStats } from "$lib/shared/api/skycrypt-api.remote";
   import { cn } from "$lib/shared/utils";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
-  import type { PageServerData } from "./$types";
+  import { type PageServerData } from "./$types";
 
   const { data }: { data: PageServerData } = $props();
 
@@ -62,3 +63,5 @@
     </div>
   {/snippet}
 </svelte:boundary>
+
+<TooltipSetup />

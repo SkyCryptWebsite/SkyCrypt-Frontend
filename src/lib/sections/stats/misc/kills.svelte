@@ -1,8 +1,8 @@
 <script lang="ts">
   import { getMiscContext } from "$ctx";
-  import AdditionStat from "$lib/components/AdditionStat.svelte";
-  import ScrollItems from "$lib/components/scroll-items.svelte";
-  import SectionSubtitle from "$lib/components/SectionSubtitle.svelte";
+  import { ScrollItems } from "$lib/components/misc";
+  import { SectionSubtitle } from "$lib/components/sections";
+  import { AdditionStat } from "$lib/components/stats";
   import { format } from "numerable";
   import VirtualList from "svelte-tiny-virtual-list";
 

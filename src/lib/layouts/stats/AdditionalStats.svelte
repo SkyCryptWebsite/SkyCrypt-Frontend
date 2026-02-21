@@ -1,7 +1,6 @@
 <script lang="ts">
   import { getHoverContext, getPreferences, getProfileContext } from "$ctx";
-  import AdditionStat from "$lib/components/AdditionStat.svelte";
-  import { type SkycryptSrcModelsNetworthResult } from "$lib/shared/api/orval-generated";
+  import { AdditionStat, NetworthCard } from "$lib/components/stats";
   import { getNetworth } from "$lib/shared/api/skycrypt-api.remote";
   import { calculatePercentage, formatNumber } from "$lib/shared/helper";
   import { cn, flyAndScale } from "$lib/shared/utils";
@@ -137,45 +136,11 @@
       {@const networthData = await getNetworth({ uuid: profileUUID, profileId: profileId })}
 
       {#if networthData.normal}
-        {@render NetworthSnippet(networthData.normal, "Networth")}
+        <NetworthCard networth={networthData.normal} title="Networth" />
       {/if}
       {#if networthData.nonCosmetic}
-        {@render NetworthSnippet(networthData.nonCosmetic, "Non-Cosmetic Networth")}
+        <NetworthCard networth={networthData.nonCosmetic} title="Non-Cosmetic Networth" />
       {/if}
     {/if}
   </svelte:boundary>
 </div>
-
-{#snippet NetworthSnippet(networth: SkycryptSrcModelsNetworthResult, title: string = "Networth")}
-  <AdditionStat text={title} data={formatNumber(networth.networth ?? 0)} asterisk={true}>
-    <div class="max-w-xs space-y-2 font-bold">
-      <div>
-        <h3 class="text-text/85">{title}</h3>
-        <p class="font-medium text-text/80 italic">{title} calculations by SkyHelper.</p>
-      </div>
-      <div>
-        <ul class="font-bold [&_li]:text-text/85 [&_li]:capitalize [&_li_span]:text-text [&_li_span]:normal-case">
-          {#each Object.entries(networth.types ?? {}) as [key, value], index (index)}
-            <li>
-              {key.replace(/_/g, " ")}:
-              <span>
-                {formatNumber(value.total ?? 0)}
-              </span>
-            </li>
-          {/each}
-        </ul>
-      </div>
-      <p class="text-text/85">
-        Unsoulbound {title}:
-        <span class="text-text">
-          {formatNumber(networth.unsoulboundNetworth ?? 0)}
-        </span>
-        <br />
-        Total {title}:
-        <span class="text-text">
-          {numberFormat(networth.networth, defaultPattern)} ({formatNumber(networth.networth ?? 0)})
-        </span>
-      </p>
-    </div>
-  </AdditionStat>
-{/snippet}
