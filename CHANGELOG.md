@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.2.0-beta.2
+
+### Patch Changes
+
+- Migrate tooltips to a singleton pattern ([`9b3cfd3`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/9b3cfd32169d0539ad41d993a92a6a79ace8fa9c))
+
 ## 3.2.0-beta.1
 
 ### Minor Changes
