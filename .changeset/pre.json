@@ -5,15 +5,9 @@
     "skycrypt-frontend": "3.1.1"
   },
   "changesets": [
-    "command-palette-extraction",
-    "extracted-snippets-refactor",
-    "fruity-snakes-juggle",
     "hungry-geese-retire",
     "metal-baths-relax",
-    "organized-components-move",
-    "runtime-theme-engine",
     "slimy-dots-punch",
-    "string-shorthand-props",
     "warm-hats-check"
   ]
 }

@@ -1,5 +1,6 @@
 # Changelog
 
+<<<<<<< HEAD
 ## 3.2.0-beta.3
 
 ### Minor Changes
@@ -13,6 +14,25 @@
 - refactor: add tabs to skills section ([`e6a3feb`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/e6a3feb7416c0d29a8fcbe9f433c1b1885629446))
 
 - refactor: make image in chip component optional ([`c7d580c`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/c7d580c060cdcc01178ec45224577708f1088370))
+=======
+## 3.2.0
+
+### Minor Changes
+
+- Add runtime theme engine V3 with visual editor, replacing old build-time JSON theme system. Users can now create, edit, share, and manage custom themes directly on the website. Includes Zod schema validation, URL-based compressed sharing, MC color palette presets, live preview, and migration of all 11 first-party themes to the new V3 format. ([#269](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/269))
+
+### Patch Changes
+
+- Extracted DungeonCataCard, GardenPlotGrid, SectionBoundary, and CommandPalette (with CommandSearchGroup and CommandSettingsGroup sub-components) from large files. ([#266](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/266))
+
+- Extracted 8 reusable components from large section files: SettingToggleRow, ContainedItemsGrid, NetworthCard, ContributorCard, ContributorCardSkeleton, CtaCard, InventorySearch, InventoryGrid. ([#266](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/266))
+
+- Migrate tooltips to a singleton pattern ([#271](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/271))
+
+- Reorganized component directory structure — moved 29 components into categorical subdirectories (item/, stats/, notices/, misc/, sections/). Updated 100+ import paths. ([#266](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/266))
+
+- Added string shorthand props (text, subtitleText, tooltipContent) to Section, SectionTitle, SectionSubtitle, Notice, and Chip components. ([#266](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/266))
+>>>>>>> origin/prod
 
 ## 3.2.0-beta.2
 
