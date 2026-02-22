@@ -43,6 +43,7 @@
     { name: "Fishing", component: Fishing, available: !!skills?.fishing, icon: FishIcon },
     { name: "Enchanting", component: Enchanting, available: !!skills?.enchanting, icon: SparklesIcon }
   ]) satisfies SkillTab[];
+
   let tabValue = $derived(skillTabs.find((tab) => tab.available)?.name.toLowerCase());
 
   const [send, receive] = crossfade({

@@ -18,7 +18,7 @@
 </script>
 
 <Collapsible.Root bind:open={sectionOpen}>
-  <Collapsible.Trigger class="group flex items-center gap-0.5">
+  <Collapsible.Trigger class="group flex items-center gap-0.5 pt-4">
     <ChevronDown class="size-5 transition-all duration-300 ease-out group-data-[state=open]:-rotate-180" />
     <SectionSubtitle class="my-0">Garden</SectionSubtitle>
   </Collapsible.Trigger>
