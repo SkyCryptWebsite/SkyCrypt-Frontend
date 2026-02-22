@@ -11,6 +11,8 @@
   import WheatIcon from "@lucide/svelte/icons/wheat";
   import { Tabs } from "bits-ui";
   import type { Component } from "svelte";
+  import { cubicOut } from "svelte/easing";
+  import { crossfade } from "svelte/transition";
   import Enchanting from "./skills/enchanting.svelte";
   import Farming from "./skills/farming.svelte";
   import Fishing from "./skills/fishing.svelte";
@@ -41,6 +43,12 @@
     { name: "Fishing", component: Fishing, available: !!skills?.fishing, icon: FishIcon },
     { name: "Enchanting", component: Enchanting, available: !!skills?.enchanting, icon: SparklesIcon }
   ]) satisfies SkillTab[];
+  let tabValue = $derived(skillTabs.find((tab) => tab.available)?.name.toLowerCase());
+
+  const [send, receive] = crossfade({
+    duration: 300,
+    easing: cubicOut
+  });
 
   $effect(() => {
     skillsContext.skills = skills;
@@ -49,25 +57,31 @@
 
 <Section id="Skills" {order}>
   {#if skills}
-    <Tabs.Root value={skillTabs.find((tab) => tab.available)?.name.toLowerCase()} class="pt-4">
+    <Tabs.Root bind:value={tabValue} class="pt-4">
       <ScrollItems>
         <Tabs.List class="relative flex w-fit items-center justify-center gap-1 overflow-clip rounded-md border border-skillbar text-base">
           {#each skillTabs as tab (tab.name)}
             {#if tab.available}
-              <Tabs.Trigger value={tab.name.toLowerCase()} class="flex flex-col items-center justify-center rounded-md px-4 py-2 font-semibold text-white first:rounded-l-none last:rounded-r-none data-[state=active]:bg-skillbar">
-                <tab.icon class="size-5" />
-                {tab.name}
+              {@const isActive = tabValue === tab.name.toLowerCase()}
+              <Tabs.Trigger value={tab.name.toLowerCase()} class="relative isolate px-4 py-2 font-semibold text-white ">
+                {#if isActive}
+                  <div class="absolute inset-0 rounded-md bg-skillbar" in:send={{ key: "active-tab" }} out:receive={{ key: "active-tab" }}></div>
+                {/if}
+                <div class="relative z-10 flex flex-col items-center justify-center">
+                  <tab.icon class="size-5" />
+                  {tab.name}
+                </div>
               </Tabs.Trigger>
             {/if}
           {/each}
         </Tabs.List>
       </ScrollItems>
       {#each skillTabs as tab (tab.name)}
-        {#if tab.available}
+        <div class="relative overflow-clip">
           <Tabs.Content value={tab.name.toLowerCase()} class="pt-4">
             <tab.component />
           </Tabs.Content>
-        {/if}
+        </div>
       {/each}
     </Tabs.Root>
   {/if}
