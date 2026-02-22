@@ -1,12 +1,30 @@
 <script lang="ts">
   import { getProfileContext, setSkillsContext, SkillsContext } from "$ctx";
-  import { Notice } from "$lib/components/notices";
+  import { ScrollItems } from "$lib/components/misc";
   import { Section } from "$lib/components/sections";
   import { getSkillsSection } from "$lib/shared/api/skycrypt-api.remote";
+  import { type Icon } from "@lucide/svelte";
+  import FishIcon from "@lucide/svelte/icons/fish";
+  import PickaxeIcon from "@lucide/svelte/icons/pickaxe";
+  import SparklesIcon from "@lucide/svelte/icons/sparkles";
+  import TreesIcon from "@lucide/svelte/icons/trees";
+  import WheatIcon from "@lucide/svelte/icons/wheat";
+  import { Tabs } from "bits-ui";
+  import type { Component } from "svelte";
+  import { cubicOut } from "svelte/easing";
+  import { crossfade } from "svelte/transition";
   import Enchanting from "./skills/enchanting.svelte";
   import Farming from "./skills/farming.svelte";
   import Fishing from "./skills/fishing.svelte";
+  import Foraging from "./skills/foraging.svelte";
   import Mining from "./skills/mining.svelte";
+
+  type SkillTab = {
+    name: string;
+    component: Component<Record<string, never>>;
+    available: boolean | undefined;
+    icon: typeof Icon;
+  };
 
   let { order }: { order: number } = $props();
 
@@ -18,6 +36,20 @@
   setSkillsContext(skillsContext);
 
   const skills = $derived(await getSkillsSection({ uuid: profileUUID!, profileId: profileId! }));
+  const skillTabs = $derived([
+    { name: "Mining", component: Mining, available: !!skills?.mining, icon: PickaxeIcon },
+    { name: "Foraging", component: Foraging, available: !!skills?.foraging, icon: TreesIcon },
+    { name: "Farming", component: Farming, available: !!skills?.farming, icon: WheatIcon },
+    { name: "Fishing", component: Fishing, available: !!skills?.fishing, icon: FishIcon },
+    { name: "Enchanting", component: Enchanting, available: !!skills?.enchanting, icon: SparklesIcon }
+  ]) satisfies SkillTab[];
+
+  let tabValue = $derived(skillTabs.find((tab) => tab.available)?.name.toLowerCase());
+
+  const [send, receive] = crossfade({
+    duration: 300,
+    easing: cubicOut
+  });
 
   $effect(() => {
     skillsContext.skills = skills;
@@ -26,29 +58,32 @@
 
 <Section id="Skills" {order}>
   {#if skills}
-    <Notice type="info" title="Foraging" class="my-5">
-      <p class="text-text/80">Unfortunately, Hypixel has yet to add the new foraging update to their API.<br />Until they do, we can't show any foraging related data, as it simply doesn't exist.</p>
-      <p class="text-text/80">We will add foraging as soon as Hypixel adds it to their API.</p>
-    </Notice>
-    {#if skills.mining}
-      <Mining />
-    {:else}
-      <p class="space-x-0.5 leading-6">{profile?.username} doesn't have anything related to mining.</p>
-    {/if}
-    {#if skills.farming}
-      <Farming />
-    {:else}
-      <p class="space-x-0.5 leading-6">{profile?.username} doesn't have anything related to farming.</p>
-    {/if}
-    {#if skills.fishing}
-      <Fishing />
-    {:else}
-      <p class="space-x-0.5 leading-6">{profile?.username} doesn't have anything related to fishing.</p>
-    {/if}
-    {#if skills.enchanting}
-      <Enchanting />
-    {:else}
-      <p class="space-x-0.5 leading-6">{profile?.username} doesn't have anything related to enchanting.</p>
-    {/if}
+    <Tabs.Root bind:value={tabValue} class="pt-4">
+      <ScrollItems>
+        <Tabs.List class="relative flex w-fit items-center justify-center gap-1 overflow-clip rounded-md border border-skillbar text-base">
+          {#each skillTabs as tab (tab.name)}
+            {#if tab.available}
+              {@const isActive = tabValue === tab.name.toLowerCase()}
+              <Tabs.Trigger value={tab.name.toLowerCase()} class="relative isolate px-4 py-2 font-semibold text-white ">
+                {#if isActive}
+                  <div class="absolute inset-0 rounded-md bg-skillbar" in:send={{ key: "active-tab" }} out:receive={{ key: "active-tab" }}></div>
+                {/if}
+                <div class="relative z-10 flex flex-col items-center justify-center">
+                  <tab.icon class="size-5" />
+                  {tab.name}
+                </div>
+              </Tabs.Trigger>
+            {/if}
+          {/each}
+        </Tabs.List>
+      </ScrollItems>
+      {#each skillTabs as tab (tab.name)}
+        <div class="relative overflow-clip">
+          <Tabs.Content value={tab.name.toLowerCase()} class="pt-4">
+            <tab.component />
+          </Tabs.Content>
+        </div>
+      {/each}
+    </Tabs.Root>
   {/if}
 </Section>

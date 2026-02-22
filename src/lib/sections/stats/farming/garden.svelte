@@ -18,7 +18,7 @@
 </script>
 
 <Collapsible.Root bind:open={sectionOpen}>
-  <Collapsible.Trigger class="group flex items-center gap-0.5">
+  <Collapsible.Trigger class="group flex items-center gap-0.5 pt-4">
     <ChevronDown class="size-5 transition-all duration-300 ease-out group-data-[state=open]:-rotate-180" />
     <SectionSubtitle class="my-0">Garden</SectionSubtitle>
   </Collapsible.Trigger>
@@ -81,6 +81,30 @@
               </AdditionStat>
             </div>
             <div class="mt-5">
+              {#if garden.gardenUpgrades}
+                <div class="mb-3 flex items-center gap-1 text-base font-semibold uppercase">
+                  <h3 class="text-xl">Garden Upgrades</h3>
+                </div>
+
+                <ScrollItems>
+                  {#each Object.entries(garden.gardenUpgrades ?? {}) as [upgrade, level], index (index)}
+                    {@const hasUnlocked = level}
+                    <Chip class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked })}>
+                      <div class={cn("flex flex-col")}>
+                        <div class="font-bold whitespace-nowrap">
+                          <span class="capitalize opacity-60">{upgrade.replaceAll("_", " ")}</span>
+                          <div class="text-sm">
+                            <span class="opacity-60">Level:</span>
+                            <span class="text-text">{format(level)}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </Chip>
+                  {/each}
+                </ScrollItems>
+              {/if}
+            </div>
+            <div class="mt-5">
               {@render milestones(garden)}
             </div>
             <div class="mt-5">
@@ -100,7 +124,7 @@
   {#if garden.cropUpgrades}
     {@const allMaxed = Object.values(garden.cropUpgrades).every((upgrade) => upgrade.level?.maxed)}
     <div class="mb-3 flex items-center gap-1 text-base font-semibold uppercase">
-      <h3 class="text-xl">Upgrades</h3>
+      <h3 class="text-xl">Crop Upgrades</h3>
       {#if allMaxed}
         <span class="text-gold">Max!</span>
       {:else}

@@ -92,6 +92,11 @@ export interface ModelsBestiaryOutput {
   totalFamilies?: number;
 }
 
+export interface ModelsCenterOfTheForest {
+  level?: number;
+  maxLevel?: number;
+}
+
 export interface ModelsSkill {
   level?: number;
   levelCap?: number;
@@ -396,6 +401,11 @@ export interface ModelsFarmingOutput {
   uniqueGolds?: number;
 }
 
+export interface ModelsFishFamily {
+  collected?: number;
+  total?: number;
+}
+
 export interface ModelsKill {
   amount?: number;
   id?: string;
@@ -444,28 +454,17 @@ export interface ModelsFishingOuput {
   trophyFish?: ModelsTrophyFishOutput;
 }
 
-export interface ModelsForgeOutput {
-  duration?: number;
-  endingTime?: number;
-  id?: string;
-  name?: string;
-  slot?: number;
-  startingTime?: number;
+export interface ModelsTreeGift {
+  maxMilestone?: number;
+  milestone?: number;
 }
 
-export interface ModelsFossil {
-  found?: boolean;
-  name?: string;
-  texture_path?: string;
-}
+export type ModelsForagingOutputTreeGift = { [key: string]: ModelsTreeGift };
 
-export interface ModelsFossils {
-  fossils?: ModelsFossil[];
-  found?: number;
-  max?: number;
+export interface ModelsHinaChapter {
+  maxTier?: number;
+  tier?: number;
 }
-
-export type ModelsGardenComposter = { [key: string]: number };
 
 export interface SkycrypttypesRodPart {
   donated_museum?: boolean;
@@ -594,6 +593,57 @@ export interface ModelsProcessedItem {
   wiki?: ModelsWikipediaLinks;
 }
 
+export interface ModelsHotfTokens {
+  available?: number;
+  spent?: number;
+  total?: number;
+}
+
+export interface ModelsWhispers {
+  available?: number;
+  spent?: number;
+  total?: number;
+}
+
+export interface ModelsForagingOutput {
+  cotf?: ModelsCenterOfTheForest;
+  fishFamily?: ModelsFishFamily;
+  foragingLevel?: ModelsSkill;
+  hinaChapter?: ModelsHinaChapter;
+  hotf?: ModelsProcessedItem[];
+  level?: ModelsSkill;
+  selectedAxeAbility?: string;
+  tokens?: ModelsHotfTokens;
+  tools?: ModelsSkillToolsResult;
+  treeGift?: ModelsForagingOutputTreeGift;
+  whispers?: ModelsWhispers;
+}
+
+export interface ModelsForgeOutput {
+  duration?: number;
+  endingTime?: number;
+  id?: string;
+  name?: string;
+  slot?: number;
+  startingTime?: number;
+}
+
+export interface ModelsFossil {
+  found?: boolean;
+  name?: string;
+  texture_path?: string;
+}
+
+export interface ModelsFossils {
+  fossils?: ModelsFossil[];
+  found?: number;
+  max?: number;
+}
+
+export type ModelsGardenComposter = { [key: string]: number };
+
+export type ModelsGardenGardenUpgrades = { [key: string]: number };
+
 export interface ModelsPlotLayout {
   barnSkin?: string;
   layout?: ModelsProcessedItem[];
@@ -621,6 +671,7 @@ export interface ModelsGarden {
   composter?: ModelsGardenComposter;
   cropMilestones?: ModelsCropMilestone[];
   cropUpgrades?: ModelsCropUpgrade[];
+  gardenUpgrades?: ModelsGardenGardenUpgrades;
   level?: ModelsSkill;
   plot?: ModelsPlotLayout;
   visitors?: ModelsVisitors;
@@ -722,6 +773,7 @@ export interface ModelsMiningOutput {
   glaciteTunnels?: ModelsGlaciteTunnels;
   hotm?: ModelsProcessedItem[];
   level?: ModelsSkill;
+  miningLevel?: ModelsSkill;
   peakOfTheMountain?: ModelsPeakOfTheMountain;
   powder?: ModelsPowderOutput;
   selectedPickaxeAbility?: string;
@@ -845,6 +897,8 @@ export interface ModelsMiscMythologicalEvent {
 
 export type ModelsMiscOutputClaimedItems = { [key: string]: number };
 
+export type ModelsMiscOutputGardenChips = { [key: string]: number };
+
 export interface ModelsMiscPetMilestone {
   amount?: number;
   progress?: string;
@@ -874,6 +928,7 @@ export interface ModelsMiscOutput {
   dragons?: ModelsMiscDragons;
   endstone_protector?: ModelsMiscEndstoneProtector;
   essence?: ModelsMiscEssence[];
+  garden_chips?: ModelsMiscOutputGardenChips;
   gifts?: ModelsMiscGifts;
   kills?: ModelsMiscKills;
   mythological_event?: ModelsMiscMythologicalEvent;
@@ -1043,6 +1098,7 @@ export interface ModelsSkillsOutput {
   enchanting?: ModelsEnchantingOutput;
   farming?: ModelsFarmingOutput;
   fishing?: ModelsFishingOuput;
+  foraging?: ModelsForagingOutput;
   mining?: ModelsMiningOutput;
 }
 
