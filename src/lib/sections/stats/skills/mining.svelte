@@ -2,7 +2,6 @@
   import { getSkillsContext } from "$ctx";
   import { Item } from "$lib/components/item";
   import { Chip, ScrollItems } from "$lib/components/misc";
-  import { Notice } from "$lib/components/notices";
   import { SectionSubtitle } from "$lib/components/sections";
   import { AdditionStat } from "$lib/components/stats";
   import Items from "$lib/layouts/stats/Items.svelte";
@@ -137,7 +136,7 @@
       <AdditionStat text="Tier" data={mining.level.level.toString()} maxed={mining.level.level === mining.level.maxLevel} />
     {/if}
     {#if mining.tokens}
-      <AdditionStat text="Token Of The Mountain" data={`${mining.tokens.spent}/${mining.tokens.total}`} />
+      <AdditionStat text="Tokens Of The Mountain" data={`${mining.tokens.spent}/${mining.tokens.total}`} maxed={mining.tokens.spent === mining.tokens.total} />
     {/if}
     {#if mining.peakOfTheMountain}
       <AdditionStat text="Peak Of The Mountain" data={`${mining.peakOfTheMountain.level}/${mining.peakOfTheMountain.max_level}`} maxed={mining.peakOfTheMountain.level === mining.peakOfTheMountain.max_level} />
@@ -167,10 +166,6 @@
 
   {#if mining.hotm && mining.hotm.length > 0}
     <div class="pt-5">
-      <Notice type="warning" title="Heart of the Mountain" class="mb-5">
-        <p class="text-text/80">Unfortunately, Hypixel broke the Heart of the Mountain API after the Foraging update.<br />So we are unable to display the Heart of the Mountain data, because it simply doesn't exist anymore.</p>
-        <p class="text-text/80">We will add this back as soon as Hypixel fixes it.</p>
-      </Notice>
       <div class="@container relative mb-0 rounded-lg bg-background/30 p-5">
         <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
           {#each mining.hotm as item, index (index)}
