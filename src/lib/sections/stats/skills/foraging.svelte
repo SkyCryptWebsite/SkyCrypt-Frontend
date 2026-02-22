@@ -39,7 +39,7 @@
       <AdditionStat text="Hina's Chapters" data={format(foraging.hinaChapter.tier)} maxed={foraging.hinaChapter.tier === foraging.hinaChapter.maxTier} />
     {/if}
     {#if foraging.fishFamily}
-      <AdditionStat text="Fish Family" data={format(foraging.fishFamily.collected)} maxed={foraging.fishFamily.collected === foraging.fishFamily.total} />
+      <AdditionStat text="Fish Family" data={format(foraging.fishFamily.collected)} maxed={(foraging.fishFamily.collected ?? 0) >= (foraging.fishFamily.total ?? 0)} />
     {/if}
   </div>
 
