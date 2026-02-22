@@ -1,6 +1,21 @@
 # Changelog
 
+## 3.2.0
+
+### Minor Changes
+
+- feat: add garden upgrades and garden chips ([#276](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/276))
+
+- feat: add foraging in skills section ([#276](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/276))
+
+### Patch Changes
+
+- refactor: add tabs to skills section ([#276](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/276))
+
+- refactor: make image in chip component optional ([#276](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/276))
+
 <<<<<<< HEAD
+
 ## 3.2.0-beta.3
 
 ### Minor Changes
@@ -13,8 +28,8 @@
 
 - refactor: add tabs to skills section ([`e6a3feb`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/e6a3feb7416c0d29a8fcbe9f433c1b1885629446))
 
-- refactor: make image in chip component optional ([`c7d580c`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/c7d580c060cdcc01178ec45224577708f1088370))
-=======
+- # refactor: make image in chip component optional ([`c7d580c`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/c7d580c060cdcc01178ec45224577708f1088370))
+
 ## 3.2.0
 
 ### Minor Changes
@@ -32,7 +47,7 @@
 - Reorganized component directory structure — moved 29 components into categorical subdirectories (item/, stats/, notices/, misc/, sections/). Updated 100+ import paths. ([#266](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/266))
 
 - Added string shorthand props (text, subtitleText, tooltipContent) to Section, SectionTitle, SectionSubtitle, Notice, and Chip components. ([#266](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/266))
->>>>>>> origin/prod
+  > > > > > > > origin/prod
 
 ## 3.2.0-beta.2
 
