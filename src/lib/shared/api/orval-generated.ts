@@ -671,6 +671,7 @@ export interface ModelsGarden {
   composter?: ModelsGardenComposter;
   cropMilestones?: ModelsCropMilestone[];
   cropUpgrades?: ModelsCropUpgrade[];
+  gardenUpgrades?: ModelsGardenGardenUpgrades;
   level?: ModelsSkill;
   plot?: ModelsPlotLayout;
   visitors?: ModelsVisitors;
@@ -772,6 +773,7 @@ export interface ModelsMiningOutput {
   glaciteTunnels?: ModelsGlaciteTunnels;
   hotm?: ModelsProcessedItem[];
   level?: ModelsSkill;
+  miningLevel?: ModelsSkill;
   peakOfTheMountain?: ModelsPeakOfTheMountain;
   powder?: ModelsPowderOutput;
   selectedPickaxeAbility?: string;
@@ -895,6 +897,8 @@ export interface ModelsMiscMythologicalEvent {
 
 export type ModelsMiscOutputClaimedItems = { [key: string]: number };
 
+export type ModelsMiscOutputGardenChips = { [key: string]: number };
+
 export interface ModelsMiscPetMilestone {
   amount?: number;
   progress?: string;
@@ -924,6 +928,7 @@ export interface ModelsMiscOutput {
   dragons?: ModelsMiscDragons;
   endstone_protector?: ModelsMiscEndstoneProtector;
   essence?: ModelsMiscEssence[];
+  garden_chips?: ModelsMiscOutputGardenChips;
   gifts?: ModelsMiscGifts;
   kills?: ModelsMiscKills;
   mythological_event?: ModelsMiscMythologicalEvent;
