@@ -1,11 +1,13 @@
 <script lang="ts">
   import { getSkillsContext } from "$ctx";
   import { Item } from "$lib/components/item";
+  import { Chip, ScrollItems } from "$lib/components/misc";
   import { SectionSubtitle } from "$lib/components/sections";
   import { AdditionStat } from "$lib/components/stats";
   import Items from "$lib/layouts/stats/Items.svelte";
   import { renderLore } from "$lib/shared/helper";
   import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
+  import { cn } from "$lib/shared/utils";
   import { format } from "numerable";
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
@@ -43,13 +45,25 @@
 
   <SectionSubtitle>Tree Gifts</SectionSubtitle>
   {#if foraging.treeGift}
-    <div class="space-y-0.5">
+    <ScrollItems>
       {#each Object.entries(foraging.treeGift) as [type, amount], index (index)}
         {#if amount != null}
-          <AdditionStat text={type} data={format(amount.milestone)} class="capitalize" maxed={amount.milestone === amount.maxMilestone} />
+          {@const hasMaxed = amount.milestone === amount.maxMilestone}
+          {@const hasUnlocked = amount.milestone}
+          <Chip class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked })}>
+            <div class={cn("flex flex-col")}>
+              <div class="font-bold whitespace-nowrap">
+                <span class={cn("capitalize", { "text-gold": hasMaxed })}>{type.replaceAll("_", " ").toLowerCase()}</span>
+                <div class="text-sm">
+                  <span class={cn({ "text-gold": hasMaxed })}>Level:</span>
+                  <span class={cn({ "text-gold": hasMaxed })}>{format(amount.milestone)}</span>
+                </div>
+              </div>
+            </div>
+          </Chip>
         {/if}
       {/each}
-    </div>
+    </ScrollItems>
   {:else}
     <p class="space-x-0.5 leading-6">This player doesn't have any tree gifts.</p>
   {/if}
