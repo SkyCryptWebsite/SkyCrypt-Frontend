@@ -1,5 +1,19 @@
 # Changelog
 
+## 3.2.0-beta.3
+
+### Minor Changes
+
+- feat: add garden upgrades and garden chips ([`123c4eb`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/123c4ebc1940ed7702c7b25bb71b3e1caad08e37))
+
+- feat: add foraging in skills section ([`1c3fe6b`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/1c3fe6b4b6fd6411e2a2912c67811fb246b05782))
+
+### Patch Changes
+
+- refactor: add tabs to skills section ([`e6a3feb`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/e6a3feb7416c0d29a8fcbe9f433c1b1885629446))
+
+- refactor: make image in chip component optional ([`c7d580c`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/c7d580c060cdcc01178ec45224577708f1088370))
+
 ## 3.2.0-beta.2
 
 ### Patch Changes
