@@ -46,17 +46,17 @@
   <SectionSubtitle>Tree Gifts</SectionSubtitle>
   {#if foraging.treeGift}
     <ScrollItems>
-      {#each Object.entries(foraging.treeGift) as [type, amount], index (index)}
-        {#if amount != null}
-          {@const hasMaxed = amount.milestone === amount.maxMilestone}
-          {@const hasUnlocked = amount.milestone}
-          <Chip class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked })}>
+      {#each Object.entries(foraging.treeGift) as [name, data], index (index)}
+        {#if data != null}
+          {@const hasMaxed = data.milestone === data.maxMilestone}
+          {@const hasUnlocked = data.milestone}
+          <Chip class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked })} image={{ src: data.texture ?? "" }}>
             <div class={cn("flex flex-col")}>
               <div class="font-bold whitespace-nowrap">
-                <span class={cn("capitalize", { "text-gold": hasMaxed })}>{type.replaceAll("_", " ").toLowerCase()}</span>
+                <span class={cn("capitalize", { "text-gold": hasMaxed })}>{name.replaceAll("_", " ").toLowerCase()}</span>
                 <div class="text-sm">
                   <span class={cn({ "text-gold": hasMaxed })}>Level:</span>
-                  <span class={cn({ "text-gold": hasMaxed })}>{format(amount.milestone)}</span>
+                  <span class={cn({ "text-gold": hasMaxed })}>{format(data.milestone)}</span>
                 </div>
               </div>
             </div>
