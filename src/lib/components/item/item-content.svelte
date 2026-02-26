@@ -25,7 +25,7 @@
   const itemNameHtml = $derived(itemName ? renderLore(itemName) : "");
   const isMulticolor = $derived((itemNameHtml?.match(/<\/span>/g) || [])?.length > 1);
   const bgColor = $derived(getRarityClass(piece?.rarity ?? ("common".toLowerCase() as string), "bg"));
-
+  const textColor = $derived(getRarityClass(piece?.rarity ?? ("common".toLowerCase() as string), "text"));
   const enchanted = $derived(skyblockItem?.texture_path?.includes("/api/leather/") ? false : skyblockItem && "shiny" in skyblockItem ? skyblockItem.shiny : false);
   const hasColor = $derived(skyblockItem?.lore?.some((lore) => lore.includes("Color:")) ?? false);
   const packs = $derived(getPacksContext().packs);
@@ -67,7 +67,7 @@
         </Avatar.Fallback>
       </Avatar.Root>
 
-      <p class="relative min-w-0 wrap-break-word group-data-[mctooltip=false]/itemtooltip:text-center group-data-[mctooltip=false]/itemtooltip:text-base group-data-[mctooltip=false]/itemtooltip:font-semibold group-data-[mctooltip=false]/itemtooltip:uppercase data-[multicolor=false]:text-text data-[multicolor=true]:rounded-full data-[multicolor=true]:py-1 group-data-[mctooltip=false]/itemtooltip:data-[multicolor=true]:bg-background-lore group-data-[mctooltip=false]/itemtooltip:data-[multicolor=true]:px-2 group-data-[mctooltip=false]/itemtooltip:sm:text-lg" data-multicolor={isMulticolor}>
+      <p class={cn("relative min-w-0 wrap-break-word group-data-[mctooltip=false]/itemtooltip:text-center group-data-[mctooltip=false]/itemtooltip:text-base group-data-[mctooltip=false]/itemtooltip:font-semibold group-data-[mctooltip=false]/itemtooltip:uppercase data-[multicolor=true]:rounded-full data-[multicolor=true]:py-1 group-data-[mctooltip=false]/itemtooltip:data-[multicolor=true]:bg-background-lore group-data-[mctooltip=false]/itemtooltip:data-[multicolor=true]:px-2 group-data-[mctooltip=false]/itemtooltip:sm:text-lg", preferences.mctooltip ? textColor : "data-[multicolor=false]:text-text")} data-multicolor={isMulticolor}>
         {#if preferences.mctooltip}
           {@html itemNameHtml}
         {:else}
