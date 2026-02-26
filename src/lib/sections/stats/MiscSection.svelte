@@ -8,7 +8,6 @@
   import Dragons from "./misc/dragons.svelte";
   import Endstone from "./misc/endstone.svelte";
   import Essence from "./misc/essence.svelte";
-  import Garden from "./misc/garden.svelte";
   import Gifts from "./misc/gifts.svelte";
   import Jerry from "./misc/jerry.svelte";
   import Kills from "./misc/kills.svelte";
@@ -35,7 +34,6 @@
 <Section id="Misc" {order}>
   {#if misc}
     <Essence />
-    <Garden />
     <!-- TODO: Essence Shop -->
     <Kills />
     <!-- <Races /> -->

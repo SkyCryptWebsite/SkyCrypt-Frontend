@@ -26,7 +26,7 @@
     {#if gardenLocked}
       <p>This player does not have the Garden unlocked.</p>
     {:else}
-      <SectionBoundary promise={getGarden({ profileId: profileId! })}>
+      <SectionBoundary promise={getGarden({ uuid: profile?.uuid ?? "", profileId: profileId! })}>
         {#snippet children(garden)}
           {#if garden}
             {@const hasMaxed = garden.level?.maxed ?? false}
@@ -79,31 +79,55 @@
                   </h3>
                 {/each}
               </AdditionStat>
+              <AdditionStat text="DNA Analysis Milestone" data="{garden.dnaAnalysisMilestone?.level} / {garden.dnaAnalysisMilestone?.maxLevel}" maxed={garden.dnaAnalysisMilestone?.level === garden.dnaAnalysisMilestone?.maxLevel} />
             </div>
-            <div class="mt-5">
-              {#if garden.gardenUpgrades}
+            {#if garden.gardenUpgrades}
+              <div class="mt-5">
                 <div class="mb-3 flex items-center gap-1 text-base font-semibold uppercase">
                   <h3 class="text-xl">Garden Upgrades</h3>
                 </div>
 
                 <ScrollItems>
-                  {#each Object.entries(garden.gardenUpgrades ?? {}) as [upgrade, level], index (index)}
-                    {@const hasUnlocked = level}
-                    <Chip class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked })}>
+                  {#each garden.gardenUpgrades as gardenUpgrade, index (index)}
+                    {@const hasUnlocked = gardenUpgrade.level}
+                    <Chip class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked })} image={{ src: gardenUpgrade.texture ?? "" }}>
                       <div class={cn("flex flex-col")}>
                         <div class="font-bold whitespace-nowrap">
-                          <span class="capitalize opacity-60">{upgrade.replaceAll("_", " ")}</span>
+                          <span class="capitalize opacity-60">{gardenUpgrade.name}</span>
                           <div class="text-sm">
                             <span class="opacity-60">Level:</span>
-                            <span class="text-text">{format(level)}</span>
+                            <span class="text-text">{format(gardenUpgrade.level)}</span>
                           </div>
                         </div>
                       </div>
                     </Chip>
                   {/each}
                 </ScrollItems>
-              {/if}
-            </div>
+              </div>
+            {/if}
+
+            {#if garden.gardenChips != null}
+              <div class="space-y-4">
+                <SectionSubtitle class="uppercase!">Garden Chips</SectionSubtitle>
+                <ScrollItems>
+                  {#each garden.gardenChips as gardenChip, index (index)}
+                    {@const hasUnlocked = gardenChip.amount}
+                    {@const hasMaxed = (gardenChip.amount ?? 0) >= (gardenChip.max ?? 0)}
+                    <Chip class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked })} image={{ src: gardenChip.texture ?? "" }}>
+                      <div class={cn("flex flex-col")}>
+                        <div class="font-bold whitespace-nowrap">
+                          <span class={cn("capitalize", hasMaxed ? "text-maxed" : "opacity-60")}>{gardenChip.name}</span>
+                          <div class={cn("text-sm", hasMaxed ? "text-gold" : "text-text")}>
+                            <span class="opacity-60">Level:</span>
+                            {format(gardenChip.amount)}/{gardenChip.max}
+                          </div>
+                        </div>
+                      </div>
+                    </Chip>
+                  {/each}
+                </ScrollItems>
+              </div>
+            {/if}
             <div class="mt-5">
               {@render milestones(garden)}
             </div>
