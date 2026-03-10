@@ -14,6 +14,7 @@
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
 
+  const openSections = true as const;
   const tiers = ["diamond", "gold", "silver", "bronze"] as const;
   type ColorSchema = Record<(typeof tiers)[number], { bg: string; text: string }>;
 
@@ -58,7 +59,7 @@
 
   {#if fishing.waterSeaCreatures}
     {#if Object.entries(fishing.waterSeaCreatures).find(([_, waterSeaCreature]) => (waterSeaCreature.amount ?? 0) > 0)}
-      <Collapsible.Root>
+      <Collapsible.Root open={openSections}>
         <Collapsible.Trigger class="group flex items-center gap-0.5 pt-4">
           <ChevronDown class="size-5 transition-all duration-300 ease-out group-data-[state=open]:-rotate-180" />
           <SectionSubtitle class="my-0">Sea Creatures</SectionSubtitle>
@@ -92,7 +93,7 @@
 
   {#if fishing.lavaSeaCreatures}
     {#if Object.entries(fishing.lavaSeaCreatures).find(([_, lavaSeaCreature]) => (lavaSeaCreature.amount ?? 0) > 0)}
-      <Collapsible.Root>
+      <Collapsible.Root open={openSections}>
         <Collapsible.Trigger class="group flex items-center gap-0.5 pt-4">
           <ChevronDown class="size-5 transition-all duration-300 ease-out group-data-[state=open]:-rotate-180" />
           <SectionSubtitle class="my-0">Lava Sea Creatures</SectionSubtitle>
@@ -125,7 +126,7 @@
   {/if}
 
   {#if fishing.trophyFish != null && (fishing.trophyFish.totalCaught ?? 0) > 0}
-    <Collapsible.Root>
+    <Collapsible.Root open={openSections}>
       <Collapsible.Trigger class="group flex items-center gap-0.5 pt-4">
         <ChevronDown class="size-5 transition-all duration-300 ease-out group-data-[state=open]:-rotate-180" />
         <SectionSubtitle class="my-0">Trophy Fish</SectionSubtitle>

@@ -1,3 +1,19 @@
+<script lang="ts" module>
+  export class CurrentTabContext {
+    #current: TabNames | null = $state(null);
+
+    get current() {
+      return this.#current;
+    }
+
+    set current(value: TabNames | null) {
+      this.#current = value;
+    }
+  }
+
+  export const [getCurrentTabContext, setCurrentTabContext] = createContext<CurrentTabContext>();
+</script>
+
 <script lang="ts">
   import { getProfileContext, setSkillsContext, SkillsContext } from "$ctx";
   import { ScrollItems } from "$lib/components/misc";
@@ -10,7 +26,7 @@
   import TreesIcon from "@lucide/svelte/icons/trees";
   import WheatIcon from "@lucide/svelte/icons/wheat";
   import { Tabs } from "bits-ui";
-  import type { Component } from "svelte";
+  import { createContext, type Component } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { crossfade } from "svelte/transition";
   import Enchanting from "./skills/enchanting.svelte";
@@ -18,6 +34,7 @@
   import Fishing from "./skills/fishing.svelte";
   import Foraging from "./skills/foraging.svelte";
   import Mining from "./skills/mining.svelte";
+  import { TabNamesEnum, type TabNames } from "./types";
 
   type SkillTab = {
     name: string;
@@ -34,17 +51,19 @@
 
   const skillsContext = new SkillsContext();
   setSkillsContext(skillsContext);
+  const currentTabContext = new CurrentTabContext();
+  setCurrentTabContext(currentTabContext);
 
   const skills = $derived(await getSkillsSection({ uuid: profileUUID!, profileId: profileId! }));
   const skillTabs = $derived([
-    { name: "Mining", component: Mining, available: !!skills?.mining, icon: PickaxeIcon },
-    { name: "Foraging", component: Foraging, available: !!skills?.foraging, icon: TreesIcon },
-    { name: "Farming", component: Farming, available: !!skills?.farming, icon: WheatIcon },
-    { name: "Fishing", component: Fishing, available: !!skills?.fishing, icon: FishIcon },
-    { name: "Enchanting", component: Enchanting, available: !!skills?.enchanting, icon: SparklesIcon }
+    { name: TabNamesEnum.Mining, component: Mining, available: !!skills?.mining, icon: PickaxeIcon },
+    { name: TabNamesEnum.Foraging, component: Foraging, available: !!skills?.foraging, icon: TreesIcon },
+    { name: TabNamesEnum.Farming, component: Farming, available: !!skills?.farming, icon: WheatIcon },
+    { name: TabNamesEnum.Fishing, component: Fishing, available: !!skills?.fishing, icon: FishIcon },
+    { name: TabNamesEnum.Enchanting, component: Enchanting, available: !!skills?.enchanting, icon: SparklesIcon }
   ]) satisfies SkillTab[];
 
-  let tabValue = $derived(skillTabs.find((tab) => tab.available)?.name.toLowerCase());
+  let tabValue = $derived(skillTabs.find((tab) => tab.available)?.name ?? null);
 
   const [send, receive] = crossfade({
     duration: 300,
@@ -54,23 +73,27 @@
   $effect(() => {
     skillsContext.skills = skills;
   });
+
+  $effect(() => {
+    currentTabContext.current = tabValue;
+  });
 </script>
 
 <Section id="Skills" {order}>
   {#if skills}
-    <Tabs.Root bind:value={tabValue} class="pt-4">
+    <Tabs.Root bind:value={() => tabValue?.toString(), (v) => (tabValue = v as TabNamesEnum)} class="pt-4">
       <ScrollItems>
         <Tabs.List class="relative flex w-fit items-center justify-center gap-1 overflow-clip rounded-md border border-skillbar text-base">
           {#each skillTabs as tab (tab.name)}
             {#if tab.available}
-              {@const isActive = tabValue === tab.name.toLowerCase()}
-              <Tabs.Trigger value={tab.name.toLowerCase()} class="relative isolate px-4 py-2 font-semibold text-white ">
+              {@const isActive = tabValue === tab.name}
+              <Tabs.Trigger value={tab.name} class="relative isolate px-4 py-2 font-semibold text-white ">
                 {#if isActive}
                   <div class="absolute inset-0 rounded-md bg-skillbar" in:send={{ key: "active-tab" }} out:receive={{ key: "active-tab" }}></div>
                 {/if}
                 <div class="relative z-10 flex flex-col items-center justify-center">
                   <tab.icon class="size-5" />
-                  {tab.name}
+                  <span class="capitalize">{tab.name}</span>
                 </div>
               </Tabs.Trigger>
             {/if}
@@ -79,7 +102,7 @@
       </ScrollItems>
       {#each skillTabs as tab (tab.name)}
         <div class="relative overflow-clip">
-          <Tabs.Content value={tab.name.toLowerCase()} class="pt-4">
+          <Tabs.Content value={tab.name} class="pt-4">
             <tab.component />
           </Tabs.Content>
         </div>
