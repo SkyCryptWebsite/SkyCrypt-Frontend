@@ -5,7 +5,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/SkyCryptWebsite/SkyCryptv2.git"
+    "url": "https://github.com/SkyCryptWebsite/SkyCrypt-Frontend.git"
   },
   "scripts": {
     "dev": "vite dev",
@@ -111,17 +111,6 @@
     "npm": "forbidden, use pnpm instead",
     "yarn": "forbidden, use pnpm instead",
     "bun": "forbidden, use pnpm instead"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@sentry/cli",
-      "@tailwindcss/oxide",
-      "edgedriver",
-      "esbuild",
-      "geckodriver",
-      "simple-git-hooks",
-      "svelte-preprocess"
-    ]
   },
   "simple-git-hooks": {
     "commit-msg": "pnpm exec commitlint --edit $1"
