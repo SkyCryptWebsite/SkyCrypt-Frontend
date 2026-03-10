@@ -112,14 +112,14 @@
                 <ScrollItems>
                   {#each garden.gardenChips as gardenChip, index (index)}
                     {@const hasUnlocked = gardenChip.amount}
-                    {@const hasMaxed = (gardenChip.amount ?? 0) >= (gardenChip.max ?? 0)}
+                    {@const hasMaxed = (gardenChip.amount ?? 0) >= (gardenChip.maxLevel ?? 0)}
                     <Chip class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked })} image={{ src: gardenChip.texture ?? "" }}>
                       <div class={cn("flex flex-col")}>
                         <div class="font-bold whitespace-nowrap">
                           <span class={cn("capitalize", hasMaxed ? "text-maxed" : "opacity-60")}>{gardenChip.name}</span>
                           <div class={cn("text-sm", hasMaxed ? "text-gold" : "text-text")}>
                             <span class="opacity-60">Level:</span>
-                            {format(gardenChip.amount)}/{gardenChip.max}
+                            {format(gardenChip.amount)}/{gardenChip.maxLevel}
                           </div>
                         </div>
                       </div>

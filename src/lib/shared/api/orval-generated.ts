@@ -651,7 +651,7 @@ export type ModelsGardenComposter = { [key: string]: number };
 
 export interface ModelsGardenChip {
   amount?: number;
-  max?: number;
+  maxLevel?: number;
   name?: string;
   texture?: string;
 }
