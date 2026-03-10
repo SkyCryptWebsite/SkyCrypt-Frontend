@@ -137,6 +137,35 @@ export const GetApiAccessoriesUuidProfileIdResponse = zod.object({
 });
 
 /**
+ * Returns attribute shards stats for the given user and profile ID
+ * @summary Get attribute shards stats of a specified player
+ */
+export const GetApiAttributeShardsUuidProfileIdParams = zod.object({
+  uuid: zod.string().describe("User UUID"),
+  profileId: zod.string().describe("Profile ID")
+});
+
+export const GetApiAttributeShardsUuidProfileIdResponse = zod.object({
+  maxSyphoned: zod.number().optional(),
+  max_unlocked: zod.number().optional(),
+  shards: zod
+    .array(
+      zod.object({
+        captured: zod.number().optional(),
+        lore: zod.array(zod.string()).optional(),
+        maxSyphon: zod.number().optional(),
+        name: zod.string().optional(),
+        owned: zod.number().optional(),
+        syphoned: zod.number().optional(),
+        texture: zod.string().optional()
+      })
+    )
+    .optional(),
+  syphoned: zod.number().optional(),
+  unlocked: zod.number().optional()
+});
+
+/**
  * Returns bestiary for the given user and profile ID
  * @summary Get bestiary stats of a specified player
  */
@@ -593,6 +622,16 @@ export const GetApiGardenUuidProfileIdResponse = zod.object({
       xpForNext: zod.number().optional()
     })
     .optional(),
+  mutations: zod
+    .array(
+      zod.object({
+        max: zod.boolean().optional(),
+        name: zod.string().optional(),
+        texture: zod.string().optional(),
+        unlocked: zod.boolean().optional()
+      })
+    )
+    .optional(),
   plot: zod
     .object({
       barnSkin: zod.string().optional(),
@@ -606,6 +645,7 @@ export const GetApiGardenUuidProfileIdResponse = zod.object({
             display_name: zod.string().optional(),
             id: zod.string().optional(),
             isInactive: zod.boolean().optional(),
+            itemIndex: zod.number().optional(),
             lore: zod.array(zod.string()).optional(),
             price: zod.number().optional(),
             rarity: zod.string().optional(),
@@ -694,6 +734,7 @@ export const GetApiGardenUuidProfileIdResponse = zod.object({
                   })
                   .optional()
                   .describe('HideFlags       int             `nbt:\"HideFlags\" json:\"HideFlags,omitempty\"`\nUnbreakable     int             `nbt:\"Unbreakable\" json:\"Unbreakable,omitempty\"`\nEnchantments    []Enchantment   `nbt:\"ench\" json:\"ench,omitempty\"`'),
+                ItemModel: zod.string().optional(),
                 SkullOwner: zod
                   .object({
                     Id: zod.string().optional(),
@@ -1752,6 +1793,7 @@ export const GetApiSkillsUuidProfileIdResponse = zod.object({
             display_name: zod.string().optional(),
             id: zod.string().optional(),
             isInactive: zod.boolean().optional(),
+            itemIndex: zod.number().optional(),
             lore: zod.array(zod.string()).optional(),
             price: zod.number().optional(),
             rarity: zod.string().optional(),
@@ -1840,6 +1882,7 @@ export const GetApiSkillsUuidProfileIdResponse = zod.object({
                   })
                   .optional()
                   .describe('HideFlags       int             `nbt:\"HideFlags\" json:\"HideFlags,omitempty\"`\nUnbreakable     int             `nbt:\"Unbreakable\" json:\"Unbreakable,omitempty\"`\nEnchantments    []Enchantment   `nbt:\"ench\" json:\"ench,omitempty\"`'),
+                ItemModel: zod.string().optional(),
                 SkullOwner: zod
                   .object({
                     Id: zod.string().optional(),
@@ -2058,6 +2101,7 @@ export const GetApiSkillsUuidProfileIdResponse = zod.object({
             display_name: zod.string().optional(),
             id: zod.string().optional(),
             isInactive: zod.boolean().optional(),
+            itemIndex: zod.number().optional(),
             lore: zod.array(zod.string()).optional(),
             price: zod.number().optional(),
             rarity: zod.string().optional(),
@@ -2146,6 +2190,7 @@ export const GetApiSkillsUuidProfileIdResponse = zod.object({
                   })
                   .optional()
                   .describe('HideFlags       int             `nbt:\"HideFlags\" json:\"HideFlags,omitempty\"`\nUnbreakable     int             `nbt:\"Unbreakable\" json:\"Unbreakable,omitempty\"`\nEnchantments    []Enchantment   `nbt:\"ench\" json:\"ench,omitempty\"`'),
+                ItemModel: zod.string().optional(),
                 SkullOwner: zod
                   .object({
                     Id: zod.string().optional(),

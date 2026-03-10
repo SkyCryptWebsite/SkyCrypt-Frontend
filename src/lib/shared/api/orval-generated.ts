@@ -45,6 +45,24 @@ export interface ModelsArmorResult {
   stats?: ModelsArmorResultStats;
 }
 
+export interface ModelsAttributeShard {
+  captured?: number;
+  lore?: string[];
+  maxSyphon?: number;
+  name?: string;
+  owned?: number;
+  syphoned?: number;
+  texture?: string;
+}
+
+export interface ModelsAttributeShardsOutput {
+  maxSyphoned?: number;
+  max_unlocked?: number;
+  shards?: ModelsAttributeShard[];
+  syphoned?: number;
+  unlocked?: number;
+}
+
 export interface ModelsBestRunOutput {
   damage_dealt?: number;
   damage_mitigated?: number;
@@ -583,6 +601,7 @@ export interface SkycrypttypesDisplay {
 
 export interface SkycrypttypesTag {
   ExtraAttributes?: SkycrypttypesExtraAttributes;
+  ItemModel?: string;
   SkullOwner?: SkycrypttypesSkullOwner;
   display?: SkycrypttypesDisplay;
 }
@@ -595,6 +614,7 @@ export interface ModelsProcessedItem {
   display_name?: string;
   id?: string;
   isInactive?: boolean;
+  itemIndex?: number;
   lore?: string[];
   price?: number;
   rarity?: string;
@@ -670,6 +690,13 @@ export interface ModelsGardenUpgrade {
   texture?: string;
 }
 
+export interface ModelsMutation {
+  max?: boolean;
+  name?: string;
+  texture?: string;
+  unlocked?: boolean;
+}
+
 export interface ModelsPlotLayout {
   barnSkin?: string;
   layout?: ModelsProcessedItem[];
@@ -701,6 +728,7 @@ export interface ModelsGarden {
   gardenChips?: ModelsGardenChip[];
   gardenUpgrades?: ModelsGardenUpgrade[];
   level?: ModelsSkill;
+  mutations?: ModelsMutation[];
   plot?: ModelsPlotLayout;
   visitors?: ModelsVisitors;
 }
@@ -1255,6 +1283,40 @@ export const getGetApiAccessoriesUuidProfileIdUrl = (uuid: string, profileId: st
 
 export const getApiAccessoriesUuidProfileId = async (uuid: string, profileId: string, options?: RequestInit): Promise<getApiAccessoriesUuidProfileIdResponse> => {
   return customFetch<getApiAccessoriesUuidProfileIdResponse>(getGetApiAccessoriesUuidProfileIdUrl(uuid, profileId), {
+    ...options,
+    method: "GET"
+  });
+};
+
+/**
+ * Returns attribute shards stats for the given user and profile ID
+ * @summary Get attribute shards stats of a specified player
+ */
+export type getApiAttributeShardsUuidProfileIdResponse200 = {
+  data: ModelsAttributeShardsOutput;
+  status: 200;
+};
+
+export type getApiAttributeShardsUuidProfileIdResponse400 = {
+  data: ModelsProcessingError;
+  status: 400;
+};
+
+export type getApiAttributeShardsUuidProfileIdResponseSuccess = getApiAttributeShardsUuidProfileIdResponse200 & {
+  headers: Headers;
+};
+export type getApiAttributeShardsUuidProfileIdResponseError = getApiAttributeShardsUuidProfileIdResponse400 & {
+  headers: Headers;
+};
+
+export type getApiAttributeShardsUuidProfileIdResponse = getApiAttributeShardsUuidProfileIdResponseSuccess | getApiAttributeShardsUuidProfileIdResponseError;
+
+export const getGetApiAttributeShardsUuidProfileIdUrl = (uuid: string, profileId: string) => {
+  return `/api/attribute_shards/${uuid}/${profileId}`;
+};
+
+export const getApiAttributeShardsUuidProfileId = async (uuid: string, profileId: string, options?: RequestInit): Promise<getApiAttributeShardsUuidProfileIdResponse> => {
+  return customFetch<getApiAttributeShardsUuidProfileIdResponse>(getGetApiAttributeShardsUuidProfileIdUrl(uuid, profileId), {
     ...options,
     method: "GET"
   });
