@@ -57,7 +57,7 @@
   onclick={() => (internalState.content = tooltip)}
   tether={genericTooltipTether}
   payload={{
-    class: "z-50 rounded-lg bg-background-grey p-4",
+    class: "z-50 max-w-md rounded-lg bg-background-grey p-4 break-normal wrap-break-word whitespace-normal!",
     sideOffset: 6,
     side: "top",
     align: "center",

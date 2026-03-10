@@ -201,7 +201,7 @@
                 {#snippet tooltip()}
                   {#if trophyFish.description}
                     <div class="contents" {@attach animateObfuscatedText}>
-                      {@html renderLore(trophyFish.description)}
+                      {@html renderLore(trophyFish.description, true, undefined, { breakSpaces: true })}
                     </div>
                   {/if}
                 {/snippet}
