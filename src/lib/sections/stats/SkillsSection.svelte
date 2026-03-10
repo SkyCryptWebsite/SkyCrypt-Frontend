@@ -15,6 +15,7 @@
 </script>
 
 <script lang="ts">
+  import { beforeNavigate } from "$app/navigation";
   import { getProfileContext, setSkillsContext, SkillsContext } from "$ctx";
   import { ScrollItems } from "$lib/components/misc";
   import { Section } from "$lib/components/sections";
@@ -26,6 +27,7 @@
   import TreesIcon from "@lucide/svelte/icons/trees";
   import WheatIcon from "@lucide/svelte/icons/wheat";
   import { Tabs } from "bits-ui";
+  import { PersistedState } from "runed";
   import { createContext, type Component } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { crossfade } from "svelte/transition";
@@ -63,11 +65,23 @@
     { name: TabNamesEnum.Enchanting, component: Enchanting, available: !!skills?.enchanting, icon: SparklesIcon }
   ]) satisfies SkillTab[];
 
-  let tabValue = $derived(skillTabs.find((tab) => tab.available)?.name ?? null);
+  const selectedTabState = new PersistedState<TabNames | null>("skillsActiveTab", null, { storage: "session", syncTabs: false });
+  const availableTabNames = $derived(skillTabs.filter((tab) => tab.available).map((tab) => tab.name as TabNames));
+  const tabValue = $derived.by(() => {
+    if (selectedTabState.current && availableTabNames.includes(selectedTabState.current)) {
+      return selectedTabState.current;
+    }
+
+    return availableTabNames[0] ?? null;
+  });
 
   const [send, receive] = crossfade({
     duration: 300,
     easing: cubicOut
+  });
+
+  beforeNavigate(({ willUnload }) => {
+    if (willUnload) selectedTabState.current = null;
   });
 
   $effect(() => {
@@ -81,7 +95,7 @@
 
 <Section id="Skills" {order}>
   {#if skills}
-    <Tabs.Root bind:value={() => tabValue?.toString(), (v) => (tabValue = v as TabNamesEnum)} class="pt-4">
+    <Tabs.Root bind:value={() => tabValue?.toString(), (v) => (selectedTabState.current = v as TabNames)} class="pt-4">
       <ScrollItems>
         <Tabs.List class="relative flex w-fit items-center justify-center gap-1 overflow-clip rounded-md border border-skillbar text-base">
           {#each skillTabs as tab (tab.name)}
