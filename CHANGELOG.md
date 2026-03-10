@@ -74,7 +74,7 @@
 
 - refactor: add tabs to skills section ([`e6a3feb`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/e6a3feb7416c0d29a8fcbe9f433c1b1885629446))
 
-- # refactor: make image in chip component optional ([`c7d580c`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/c7d580c060cdcc01178ec45224577708f1088370))
+- refactor: make image in chip component optional ([`c7d580c`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/c7d580c060cdcc01178ec45224577708f1088370))
 
 ## 3.2.0
 
