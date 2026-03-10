@@ -2,7 +2,7 @@
   import { getInternalState, getPreferences, itemTooltipTether } from "$ctx";
   import type { ModelsStrippedItem } from "$lib/shared/api/orval-generated";
   import { RARITIES, RARITY_COLORS } from "$lib/shared/constants/rarities";
-  import { getRarityClass, shouldShine } from "$lib/shared/helper";
+  import { formatNumber, getRarityClass, shouldShine } from "$lib/shared/helper";
   import { cn } from "$lib/shared/utils";
   import ImageOff from "@lucide/svelte/icons/image-off";
   import { Avatar, Tooltip, type AvatarImageLoadingStatus } from "bits-ui";
@@ -74,7 +74,7 @@
 
       {#if showNumbers}
         <div class="absolute right-0.5 bottom-0.5 text-sm font-semibold text-white text-shadow-[.1em_.1em_.1em_#000] sm:text-2xl">
-          {skyblockItem.Count}
+          {formatNumber(skyblockItem.Count ?? 0)}
         </div>
       {/if}
     </div>

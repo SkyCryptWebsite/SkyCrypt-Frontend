@@ -74,6 +74,11 @@
       gap: 45
     },
     {
+      id: "sacks",
+      icon: PUBLIC_API_URL + "head/fb49a2cb90737993201fe72a1f1ab75c5c93c28f047f685ffad5ab20c7b0caf0",
+      gap: 45
+    },
+    {
       id: "museum",
       icon: PUBLIC_API_URL + "head/438cf3f8e54afc3b3f91d20a49f324dca1486007fe545399055524c17941f4dc",
       gap: 54
@@ -104,8 +109,8 @@
 
   $effect.pre(() => {
     if (internalState.itemContentSpecial) {
-      if (openTab === "search" || openTab === "backpack" || openTab === "museum") {
-        console.warn("Item content special should not be set for search, backpack, or museum tabs.");
+      if (openTab === "search" || openTab === "backpack" || openTab === "museum" || openTab === "sacks") {
+        console.warn("Item content special should not be set for search, backpack, sacks, or museum tabs.");
         internalState.itemContentSpecial = undefined;
       }
     }
@@ -143,7 +148,7 @@
     </Tabs.List>
 
     <Tabs.Content value={openTab}>
-      {#if openTab === "backpack" || openTab === "museum"}
+      {#if openTab === "backpack" || openTab === "museum" || openTab === "sacks"}
         {@render multipleInventorySection()}
       {:else if openTab == "search"}
         {#if uuid && profileId}
