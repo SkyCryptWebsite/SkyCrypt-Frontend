@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.3.0-beta.1
+
+### Patch Changes
+
+- feat: remove consumables in Misc -> Uncategorized ([`0113d81`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/0113d81bfec105eee9b1e826e48535c29809c2f9))
+
 ## 3.3.0-beta.0
 
 ### Minor Changes
