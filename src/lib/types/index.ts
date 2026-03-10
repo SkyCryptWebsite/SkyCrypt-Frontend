@@ -20,7 +20,8 @@ export enum APIEndpointName {
   EMBED = "Embed Data",
   RESOURCEPACK = "Resource Pack",
   SEARCH = "Search",
-  USERNAME = "Username"
+  USERNAME = "Username",
+  ATTRIBUTE_SHARDS = "Attribute Shards"
 }
 
 export * from "./types.d";
