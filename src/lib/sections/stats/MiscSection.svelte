@@ -3,11 +3,11 @@
   import { Section } from "$lib/components/sections";
   import { getMiscSection } from "$lib/shared/api/skycrypt-api.remote";
   import Auctions from "./misc/auctions.svelte";
+  import Chips from "./misc/chips.svelte";
   import Claimed from "./misc/claimed.svelte";
   import Damage from "./misc/damage.svelte";
   import Dragons from "./misc/dragons.svelte";
   import Endstone from "./misc/endstone.svelte";
-  import Essence from "./misc/essence.svelte";
   import Gifts from "./misc/gifts.svelte";
   import Jerry from "./misc/jerry.svelte";
   import Kills from "./misc/kills.svelte";
@@ -33,7 +33,7 @@
 
 <Section id="Misc" {order}>
   {#if misc}
-    <Essence />
+    <Chips />
     <!-- TODO: Essence Shop -->
     <Kills />
     <!-- <Races /> -->
