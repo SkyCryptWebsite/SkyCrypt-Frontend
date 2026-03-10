@@ -57,7 +57,7 @@ export interface ModelsAttributeShard {
 
 export interface ModelsAttributeShardsOutput {
   maxSyphoned?: number;
-  max_unlocked?: number;
+  maxUnlocked?: number;
   shards?: ModelsAttributeShard[];
   syphoned?: number;
   unlocked?: number;

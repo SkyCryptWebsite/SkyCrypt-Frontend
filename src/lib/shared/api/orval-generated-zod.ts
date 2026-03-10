@@ -147,7 +147,7 @@ export const GetApiAttributeShardsUuidProfileIdParams = zod.object({
 
 export const GetApiAttributeShardsUuidProfileIdResponse = zod.object({
   maxSyphoned: zod.number().optional(),
-  max_unlocked: zod.number().optional(),
+  maxUnlocked: zod.number().optional(),
   shards: zod
     .array(
       zod.object({

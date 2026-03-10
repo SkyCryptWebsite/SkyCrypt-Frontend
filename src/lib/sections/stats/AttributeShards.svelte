@@ -33,7 +33,7 @@
     <Items class="flex-col">
       {#snippet text()}
         <div>
-          <AdditionStat text="Unlocked" data="{attributeShards.unlocked} / {attributeShards.max_unlocked}" maxed={attributeShards.unlocked === attributeShards.max_unlocked} />
+          <AdditionStat text="Unlocked" data="{attributeShards.unlocked} / {attributeShards.maxUnlocked}" maxed={attributeShards.unlocked === attributeShards.maxUnlocked} />
           <AdditionStat text="Syphoned" data="{attributeShards.syphoned} / {attributeShards.maxSyphoned}" maxed={attributeShards.syphoned === attributeShards.maxSyphoned} />
         </div>
       {/snippet}
