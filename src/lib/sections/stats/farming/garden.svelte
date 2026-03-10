@@ -137,6 +137,25 @@
                 </ScrollItems>
               </div>
             {/if}
+
+            {#if garden.mutations != null}
+              <div class="space-y-4">
+                <SectionSubtitle class="uppercase!">Mutations</SectionSubtitle>
+                <ScrollItems>
+                  {#each garden.mutations as mutation, index (index)}
+                    {@const hasUnlocked = mutation.unlocked}
+                    {@const hasMaxed = mutation.max}
+                    <Chip class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked })} image={{ src: mutation.texture ?? "" }}>
+                      <div class={cn("flex flex-col")}>
+                        <div class="font-bold whitespace-nowrap">
+                          <span class={cn("capitalize", hasMaxed ? "text-maxed" : "opacity-60")}>{mutation.name}</span>
+                        </div>
+                      </div>
+                    </Chip>
+                  {/each}
+                </ScrollItems>
+              </div>
+            {/if}
             <div class="mt-5">
               {@render milestones(garden)}
             </div>
