@@ -73,7 +73,7 @@
       {/if}
 
       {#if showNumbers}
-        <div class="absolute right-0.5 bottom-0.5 text-sm font-semibold text-white text-shadow-[.1em_.1em_.1em_#000] sm:text-2xl">
+        <div class="absolute right-0.5 bottom-0.5 text-sm font-semibold text-white text-shadow-[.1em_.1em_.1em_#000] sm:text-base">
           {formatNumber(skyblockItem.Count ?? 0)}
         </div>
       {/if}
