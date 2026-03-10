@@ -190,6 +190,7 @@
   closeButton={isHover.current}
   position={$position}
   class="sm:mr-8"
+  pauseWhenPageIsHidden={true}
   toastOptions={{
     class: cn("gap-2! font-semibold! group rounded-lg! text-text/80! border-none!", preferences.performanceMode ? "bg-background-grey!" : "backdrop-blur-lg! backdrop-brightness-50! bg-transparent!"),
 
