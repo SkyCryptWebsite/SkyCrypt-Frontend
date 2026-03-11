@@ -1,5 +1,49 @@
 # Changelog
 
+## 3.3.0
+
+### Minor Changes
+
+- feat: add attribute shards section ([#280](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/280))
+
+- feat: add support for 'sacks' tab in inventory ([#280](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/280))
+
+### Patch Changes
+
+- chore: update repository URL in package.json and add pnpm workspace configuration ([#280](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/280))
+
+- fix: searching for a profile on an error page would not re-render the new page [SvelteKit Issue #15310](https://github.com/sveltejs/kit/issues/15310) ([#280](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/280))
+
+- fix: last skillbar being misaligned when the items are even ([#280](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/280))
+
+- feat: add lava sea creatures and differentiate between water and lava sea creatures ([#280](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/280))
+
+- chore: remove unused static assets ([#280](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/280))
+
+- feat: remove consumables in Misc -> Uncategorized ([#280](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/280))
+
+- fix: pet name being always white when using mc styled tooltips ([#280](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/280))
+
+- feat: enhance renderLore function to support options for breaking spaces and dashes ([#280](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/280))
+
+- refactor: rename max to maxLevel in ModelsGardenChip and update references ([#280](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/280))
+
+- feat: replace Essence component with Chips component and update API models ([#280](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/280))
+
+- refactor: move Garden Chips from misc section to garden section ([#280](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/280))
+  feat: add DNA Analysis Milestone to garden section
+  feat: add images to garden upgrades and chips, and add max level display for chips
+
+- fix maxed enchants only showing a different color if rightmost in their respective line ([#280](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/280))
+
+- fix: update tooltip class for better word wrapping and adjust renderLore to support breaking spaces ([#280](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/280))
+
+- feat: add mutations to garden ([#280](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/280))
+
+- feat: implement tab context management, update skill sections with new tab enum, and open all collapsibles by default ([#280](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/280))
+
+- feat: add images to foraging tree gift chips ([#280](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/280))
+
 ## 3.3.0-beta.1
 
 ### Patch Changes
