@@ -39,7 +39,7 @@
 </script>
 
 <Tooltip.Trigger
-  class={cn("relative flex aspect-square items-center justify-center overflow-clip nice-colors-dark", isInventory ? "size-6 p-0 sm:size-16" : `size-18 p-2 ${bgColor}`, { shine: shine && !isInventory }, { "rounded-lg": !isInventory }, preferences.performanceMode ? "" : "transition-all duration-150 ease-out hover:scale-110 active:scale-110")}
+  class={cn("overflow-clip nice-colors-dark", isInventory ? "p-0" : `relative p-2 ${bgColor}`, { shine: shine && !isInventory }, { "rounded-lg": !isInventory }, preferences.performanceMode ? "" : "transition-all duration-150 ease-out hover:scale-110 active:scale-110")}
   bind:ref={targetNode}
   onclick={() => {
     if (skyblockItem.containsItems) {
@@ -71,15 +71,15 @@
       {#if recombobulated && !isInventory}
         <div class="absolute -top-3 -right-3 z-10 size-6 rotate-45 bg-(--color)" style="--color: var(--§{RARITY_COLORS[RARITIES[RARITIES.indexOf(piece.rarity ?? 'common') - 1]]})"></div>
       {/if}
-
-      {#if showNumbers}
-        <div class="absolute right-0.5 bottom-0.5 text-sm font-semibold text-white text-shadow-[.1em_.1em_.1em_#000] sm:text-base">
-          {formatNumber(skyblockItem.Count ?? 0)}
-        </div>
-      {/if}
     </div>
   {/snippet}
 </Tooltip.Trigger>
+
+{#if showNumbers}
+  <div class="absolute right-0.5 bottom-0.5 text-xs font-semibold text-white text-shadow-[.1em_.1em_.1em_#000] sm:text-base">
+    {formatNumber(skyblockItem.Count ?? 0)}
+  </div>
+{/if}
 
 {#snippet loadingState()}
   <div class={cn("animate-pulse rounded-lg bg-white/30", isInventory ? "size-8 sm:size-14" : "size-14")}></div>
