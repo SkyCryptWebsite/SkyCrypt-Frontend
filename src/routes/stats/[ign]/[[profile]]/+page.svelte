@@ -41,7 +41,9 @@
   });
 </script>
 
-<SEO embedData={data.embed} />
+{#if data.embed}
+  <SEO embedData={data.embed} />
+{/if}
 
 {#key page.params.ign || page.params.profile}
   <svelte:boundary>
