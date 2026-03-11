@@ -11,6 +11,7 @@
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
   import { Collapsible } from "bits-ui";
 
+  const openSections = true as const;
   const data = $derived(getSkillsContext().skills);
   const farming = $derived(data?.farming);
   const farmingTools = $derived(farming?.tools);
@@ -70,7 +71,7 @@
 
   {#if farming.contests}
     {#if Object.entries(farming.contests).find(([_, cropData]) => (cropData.amount ?? 0) > 0)}
-      <Collapsible.Root class="mt-5">
+      <Collapsible.Root open={openSections} class="mt-5">
         <Collapsible.Trigger class="group flex items-center gap-0.5">
           <ChevronDown class="size-5 transition-all duration-300 ease-out group-data-[state=open]:-rotate-180" />
           <SectionSubtitle class="my-0">Farming Crops</SectionSubtitle>

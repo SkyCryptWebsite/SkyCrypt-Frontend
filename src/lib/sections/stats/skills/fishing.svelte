@@ -14,6 +14,7 @@
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
 
+  const openSections = true as const;
   const tiers = ["diamond", "gold", "silver", "bronze"] as const;
   type ColorSchema = Record<(typeof tiers)[number], { bg: string; text: string }>;
 
@@ -56,30 +57,64 @@
     <p class="space-x-0.5 leading-6">This player doesn't have any fishing tools.</p>
   {/if}
 
-  {#if fishing.kills}
-    {#if Object.entries(fishing.kills).find(([_, seaCreature]) => (seaCreature.amount ?? 0) > 0)}
-      <Collapsible.Root>
+  {#if fishing.waterSeaCreatures}
+    {#if Object.entries(fishing.waterSeaCreatures).find(([_, waterSeaCreature]) => (waterSeaCreature.amount ?? 0) > 0)}
+      <Collapsible.Root open={openSections}>
         <Collapsible.Trigger class="group flex items-center gap-0.5 pt-4">
           <ChevronDown class="size-5 transition-all duration-300 ease-out group-data-[state=open]:-rotate-180" />
           <SectionSubtitle class="my-0">Sea Creatures</SectionSubtitle>
         </Collapsible.Trigger>
         <Collapsible.Content class="mt-4 flex flex-wrap gap-4">
-          {@const seaCreatures = Object.entries(fishing.kills)}
+          {@const waterSeaCreatures = Object.entries(fishing.waterSeaCreatures)}
           <ScrollItems>
-            {#each seaCreatures as [_, seaCreature], index (index)}
-              <div class="flex h-full max-h-56 flex-col rounded-lg bg-background/30 p-2 whitespace-nowrap" in:fade|global={{ duration: 300, delay: 25 * (index + 1), easing: cubicOut }} out:fade={{ duration: 300, delay: 5 * (seaCreatures.length - index), easing: cubicOut }}>
+            {#each waterSeaCreatures as [_, waterSeaCreature], index (index)}
+              <div class="flex h-full max-h-56 flex-col rounded-lg bg-background/30 p-2 whitespace-nowrap" in:fade|global={{ duration: 300, delay: 25 * (index + 1), easing: cubicOut }} out:fade={{ duration: 300, delay: 5 * (waterSeaCreatures.length - index), easing: cubicOut }}>
                 <div class="flex h-12 items-center justify-center border-b-2 border-icon pb-2 text-center font-bold">
-                  {seaCreature.name}
+                  {waterSeaCreature.name}
                 </div>
                 <div class="mt-2 flex h-full w-full flex-col items-center justify-center gap-4">
                   <Avatar.Root class="flex items-center justify-center">
-                    <Avatar.Image loading="lazy" src={seaCreature.texture} class="aspect-square size-24 object-contain" />
+                    <Avatar.Image loading="lazy" src={waterSeaCreature.texture} class="aspect-square size-24 object-contain" />
                     <Avatar.Fallback>
                       <Image class="size-24" />
                     </Avatar.Fallback>
                   </Avatar.Root>
                   <div class="text-center font-bold">
-                    {seaCreature.amount} <span class="text-text/60">Kills</span>
+                    {waterSeaCreature.amount} <span class="text-text/60">Kills</span>
+                  </div>
+                </div>
+              </div>
+            {/each}
+          </ScrollItems>
+        </Collapsible.Content>
+      </Collapsible.Root>
+    {/if}
+  {/if}
+
+  {#if fishing.lavaSeaCreatures}
+    {#if Object.entries(fishing.lavaSeaCreatures).find(([_, lavaSeaCreature]) => (lavaSeaCreature.amount ?? 0) > 0)}
+      <Collapsible.Root open={openSections}>
+        <Collapsible.Trigger class="group flex items-center gap-0.5 pt-4">
+          <ChevronDown class="size-5 transition-all duration-300 ease-out group-data-[state=open]:-rotate-180" />
+          <SectionSubtitle class="my-0">Lava Sea Creatures</SectionSubtitle>
+        </Collapsible.Trigger>
+        <Collapsible.Content class="mt-4 flex flex-wrap gap-4">
+          {@const lavaSeaCreatures = Object.entries(fishing.lavaSeaCreatures)}
+          <ScrollItems>
+            {#each lavaSeaCreatures as [_, lavaSeaCreature], index (index)}
+              <div class="flex h-full max-h-56 flex-col rounded-lg bg-background/30 p-2 whitespace-nowrap" in:fade|global={{ duration: 300, delay: 25 * (index + 1), easing: cubicOut }} out:fade={{ duration: 300, delay: 5 * (lavaSeaCreatures.length - index), easing: cubicOut }}>
+                <div class="flex h-12 items-center justify-center border-b-2 border-icon pb-2 text-center font-bold">
+                  {lavaSeaCreature.name}
+                </div>
+                <div class="mt-2 flex h-full w-full flex-col items-center justify-center gap-4">
+                  <Avatar.Root class="flex items-center justify-center">
+                    <Avatar.Image loading="lazy" src={lavaSeaCreature.texture} class="aspect-square size-24 object-contain" />
+                    <Avatar.Fallback>
+                      <Image class="size-24" />
+                    </Avatar.Fallback>
+                  </Avatar.Root>
+                  <div class="text-center font-bold">
+                    {lavaSeaCreature.amount} <span class="text-text/60">Kills</span>
                   </div>
                 </div>
               </div>
@@ -91,7 +126,7 @@
   {/if}
 
   {#if fishing.trophyFish != null && (fishing.trophyFish.totalCaught ?? 0) > 0}
-    <Collapsible.Root>
+    <Collapsible.Root open={openSections}>
       <Collapsible.Trigger class="group flex items-center gap-0.5 pt-4">
         <ChevronDown class="size-5 transition-all duration-300 ease-out group-data-[state=open]:-rotate-180" />
         <SectionSubtitle class="my-0">Trophy Fish</SectionSubtitle>
@@ -166,7 +201,7 @@
                 {#snippet tooltip()}
                   {#if trophyFish.description}
                     <div class="contents" {@attach animateObfuscatedText}>
-                      {@html renderLore(trophyFish.description)}
+                      {@html renderLore(trophyFish.description, true, undefined, { breakSpaces: true })}
                     </div>
                   {/if}
                 {/snippet}

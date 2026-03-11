@@ -1,5 +1,53 @@
 # Changelog
 
+## 3.3.0-beta.1
+
+### Patch Changes
+
+- feat: remove consumables in Misc -> Uncategorized ([`0113d81`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/0113d81bfec105eee9b1e826e48535c29809c2f9))
+
+## 3.3.0-beta.0
+
+### Minor Changes
+
+- feat: add attribute shards section ([`7f8dd28`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/7f8dd287848031216cecc7239aa422930af85366))
+
+- feat: add support for 'sacks' tab in inventory ([`07537a2`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/07537a2157305ff2e9a62e6885d20f07efeb126f))
+
+### Patch Changes
+
+- chore: update repository URL in package.json and add pnpm workspace configuration ([`1985230`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/1985230a947b23bcc3f2c5eb5f5e086eb376e37a))
+
+- fix: searching for a profile on an error page would not re-render the new page [SvelteKit Issue #15310](https://github.com/sveltejs/kit/issues/15310) ([`b01cd5a`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/b01cd5a45d53bb79ffc4e31873dfc895c3048c05))
+
+- fix: last skillbar being misaligned when the items are even ([`4f5a428`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/4f5a428469c596c4ed826d2c851a7634fa7c2d9f))
+
+- feat: add lava sea creatures and differentiate between water and lava sea creatures ([`f375582`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/f3755826b540344c7691cc192c6ef6fce356b673))
+
+- chore: remove unused static assets ([`d85ebca`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/d85ebcacd8e214dcbac9ac00a28bdfa83e9115d3))
+
+- fix: pet name being always white when using mc styled tooltips ([`9319fd7`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/9319fd71de27bab022565ce68032a9233698e875))
+
+- feat: enhance renderLore function to support options for breaking spaces and dashes ([`0f5bc72`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/0f5bc72955f43c8e7b03811fad4d45038ef57f41))
+
+- refactor: rename max to maxLevel in ModelsGardenChip and update references ([`096911c`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/096911c9b9da791fc568d97a5c28c087721b877e))
+
+- feat: replace Essence component with Chips component and update API models ([`1215372`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/1215372d35ac6296130666b80b320f6f35418960))
+
+- refactor: move Garden Chips from misc section to garden section ([`a66852f`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/a66852f61f953d6a95c8f5105eb1675e5144a394))
+  feat: add DNA Analysis Milestone to garden section
+  feat: add images to garden upgrades and chips, and add max level display for chips
+
+- fix maxed enchants only showing a different color if rightmost in their respective line ([`f76c675`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/f76c675b858bf9220b3aba9a2df55389d6dd1cde))
+
+- fix: update tooltip class for better word wrapping and adjust renderLore to support breaking spaces ([`0be8b23`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/0be8b23a14ac95d3ff4146774519d9947546c62e))
+
+- feat: add mutations to garden ([`64b10c2`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/64b10c2716a7045ceac7deb821e47e190cdb3bb1))
+
+- feat: implement tab context management, update skill sections with new tab enum, and open all collapsibles by default ([`17632d1`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/17632d1a254800afa8062a109c0f8b2d32f8fcd7))
+
+- feat: add images to foraging tree gift chips ([`9c7a2c7`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/9c7a2c7c70eaea012d9a5b8f5958b57878fb747b))
+
 ## 3.2.0
 
 ### Minor Changes
@@ -14,8 +62,6 @@
 
 - refactor: make image in chip component optional ([#276](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/276))
 
-<<<<<<< HEAD
-
 ## 3.2.0-beta.3
 
 ### Minor Changes
@@ -28,7 +74,7 @@
 
 - refactor: add tabs to skills section ([`e6a3feb`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/e6a3feb7416c0d29a8fcbe9f433c1b1885629446))
 
-- # refactor: make image in chip component optional ([`c7d580c`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/c7d580c060cdcc01178ec45224577708f1088370))
+- refactor: make image in chip component optional ([`c7d580c`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/c7d580c060cdcc01178ec45224577708f1088370))
 
 ## 3.2.0
 
@@ -47,7 +93,6 @@
 - Reorganized component directory structure — moved 29 components into categorical subdirectories (item/, stats/, notices/, misc/, sections/). Updated 100+ import paths. ([#266](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/266))
 
 - Added string shorthand props (text, subtitleText, tooltipContent) to Section, SectionTitle, SectionSubtitle, Notice, and Chip components. ([#266](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/266))
-  > > > > > > > origin/prod
 
 ## 3.2.0-beta.2
 
@@ -135,8 +180,6 @@
 
 - Use totalAmount instead of amount for collections ([#246](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/246))
 
-<<<<<<< HEAD
-
 ## 3.1.0-beta.3
 
 ### Patch Changes
@@ -144,10 +187,6 @@
 - Refactor how bots and embeds are handled to prevent getting flagged for "cloaking" ([`c4fab6e`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/c4fab6ee92b10a4a136b1c87e9e350f15f9a757e))
 
 - Enable link preloading again ([`8fa2660`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/8fa26605a08f45505122928ea5ea60a63374ecf0))
-
-=======
-
-> > > > > > > origin/prod
 
 ## 3.1.0-beta.2
 

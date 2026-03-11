@@ -56,8 +56,21 @@ export function getRarityClass(rarity: string, type: "bg" | "text"): string {
  * @param {boolean} formatTime whether to format timestamps in the lore
  * @returns {string} HTML
  */
-export function renderLore(text: string, formatTime: boolean = true, index?: number): string {
+export function renderLore(text: string, formatTime: boolean = true, index?: number, options?: { breakSpaces?: boolean; breakDashes?: boolean }): string {
   let lore = mcTextToHTML({ mcString: text, index });
+
+  const breakSpaces = options?.breakSpaces ?? true;
+  const breakDashes = options?.breakDashes ?? true;
+
+  if (breakSpaces) {
+    // mcTextToHTML converts spaces to non-breaking spaces for formatting, but lore/tooltips need normal wrapping.
+    lore = lore.replaceAll("&nbsp;", " ").replaceAll("\u00A0", " ");
+  }
+
+  if (breakDashes) {
+    // Keep numeric ranges like `7-16` on the same line in tooltips.
+    lore = lore.replaceAll(/(\d)-(\d)/g, "$1&#8209;$2");
+  }
 
   if (formatTime) {
     const timestampRegex = /{TIMESTAMP:(\d+)}/g;

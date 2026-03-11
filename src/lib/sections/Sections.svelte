@@ -22,6 +22,7 @@
     Bestiary: () => import("$lib/sections/stats/Bestiary.svelte"),
     Collections: () => import("$lib/sections/stats/Collections.svelte"),
     Crimson_Isle: () => import("$lib/sections/stats/CrimsonIsle.svelte"),
+    Attribute_Shards: () => import("$lib/sections/stats/AttributeShards.svelte"),
     Rift: () => import("$lib/sections/stats/Rift.svelte"),
     Misc: () => import("$lib/sections/stats/MiscSection.svelte")
   } satisfies Record<SectionName, () => Promise<{ default: unknown }>>;

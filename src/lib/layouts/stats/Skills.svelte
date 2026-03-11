@@ -5,7 +5,7 @@
   const profile = $derived(getProfileContext().current);
 </script>
 
-<div class="skills space-y-2 pr-2 @md:pr-0">
+<div class="space-y-2 pr-2 @md:pr-0">
   {#if profile != null}
     {#if profile.skyblock_level?.level}
       {#if profile.skyblock_level.level > 0}

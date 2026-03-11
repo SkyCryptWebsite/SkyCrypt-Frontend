@@ -28,6 +28,7 @@ export class PreferencesContext {
     $effect.pre(() => {
       untrack(() => {
         this.loadOldSettings();
+        this.sectionOrder = this.#data.current.sectionOrder;
         // Apply rainbow setting on load
         this.rainbowEnchantments = !!this.rainbowEnchantments;
       });
@@ -39,16 +40,32 @@ export class PreferencesContext {
   }
 
   set sectionOrder(value: SectionID[]) {
-    const newOrder = [];
-    // Validate all sections exist
-    for (const id of value) {
-      const existing = sections.find((section) => section.id === id.id);
-      if (existing) {
-        // New object to avoid reference issues
-        newOrder.push({ ...existing });
-      }
-    }
+    const newOrder = this.reconcileSectionOrder(value);
     this.#data.current = { ...this.#data.current, sectionOrder: newOrder };
+  }
+
+  reconcileSectionOrder(value: SectionID[]) {
+    const newOrder: SectionID[] = [];
+    const seenSectionIds: Record<number, true> = {};
+
+    // Keep current user ordering for sections that still exist.
+    for (const section of value) {
+      const existing = sections.find((current) => current.id === section.id);
+      if (!existing || seenSectionIds[existing.id]) continue;
+
+      seenSectionIds[existing.id] = true;
+      newOrder.push({ ...existing });
+    }
+
+    // Append newly added sections to avoid requiring localStorage resets.
+    for (const section of sections) {
+      if (seenSectionIds[section.id]) continue;
+
+      seenSectionIds[section.id] = true;
+      newOrder.push({ ...section });
+    }
+
+    return newOrder;
   }
 
   get performanceMode() {

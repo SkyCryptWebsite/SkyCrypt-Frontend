@@ -44,8 +44,10 @@ describe.concurrent("PreferencesContext Tests", () => {
           const stored = localStorage.getItem("skycryptPreferences");
           expect(stored).toBeTruthy();
           const parsed = JSON.parse(stored!);
-          expect(parsed.sectionOrder).toHaveLength(3);
+          expect(parsed.sectionOrder).toHaveLength(sections.length);
           expect(parsed.sectionOrder[0].id).toBe(sections[1].id);
+          expect(parsed.sectionOrder[1].id).toBe(sections[0].id);
+          expect(parsed.sectionOrder[2].id).toBe(sections[2].id);
         });
       });
 
@@ -203,8 +205,10 @@ describe.concurrent("PreferencesContext Tests", () => {
           prefs.sectionOrder = [sections[0], sections[1], sections[2]];
           flushSync();
 
-          expect(prefs.sectionOrder).toHaveLength(3);
+          expect(prefs.sectionOrder).toHaveLength(sections.length);
           expect(prefs.sectionOrder[0].id).toBe(sections[0].id);
+          expect(prefs.sectionOrder[1].id).toBe(sections[1].id);
+          expect(prefs.sectionOrder[2].id).toBe(sections[2].id);
         });
       });
 
@@ -221,7 +225,7 @@ describe.concurrent("PreferencesContext Tests", () => {
           prefs.sectionOrder = [sections[0], invalid, sections[1]];
           flushSync();
 
-          expect(prefs.sectionOrder).toHaveLength(2);
+          expect(prefs.sectionOrder).toHaveLength(sections.length);
           expect(prefs.sectionOrder[0].id).toBe(sections[0].id);
           expect(prefs.sectionOrder[1].id).toBe(sections[1].id);
         });
@@ -256,7 +260,8 @@ describe.concurrent("PreferencesContext Tests", () => {
           prefs.sectionOrder = [];
           flushSync();
 
-          expect(prefs.sectionOrder).toHaveLength(0);
+          expect(prefs.sectionOrder).toHaveLength(sections.length);
+          expect(prefs.sectionOrder[0].id).toBe(sections[0].id);
         });
       });
 

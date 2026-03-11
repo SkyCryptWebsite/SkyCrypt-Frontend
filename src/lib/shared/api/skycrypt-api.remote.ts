@@ -1,6 +1,6 @@
 import { prerender, query } from "$app/server";
-import { getApiAccessoriesUuidProfileId, getApiBestiaryUuidProfileId, getApiCollectionsUuidProfileId, getApiCrimsonIsleUuidProfileId, getApiDungeonsUuidProfileId, getApiEmbedUuid, getApiGardenProfileId, getApiGearUuidProfileId, getApiInventoryUuidProfileIdInventoryId, getApiMinionsUuidProfileId, getApiMiscUuidProfileId, getApiNetworthUuidProfileId, getApiPetsUuidProfileId, getApiPlayerStatsUuidProfileId, getApiResourcepacks, getApiRiftUuidProfileId, getApiSkillsUuidProfileId, getApiSlayerUuidProfileId, getApiStatsUuidProfileId, getApiUsernameUuid, getApiUuidUsername, type ModelsProcessingError } from "$lib/shared/api/orval-generated";
-import { GetApiAccessoriesUuidProfileIdParams, GetApiBestiaryUuidProfileIdParams, GetApiCollectionsUuidProfileIdParams, GetApiCrimsonIsleUuidProfileIdParams, GetApiDungeonsUuidProfileIdParams, GetApiEmbedUuidParams, GetApiEmbedUuidQueryParams, GetApiGardenProfileIdParams, GetApiGearUuidProfileIdParams, GetApiInventoryUuidProfileIdInventoryIdParams, GetApiInventoryUuidProfileIdInventoryIdQueryParams, GetApiMinionsUuidProfileIdParams, GetApiMiscUuidProfileIdParams, GetApiNetworthUuidProfileIdParams, GetApiPetsUuidProfileIdParams, GetApiPlayerStatsUuidProfileIdParams, GetApiRiftUuidProfileIdParams, GetApiSkillsUuidProfileIdParams, GetApiSlayerUuidProfileIdParams, GetApiStatsUuidProfileIdParams, GetApiUsernameUuidParams, GetApiUuidUsernameParams } from "$lib/shared/api/orval-generated-zod";
+import { getApiAccessoriesUuidProfileId, getApiAttributeShardsUuidProfileId, getApiBestiaryUuidProfileId, getApiCollectionsUuidProfileId, getApiCrimsonIsleUuidProfileId, getApiDungeonsUuidProfileId, getApiEmbedUuid, getApiGardenUuidProfileId, getApiGearUuidProfileId, getApiInventoryUuidProfileIdInventoryId, getApiMinionsUuidProfileId, getApiMiscUuidProfileId, getApiNetworthUuidProfileId, getApiPetsUuidProfileId, getApiPlayerStatsUuidProfileId, getApiResourcepacks, getApiRiftUuidProfileId, getApiSkillsUuidProfileId, getApiSlayerUuidProfileId, getApiStatsUuidProfileId, getApiUsernameUuid, getApiUuidUsername, type ModelsProcessingError } from "$lib/shared/api/orval-generated";
+import { GetApiAccessoriesUuidProfileIdParams, GetApiAttributeShardsUuidProfileIdParams, GetApiBestiaryUuidProfileIdParams, GetApiCollectionsUuidProfileIdParams, GetApiCrimsonIsleUuidProfileIdParams, GetApiDungeonsUuidProfileIdParams, GetApiEmbedUuidParams, GetApiEmbedUuidQueryParams, GetApiGardenUuidProfileIdParams, GetApiGearUuidProfileIdParams, GetApiInventoryUuidProfileIdInventoryIdParams, GetApiInventoryUuidProfileIdInventoryIdQueryParams, GetApiMinionsUuidProfileIdParams, GetApiMiscUuidProfileIdParams, GetApiNetworthUuidProfileIdParams, GetApiPetsUuidProfileIdParams, GetApiPlayerStatsUuidProfileIdParams, GetApiRiftUuidProfileIdParams, GetApiSkillsUuidProfileIdParams, GetApiSlayerUuidProfileIdParams, GetApiStatsUuidProfileIdParams, GetApiUsernameUuidParams, GetApiUuidUsernameParams } from "$lib/shared/api/orval-generated-zod";
 import { APIEndpointName } from "$types";
 import { error, isHttpError, redirect } from "@sveltejs/kit";
 import z from "zod";
@@ -84,8 +84,8 @@ export const getSkillsSection = query(GetApiSkillsUuidProfileIdParams, async ({ 
 });
 
 /** Fetch garden data for a specific profile */
-export const getGarden = query(GetApiGardenProfileIdParams, async ({ profileId }) => {
-  return fetchSection(APIEndpointName.GARDEN, () => getApiGardenProfileId(profileId));
+export const getGarden = query(GetApiGardenUuidProfileIdParams, async ({ uuid, profileId }) => {
+  return fetchSection(APIEndpointName.GARDEN, () => getApiGardenUuidProfileId(uuid, profileId));
 });
 
 /** Fetch dungeons section data (catacombs, master mode) for a specific profile */
@@ -145,6 +145,11 @@ export const searchUser = query(GetApiUuidUsernameParams, async ({ username }) =
 /** Fetch embed data */
 export const getUsername = query(GetApiUsernameUuidParams, async ({ uuid }) => {
   return fetchSection(APIEndpointName.USERNAME, () => getApiUsernameUuid(uuid));
+});
+
+/** Fetch attribute shards section data for a specific profile */
+export const getAttributeShardsSection = query(GetApiAttributeShardsUuidProfileIdParams, async ({ uuid, profileId }) => {
+  return fetchSection(APIEndpointName.ATTRIBUTE_SHARDS, () => getApiAttributeShardsUuidProfileId(uuid, profileId));
 });
 
 export const getUsernamePrerendered = prerender(GetApiUsernameUuidParams, async ({ uuid }) => {

@@ -163,5 +163,12 @@ describe.concurrent("Minecraft Text Parser Tests", () => {
       expect(result).not.toContain("<script>");
       expect(result).toContain("&lt;script&gt;");
     });
+
+    it("check max enchant detection with trailing comma", ({ expect }) => {
+      const result = mcTextToHTML({ mcString: "§9Aqua Affinity I,", breakLine: false });
+      const doc = domParser.parseFromString(result, "text/html");
+      const span = doc.querySelector("span");
+      expect(span?.classList.contains("lore-enchantment")).toBe(true);
+    });
   });
 });

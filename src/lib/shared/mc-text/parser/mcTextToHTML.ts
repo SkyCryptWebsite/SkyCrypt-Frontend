@@ -21,6 +21,8 @@ import { BASE_FORMATTING_CODE_REGEX, htmlStringFormatting } from "$lib/shared/mc
 export default function mcTextToHTML(...args: [{ mcString: string; breakLine?: boolean; index?: number }]): string {
   const [{ mcString, breakLine = true, index: loreIndex }] = args;
 
+  const normalizeEnchantText = (text: string): string => text.trim().replace(/^[,.;:!?]+|[,.;:!?]+$/g, "");
+
   // Split the mc text string by formatting codes (§a, §b, etc.) and filter out empty strings
   // This creates an array where formatting codes and text alternate
   const codeSplit: string[] = mcString.split(BASE_FORMATTING_CODE_REGEX).filter((item) => item !== "");
@@ -79,7 +81,7 @@ export default function mcTextToHTML(...args: [{ mcString: string; breakLine?: b
       const textContent: string = item !== "" ? htmlStringFormatting(item) : item;
 
       // Check if the text contains max-level enchantments (for special rainbow effect)
-      switch (MAX_ENCHANTS.has(item)) {
+      switch (MAX_ENCHANTS.has(normalizeEnchantText(item))) {
         case true:
           shouldRainbowEnchantedCheck = true;
           break;
