@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.3.1-beta.1
+
+### Patch Changes
+
+- refactor: update release workflows ([`a838fe9`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/a838fe9fcd871372d2646744239e14bfe737f4fd))
+
 ## 3.3.1-beta.0
 
 ### Patch Changes
