@@ -51,9 +51,7 @@ const config = {
 
   vitePlugin: {
     // Can be removed once Svelte 6 is released, as `true` will be the default
-    dynamicCompileOptions({ _filename, _compileOptions }) {
-      return { runes: true };
-    }
+    dynamicCompileOptions: () => ({ runes: true })
   }
 };
 
