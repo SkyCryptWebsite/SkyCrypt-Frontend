@@ -17,6 +17,7 @@
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
+  import Settings from "$lib/components/header/settings";
 
   const { data: ctx }: { data: ModelsStatsOutput } = $props();
 
@@ -196,20 +197,17 @@
   </PaneGroup> -->
   <!-- TODO: See the paneforge todo above  -->
   <div class="@container fixed inset-y-0 left-0 z-10 hidden h-dvh w-[30vw] @[75rem]/parent:block">
-    {#if preferences.performanceMode && !showStaticSkin}
-      <Avatar.Root class="flex size-full items-center justify-center">
-        {#snippet child({ props })}
-          <div transition:fade={{ duration: 300, easing: cubicOut }} {...props}>
-            <Avatar.Image loading="lazy" src="https://nmsr.nickac.dev/fullbody/{profile.uuid}?no=shadow" alt="{profile.username}'s avatar" class="max-h-128 object-cover" />
-            <Avatar.Fallback>
-              <Image class="size-24 object-cover text-text" />
-            </Avatar.Fallback>
-          </div>
-        {/snippet}
-      </Avatar.Root>
-    {:else if browser && innerWidth >= 1024}
-      <Skin3D showStaticSkin={() => (showStaticSkin = true)} class="h-full" />
-    {/if}
+    <Settings />
+    <Avatar.Root class="flex size-full items-center justify-center">
+      {#snippet child({ props })}
+        <div transition:fade={{ duration: 300, easing: cubicOut }} {...props}>
+          <Avatar.Image loading="lazy" src="https://nmsr.nickac.dev/fullbody/{profile.uuid}?no=shadow" alt="{profile.username}'s avatar" class="max-h-128 object-cover" />
+          <Avatar.Fallback>
+            <Image class="size-24 object-cover text-text" />
+          </Avatar.Fallback>
+        </div>
+      {/snippet}
+    </Avatar.Root>
   </div>
 
   <div class={cn("fixed top-0 right-0 min-h-dvh w-full @[75rem]/parent:w-[calc(100%-30vw)]", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")}></div>
