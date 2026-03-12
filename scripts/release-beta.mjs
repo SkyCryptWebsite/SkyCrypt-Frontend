@@ -3,7 +3,6 @@ import fs from "node:fs";
 import path from "node:path";
 
 const changesetDir = path.join(process.cwd(), ".changeset");
-const outputFile = process.env.GITHUB_OUTPUT;
 
 function run(command) {
   execSync(command, { stdio: "inherit" });
@@ -13,7 +12,7 @@ function runOptional(command) {
   try {
     execSync(command, { stdio: "inherit" });
   } catch {
-    // Optional command failed (e.g., already in pre mode).
+    // Optional command failed.
   }
 }
 
@@ -21,60 +20,54 @@ function output(command) {
   return execSync(command, { encoding: "utf8" }).trim();
 }
 
-function setOutput(name, value) {
-  if (!outputFile) {
-    return;
-  }
-
-  fs.appendFileSync(outputFile, `${name}=${value}\n`);
-}
-
-const hasChangesets = fs.existsSync(changesetDir) && fs.readdirSync(changesetDir).some((name) => name.endsWith(".md") && name !== "README.md");
-
-if (!hasChangesets) {
-  const version = output("node -p \"require('./package.json').version\"");
-  setOutput("release_ready", version.includes("beta") ? "true" : "false");
-  process.exit(0);
-}
-
 run("git fetch origin dev");
 run('git config user.name "github-actions[bot]"');
 run('git config user.email "github-actions[bot]@users.noreply.github.com"');
-run("git checkout -B changeset-release/dev origin/dev");
+run("git checkout -B dev origin/dev");
 
 const preStatePath = path.join(changesetDir, "pre.json");
-let inPreMode = false;
+let isInBetaPreMode = false;
 
 if (fs.existsSync(preStatePath)) {
   try {
     const preState = JSON.parse(fs.readFileSync(preStatePath, "utf8"));
-    inPreMode = preState?.mode === "pre";
+    isInBetaPreMode = preState?.mode === "pre" && preState?.tag === "beta";
   } catch {
-    inPreMode = false;
+    isInBetaPreMode = false;
   }
 }
 
-if (!inPreMode) {
-  runOptional("pnpm changeset pre enter beta");
+if (!isInBetaPreMode) {
+  runOptional("pnpm changeset pre exit");
+  run("pnpm changeset pre enter beta");
 }
+
 run("pnpm changeset:version");
 
 try {
   execSync("git diff --quiet");
-  setOutput("release_ready", "false");
-  process.exit(0);
+  console.info("No beta version changes detected");
 } catch {
   // There are changes to commit.
+  run("git add -A");
+  run('git commit -m "chore: version packages (beta) [skip ci]"');
+  run("git push origin HEAD:dev");
 }
 
-run("git add -A");
-run('git commit -m "chore: version packages (beta)"');
-run("git push origin HEAD:changeset-release/dev --force");
+const version = output("node -p \"require('./package.json').version\"");
 
-const existingPr = output("gh pr list --head changeset-release/dev --base dev --json number --jq '.[0].number'");
-
-if (!existingPr) {
-  run('gh pr create --title "Version Packages" --body "" --base dev --head changeset-release/dev');
+if (!version.includes("beta")) {
+  console.info(`Current version (${version}) is not a beta, skipping prerelease`);
+  process.exit(0);
 }
 
-setOutput("release_ready", "false");
+const tag = `v${version}`;
+const remoteTag = output(`git ls-remote --tags origin ${tag}`);
+
+if (remoteTag) {
+  console.info(`Tag ${tag} already exists, skipping`);
+} else {
+  run(`git tag ${tag}`);
+  run(`git push origin ${tag}`);
+  run(`gh release create ${tag} --title ${tag} --generate-notes --prerelease`);
+}
