@@ -81,7 +81,8 @@ jobs:
         id: stable_prep
         run: node scripts/release-stable.mjs
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
 
       - name: Create Stable GitHub Release
         if: steps.stable_prep.outputs.release_ready == 'true'
@@ -104,4 +105,5 @@ jobs:
           git push origin "$TAG"
           gh release create "$TAG" --title "$TAG" --generate-notes --latest
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
