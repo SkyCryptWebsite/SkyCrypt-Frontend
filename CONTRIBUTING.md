@@ -88,11 +88,27 @@ Releases are created automatically based on the branch:
 - **dev branch** → Creates prereleases (e.g., `v0.1.0-beta.1`) and deploys to cupcake.shiiyu.moe
 - **prod branch** → Creates stable releases (e.g., `v0.1.0`) and deploys to sky.shiiyu.moe
 
+Release behavior details:
+
+- Changesets are authored in feature PRs and merged into `dev`.
+- The release workflow commits version/changelog updates directly on the release branch (`dev` or `prod`) using `github-actions[bot]`.
+- Stable release changes from `prod` are automatically synced back to `dev` by the release workflow to keep branches aligned.
+- Do **not** manually maintain `changeset-release/*` branches.
+- Do **not** manually merge `prod` into `dev` for version sync; the workflow handles this.
+
 The version bump is determined automatically by changesets:
 
 - `patch` patch version (0.0.1 → 0.0.2)
 - `minor` minor version (0.0.1 → 0.1.0)
 - `major` major version (0.0.1 → 1.0.0)
+
+### Changeset Cleanup Policy
+
+The `.changeset/*.md` files are temporary release inputs:
+
+- If a changeset's entry is already present in a **stable** (non-beta) section of `CHANGELOG.md`, that changeset file should be removed.
+- Keep unreleased changesets and currently active prerelease changesets.
+- Keep `.changeset/README.md` and `.changeset/pre.json`.
 
 ## Issues
 
