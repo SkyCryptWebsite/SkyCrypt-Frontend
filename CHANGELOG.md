@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.3.1-beta.2
+
+### Patch Changes
+
+- feat: enhance CI workflows with CodeQL analysis and stable release process ([`29736f0`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/29736f098d1b5c37cdd6646c5285bd44cdec6433))
+
 ## 3.3.1-beta.1
 
 ### Patch Changes
