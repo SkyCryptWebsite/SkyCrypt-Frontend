@@ -52,6 +52,7 @@ jobs:
 
     permissions:
       contents: write
+      pull-requests: write
 
     steps:
       - name: Git checkout
@@ -77,6 +78,30 @@ jobs:
           HUSKY: "0"
 
       - name: Prepare Stable Release
+        id: stable_prep
         run: node scripts/release-stable.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Stable GitHub Release
+        if: steps.stable_prep.outputs.release_ready == 'true'
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+
+          if echo "$VERSION" | grep -q "beta"; then
+            echo "Current version ($VERSION) is still a beta, skipping"
+            exit 0
+          fi
+
+          TAG="v${VERSION}"
+
+          if git ls-remote --tags origin "$TAG" | grep -q "$TAG"; then
+            echo "Tag $TAG already exists, skipping"
+            exit 0
+          fi
+
+          git tag "$TAG"
+          git push origin "$TAG"
+          gh release create "$TAG" --title "$TAG" --generate-notes --latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
