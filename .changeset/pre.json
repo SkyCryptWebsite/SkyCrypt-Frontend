@@ -1,0 +1,12 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "skycrypt-frontend": "3.2.0"
+  },
+  "changesets": [
+    "modern-carrots-change",
+    "slimy-beans-brake",
+    "tasty-stamps-scream"
+  ]
+}

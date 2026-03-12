@@ -1,5 +1,19 @@
 # Changelog
 
+## 3.3.1-beta.1
+
+### Patch Changes
+
+- refactor: update release workflows ([`a838fe9`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/a838fe9fcd871372d2646744239e14bfe737f4fd))
+
+## 3.3.1-beta.0
+
+### Patch Changes
+
+- chore: update config to match default config generated via sv@0.12.6 ([`3c5c711`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/3c5c711ecb704492fb594559fd314c4f49746c4a))
+
+- fix: tooltip does not update when hovering over items too quickly #282 ([`7a3db55`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/7a3db556cade43fd607de0c29a18621e083ea082))
+
 ## 3.3.0
 
 ### Minor Changes

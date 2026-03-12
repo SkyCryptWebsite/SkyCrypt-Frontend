@@ -11,12 +11,11 @@ concurrency:
 jobs:
   beta:
     name: Beta Release
-    if: github.ref == 'refs/heads/dev' && github.repository_owner == 'SkyCryptWebsite'
+    if: github.ref == 'refs/heads/dev' && github.repository_owner == 'SkyCryptWebsite' && github.actor != 'github-actions[bot]' && !contains(github.event.head_commit.message, '[skip ci]')
     runs-on: ubuntu-latest
 
     permissions:
       contents: write
-      pull-requests: write
 
     steps:
       - name: Git checkout
@@ -42,49 +41,23 @@ jobs:
           HUSKY: "0"
 
       - name: Prepare Beta Release
-        id: beta_prep
         run: node scripts/release-beta.mjs
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
-
-      - name: Create Beta GitHub Release
-        if: steps.beta_prep.outputs.release_ready == 'true'
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-
-          if ! echo "$VERSION" | grep -q "beta"; then
-            echo "Current version ($VERSION) is not a beta, skipping"
-            exit 0
-          fi
-
-          TAG="v${VERSION}"
-
-          if git rev-parse "$TAG" >/dev/null 2>&1; then
-            echo "Tag $TAG already exists, skipping"
-            exit 0
-          fi
-
-          git tag "$TAG"
-          git push origin "$TAG"
-          gh release create "$TAG" --title "$TAG" --generate-notes --prerelease
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   stable:
     name: Stable Release
-    if: github.ref == 'refs/heads/prod' && github.repository_owner == 'SkyCryptWebsite'
+    if: github.ref == 'refs/heads/prod' && github.repository_owner == 'SkyCryptWebsite' && github.actor != 'github-actions[bot]' && !contains(github.event.head_commit.message, '[skip ci]')
     runs-on: ubuntu-latest
 
     permissions:
       contents: write
-      pull-requests: write
 
     steps:
       - name: Git checkout
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
-          token: ${{ secrets.PAT_TOKEN }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -104,30 +77,6 @@ jobs:
           HUSKY: "0"
 
       - name: Prepare Stable Release
-        id: stable_prep
         run: node scripts/release-stable.mjs
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
-
-      - name: Create Stable GitHub Release
-        if: steps.stable_prep.outputs.release_ready == 'true'
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-
-          if echo "$VERSION" | grep -q "beta"; then
-            echo "Current version ($VERSION) is still a beta, skipping"
-            exit 0
-          fi
-
-          TAG="v${VERSION}"
-
-          if git rev-parse "$TAG" >/dev/null 2>&1; then
-            echo "Tag $TAG already exists, skipping"
-            exit 0
-          fi
-
-          git tag "$TAG"
-          git push origin "$TAG"
-          gh release create "$TAG" --title "$TAG" --generate-notes --latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

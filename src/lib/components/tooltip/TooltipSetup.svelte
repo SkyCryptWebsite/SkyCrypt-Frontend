@@ -18,14 +18,16 @@
             {#if open}
               <div {...wrapperProps}>
                 <div {...props} transition:flyAndScale|global>
-                  {#if payload?.children}
-                    {@render payload.children()}
-                  {:else if payload?.tooltipContent}
-                    {payload.tooltipContent}
-                  {/if}
-                  {#if payload?.showArrow !== false}
-                    <Tooltip.Arrow />
-                  {/if}
+                  {#key payload}
+                    {#if payload?.children}
+                      {@render payload.children()}
+                    {:else if payload?.tooltipContent}
+                      {payload.tooltipContent}
+                    {/if}
+                    {#if payload?.showArrow !== false}
+                      <Tooltip.Arrow />
+                    {/if}
+                  {/key}
                 </div>
               </div>
             {/if}
@@ -46,9 +48,11 @@
             {#if open}
               <div {...wrapperProps}>
                 <div {...props} transition:flyAndScale>
-                  {#if payload?.skyblockItem}
-                    <ItemContent piece={payload.skyblockItem} />
-                  {/if}
+                  {#key payload}
+                    {#if payload?.skyblockItem}
+                      <ItemContent piece={payload.skyblockItem} />
+                    {/if}
+                  {/key}
                 </div>
               </div>
             {/if}
