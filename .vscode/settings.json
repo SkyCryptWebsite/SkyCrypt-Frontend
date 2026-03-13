@@ -22,8 +22,7 @@
     "typescript": "typescript",
     "svelte": "html"
   },
-  "javascript.updateImportsOnFileMove.enabled": "prompt",
-  "typescript.updateImportsOnFileMove.enabled": "prompt",
+  "js/ts.updateImportsOnFileMove.enabled": "prompt",
   "eslint.validate": ["javascript", "typescript", "svelte"],
   "prettier.documentSelectors": ["**/*.svelte"],
   "github.copilot.chat.commitMessageGeneration.instructions": [
