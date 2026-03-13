@@ -2,29 +2,25 @@
   import { getPreferences } from "$ctx";
   import { SettingsTab } from "$lib/components/header/types";
   import { sections } from "$lib/sections/constants";
-  import type { SectionID } from "$lib/sections/types";
+  import { RestrictToVerticalAxis } from "@dnd-kit/abstract/modifiers";
+  import { move } from "@dnd-kit/helpers";
+  import { DragDropProvider, DragOverlay, type DragDropEventHandlers } from "@dnd-kit/svelte";
+  import { createSortable } from "@dnd-kit/svelte/sortable";
   import GripVertical from "@lucide/svelte/icons/grip-vertical";
   import ListOrdered from "@lucide/svelte/icons/list-ordered";
   import { Button, Tabs } from "bits-ui";
-  import { dndzone, SHADOW_ITEM_MARKER_PROPERTY_NAME, type DndEvent } from "svelte-dnd-action";
-  import { flip } from "svelte/animate";
-  import { cubicOut } from "svelte/easing";
-  import { fade } from "svelte/transition";
 
   const preferences = getPreferences();
+  type SectionItem = (typeof preferences.sectionOrder)[number];
+  type SortableItem = ReturnType<typeof createSortable>;
 
   const defaultSectionOrder = sections;
   const differsFromDefault = $derived(JSON.stringify(preferences.sectionOrder) !== JSON.stringify(defaultSectionOrder));
 
-  let sectionOrder = $derived(preferences.sectionOrder);
+  let sectionOrder = $state(preferences.sectionOrder);
 
-  function onconsider(e: CustomEvent<DndEvent<SectionID>>) {
-    sectionOrder = e.detail.items;
-  }
-
-  function onfinalize(e: CustomEvent<DndEvent<SectionID>>) {
-    sectionOrder = e.detail.items;
-    preferences.sectionOrder = e.detail.items;
+  function onDragEnd(event: Parameters<NonNullable<DragDropEventHandlers["onDragEnd"]>>[0]) {
+    preferences.sectionOrder = move(sectionOrder, event);
   }
 </script>
 
@@ -37,20 +33,22 @@
       <p class="text-text/60">Drag and drop the sections to reorder them as you like.</p>
     </div>
   </div>
-  <div class="mt-4 flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto" use:dndzone={{ items: sectionOrder, flipDurationMs: 300, dropTargetStyle: {} }} {onconsider} {onfinalize}>
-    {#each sectionOrder as section (section.id)}
-      {@const normalizedName = section.name.replaceAll("_", " ")}
-      <div animate:flip={{ duration: 300, easing: cubicOut }} class="relative flex items-center gap-2 rounded-lg bg-text/5 p-2 font-semibold">
-        <GripVertical class="size-5 text-text/60" />
-        {normalizedName}
-        {#if SHADOW_ITEM_MARKER_PROPERTY_NAME in section && section[SHADOW_ITEM_MARKER_PROPERTY_NAME]}
-          <div in:fade={{ duration: 300, easing: cubicOut }} class="visible absolute inset-0 flex animate-pulse items-center gap-2 rounded-lg bg-text/5 p-2 font-semibold opacity-30">
-            <GripVertical class="size-5 text-text/60" />
-            {normalizedName}
-          </div>
-        {/if}
-      </div>
-    {/each}
+  <div class="mt-4 flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto">
+    <DragDropProvider {onDragEnd} modifiers={(defaults) => [...defaults, RestrictToVerticalAxis]}>
+      {#each sectionOrder as section, index (section.id)}
+        {@const sortable = createSortable({ id: section.id, index, feedback: "clone" })}
+        {@render sectionRowContent(section, sortable, true)}
+      {/each}
+
+      <DragOverlay>
+        {#snippet children(source)}
+          {@const activeSection = sectionOrder.find((section) => section.id === source.id)}
+          {#if activeSection}
+            {@render sectionRowContent(activeSection)}
+          {/if}
+        {/snippet}
+      </DragOverlay>
+    </DragDropProvider>
   </div>
   {#if differsFromDefault}
     <Button.Root
@@ -62,3 +60,10 @@
     </Button.Root>
   {/if}
 </Tabs.Content>
+
+{#snippet sectionRowContent(section: SectionItem, sortable: SortableItem | null = null, flipEnabled = false)}
+  <div {@attach sortable?.attach} class="relative flex items-center gap-2 rounded-lg bg-text/5 p-2 font-semibold data-[dragging=true]:animate-pulse data-[dragging=true]:opacity-30 data-[flip=true]:will-change-transform" data-dragging={sortable?.isDropTarget} data-flip={flipEnabled}>
+    <GripVertical class="size-5 text-text/60" />
+    {section.name.replaceAll("_", " ")}
+  </div>
+{/snippet}
