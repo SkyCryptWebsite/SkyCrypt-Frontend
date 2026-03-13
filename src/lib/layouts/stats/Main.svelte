@@ -31,7 +31,7 @@
 
   const profile = $derived(ctx);
 
-  let showStaticSkin = $state(false);
+  let showStaticSkin = $derived(preferences.performanceMode);
   let _rightSize = $state(0);
   let _leftSize = $state(0);
   let _skinCollapsed = $state(false);
@@ -200,7 +200,7 @@
   </PaneGroup> -->
   <!-- TODO: See the paneforge todo above  -->
   <div class="@container fixed top-1/2 left-0 z-10 hidden h-dvh w-[30vw] -translate-y-1/2 @[75rem]/parent:block">
-    {#if preferences.performanceMode && !showStaticSkin}
+    {#if showStaticSkin}
       <Avatar.Root class="flex size-full items-center justify-center">
         {#snippet child({ props })}
           <div transition:fade={{ duration: 300, easing: cubicOut }} {...props}>
@@ -211,7 +211,7 @@
           </div>
         {/snippet}
       </Avatar.Root>
-    {:else if browser && innerWidth >= 1024}
+    {:else if browser && innerWidth >= 1210}
       <Skin3D showStaticSkin={() => (showStaticSkin = true)} class="h-full" />
     {/if}
   </div>
