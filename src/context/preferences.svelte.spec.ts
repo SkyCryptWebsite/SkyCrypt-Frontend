@@ -4,7 +4,7 @@ import { flushSync, untrack } from "svelte";
 import { afterEach, beforeEach, describe, it } from "vitest";
 import { PreferencesContext } from "./preferences.svelte";
 
-describe.concurrent("PreferencesContext Tests", () => {
+describe("PreferencesContext Tests", () => {
   beforeEach(() => {
     localStorage.clear();
   });
@@ -13,7 +13,7 @@ describe.concurrent("PreferencesContext Tests", () => {
     localStorage.clear();
   });
 
-  describe.concurrent("Initialization", () => {
+  describe("Initialization", () => {
     it("initializes with default values", ({ expect }) => {
       const cleanup = $effect.root(() => {
         const prefs = new PreferencesContext();
@@ -32,7 +32,7 @@ describe.concurrent("PreferencesContext Tests", () => {
     });
   });
 
-  describe.concurrent("PersistedState localStorage", () => {
+  describe("PersistedState localStorage", () => {
     it("persists sectionOrder to localStorage", ({ expect }) => {
       const cleanup = $effect.root(() => {
         const prefs = new PreferencesContext();
@@ -196,7 +196,7 @@ describe.concurrent("PreferencesContext Tests", () => {
     });
   });
 
-  describe.concurrent("sectionOrder Setter Validation", () => {
+  describe("sectionOrder Setter Validation", () => {
     it("validates section IDs against sections constant", ({ expect }) => {
       const cleanup = $effect.root(() => {
         const prefs = new PreferencesContext();
@@ -285,7 +285,7 @@ describe.concurrent("PreferencesContext Tests", () => {
     });
   });
 
-  describe.concurrent("Property Getters and Setters", () => {
+  describe("Property Getters and Setters", () => {
     it("performanceMode getter returns correct value", ({ expect }) => {
       const cleanup = $effect.root(() => {
         const prefs = new PreferencesContext();
@@ -377,7 +377,7 @@ describe.concurrent("PreferencesContext Tests", () => {
     });
   });
 
-  describe.concurrent("rainbowEnchantments document.dataset", () => {
+  describe("rainbowEnchantments document.dataset", () => {
     it("sets document.documentElement.dataset.rainbow to 'true' when enabled", ({ expect }) => {
       const cleanup = $effect.root(() => {
         const prefs = new PreferencesContext();
@@ -461,7 +461,7 @@ describe.concurrent("PreferencesContext Tests", () => {
     });
   });
 
-  describe.concurrent("Migration via loadOldSettings", () => {
+  describe("Migration via loadOldSettings", () => {
     it("migrates sectionOrderPreferences from old storage key", ({ expect }) => {
       const oldOrder: SectionID[] = [sections[2], sections[1], sections[0]];
       localStorage.setItem("sectionOrderPreferences", JSON.stringify(oldOrder));
@@ -601,7 +601,7 @@ describe.concurrent("PreferencesContext Tests", () => {
     });
   });
 
-  describe.concurrent("Edge Cases", () => {
+  describe("Edge Cases", () => {
     it("handles rapid successive updates", ({ expect }) => {
       const cleanup = $effect.root(() => {
         const prefs = new PreferencesContext();
@@ -675,7 +675,7 @@ describe.concurrent("PreferencesContext Tests", () => {
     });
   });
 
-  describe.concurrent("TypeScript Type Safety", () => {
+  describe("TypeScript Type Safety", () => {
     it("enforces boolean type for performanceMode", ({ expect }) => {
       const cleanup = $effect.root(() => {
         const prefs = new PreferencesContext();
