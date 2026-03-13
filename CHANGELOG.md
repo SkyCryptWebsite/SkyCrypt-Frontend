@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.3.1-beta.3
+
+### Patch Changes
+
+- fix: replace createHover with manual hover state management in Skillbar component ([`133d0c8`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/133d0c82290885b03a8b6ec908f9aff9588e0a3c))
+
+- feat: migrate to @dndkit from svelte-dnd-action ([`af1100b`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/af1100bc4f2c982e4d58d705a456cb23f927d810))
+
 ## 3.3.1-beta.2
 
 ### Patch Changes
