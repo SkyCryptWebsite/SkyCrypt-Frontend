@@ -14,34 +14,54 @@
   <a href="https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/actions/workflows/website.yml"><img alt="GitHub Repo stars" src="https://img.shields.io/github/actions/workflow/status/SkyCryptWebsite/SkyCrypt-Frontend/website.yml?branch=prod&style=for-the-badge" /></a>
 </p>
 
-This is the new version of [SkyCrypt](https://github.com/SkyCryptWebsite/SkyCrypt), a website that provides information about the game Hypixel SkyBlock. This version is built from the ground up to replace the original SkyCrypt for a more modern and maintainable codebase.
+A website that provides per-player information about the game Hypixel SkyBlock.
 
 Originally inspired by [LeaPhant's skyblock-stats](https://github.com/LeaPhant/skyblock-stats).
 
-**Website**: https://sky.shiiyu.moe \
-**Development Website**: https://cupcake.shiiyu.moe
+- **Website**: https://sky.shiiyu.moe
+- **Development Website**: https://cupcake.shiiyu.moe
+- **Backend**: [SkyCrypt-Backend](https://github.com/SkyCryptWebsite/SkyCrypt-Backend)
 
-**Backend**: [SkyCrypt-Backend](https://github.com/SkyCryptWebsite/SkyCrypt-Backend)
+---
 
-<h2 align="center">Screenshot</h1>
+This repo is built from the ground up to replace the [original SkyCrypt](https://github.com/SkyCryptWebsite/SkyCrypt) for a more modern and maintainable codebase.
+
+---
+
+<h2 align="center">Screenshot</h2>
 
 ![Screenshot](static/img/screenshots/desktop.avif)
 
-<h2 align="center">Contributing</h1>
+<h2 align="center">Contributing</h2>
 
 You are free to report bugs or contribute to this project. Just open <a href="../../issues">Issues</a> or <a href="../../pulls">Pull Requests</a> and the team will look into them.
 
 Refer to the <a href="/CONTRIBUTING.md">CONTRIBUTING.md</a> file for more information on how to contribute.
 
+> [!TIP]
+> Contributions are not limited to code. Making suggestions, reporting bugs, and sharing the project with others are all forms of contribution that are highly appreciated.
+
 <h2 align="center">Credits</h2>
 
-- **Custom Textures**:
-  - [FurfSky Reborn](https://hypixel.net/threads/4101579) by The Reborn Team
-  - [RNBW+](https://hypixel.net/threads/3470904) by rainbowcraft2
-  - [Hypixel Skyblock Pack](https://hypixel.net/threads/2103515) by Packs HQ
-  - [Hypixel Plus](https://hypixel.net/threads/4174260) by ic22487
-  - [Vanilla+](https://hypixel.net/threads/2147652) by TBlazeWarriorT
-  - [Worlds and Beyond](https://hypixel.net/threads/3597207) by Skeletony\_
-  - [Default Minecraft Textures](https://www.minecraft.net/) by Mojang
-- **Player Heads**: [SkyBlock](https://hypixel.net/forums/skyblock.157/) by Hypixel
-- **Original Site**: [sky.lea.moe](https://sky.lea.moe/) by LeaPhant
+Original Site: [sky.lea.moe](https://sky.lea.moe/) by LeaPhant
+
+### Used Resources
+
+#### Custom Textures:
+
+- [FurfSky Reborn](https://modrinth.com/resourcepack/furfsky-reborn) by The Reborn Team
+- [Hypixel Plus](https://modrinth.com/resourcepack/hypixel-plus) by ic22487
+- [Default Minecraft Textures](https://www.minecraft.net/) by Mojang
+
+#### Background Image:
+
+- Resource Pack: [Dandelion](https://www.planetminecraft.com/texture_pack/16x132-dandelion-cute-and-swirly/) by Steelfeathers
+- Shaders: [Sildur's Vibrant Shaders](https://sildurs-shaders.github.io/) by Sildur
+
+#### Tools, Libraries, and APIs:
+
+- 3D Skin View: [skinview3d](https://github.com/bs-community/skinview3d/) by BS-Community
+- Networth: [SkyHelper Networth](https://github.com/SkyCryptWebsite/SkyHelper-Networth-Go) by SkyHelper
+- Player Heads: [SkyBlock](https://hypixel.net) by Hypixel
+- Player Data: [Hypixel API](https://api.hypixel.net) by Hypixel
+- Game Data: [NotEnoughUpdates-REPO](https://github.com/NotEnoughUpdates/NotEnoughUpdates-REPO) by NEU
