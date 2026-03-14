@@ -81,6 +81,7 @@
     "pretty-ms": "^9.3.0",
     "runed": "^0.37.1",
     "skinview3d": "^3.4.1",
+    "super-sitemap": "^1.0.7",
     "svelte": "5.53.7",
     "svelte-check": "^4.4.5",
     "svelte-persisted-store": "^0.12.0",
