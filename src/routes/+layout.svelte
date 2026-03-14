@@ -36,6 +36,21 @@
   const theme = writable<ToasterProps["theme"]>("dark");
   const noEmbedUrls = ["/stats/"];
   const packs = new PacksContext();
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://sky.shiiyu.moe/#website",
+    name: "SkyCrypt",
+    url: "https://sky.shiiyu.moe",
+    description: "A beautiful site for sharing your SkyBlock profile 🍣",
+    publisher: {
+      "@type": "Organization",
+      "@id": "https://sky.shiiyu.moe/#organization",
+      name: "SkyCrypt",
+      url: "https://sky.shiiyu.moe",
+      logo: "https://sky.shiiyu.moe/img/app-icons/svg.svg"
+    }
+  } as const;
 
   function updateOnlineStatus() {
     toast.dismiss(toastId);
@@ -174,6 +189,7 @@
     title="SkyCrypt"
     description="A beautiful site for sharing your SkyBlock profile 🍣"
     canonical="https://sky.shiiyu.moe/"
+    jsonLd={websiteJsonLd}
     openGraph={{
       title: "SkyBlock Stats",
       description: "A beautiful site for sharing your SkyBlock profile 🍣",

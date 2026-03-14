@@ -111,12 +111,6 @@
   });
 </script>
 
-<svelte:head>
-  <link rel="canonical" href={`https://sky.shiiyu.moe/stats/${profile.uuid}/${profile.profile_id}`} />
-  <link rel="icon" href="https://nmsr.nickac.dev/face/{profile.uuid}" sizes="32x32" type="image/png" />
-  <title>{profile.displayName} | SkyCrypt</title>
-</svelte:head>
-
 <svelte:window bind:innerWidth />
 
 <div class="@container/parent relative">
