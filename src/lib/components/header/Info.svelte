@@ -11,11 +11,27 @@
   const isHover = getHoverContext();
 
   const { PUBLIC_DISCORD_INVITE, PUBLIC_PATREON } = env;
+  const packageVersion = __NPM_PACKAGE_VERSION__;
+  const commitHash = PUBLIC_COMMIT_HASH;
 </script>
 
 {#snippet info()}
   <p class="my-4">SkyCrypt is a free, open-source stats viewer for Hypixel SkyBlock.</p>
-  <p>Currently running version <Button.Root class="font-semibold text-link" rel="noreferrer" href="https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/{PUBLIC_COMMIT_HASH}" target="_blank">{PUBLIC_COMMIT_HASH}</Button.Root>.</p>
+  {#if __NPM_PACKAGE_VERSION__ || PUBLIC_COMMIT_HASH}
+    <p>
+      Currently running version
+      <span class="font-semibold">
+        {#if packageVersion}<Button.Root class="text-link" rel="noreferrer" href="https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/releases/tag/v{packageVersion}" target="_blank">{packageVersion}</Button.Root>{/if}
+        {#if commitHash}
+          <span class="opacity-50">
+            {#if packageVersion}{"("}{/if}<Button.Root class="text-link" rel="noreferrer" href="https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/{commitHash}" target="_blank">{commitHash}</Button.Root>{#if packageVersion}{")"}{/if}
+          </span>
+        {/if}
+      </span>
+    </p>
+  {:else}
+    <p>Version information is not available.</p>
+  {/if}
   <p class="my-4">
     You can report bugs, suggest features on <Button.Root class="font-semibold text-link" href={PUBLIC_DISCORD_INVITE} target="_blank" rel="noreferrer">Discord</Button.Root>, and/or contribute to the code on <Button.Root class="font-semibold text-link" href="https://github.com/SkyCryptWebsite" target="_blank" rel="noreferrer">GitHub</Button.Root>. It would be much appreciated!
   </p>
