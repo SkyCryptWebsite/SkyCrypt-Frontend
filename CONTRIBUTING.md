@@ -6,11 +6,13 @@ Before contributing to SkyCrypt, make sure you install the development environme
 
 - [Node.js](https://nodejs.org) (at least v24, as of February 2026)
 - [pnpm](https://pnpm.io/) (Package manager)
-- [Nginx](https://www.nginx.com/) (Optional but an ideal choice for full deployment)
 
 ## Backend
 
-SkyCrypt-Frontend, as the name suggests, is the frontend of SkyCrypt. The backend is a separate repository called [SkyCrypt-Backend](https://github.com/SkyCryptWebsite/SkyCrypt-Backend). You will need to set up the backend in order to process and get the data for the frontend to show.
+SkyCrypt-Frontend, as the name suggests, is the frontend of SkyCrypt. The backend is a separate repository called [SkyCrypt-Backend](https://github.com/SkyCryptWebsite/SkyCrypt-Backend).
+
+> [!IMPORTANT]  
+> You will need to set up the backend in order to process and get the data for the frontend to show.
 
 ## Getting Started
 
@@ -33,9 +35,9 @@ SkyCrypt-Frontend, as the name suggests, is the frontend of SkyCrypt. The backen
 
 5. You can now open your browser and go to the address listen in the terminal
 
-- For development, by default, the address is `http://localhost:5173`.
-- For preview, by default, the address is `http://localhost:4173`
-- For production, by default, the address is `http://localhost:3000`.
+- For development (`pnpm dev`), by default, the address is `http://localhost:5173`.
+- For preview (`pnpm preview`), by default, the address is `http://localhost:4173`
+- For production (`node build`), by default, the address is `http://localhost:3000`.
 
 ### VS Code
 
@@ -56,14 +58,14 @@ Please ensure that you don't accidentally commit the changes you made to the `.v
 When you are ready to submit your changes, please create a pull request (PR) on GitHub. Make sure to check the following:
 
 - **Use Conventional Commits**: Follow the [Conventional Commits](https://www.conventionalcommits.org/) specification for your commit messages.
-- Your code is well formatted and follows the project's coding style. Run `pnpm lint` to check for linting errors. If there are any `prettier` errors, run `pnpm format` to fix them. If there are any `eslint` or `svelte-check` errors, fix them manually.
-- Your code builds successfully. Run `pnpm build` to check for build errors.
+- Your code is well formatted and follows the project's coding style. Run `pnpm lint` to check for linting errors. If there are any `prettier` errors, run `pnpm format` to fix them automatically. If there are any `eslint` or `svelte-check` errors, fix them manually.
+- Your code builds successfully. Run `pnpm build` to check.
 - Your PR has a clear title and description explaining the changes you made.
 - Your PR includes changesets if necessary. If your PR includes changes that should be reflected in the changelog, please include a changeset. You can do this by running `pnpm changeset` and following the prompts.
 
 ### Commit Message Format
 
-We use conventional commits to automatically generate changelogs and manage releases. Your commit messages should follow this format:
+Your commit messages should follow this format:
 
 ```
 <type>[optional scope]: <subject>
@@ -85,8 +87,8 @@ The scope is optional but recommended for better categorization.
 
 Releases are created automatically based on the branch:
 
-- **dev branch** → Creates prereleases (e.g., `v0.1.0-beta.1`) and deploys to cupcake.shiiyu.moe
-- **prod branch** → Creates stable releases (e.g., `v0.1.0`) and deploys to sky.shiiyu.moe
+- **dev branch** → Creates prereleases (e.g., `v1.1.0-beta.1`) and deploys to [cupcake.shiiyu.moe](https://cupcake.shiiyu.moe)
+- **prod branch** → Creates stable releases (e.g., `v1.1.0`) and deploys to [sky.shiiyu.moe](https://sky.shiiyu.moe)
 
 Release behavior details:
 
