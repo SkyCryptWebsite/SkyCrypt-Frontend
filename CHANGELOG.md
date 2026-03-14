@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.3.1-beta.4
+
+### Patch Changes
+
+- feat: add super-sitemap package and implement sitemap generation for contributors ([`556d4d0`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/556d4d0a41756905062158e8370dd2566e481825))
+
+- feat: enhance SEO and structured data for profile and website pages ([`45cc57f`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/45cc57fdb93dddfce7f7679b7a959e056e7ae6d1))
+
+- chore: enhance headers for SEO in hooks.server.ts ([`6168439`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/61684397e3defce3cc261d04f78b6af9513e5736))
+
 ## 3.3.1-beta.3
 
 ### Patch Changes
