@@ -3,6 +3,7 @@
   import { env } from "$env/dynamic/public";
   import { PUBLIC_COMMIT_HASH } from "$env/static/public";
   import { flyAndScale } from "$lib/shared/utils";
+  import ExternalLink from "@lucide/svelte/icons/external-link";
   import Info from "@lucide/svelte/icons/info";
   import { Button, Popover } from "bits-ui";
   import { Drawer } from "vaul-svelte";
@@ -10,11 +11,27 @@
   const isHover = getHoverContext();
 
   const { PUBLIC_DISCORD_INVITE, PUBLIC_PATREON } = env;
+  const packageVersion = __NPM_PACKAGE_VERSION__;
+  const commitHash = PUBLIC_COMMIT_HASH;
 </script>
 
 {#snippet info()}
   <p class="my-4">SkyCrypt is a free, open-source stats viewer for Hypixel SkyBlock.</p>
-  <p>Currently running version <Button.Root class="font-semibold text-link" rel="noreferrer" href="https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/{PUBLIC_COMMIT_HASH}" target="_blank">{PUBLIC_COMMIT_HASH}</Button.Root>.</p>
+  {#if __NPM_PACKAGE_VERSION__ || PUBLIC_COMMIT_HASH}
+    <p>
+      Currently running version
+      <span class="font-semibold">
+        {#if packageVersion}<Button.Root class="text-link" rel="noreferrer" href="https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/releases/tag/v{packageVersion}" target="_blank">{packageVersion}</Button.Root>{/if}
+        {#if commitHash}
+          <span class="opacity-50">
+            {#if packageVersion}{"("}{/if}<Button.Root class="text-link" rel="noreferrer" href="https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/{commitHash}" target="_blank">{commitHash}</Button.Root>{#if packageVersion}{")"}{/if}
+          </span>
+        {/if}
+      </span>
+    </p>
+  {:else}
+    <p>Version information is not available.</p>
+  {/if}
   <p class="my-4">
     You can report bugs, suggest features on <Button.Root class="font-semibold text-link" href={PUBLIC_DISCORD_INVITE} target="_blank" rel="noreferrer">Discord</Button.Root>, and/or contribute to the code on <Button.Root class="font-semibold text-link" href="https://github.com/SkyCryptWebsite" target="_blank" rel="noreferrer">GitHub</Button.Root>. It would be much appreciated!
   </p>
@@ -28,79 +45,9 @@
     The original project, <Button.Root class="font-semibold text-link" href="https://sky.lea.moe">sky.lea.moe</Button.Root>, was created by
     <Button.Root class="font-semibold text-link" href="https://github.com/LeaPhant" target="_blank" rel="noreferrer">LeaPhant</Button.Root>. Thanks for all of what you've done Lea!
   </p>
-  <h4 class="mt-5 mb-4 font-bold">Used Resources:</h4>
-  <ul class="list-inside list-disc [&_ul]:mb-2 [&_ul]:list-inside [&_ul]:list-[revert] [&_ul]:pl-5">
-    <li>
-      Custom Textures:
-      <ul>
-        <li>
-          <Button.Root class="font-semibold text-link" rel="noreferrer" href="https://hypixel.net/threads/4101579" target="_blank">FurfSky Reborn</Button.Root>
-          by <span class="text-text/70">The Reborn Team</span>
-        </li>
-        <li>
-          <Button.Root class="font-semibold text-link" rel="noreferrer" href="https://hypixel.net/threads/3470904" target="_blank">RNBW+</Button.Root>
-          by <span class="text-text/70">rainbowcraft2</span>
-        </li>
-        <li>
-          <Button.Root class="font-semibold text-link" rel="noreferrer" href="https://hypixel.net/threads/2103515" target="_blank">Hypixel Skyblock Pack</Button.Root>
-          by <span class="text-text/70">Packs HQ</span>
-        </li>
-        <li>
-          <Button.Root class="font-semibold text-link" rel="noreferrer" href="https://hypixel.net/threads/4174260" target="_blank">Hypixel Plus</Button.Root>
-          by <span class="text-text/70">ic22487</span>
-        </li>
-        <li>
-          <Button.Root class="font-semibold text-link" rel="noreferrer" href="https://hypixel.net/threads/2147652" target="_blank">Vanilla+</Button.Root>
-          by <span class="text-text/70">TBlazeWarriorT</span>
-        </li>
-        <li>
-          <Button.Root class="font-semibold text-link" rel="noreferrer" href="https://hypixel.net/threads/3597207" target="_blank">Worlds and Beyond</Button.Root>
-          by <span class="text-text/70">Skeletony_</span>
-        </li>
-        <li>
-          <Button.Root class="font-semibold text-link" rel="noreferrer" href="https://www.minecraft.net/" target="_blank">Default Minecraft Textures</Button.Root>
-          by <span class="text-text/70">Mojang</span>
-        </li>
-      </ul>
-    </li>
-    <li>
-      Background Image:
-      <ul>
-        <li>
-          Resource Pack: <Button.Root class="font-semibold text-link" rel="noreferrer" href="https://www.planetminecraft.com/texture_pack/16x132-dandelion-cute-and-swirly/" target="_blank">Dandelion</Button.Root>
-          by <span class="text-text/70">Steelfeathers</span>
-        </li>
-        <li>
-          Shaders: <Button.Root class="font-semibold text-link" rel="noreferrer" href="https://sildurs-shaders.github.io/" target="_blank">Sildur's Vibrant Shaders</Button.Root>
-          by <span class="text-text/70">Sildur</span>
-        </li>
-      </ul>
-    </li>
-    <li>
-      3D Skin View: <Button.Root class="font-semibold text-link" rel="noreferrer" href="https://github.com/bs-community/skinview3d/" target="_blank">skinview3d</Button.Root>
-      by <span class="text-text/70">BS-Community</span>
-    </li>
-    <li>
-      Farming Weight: <Button.Root class="font-semibold text-link" rel="noreferrer" href="https://elitebot.dev/" target="_blank">Elite</Button.Root>
-      by <span class="text-text/70">Kaeso</span>
-    </li>
-    <li>
-      Networth: <Button.Root class="font-semibold text-link" rel="noreferrer" href="https://github.com/SkyCryptWebsite/SkyHelper-Networth-Go" target="_blank">SkyHelper Networth</Button.Root>
-      by <span class="text-text/70">SkyHelper</span>
-    </li>
-    <li>
-      Player Heads: <Button.Root class="font-semibold text-link" rel="noreferrer" href="https://hypixel.net" target="_blank">SkyBlock</Button.Root>
-      by <span class="text-text/70">Hypixel</span>
-    </li>
-    <li>
-      Player Data: <Button.Root class="font-semibold text-link" rel="noreferrer" href="https://api.hypixel.net" target="_blank">Hypixel API</Button.Root>
-      by <span class="text-text/70">Hypixel</span>
-    </li>
-    <li>
-      Game Data: <Button.Root class="font-semibold text-link" rel="noreferrer" href="https://github.com/NotEnoughUpdates/NotEnoughUpdates-REPO" target="_blank">NotEnoughUpdates-REPO</Button.Root>
-      by <span class="text-text/70">NEU</span>
-    </li>
-  </ul>
+  <Button.Root class="flex items-center-safe gap-1 font-semibold text-link" href="https://github.com/SkyCryptWebsite/SkyCrypt-Frontend#credits" target="_blank">
+    Used Resources <ExternalLink class="size-4" />
+  </Button.Root>
 {/snippet}
 
 {#if isHover.current}
@@ -110,7 +57,7 @@
       <span class="hidden @md:inline">About</span>
     </Popover.Trigger>
     <Popover.Portal>
-      <Popover.Content forceMount side="bottom" sideOffset={20} align="center" collisionPadding={8} class="z-50 max-h-96 max-w-lg overflow-x-clip overflow-y-auto rounded-lg bg-background-grey/95 px-8 py-4">
+      <Popover.Content forceMount side="bottom" sideOffset={20} align="center" collisionPadding={8} class="z-50 max-w-lg overflow-x-clip overflow-y-auto rounded-lg bg-background-grey/95 px-8 py-4">
         {#snippet child({ wrapperProps, props, open })}
           {#if open}
             <div {...wrapperProps}>

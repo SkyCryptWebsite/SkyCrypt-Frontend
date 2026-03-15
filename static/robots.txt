@@ -1,3 +1,4 @@
-# allow crawling everything by default
 User-agent: *
-Disallow:
+Disallow: /api/
+
+Sitemap: https://sky.shiiyu.moe/sitemap.xml

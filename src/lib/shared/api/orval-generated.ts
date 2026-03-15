@@ -337,6 +337,13 @@ export interface ModelsEmbedNetworth {
   normal?: number;
 }
 
+export interface ModelsRankOutput {
+  plusColor?: string;
+  plusText?: string;
+  rankColor?: string;
+  rankText?: string;
+}
+
 export type ModelsEmbedDataSkillsSkills = { [key: string]: number };
 
 export interface ModelsEmbedDataSkills {
@@ -361,6 +368,7 @@ export interface ModelsEmbedData {
   profile_cute_name?: string;
   profile_id?: string;
   purse?: number;
+  rank?: ModelsRankOutput;
   skills?: ModelsEmbedDataSkills;
   skyblock_level?: number;
   slayers?: ModelsEmbedDataSlayers;
@@ -1070,13 +1078,6 @@ export interface ModelsProfilesStats {
   game_mode?: string;
   profile_id?: string;
   selected?: boolean;
-}
-
-export interface ModelsRankOutput {
-  plusColor?: string;
-  plusText?: string;
-  rankColor?: string;
-  rankText?: string;
 }
 
 export interface ModelsResourcePackConfig {

@@ -96,7 +96,7 @@ describe.concurrent("embedGenerator", () => {
       };
 
       const result = getLongDescription(embedData);
-      expect(result).toContain("🌟 Skyblock Level:");
+      expect(result).toContain("🌟 Level:");
       expect(result).toContain("250.5");
     });
 
@@ -349,7 +349,7 @@ describe.concurrent("embedGenerator", () => {
       };
 
       const result = getLongDescription(embedData);
-      expect(result).toContain("🌟 Skyblock Level: 300");
+      expect(result).toContain("🌟 Level: 300");
       expect(result).toContain("💸 Networth: 2B");
       expect(result).toContain("💰 Purse: 75M");
       expect(result).toContain("🏦 Bank: 150M");

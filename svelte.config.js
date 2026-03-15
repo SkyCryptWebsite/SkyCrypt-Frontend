@@ -29,6 +29,7 @@ const config = {
       mode: "auto",
       directives: {
         "script-src": ["self", "unsafe-inline"],
+        "worker-src": ["self", "blob:"],
         "style-src": ["self", "unsafe-inline", "https://fonts.googleapis.com"],
         "img-src": ["self", "data:", "https://textures.minecraft.net", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe", "https://nmsr.nickac.dev"],
         "connect-src": ["self", "https://mowojang.matdoes.dev", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe"],
@@ -36,7 +37,7 @@ const config = {
       }
     },
     version: {
-      name: process.env.PUBLIC_COMMIT_HASH || Date.now().toString(),
+      name: process.env.PUBLIC_COMMIT_HASH,
       // in ms
       pollInterval: 1000 * 60 // 1 minute
     }

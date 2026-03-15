@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { dev } from "$app/environment";
   import { page } from "$app/state";
   import { getInternalState, getPreferences, getTheme } from "$ctx";
   import HeaderInfo from "$lib/components/header/Info.svelte";
@@ -10,6 +11,8 @@
   const preferences = getPreferences();
   const internalState = getInternalState();
   const theme = getTheme();
+
+  const packageVersion = __NPM_PACKAGE_VERSION__;
 </script>
 
 <header class="@container fixed top-0 left-0 z-30 h-12 w-full overflow-clip bg-header px-2.5 pt-[env(safe-area-inset-top,0)] pr-[max(0.625rem,env(safe-area-inset-right))] pb-[env(safe-area-inset-bottom,0)] pl-[max(0.625rem,env(safe-area-inset-left))] leading-12">
@@ -31,8 +34,19 @@
 
           <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">SC</Avatar.Fallback>
         </Avatar.Root>
-        SkyCrypt
       </Button.Root>
+      <div class="flex flex-col items-center-safe justify-center-safe gap-1">
+        <Button.Root href="/" class="leading-none font-bold" data-sveltekit-preload-data="hover">
+          SkyCrypt
+          {#if page.url.origin.includes("cupcake") || dev}
+            Beta
+          {/if}
+        </Button.Root>
+
+        {#if packageVersion}
+          <Button.Root class="text-xs leading-none font-normal text-text/60 transition-colors hover:text-link/60 data-[cupcake=true]:text-yellow-500/60 data-[cupcake=true]:hover:text-yellow-500" rel="noreferrer" href="https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/releases/tag/v{packageVersion}" target="_blank" data-cupcake={page.url.origin.includes("cupcake") || dev}>v{packageVersion}</Button.Root>
+        {/if}
+      </div>
       <HeaderInfo />
     </div>
 

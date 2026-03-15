@@ -106,27 +106,11 @@ body:
       label: Default Settings
       description: |
         Let us know if you've changed any of the default settings.
-        The defaults are:
-        - Packs: All enabled
-        - Themes: "Default Theme" selected
-        - Order: No "RESET TO DEFAULT" button visible
-        - Wiki:
-          1. Official
-          2. Fandom
-        - Performance Mode: Off
-        - Show Glint: On
-        - Keybind: `/`
       value: |
         - [ ] I have not changed any of the default settings.
         - [ ] I have changed the default settings:
-          - [ ] Packs: <!-- List the packs you have disabled -->
-          - [ ] Themes: <!-- List the theme you have selected -->
-          - [ ] Order: <!-- Describe the order you have set -->
-          - [ ] Wiki: <!-- List the wiki you have selected -->
-          - [ ] Performance Mode: <!-- On/Off -->
-          - [ ] Show Glint: <!-- On/Off -->
-          - [ ] Keybind: <!-- Describe the keybind you have set -->
-          - [ ] Other: <!-- Describe any other changes you have made -->
+          - Setting 1: ...
+          - Setting 2: ...
       render: markdown
     validations:
       required: true

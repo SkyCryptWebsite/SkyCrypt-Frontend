@@ -1,5 +1,57 @@
 # Changelog
 
+## 3.3.1-beta.6
+
+### Patch Changes
+
+- feat: include package version in site name for SEO component ([`29a7a11`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/29a7a115635c76baea0230e341b67b4ff409d603))
+
+- refactor: remove unused theme context import and use derived theme color in SEO component ([`e9d6101`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/e9d61018a4d39200a02f02dd63e5166320c71209))
+
+- fix: replace createHover with manual hover state management in Skillbar component ([`133d0c8`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/133d0c82290885b03a8b6ec908f9aff9588e0a3c))
+
+- feat: add super-sitemap package and implement sitemap generation for contributors ([`556d4d0`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/556d4d0a41756905062158e8370dd2566e481825))
+
+- feat: enhance SEO and structured data for profile and website pages ([`45cc57f`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/45cc57fdb93dddfce7f7679b7a959e056e7ae6d1))
+
+- chore: enhance headers for SEO in hooks.server.ts ([`6168439`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/61684397e3defce3cc261d04f78b6af9513e5736))
+
+- feat: add package version display in header and info components ([`2b11d15`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/2b11d15bcf45fceb2d49cc5238c54c3b8c1355bd))
+
+- feat: migrate to @dndkit from svelte-dnd-action ([`af1100b`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/af1100bc4f2c982e4d58d705a456cb23f927d810))
+
+- feat: add rank in getLongDescription function ([`db3c2fe`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/db3c2fee0dff224ff9ff1e712858f3799412a3ab))
+
+## 3.3.1-beta.5
+
+### Patch Changes
+
+- feat: include package version in site name for SEO component ([`29a7a11`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/29a7a115635c76baea0230e341b67b4ff409d603))
+
+- refactor: remove unused theme context import and use derived theme color in SEO component ([`e9d6101`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/e9d61018a4d39200a02f02dd63e5166320c71209))
+
+- feat: add package version display in header and info components ([`2b11d15`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/2b11d15bcf45fceb2d49cc5238c54c3b8c1355bd))
+
+- feat: add rank in getLongDescription function ([`db3c2fe`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/db3c2fee0dff224ff9ff1e712858f3799412a3ab))
+
+## 3.3.1-beta.4
+
+### Patch Changes
+
+- feat: add super-sitemap package and implement sitemap generation for contributors ([`556d4d0`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/556d4d0a41756905062158e8370dd2566e481825))
+
+- feat: enhance SEO and structured data for profile and website pages ([`45cc57f`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/45cc57fdb93dddfce7f7679b7a959e056e7ae6d1))
+
+- chore: enhance headers for SEO in hooks.server.ts ([`6168439`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/61684397e3defce3cc261d04f78b6af9513e5736))
+
+## 3.3.1-beta.3
+
+### Patch Changes
+
+- fix: replace createHover with manual hover state management in Skillbar component ([`133d0c8`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/133d0c82290885b03a8b6ec908f9aff9588e0a3c))
+
+- feat: migrate to @dndkit from svelte-dnd-action ([`af1100b`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/af1100bc4f2c982e4d58d705a456cb23f927d810))
+
 ## 3.3.1
 
 ### Patch Changes

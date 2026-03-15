@@ -3,6 +3,11 @@
   import { SettingsTab } from "$lib/components/header/types";
   import { sections } from "$lib/sections/constants";
   import { cn, flyAndScale } from "$lib/shared/utils";
+  import { RestrictToVerticalAxis } from "@dnd-kit/abstract/modifiers";
+  import { move } from "@dnd-kit/helpers";
+  import type { DragDropEventHandlers } from "@dnd-kit/svelte";
+  import { DragDropProvider, DragOverlay } from "@dnd-kit/svelte";
+  import { createSortable } from "@dnd-kit/svelte/sortable";
   import BookOpenText from "@lucide/svelte/icons/book-open-text";
   import CircleQuestionMark from "@lucide/svelte/icons/circle-question-mark";
   import Fan from "@lucide/svelte/icons/fan";
@@ -13,18 +18,15 @@
   import Settings2 from "@lucide/svelte/icons/settings-2";
   import Sparkle from "@lucide/svelte/icons/sparkle";
   import { Button, Separator, Tabs, Tooltip } from "bits-ui";
-  import { dndzone, SHADOW_ITEM_MARKER_PROPERTY_NAME } from "svelte-dnd-action";
-  import { flip } from "svelte/animate";
-  import { cubicOut } from "svelte/easing";
-  import { fade } from "svelte/transition";
   import SettingToggleRow from "./SettingToggleRow.svelte";
 
   const preferences = getPreferences();
   const wikiOrderContext = getWikiOrder();
-  const initialWikiOrderPreferences = wikiOrderContext.current;
+  type WikiSource = (typeof wikiOrderContext.current)[number];
+  type SortableItem = ReturnType<typeof createSortable>;
 
   let isListening = $state(false);
-  let wikiOrder = $state(initialWikiOrderPreferences);
+  let wikiOrder = $state(wikiOrderContext.current);
 
   const defaultSectionOrder = sections;
   const differsFromDefault = $derived(JSON.stringify(preferences.sectionOrder) !== JSON.stringify(defaultSectionOrder));
@@ -51,6 +53,10 @@
         isListening = false;
       }
     }, 5000);
+  }
+
+  function onDragEnd(event: Parameters<NonNullable<DragDropEventHandlers["onDragEnd"]>>[0]) {
+    wikiOrderContext.current = move(wikiOrder, event);
   }
 </script>
 
@@ -145,34 +151,22 @@
           </div>
         </div>
       </div>
-      <div
-        class="flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto"
-        use:dndzone={{ items: wikiOrder, flipDurationMs: 300, dropTargetStyle: {} }}
-        onconsider={(e) => (wikiOrder = e.detail.items)}
-        onfinalize={(e) => {
-          wikiOrderContext.current = e.detail.items;
-          wikiOrder = e.detail.items;
-        }}>
-        {#each wikiOrder as wiki (wiki.id)}
-          {@const normalizedName = wiki.name.replaceAll("_", " ")}
-          <div animate:flip={{ duration: 300, easing: cubicOut }} class="relative flex items-center gap-2 rounded-lg bg-text/5 p-2 font-semibold">
-            <GripVertical class="size-5 shrink-0 text-text/60" />
-            <div class="flex flex-col">
-              {normalizedName}
-              <Button.Root href={wiki.link} target="_blank" class="text-link/60 underline">{new URL(wiki.link).hostname}</Button.Root>
-            </div>
-            {#if SHADOW_ITEM_MARKER_PROPERTY_NAME in wiki && wiki[SHADOW_ITEM_MARKER_PROPERTY_NAME]}
-              <div in:fade={{ duration: 300, easing: cubicOut }} class="visible absolute inset-0 flex animate-pulse items-center gap-2 rounded-lg bg-text/5 p-2 font-semibold opacity-30">
-                <GripVertical class="size-5 shrink-0 text-text/60" />
-                <div class="flex flex-col">
-                  {normalizedName}
-                  <Button.Root href={wiki.link} target="_blank" class="text-link/60 underline">{new URL(wiki.link).hostname}</Button.Root>
-                </div>
-              </div>
-            {/if}
-          </div>
+
+      <DragDropProvider {onDragEnd} modifiers={(defaults) => [...defaults, RestrictToVerticalAxis]}>
+        {#each wikiOrder as wiki, index (wiki.id)}
+          {@const sortable = createSortable({ id: wiki.id, index, feedback: "clone" })}
+          {@render wikiRowContent(wiki, sortable, true)}
         {/each}
-      </div>
+
+        <DragOverlay>
+          {#snippet children(source)}
+            {@const activeWiki = wikiOrder.find((wiki) => wiki.id === source.id)}
+            {#if activeWiki}
+              {@render wikiRowContent(activeWiki)}
+            {/if}
+          {/snippet}
+        </DragOverlay>
+      </DragDropProvider>
       {#if differsFromDefault}
         <Button.Root
           class="mt-4 w-full rounded-lg bg-text/65 p-1.5 text-sm font-semibold text-background/80 uppercase transition-colors ease-out hover:bg-text/80"
@@ -185,3 +179,13 @@
     </div>
   </div>
 </Tabs.Content>
+
+{#snippet wikiRowContent(wiki: WikiSource, sortable: SortableItem | null = null, flipEnabled = false)}
+  <div {@attach sortable?.attach} class="relative flex items-center gap-2 rounded-lg bg-text/5 p-2 font-semibold data-[dragging=true]:animate-pulse data-[dragging=true]:opacity-30 data-[flip=true]:will-change-transform" data-dragging={sortable?.isDropTarget} data-flip={flipEnabled}>
+    <GripVertical class="size-5 shrink-0 text-text/60" />
+    <div class="flex flex-col">
+      {wiki.name.replaceAll("_", " ")}
+      <Button.Root href={wiki.link} target="_blank" class="text-link/60 underline">{new URL(wiki.link).hostname}</Button.Root>
+    </div>
+  </div>
+{/snippet}

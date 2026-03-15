@@ -25,10 +25,6 @@
 
 <!-- Describe the changes you made in detail -->
 
--
--
--
-
 ## Screenshots/Videos
 
 <!-- If applicable, add screenshots or videos to help explain your changes -->
@@ -39,7 +35,7 @@
 <!-- Describe how you tested your changes -->
 
 - [ ] I have tested these changes locally
-- [ ] I have added tests that prove my changes work as expected
+- [ ] I have added tests that prove my changes work as expected (if appropriate)
 
 ### Test Environment
 
@@ -47,7 +43,7 @@
 
 - **OS**:
 - **Browser**:
-- **Node.js version**:
+- **nodejs version**:
 - **pnpm version**:
 
 ## Checklist
@@ -55,19 +51,15 @@
 <!-- Mark completed items with an "x" -->
 
 - [ ] My code follows the project's style guidelines
-- [ ] I have used [conventional commits](../.github/CONVENTIONAL_COMMITS.md) for all commit messages
-- [ ] I have performed a self-review of my own code
-- [ ] My changes generate no new warnings or errors
-- [ ] Any dependent changes have been merged and published
+- [ ] I have used [conventional commits](https://www.conventionalcommits.org) for all commit messages
 - [ ] I have added necessary documentation (if appropriate)
-- [ ] I have added tests that prove my changes work as expected
+- [ ] I have added tests that prove my changes work as expected (if appropriate)
 - [ ] I have added changesets if my changes should be reflected in the changelog
 
 ### Code Quality Checks
 
 - [ ] `pnpm lint` passes without errors
 - [ ] `pnpm format` has been run (or no formatting issues exist)
-- [ ] `pnpm check` passes without errors
 - [ ] `pnpm build` completes successfully
 
 ## Additional Notes
@@ -78,8 +70,6 @@
 
 <!-- If this PR has any special deployment considerations, note them here -->
 <!-- For example: requires database migrations, environment variable changes, etc. -->
-
----
 
 <!--
 Thank you for contributing to SkyCrypt! 🍣

@@ -498,6 +498,14 @@ export const GetApiEmbedUuidResponse = zod.object({
   profile_cute_name: zod.string().optional(),
   profile_id: zod.string().optional(),
   purse: zod.number().optional(),
+  rank: zod
+    .object({
+      plusColor: zod.string().optional(),
+      plusText: zod.string().optional(),
+      rankColor: zod.string().optional(),
+      rankText: zod.string().optional()
+    })
+    .optional(),
   skills: zod
     .object({
       skillAverage: zod.number().optional(),

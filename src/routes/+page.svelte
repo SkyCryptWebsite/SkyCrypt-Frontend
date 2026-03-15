@@ -5,7 +5,7 @@
   import { Notice } from "$lib/components/notices";
   import { searchUser } from "$lib/shared/api/skycrypt-api.remote";
   import { cn } from "$lib/shared/utils";
-  import { getContributors } from "$routes/ contributors.remote";
+  import { getContributors } from "$routes/contributors.remote";
   import CodeXml from "@lucide/svelte/icons/code-xml";
   import GitPullRequestArrow from "@lucide/svelte/icons/git-pull-request-arrow";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";

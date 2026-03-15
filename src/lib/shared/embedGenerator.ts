@@ -38,8 +38,12 @@ function getLongDescription(embedData: ModelsEmbedData) {
     return output;
   }
 
+  if (embedData.rank && embedData.rank.rankText) {
+    output += `🏅 Rank: ${embedData.rank.rankText + embedData.rank.plusText}\n`;
+  }
+
   if (embedData.skyblock_level) {
-    output += `🌟 Skyblock Level: ${formatNumber(embedData.skyblock_level)}\n`;
+    output += `🌟 Level: ${formatNumber(embedData.skyblock_level)}\n`;
   }
 
   if (embedData.networth?.normal != null) {

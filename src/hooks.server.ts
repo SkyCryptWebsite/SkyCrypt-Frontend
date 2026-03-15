@@ -4,6 +4,7 @@ import { sequence } from "@sveltejs/kit/hooks";
 
 const headersHandler = (async ({ event, resolve }) => {
   const response = await resolve(event);
+  const { request, url } = event;
 
   // Security headers
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
@@ -18,6 +19,13 @@ const headersHandler = (async ({ event, resolve }) => {
 
   // Legacy XSS protection
   response.headers.set("X-XSS-Protection", "1; mode=block");
+
+  const host = request.headers.get("x-forwarded-host") ?? url.host;
+  const isCupcake = host.includes("cupcake.shiiyu.moe");
+
+  if (isCupcake) {
+    response.headers.set("X-Robots-Tag", "noindex, nofollow");
+  }
 
   return response;
 }) satisfies Handle;
