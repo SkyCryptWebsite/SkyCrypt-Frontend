@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.3.2-beta.0
+
+### Patch Changes
+
+- feat: enhance mcTextToHTML for improved color handling and formatting resets ([`760184c`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/760184c4b2af63069f29ba64fd82eb356cdfd385))
+
 ## 3.3.1
 
 ### Patch Changes
