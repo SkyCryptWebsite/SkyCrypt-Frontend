@@ -5,6 +5,8 @@
     "skycrypt-frontend": "3.2.0"
   },
   "changesets": [
+    "calm-days-strive",
+    "common-rocks-grab",
     "cyan-otters-cough",
     "dull-parks-admire",
     "modern-carrots-change",
@@ -13,6 +15,8 @@
     "polite-hotels-dig",
     "slimy-beans-brake",
     "tasty-stamps-scream",
-    "upset-times-act"
+    "tired-aliens-film",
+    "upset-times-act",
+    "warm-insects-hide"
   ]
 }

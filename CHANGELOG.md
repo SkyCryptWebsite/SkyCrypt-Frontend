@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.3.1-beta.5
+
+### Patch Changes
+
+- feat: include package version in site name for SEO component ([`29a7a11`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/29a7a115635c76baea0230e341b67b4ff409d603))
+
+- refactor: remove unused theme context import and use derived theme color in SEO component ([`e9d6101`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/e9d61018a4d39200a02f02dd63e5166320c71209))
+
+- feat: add package version display in header and info components ([`2b11d15`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/2b11d15bcf45fceb2d49cc5238c54c3b8c1355bd))
+
+- feat: add rank in getLongDescription function ([`db3c2fe`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/db3c2fee0dff224ff9ff1e712858f3799412a3ab))
+
 ## 3.3.1-beta.4
 
 ### Patch Changes
