@@ -1,12 +1,10 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { getTheme } from "$ctx";
   import type { ModelsEmbedData } from "$lib/shared/api/orval-generated";
   import { getLongDescription, getMetaTitle, getShortDescription } from "$lib/shared/embedGenerator";
   import SvelteSeo from "svelte-seo";
 
   const { embedData }: { embedData: ModelsEmbedData } = $props();
-  const themeContext = getTheme();
 
   const isStatsPage = $derived(page.url.pathname.includes("/stats/"));
   const routeIgn = $derived(page.params.ign);
@@ -16,6 +14,7 @@
   const canonicalUrl = $derived(`https://sky.shiiyu.moe${canonicalPath}`);
   const profileDescription = $derived(isStatsPage ? getShortDescription(embedData) : getLongDescription(embedData));
   const profileImage = $derived(`https://nmsr.nickac.dev/bust/${embedData.uuid}?y=-20`);
+  const themeColor = $derived(embedData.rank?.plusColor || embedData.rank?.rankColor);
 
   const breadcrumbJsonLdString = $derived({
     "@type": "BreadcrumbList",
@@ -91,6 +90,6 @@
     title: getMetaTitle(embedData),
     description: getLongDescription(embedData)
   }}
-  themeColor={themeContext.activeTheme?.light ? "#dbdbdb" : "#282828"}
+  {themeColor}
   jsonLd={profileJsonLd}
   manifest="/manifest.webmanifest" />
