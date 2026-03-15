@@ -2,6 +2,10 @@ import { mcTextToHTML } from "$lib/shared/mc-text";
 import { colorCodes, extras } from "$lib/shared/mc-text/parser/styleLibrary";
 import { describe, it } from "vitest";
 
+function sortedClasses(element: Element): string[] {
+  return Array.from(element.classList).sort();
+}
+
 describe.concurrent("Minecraft Text Parser Tests", () => {
   it("check the color codes", ({ expect }) => {
     Object.entries(colorCodes).forEach(([code, cssVar]) => {
@@ -18,7 +22,7 @@ describe.concurrent("Minecraft Text Parser Tests", () => {
         const doc = domParser.parseFromString(result, "text/html");
         const span = doc.querySelector("span");
         annotate(`Testing code ${code} with classes ${classes.join(", ")}, got result: ${result}`);
-        expect(span?.classList.toString().split(" ").sort()).toEqual(classes.sort());
+        expect(span ? sortedClasses(span) : []).toEqual([...classes].sort());
       });
     });
   });
@@ -30,11 +34,11 @@ describe.concurrent("Minecraft Text Parser Tests", () => {
       const doc = domParser.parseFromString(result, "text/html");
       const spans = doc.querySelectorAll("span");
       expect(spans.length).toBe(3);
-      expect(spans[0].classList.toString().split(" ").sort()).toEqual(extras["§k"].sort());
+      expect(sortedClasses(spans[0])).toEqual([...extras["§k"]].sort());
       expect(spans[0].textContent).toBe("Obfuscated");
-      expect(spans[1].classList.toString().split(" ").sort()).toEqual([""].sort());
+      expect(spans[1].classList.length).toBe(0);
       expect(spans[1].textContent).toBe("\u00A0Not-Obfuscated\u00A0");
-      expect(spans[2].classList.toString().split(" ").sort()).toEqual(extras["§k"].sort());
+      expect(sortedClasses(spans[2])).toEqual([...extras["§k"]].sort());
       expect(spans[2].textContent).toBe("Obfuscated");
     });
 
@@ -74,7 +78,7 @@ describe.concurrent("Minecraft Text Parser Tests", () => {
       expect(spans[0].classList.contains("underline")).toBe(true);
       // Second span should have no color or formatting (§r resets everything)
       expect(spans[1].style.color).toBe("");
-      expect(spans[1].classList.toString().split(" ").sort()).toEqual(extras["§r"].sort());
+      expect(sortedClasses(spans[1])).toEqual([...extras["§r"]].sort());
     });
 
     it("check strikethrough formatting", ({ expect }) => {
@@ -89,7 +93,7 @@ describe.concurrent("Minecraft Text Parser Tests", () => {
       const result = mcTextToHTML({ mcString: "§d§oItalic Text", breakLine: false });
       const doc = domParser.parseFromString(result, "text/html");
       const span = doc.querySelector("span");
-      expect(span?.classList.toString().split(" ").sort()).toEqual(extras["§o"].sort());
+      expect(span ? sortedClasses(span) : []).toEqual([...extras["§o"]].sort());
       expect(span?.style.color).toBe(colorCodes["§d"]);
     });
 
@@ -103,12 +107,10 @@ describe.concurrent("Minecraft Text Parser Tests", () => {
       expect(spans[0].classList.length).toBe(0);
       // Second span: Green and bold (color resets formatting)
       expect(spans[1].style.color).toBe(colorCodes["§a"]);
-      expect(spans[1].classList.toString().split(" ").sort()).toEqual(extras["§l"].sort());
+      expect(sortedClasses(spans[1])).toEqual([...extras["§l"]].sort());
       // Third span: Blue with italic and underline (color resets previous formatting)
       expect(spans[2].style.color).toBe(colorCodes["§9"]);
-      expect(spans[2].classList.toString().split(" ").sort()).toEqual(extras["§o"].concat(extras["§n"]).sort());
-      expect(spans[2].classList.toString().split(" ").sort()).toEqual(extras["§o"].concat(extras["§n"]).sort());
-      expect(spans[2].classList.toString().split(" ").sort()).toEqual(extras["§o"].concat(extras["§n"]).sort());
+      expect(sortedClasses(spans[2])).toEqual([...extras["§o"], ...extras["§n"]].sort());
     });
 
     it("check obfuscated with multiple colors", ({ expect }) => {
@@ -123,6 +125,23 @@ describe.concurrent("Minecraft Text Parser Tests", () => {
       expect(spans[1].style.color).toBe(colorCodes["§c"]);
       expect(spans[2].classList.contains("obfuscated")).toBe(true);
       expect(spans[2].style.color).toBe(colorCodes["§f"]);
+    });
+
+    it("keeps previous color for obfuscation after reset marker in lore transfer text", ({ expect }) => {
+      const result = mcTextToHTML({ mcString: "§5§kX§5 Rift-Transferable §r§kX", breakLine: false });
+      const doc = domParser.parseFromString(result, "text/html");
+      const spans = doc.querySelectorAll("span");
+
+      expect(spans.length).toBe(3);
+      expect(spans[0].style.color).toBe(colorCodes["§5"]);
+      expect(spans[0].classList.contains("obfuscated")).toBe(true);
+
+      expect(spans[1].style.color).toBe(colorCodes["§5"]);
+      expect(spans[1].textContent).toBe("\u00A0Rift-Transferable\u00A0");
+
+      expect(spans[2].style.color).toBe(colorCodes["§5"]);
+      expect(spans[2].classList.contains("obfuscated")).toBe(true);
+      expect(sortedClasses(spans[2])).toEqual(sortedClasses(spans[0]));
     });
 
     it("check empty string handling", ({ expect }) => {

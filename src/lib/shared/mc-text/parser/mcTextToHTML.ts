@@ -22,6 +22,7 @@ export default function mcTextToHTML(...args: [{ mcString: string; breakLine?: b
   const [{ mcString, breakLine = true, index: loreIndex }] = args;
 
   const normalizeEnchantText = (text: string): string => text.trim().replace(/^[,.;:!?]+|[,.;:!?]+$/g, "");
+  const resetClasses = extras["§r"];
 
   // Split the mc text string by formatting codes (§a, §b, etc.) and filter out empty strings
   // This creates an array where formatting codes and text alternate
@@ -31,12 +32,16 @@ export default function mcTextToHTML(...args: [{ mcString: string; breakLine?: b
   let classList: string[] = [];
   // Track current color as CSS color value
   let colorVar: string | undefined;
+  let lastColorVar: string | undefined;
   // Accumulate the final HTML string
   let resultHTML: string = "";
   // Flag to check if we should apply rainbow color effect (triggered by §9 blue color code)
   let shouldRainbowColorCheck = false;
   // Flag to check if current text contains max-level enchantments (for special rainbow effect)
   let shouldRainbowEnchantedCheck = false;
+  let isPostResetObfuscated = false;
+
+  const isResetOnlyState = (): boolean => classList.length === resetClasses.length && classList.every((className, classIndex) => className === resetClasses[classIndex]);
 
   codeSplit.forEach((item: string, index: number) => {
     const mcTextStringToLowerCase = item.toLowerCase();
@@ -48,6 +53,7 @@ export default function mcTextToHTML(...args: [{ mcString: string; breakLine?: b
       classList = [];
 
       colorVar = colorCodes[mcTextStringToLowerCase as ColorCodes];
+      lastColorVar = colorVar;
 
       switch (mcTextStringToLowerCase) {
         // §f (white) acts as a reset for all formatting except color
@@ -62,60 +68,60 @@ export default function mcTextToHTML(...args: [{ mcString: string; breakLine?: b
         default:
           break;
       }
+      isPostResetObfuscated = false;
     }
     // Check if current item is a formatting code (§l bold, §o italic, etc.) or reset (§r)
     else if (isFormattingCode) {
       if (mcTextStringToLowerCase === "§r") {
         // §r resets everything - color and formatting
         colorVar = undefined;
-        classList = extras[mcTextStringToLowerCase as FormattingCodes];
+        classList = resetClasses;
+        isPostResetObfuscated = false;
       } else {
+        const resetOnlyState = isResetOnlyState();
+        isPostResetObfuscated = resetOnlyState && mcTextStringToLowerCase === "§k" && !colorVar && Boolean(lastColorVar);
+        if (resetOnlyState) {
+          classList = [];
+        }
         // Apply formatting styles (bold, italic, underline, etc.)
         classList.push(...extras[mcTextStringToLowerCase as FormattingCodes]);
       }
     }
     // Current item is actual text content, not a formatting code
     else {
-      const resultColor: string | undefined = colorVar ? `color: ${colorVar};` : undefined;
+      const shouldUseLastColorAfterResetForObfuscated = !colorVar && classList.includes("obfuscated") && Boolean(lastColorVar) && (classList.includes("text-inherit") || isPostResetObfuscated);
+      const effectiveColorVar = shouldUseLastColorAfterResetForObfuscated ? lastColorVar : colorVar;
       // Escape HTML characters to prevent XSS attacks and display properly
       const textContent: string = item !== "" ? htmlStringFormatting(item) : item;
+      classList = classList.filter((className) => className !== "lore-enchantment");
 
       // Check if the text contains max-level enchantments (for special rainbow effect)
-      switch (MAX_ENCHANTS.has(normalizeEnchantText(item))) {
-        case true:
-          shouldRainbowEnchantedCheck = true;
-          break;
-
-        default:
-          shouldRainbowEnchantedCheck = false;
-          break;
-      }
+      shouldRainbowEnchantedCheck = MAX_ENCHANTS.has(normalizeEnchantText(item));
 
       // Only create HTML elements for non-empty text content
       if (textContent !== "") {
         const spanEl = document.createElement("span");
+        let classesToApply = classList;
 
         // Apply color styling if a color is set
-        if (resultColor && colorVar) spanEl.style.color = colorVar;
+        if (effectiveColorVar) spanEl.style.color = effectiveColorVar;
 
         // Special case: Apply rainbow enchantment effect when both conditions are met:
         // 1. Blue color code (§9) was encountered (shouldRainbowColorCheck)
         // 2. Text contains max-level enchantments (shouldRainbowEnchantedCheck)
         if (shouldRainbowColorCheck && shouldRainbowEnchantedCheck) {
-          classList.push("lore-enchantment");
+          classesToApply = [...classList, "lore-enchantment"];
           // Add animation delay for lore items (creates a typewriter effect)
           if (loreIndex) spanEl.style.animationDelay = `${index * loreIndex * 2}ms`;
-        } else {
-          // Remove enchantment class if conditions are no longer met
-          classList = classList.filter((cls) => cls !== "lore-enchantment");
         }
 
         // Apply all accumulated CSS classes (bold, italic, enchantment effects, etc.)
-        if (classList.length) spanEl.classList.add(...classList);
+        if (classesToApply.length) spanEl.classList.add(...classesToApply);
         spanEl.innerHTML = textContent;
 
         // Add the span element to our result HTML
         resultHTML += spanEl.outerHTML;
+        isPostResetObfuscated = false;
       }
     }
   });
