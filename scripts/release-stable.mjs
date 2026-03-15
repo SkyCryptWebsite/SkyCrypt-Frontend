@@ -29,10 +29,10 @@ function setOutput(name, value) {
   fs.appendFileSync(outputFile, `${name}=${value}\n`);
 }
 
-run("git fetch origin prod");
+run("git fetch origin prod dev");
 run('git config user.name "github-actions[bot]"');
 run('git config user.email "github-actions[bot]@users.noreply.github.com"');
-run("git checkout -B changeset-release/prod origin/prod");
+run("git checkout -B changeset-release/prod origin/dev");
 
 const preStatePath = path.join(changesetDir, "pre.json");
 
