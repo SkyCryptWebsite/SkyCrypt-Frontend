@@ -47,7 +47,7 @@ jobs:
 
   stable:
     name: Stable Release
-    if: github.ref == 'refs/heads/prod' && github.repository_owner == 'SkyCryptWebsite' && github.actor != 'github-actions[bot]' && !contains(github.event.head_commit.message, '[skip ci]')
+    if: github.ref == 'refs/heads/prod' && github.repository_owner == 'SkyCryptWebsite' && github.actor != 'github-actions[bot]' && !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, 'changeset-release/prod')
     runs-on: ubuntu-latest
 
     permissions:
@@ -83,6 +83,35 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
           GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+
+  sync_dev_after_stable:
+    name: Sync Prod Back To Dev
+    if: github.ref == 'refs/heads/prod' && github.repository_owner == 'SkyCryptWebsite' && github.actor != 'github-actions[bot]' && contains(github.event.head_commit.message, 'changeset-release/prod')
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Sync prod into dev
+        run: |
+          git fetch origin prod dev
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -B dev-sync origin/dev
+          git merge --no-ff -m "chore: sync prod into dev [skip ci]" origin/prod || true
+
+          if git diff --quiet origin/dev HEAD; then
+            echo "No prod changes to sync back into dev"
+            exit 0
+          fi
+
+          git push origin HEAD:dev
 
       - name: Create Stable GitHub Release
         if: steps.stable_prep.outputs.release_ready == 'true'
