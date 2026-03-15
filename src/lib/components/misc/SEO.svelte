@@ -82,7 +82,7 @@
         alt: embedData.displayName
       }
     ],
-    site_name: "SkyCrypt"
+    site_name: `SkyCrypt ${__NPM_PACKAGE_VERSION__ ? `• v${__NPM_PACKAGE_VERSION__}` : ""}`
   }}
   twitter={{
     card: "summary",
