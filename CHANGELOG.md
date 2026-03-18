@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.3.3
+
+### Patch Changes
+
+- feat: add internal preferences context and survey notice component ([#298](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/298))
+
 ## 3.3.3-beta.0
 
 ### Patch Changes
