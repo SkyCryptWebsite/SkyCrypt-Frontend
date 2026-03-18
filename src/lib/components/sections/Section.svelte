@@ -16,7 +16,7 @@
   let { id, class: className, order, children, subtitle, subtitleText }: Props = $props();
 </script>
 
-<section {id} class={cn("order-(--order) mx-auto scroll-m-32", className)} style="--order: {order};">
+<section {id} class={cn("order-(--order) mx-auto scroll-m-32 *:motion-preset-focus *:motion-delay-[calc(sibling-index()*0.1s)]", className)} style="--order: {order};">
   <div class="flex items-center justify-between">
     {#if subtitle}
       {@render subtitle()}

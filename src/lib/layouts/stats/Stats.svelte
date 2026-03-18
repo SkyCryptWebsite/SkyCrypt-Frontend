@@ -32,24 +32,26 @@
         stats = getAdditionalStats({ uuid: profileUUID!, profileId: profileId! });
       }
     }}>
-    <Collapsible.Content forceMount={true} class="columns-[12.5rem]">
-      {#snippet child({ props, open })}
-        {#if open}
-          {#if stats?.error}
-            <Notice title="An unexpected error has occurred" type="error" error={stats.error.message} />
+    {#key profile}
+      <Collapsible.Content forceMount={true} class="columns-[12.5rem] *:motion-preset-focus *:motion-preset-slide-down *:motion-delay-[calc(sibling-index()*0.01s)]">
+        {#snippet child({ props, open })}
+          {#if open}
+            {#if stats?.error}
+              <Notice title="An unexpected error has occurred" type="error" error={stats.error.message} />
+            {/if}
+            {#if stats?.current?.stats}
+              <div {...props} transition:slide|global={{ duration: 300, easing: cubicOut, axis: "y" }}>
+                {#each Object.entries(stats.current.stats) as [statName, statData], index (index)}
+                  {#if statData.total > 0}
+                    <Stat stat={statName} {statData} />
+                  {/if}
+                {/each}
+              </div>
+            {/if}
           {/if}
-          {#if stats?.current?.stats}
-            <div {...props} transition:slide|global={{ duration: 300, easing: cubicOut, axis: "y" }}>
-              {#each Object.entries(stats.current.stats) as [statName, statData], index (index)}
-                {#if statData.total > 0}
-                  <Stat stat={statName} {statData} />
-                {/if}
-              {/each}
-            </div>
-          {/if}
-        {/if}
-      {/snippet}
-    </Collapsible.Content>
+        {/snippet}
+      </Collapsible.Content>
+    {/key}
     <Collapsible.Trigger class="mx-auto mt-3.5 w-full rounded-full bg-text/10 p-2.5 text-xs font-semibold uppercase">
       {#if stats?.loading}
         <LoaderCircle class="mx-auto animate-spin text-icon" />
