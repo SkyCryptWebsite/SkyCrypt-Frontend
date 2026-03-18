@@ -4,6 +4,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant light (&:where(.light, .light *));
 
+@plugin "tailwindcss-motion";
+
 @theme {
   /* Colors */
   --color-icon: var(--icon);

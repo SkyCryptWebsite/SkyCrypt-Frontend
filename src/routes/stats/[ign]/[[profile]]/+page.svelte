@@ -34,9 +34,6 @@
     if (!fromParams || !toParams) return;
     if ((fromParams.ign !== toParams.ign || fromParams.profile !== toParams.profile) && !willUnload) {
       internalState.openCommand = false;
-      // console.warn("IGN or Profile changed, reloading page to reflect new profile.");
-      // // Hard reload the page if the IGN changes, this ensures the profile context is updated correctly as TanStack Query does not work with Svelte 5 runes/states yet.
-      // window.location.reload();
     }
   });
 </script>

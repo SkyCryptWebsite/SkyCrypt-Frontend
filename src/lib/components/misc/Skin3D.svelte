@@ -90,4 +90,4 @@
 
 <svelte:window onresize={updateViewerSize} />
 
-<canvas bind:this={minecraftAvatar} class={cn("size-full transform-gpu overflow-hidden opacity-0 transition-opacity duration-300 ease-out data-[loading=false]:opacity-100 data-[loading=true]:opacity-0", className)} data-loading={canvasIsLoading}></canvas>
+<canvas bind:this={minecraftAvatar} class={cn("size-full transform-gpu overflow-hidden opacity-0 data-[loading=false]:motion-preset-focus data-[loading=false]:motion-preset-slide-right data-[loading=false]:opacity-100", className)} data-loading={canvasIsLoading}></canvas>
