@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.3.2
+
+### Patch Changes
+
+- feat: enhance mcTextToHTML for improved color handling and formatting resets ([#296](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/296))
+
+- feat: add tailwindcss-motion for enhanced animations and transitions ([#296](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/296))
+
 ## 3.3.2-beta.1
 
 ### Patch Changes
