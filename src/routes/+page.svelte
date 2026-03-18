@@ -65,10 +65,10 @@
       }
     },
     {
-      href: "https://forms.gle/2Jfbs9tjm76Rihfe8",
+      href: "https://forms.gle/wUSHhr8EACviaQVq8",
       text: {
-        title: "Skyblock Texture Pack Survey",
-        description: "Updating SkyCrypt to prioritize most used texture packs"
+        title: "Skyblock General Survey",
+        description: "Let us know what you think about the site and what features you'd like to see in the future"
       },
       img: {
         src: "/img/icons/google-forms.svg",

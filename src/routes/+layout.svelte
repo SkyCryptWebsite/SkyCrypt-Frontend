@@ -3,6 +3,7 @@
   import { beforeNavigate, replaceState } from "$app/navigation";
   import { page, updated } from "$app/state";
   import { initDisabledPacks, initFavorites, initInternalState, initPreferences, initRecentSearches, initTheme, initWikiOrder, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
+  import { initInternalPreferences } from "$ctx/internal-preferences.svelte";
   import Header from "$lib/components/header/Header.svelte";
   import { CommandPalette, PerformanceMode } from "$lib/components/misc";
   import ThemeEditor from "$lib/components/theme-editor/ThemeEditor.svelte";
@@ -11,9 +12,11 @@
   import { getPacks } from "$lib/shared/api/skycrypt-api.remote";
   import { parseThemeFromURL } from "$lib/shared/themes/sharing";
   import { cn } from "$lib/shared/utils";
+  import SurveyNotice from "$src/lib/components/notices/SurveyNotice.svelte";
   import Wifi from "@lucide/svelte/icons/wifi";
   import WifiOff from "@lucide/svelte/icons/wifi-off";
   import { Tooltip } from "bits-ui";
+  import { differenceInHours } from "date-fns";
   import { onMount, type Snippet } from "svelte";
   import SvelteSeo from "svelte-seo";
   import { toast, Toaster, type ToasterProps } from "svelte-sonner";
@@ -30,6 +33,7 @@
   let commandLoading = $state(false);
   const { ign } = $derived(page.params);
   const preferences = initPreferences();
+  const internalPreferences = initInternalPreferences();
   const themeContext = initTheme();
   const internalState = initInternalState();
   const position = writable<ToasterProps["position"]>("bottom-right");
@@ -162,6 +166,28 @@
     const packsData = packsDataRemoteFunction.current;
 
     if (packsData) packs.packs = packsData;
+  });
+
+  // TODO: Remove after the survey is done
+  $effect(() => {
+    const surveyPrefs = internalPreferences?.skycryptSurvey;
+    if (!surveyPrefs) return;
+
+    const dismissedAt = surveyPrefs.dismissedAt ? new Date(surveyPrefs.dismissedAt) : null;
+    const confirmedAt = surveyPrefs.confirmedAt ? new Date(surveyPrefs.confirmedAt) : null;
+    const now = new Date();
+
+    const isDismissedExpired = dismissedAt == null || differenceInHours(now, dismissedAt) > 12;
+    const isConfirmedExpired = confirmedAt == null || differenceInHours(now, confirmedAt) > 12;
+
+    if (isDismissedExpired && isConfirmedExpired) {
+      toast.custom(SurveyNotice, {
+        id: "survey-notice",
+        important: true,
+        duration: Number.POSITIVE_INFINITY,
+        position: "bottom-center"
+      });
+    }
   });
 </script>
 
