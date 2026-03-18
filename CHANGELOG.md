@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.3.2-beta.1
+
+### Patch Changes
+
+- feat: add tailwindcss-motion for enhanced animations and transitions ([`46061dc`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/46061dc0a6661c753cda83575663c40b6e2bbbe9))
+
 ## 3.3.2-beta.0
 
 ### Patch Changes
