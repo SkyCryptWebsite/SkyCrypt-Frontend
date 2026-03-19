@@ -35,20 +35,6 @@
         </div>
       {/snippet}
 
-      <Button.Root href="https://minionah.com" target="_blank" class="flex h-fit w-fit max-w-fit items-center gap-2 rounded-lg bg-background/30 p-2 transition-all duration-300 ease-out hover:scale-105">
-        <Avatar.Root class="size-12 shrink-0">
-          <Avatar.Image loading="lazy" src="/img/icons/minionah.avif" alt="MinionAH" class="aspect-square size-12" />
-          <Avatar.Fallback class="flex size-12 items-center justify-center rounded-lg bg-background/10 font-semibold">MA</Avatar.Fallback>
-        </Avatar.Root>
-        <div>
-          <h6 class="font-bold text-pretty text-text">Looking for a place to trade minions?</h6>
-          <span class="relative block w-fit text-left font-semibold text-text/60">
-            Check out <h5 class="inline text-link underline">MinionAH</h5>
-            <ExternalLink class="absolute top-0 -right-3 size-3 text-link" />
-          </span>
-        </div>
-      </Button.Root>
-
       {#if minions.minions}
         {#each Object.entries(minions.minions) as [category, data], index (index)}
           <div class="flex items-center gap-1 text-base font-semibold uppercase">

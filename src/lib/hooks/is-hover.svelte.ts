@@ -1,9 +1,11 @@
-import { MediaQuery } from "svelte/reactivity";
+export class IsHover {
+  #current = $state(true);
 
-const MEDIA_QUERY = "(hover: hover) and (pointer: fine)";
+  constructor() { }
 
-export class IsHover extends MediaQuery {
-  constructor() {
-    super(MEDIA_QUERY);
+  get current() {
+    return this.#current;
   }
+
+  destroy() { }
 }

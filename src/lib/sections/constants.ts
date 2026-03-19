@@ -1,6 +1,7 @@
 import type { SectionID } from "$lib/sections/types";
 
 export const sections: SectionID[] = [
+  { id: -1, name: "Overview" },
   { id: 0, name: "Gear" },
   { id: 1, name: "Accessories" },
   { id: 2, name: "Pets" },

@@ -1,27 +1,21 @@
 <script lang="ts">
-  import { browser } from "$app/environment";
   import { replaceState } from "$app/navigation";
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
   import { CombinedContext, CombinedQueryContext, getHoverContext, getInternalState, getPreferences, getProfileContext, getRecentSearches, ProfileContext, setCombinedContext, setCombinedQueryContext, setProfileContext } from "$ctx";
   import { ContainedItemsGrid, ItemContent } from "$lib/components/item";
   import { Navbar } from "$lib/components/misc";
-  import Skin3D from "$lib/components/misc/Skin3D.svelte";
-  import AdditionalStats from "$lib/layouts/stats/AdditionalStats.svelte";
-  import PlayerProfile from "$lib/layouts/stats/PlayerProfile.svelte";
-  import Skills from "$lib/layouts/stats/Skills.svelte";
-  import Stats from "$lib/layouts/stats/Stats.svelte";
   import Sections from "$lib/sections/Sections.svelte";
   import type { ModelsStatsOutput } from "$lib/shared/api/orval-generated";
   import { getCombined } from "$lib/shared/api/skycrypt-api.remote";
-  import { cn, flyAndScale } from "$lib/shared/utils";
+  import { flyAndScale } from "$lib/shared/utils";
   import Image from "@lucide/svelte/icons/image";
   import { Avatar, Dialog } from "bits-ui";
-  import { Pane } from "paneforge";
   import { onDestroy, tick, untrack } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
+  import Settings from "$lib/components/header/settings";
 
   const { data: ctx }: { data: ModelsStatsOutput } = $props();
 
@@ -31,15 +25,6 @@
   const internalState = getInternalState();
 
   const profile = $derived(ctx);
-
-  let showStaticSkin = $derived(preferences.performanceMode);
-  let _rightSize = $state(0);
-  let _leftSize = $state(0);
-  let _skinCollapsed = $state(false);
-  let _leftPane = $state<Pane>(null!);
-  let innerWidth = $state(window.innerWidth);
-  let _defaultLeftPanel = $derived(Math.ceil((300 / innerWidth) * 100));
-  let _defaultRightPanel = $derived(Math.ceil((700 / innerWidth) * 100));
 
   const abortController = new AbortController();
 
@@ -122,8 +107,6 @@
   });
 </script>
 
-<svelte:window bind:innerWidth />
-
 <div class="@container/parent relative">
   <!-- TODO: Re-enable paneforge once this is fixed: https://github.com/svecosystem/paneforge/issues/89 -->
   <!-- <PaneGroup id="panes" direction="horizontal" autoSaveId="paneConfig" class="relative w-full !overflow-x-clip !overflow-y-visible">
@@ -204,8 +187,11 @@
     </Pane>
   </PaneGroup> -->
   <!-- TODO: See the paneforge todo above  -->
-  <div class="@container fixed top-1/2 left-0 z-10 hidden h-dvh w-[30vw] -translate-y-1/2 @[75rem]/parent:block">
-    {#if showStaticSkin}
+  <div class="fixed top-0 left-0 z-20 hidden w-fit @[75rem]/parent:block">
+    <Settings />
+  </div>
+  <div class="flex h-dvh w-full">
+    <div class="@container relative hidden h-full w-[30vw] shrink-0 @[75rem]/parent:block">
       <Avatar.Root class="flex size-full items-center justify-center">
         {#snippet child({ props })}
           <div transition:fade={{ duration: 300, easing: cubicOut }} {...props}>
@@ -216,26 +202,17 @@
           </div>
         {/snippet}
       </Avatar.Root>
-    {:else if browser && innerWidth >= 1210}
-      <Skin3D showStaticSkin={() => (showStaticSkin = true)} class="h-full" />
-    {/if}
+    </div>
+    <div class="relative h-full w-full flex-1 overflow-y-auto @[75rem]/parent:w-[calc(100%-30vw)]">
+      <main data-vaul-drawer-wrapper class="@container relative mx-auto">
+        {#if getProfileContext().current}
+          <Navbar>
+            <Sections />
+          </Navbar>
+        {/if}
+      </main>
+    </div>
   </div>
-
-  <div class={cn("fixed top-0 right-0 min-h-dvh w-full @[75rem]/parent:w-[calc(100%-30vw)]", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")}></div>
-  <main data-vaul-drawer-wrapper class="@container relative mx-auto @[75rem]/parent:ml-[30vw]">
-    {#if getProfileContext().current}
-      <div class="space-y-5 p-4 @[75rem]/parent:p-8">
-        <PlayerProfile />
-        <Skills />
-        <Stats />
-        <AdditionalStats />
-      </div>
-
-      <Navbar>
-        <Sections />
-      </Navbar>
-    {/if}
-  </main>
 </div>
 
 {#if isHover.current}
