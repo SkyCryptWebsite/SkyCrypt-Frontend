@@ -32,7 +32,7 @@ function setOutput(name, value) {
 run("git fetch origin prod dev");
 run('git config user.name "github-actions[bot]"');
 run('git config user.email "github-actions[bot]@users.noreply.github.com"');
-run("git checkout -B changeset-release/prod origin/dev");
+run("git checkout -B changeset-release/prod origin/prod");
 
 const preStatePath = path.join(changesetDir, "pre.json");
 
@@ -75,6 +75,17 @@ const existingPr = output("gh pr list --head changeset-release/prod --base prod 
 
 if (!existingPr) {
   run('gh pr create --title "Version Packages (Stable)" --body "" --base prod --head changeset-release/prod');
+}
+
+const tag = `v${version}`;
+const remoteTag = output(`git ls-remote --tags origin ${tag}`);
+
+if (remoteTag) {
+  console.info(`Tag ${tag} already exists, skipping`);
+} else {
+  run(`git tag ${tag}`);
+  run(`git push origin ${tag}`);
+  run(`gh release create ${tag} --title ${tag} --generate-notes`);
 }
 
 setOutput("release_ready", "false");
