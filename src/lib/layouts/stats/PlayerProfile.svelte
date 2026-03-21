@@ -248,7 +248,7 @@
       Plancke <ExternalLink class="size-4" />
     </Button.Root>
 
-    <Button.Root href={`https://elitebot.dev/@${profile?.username}/${profile?.profile_cute_name}`} target="_blank" class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon">
+    <Button.Root href={`https://eliteskyblock.com/@${profile?.username}/${profile?.profile_cute_name}`} target="_blank" class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon">
       Elite <ExternalLink class="size-4" />
     </Button.Root>
   </div>
