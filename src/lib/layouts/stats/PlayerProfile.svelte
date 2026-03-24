@@ -3,6 +3,7 @@
   import { getFavorites, getHoverContext, getPreferences, getProfileContext } from "$ctx";
   import { APINotice } from "$lib/components/notices";
   import { cn, flyAndScale } from "$lib/shared/utils";
+  import CardBuilder from "$src/lib/components/stats/CardBuilder.svelte";
   import Ban from "@lucide/svelte/icons/ban";
   import ChevronLeft from "@lucide/svelte/icons/chevron-left";
   import ChevronRight from "@lucide/svelte/icons/chevron-right";
@@ -168,7 +169,7 @@
     {#if apiSettings.length}
       <Popover.Root bind:open={noticeOpen}>
         <Popover.Trigger class="rounded-full bg-yellow-500/20 px-4 py-2" onpointerenter={() => (noticeOpen = true)}>
-          <TriangleAlert class="size-6 text-yellow-500" />
+          <TriangleAlert class="size-6 motion-preset-pulse text-yellow-500 motion-duration-1000" />
         </Popover.Trigger>
         <Popover.Portal>
           <Popover.Content forceMount class="z-50 max-w-sm rounded-lg bg-background-grey" sideOffset={0} side="bottom" align="center" customAnchor={noticeRef} collisionPadding={6}>
@@ -243,6 +244,8 @@
       }}>
       <Link class="size-4" />
     </Button.Root>
+
+    <CardBuilder />
 
     <Button.Root href={`https://plancke.io/hypixel/player/stats/${profile?.username}`} target="_blank" class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon">
       Plancke <ExternalLink class="size-4" />
