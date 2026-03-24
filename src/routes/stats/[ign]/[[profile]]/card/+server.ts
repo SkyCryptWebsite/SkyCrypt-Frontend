@@ -1,4 +1,4 @@
-import { dev } from "$app/environment";
+import { building, dev } from "$app/environment";
 import { env } from "$env/dynamic/public";
 import appStyles from "$src/app.css?inline";
 import { DefaultCard } from "$src/lib/components/cards";
@@ -102,6 +102,7 @@ export const GET: RequestHandler = async ({ params, request, url }) => {
 };
 
 async function initializeAssets() {
+  if (building) return { fonts: [], persistentImages: [] };
   const [
     // prettier-ignore
     montserratNormalBuffer,
