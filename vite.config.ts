@@ -52,11 +52,5 @@ export default defineConfig({
   },
   define: {
     __NPM_PACKAGE_VERSION__: JSON.stringify(process.env.npm_package_version || "")
-  },
-  optimizeDeps: {
-    exclude: ["@takumi-rs/core"]
-  },
-  ssr: {
-    external: ["@takumi-rs/core"]
   }
 });
