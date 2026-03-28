@@ -55,7 +55,6 @@ export const GET: RequestHandler = async ({ params, request, url }) => {
         ...request.headers,
         "cache-control": dev || isSameOrigin ? "no-cache, no-store, must-revalidate" : "public, max-age=86400, immutable"
       },
-      drawDebugBorder: !dev,
       stylesheets: [appStyles],
       fonts,
       persistentImages,
@@ -83,7 +82,6 @@ export const GET: RequestHandler = async ({ params, request, url }) => {
           ...request.headers,
           "cache-control": "no-cache, no-store, must-revalidate"
         },
-        drawDebugBorder: !dev,
         stylesheets: [appStyles],
         fonts,
         persistentImages,
