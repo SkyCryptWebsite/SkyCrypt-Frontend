@@ -81,7 +81,7 @@ The scope is optional but recommended for better categorization.
 - `fix: resolve rendering issue`
 - `docs: update contributing guidelines`
 
-**Commit Type Reference**: See [.github/CONVENTIONAL_COMMITS.md](.github/CONVENTIONAL_COMMITS.md) for a quick reference guide.
+**Commit Type Reference**: See [conventionalcommits.org](https://www.conventionalcommits.org/en/v1.0.0/#summary) for a quick reference guide.
 
 ### Automated Releases
 

@@ -2,7 +2,9 @@
   import { resolve } from "$app/paths";
   import { getFavorites, getHoverContext, getPreferences, getProfileContext } from "$ctx";
   import { APINotice } from "$lib/components/notices";
+  import { getAprilFoolsProfileBadge, isAprilFoolsActive } from "$lib/shared/april-fools";
   import { cn, flyAndScale } from "$lib/shared/utils";
+  import CardBuilder from "$src/lib/components/stats/CardBuilder.svelte";
   import Ban from "@lucide/svelte/icons/ban";
   import ChevronLeft from "@lucide/svelte/icons/chevron-left";
   import ChevronRight from "@lucide/svelte/icons/chevron-right";
@@ -29,6 +31,7 @@
   const favorites = getFavorites();
 
   const apiSettings = $derived(Object.entries(profile?.apiSettings ?? {}).filter(([_, value]) => !value));
+  const aprilFoolsBadge = $derived(getAprilFoolsProfileBadge(profile?.uuid ?? profile?.username ?? profile?.displayName ?? "skycrypt"));
 
   const iconMapper: Record<string, string> = {
     TWITTER: "x-twitter.svg",
@@ -168,7 +171,7 @@
     {#if apiSettings.length}
       <Popover.Root bind:open={noticeOpen}>
         <Popover.Trigger class="rounded-full bg-yellow-500/20 px-4 py-2" onpointerenter={() => (noticeOpen = true)}>
-          <TriangleAlert class="size-6 text-yellow-500" />
+          <TriangleAlert class="size-6 motion-preset-pulse text-yellow-500 motion-duration-1000" />
         </Popover.Trigger>
         <Popover.Portal>
           <Popover.Content forceMount class="z-50 max-w-sm rounded-lg bg-background-grey" sideOffset={0} side="bottom" align="center" customAnchor={noticeRef} collisionPadding={6}>
@@ -189,6 +192,11 @@
   </div>
 </div>
 <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+  {#if isAprilFoolsActive()}
+    <div class="rounded-full border border-fuchsia-400/30 bg-fuchsia-500/15 px-3 py-1 text-sm font-semibold text-fuchsia-100 shadow-[0_0_20px_oklch(0.71_0.23_342_/_0.2)]">
+      {aprilFoolsBadge}
+    </div>
+  {/if}
   <div class="flex flex-wrap items-center gap-x-4 gap-y-2 *:motion-preset-focus *:motion-preset-slide-right *:motion-delay-[calc(sibling-index()*0.1s)]">
     <Tooltip.Root bind:open={favoriteTooltipOpen} disableCloseOnTriggerClick={false}>
       <Tooltip.Trigger
@@ -244,11 +252,13 @@
       <Link class="size-4" />
     </Button.Root>
 
+    <CardBuilder />
+
     <Button.Root href={`https://plancke.io/hypixel/player/stats/${profile?.username}`} target="_blank" class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon">
       Plancke <ExternalLink class="size-4" />
     </Button.Root>
 
-    <Button.Root href={`https://elitebot.dev/@${profile?.username}/${profile?.profile_cute_name}`} target="_blank" class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon">
+    <Button.Root href={`https://eliteskyblock.com/@${profile?.username}/${profile?.profile_cute_name}`} target="_blank" class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon">
       Elite <ExternalLink class="size-4" />
     </Button.Root>
   </div>
