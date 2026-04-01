@@ -2,26 +2,61 @@ name: Website
 
 on:
   push:
-    paths: ["src/**", "Dockerfile", ".github/workflows/website.yml"]
+    paths: ["src/**", "Dockerfile", "package.json", ".changeset/**", ".github/workflows/website.yml"]
   workflow_dispatch:
 
 env:
   CONTAINER_REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  SERVER_API_URL: cupcake.shiiyu.moe
   SHORT_SHA: 0000000
 
 jobs:
-  checks:
-    uses: ./.github/workflows/checks.yml
-
-  analyze:
-    name: Analyze
+  prepare:
+    name: Determine Deployment
     runs-on: ubuntu-latest
     if: |
       (github.ref == 'refs/heads/prod' || github.ref == 'refs/heads/dev')
       && github.repository_owner == 'SkyCryptWebsite'
       && github.event_name != 'pull_request'
+    outputs:
+      should_deploy: ${{ steps.decision.outputs.should_deploy }}
+      server_api_url: ${{ steps.decision.outputs.server_api_url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Decide whether to deploy
+        id: decision
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          SERVER_API_URL=cupcake.shiiyu.moe
+          SHOULD_DEPLOY=false
+
+          if [ "$GITHUB_REF" = "refs/heads/dev" ]; then
+            SHOULD_DEPLOY=true
+          else
+            SERVER_API_URL=sky.shiiyu.moe
+
+            if [[ "$VERSION" != *beta* ]]; then
+              SHOULD_DEPLOY=true
+            fi
+          fi
+
+          echo "Detected version: $VERSION"
+          echo "should_deploy=$SHOULD_DEPLOY" >> "$GITHUB_OUTPUT"
+          echo "server_api_url=$SERVER_API_URL" >> "$GITHUB_OUTPUT"
+
+  checks:
+    needs: prepare
+    if: needs.prepare.outputs.should_deploy == 'true'
+    uses: ./.github/workflows/checks.yml
+
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    needs: prepare
+    if: |
+      needs.prepare.outputs.should_deploy == 'true'
 
     permissions:
       security-events: write
@@ -39,20 +74,19 @@ jobs:
         uses: github/codeql-action/analyze@v4
 
   build:
-    if: |
-      (github.ref == 'refs/heads/prod' || github.ref == 'refs/heads/dev')
-      && github.repository_owner == 'SkyCryptWebsite'
-      && github.event_name != 'pull_request'
+    needs: prepare
+    if: needs.prepare.outputs.should_deploy == 'true'
     uses: ./.github/workflows/build.yml
     with:
-      server-api-url: ${{ github.ref == 'refs/heads/prod' && 'sky.shiiyu.moe' || 'cupcake.shiiyu.moe' }}
+      server-api-url: ${{ needs.prepare.outputs.server_api_url }}
     secrets:
       server-api-token: ${{ secrets.SERVER_API_TOKEN }}
 
   package:
     name: Package into Container
     runs-on: ubuntu-latest
-    needs: [checks, analyze, build]
+    needs: [prepare, checks, analyze, build]
+    if: needs.prepare.outputs.should_deploy == 'true'
 
     permissions:
       packages: write
@@ -67,10 +101,6 @@ jobs:
 
       - name: Assign short SHA
         run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-
-      - name: Re-assign server API URL if prod
-        if: github.ref == 'refs/heads/prod'
-        run: echo "SERVER_API_URL=sky.shiiyu.moe" >> $GITHUB_ENV
 
       - name: Registry login
         uses: docker/login-action@v4
@@ -93,7 +123,7 @@ jobs:
           push: true
           build-args: |
             PUBLIC_COMMIT_HASH=${{ env.SHORT_SHA }}
-            PUBLIC_SERVER_API_URL=https://${{ env.SERVER_API_URL }}/api/
+            PUBLIC_SERVER_API_URL=https://${{ needs.prepare.outputs.server_api_url }}/api/
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 

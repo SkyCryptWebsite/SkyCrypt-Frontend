@@ -47,18 +47,18 @@ jobs:
 
   stable:
     name: Stable Release
-    if: github.ref == 'refs/heads/prod' && github.repository_owner == 'SkyCryptWebsite' && github.actor != 'github-actions[bot]' && !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, 'changeset-release/prod')
+    if: github.ref == 'refs/heads/prod' && github.repository_owner == 'SkyCryptWebsite' && github.actor != 'github-actions[bot]' && !contains(github.event.head_commit.message, '[skip ci]')
     runs-on: ubuntu-latest
 
     permissions:
       contents: write
-      pull-requests: write
 
     steps:
       - name: Git checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          token: ${{ secrets.PAT_TOKEN }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -78,7 +78,6 @@ jobs:
           HUSKY: "0"
 
       - name: Prepare Stable Release
-        id: stable_prep
         run: node scripts/release-stable.mjs
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
@@ -86,7 +85,8 @@ jobs:
 
   sync_dev_after_stable:
     name: Sync Prod Back To Dev
-    if: github.ref == 'refs/heads/prod' && github.repository_owner == 'SkyCryptWebsite' && github.actor != 'github-actions[bot]' && contains(github.event.head_commit.message, 'changeset-release/prod')
+    needs: stable
+    if: github.ref == 'refs/heads/prod' && github.repository_owner == 'SkyCryptWebsite' && github.actor != 'github-actions[bot]' && !contains(github.event.head_commit.message, '[skip ci]')
     runs-on: ubuntu-latest
 
     permissions:
@@ -97,42 +97,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          token: ${{ secrets.PAT_TOKEN }}
 
       - name: Sync prod into dev
-        run: |
-          git fetch origin prod dev
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -B dev-sync origin/dev
-          git merge --no-ff -m "chore: sync prod into dev [skip ci]" origin/prod || true
-
-          if git diff --quiet origin/dev HEAD; then
-            echo "No prod changes to sync back into dev"
-            exit 0
-          fi
-
-          git push origin HEAD:dev
-
-      - name: Create Stable GitHub Release
-        if: steps.stable_prep.outputs.release_ready == 'true'
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-
-          if echo "$VERSION" | grep -q "beta"; then
-            echo "Current version ($VERSION) is still a beta, skipping"
-            exit 0
-          fi
-
-          TAG="v${VERSION}"
-
-          if git ls-remote --tags origin "$TAG" | grep -q "$TAG"; then
-            echo "Tag $TAG already exists, skipping"
-            exit 0
-          fi
-
-          git tag "$TAG"
-          git push origin "$TAG"
-          gh release create "$TAG" --title "$TAG" --generate-notes --latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
-          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: node scripts/sync-dev-after-stable.mjs
