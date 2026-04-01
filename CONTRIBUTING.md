@@ -94,10 +94,9 @@ Release behavior details:
 
 - Changesets are authored in feature PRs and merged into `dev`.
 - The release workflow commits version/changelog updates directly on the release branch (`dev` or `prod`) using `github-actions[bot]`.
-- Stable release versioning is proposed via `changeset-release/prod` and merged into `prod` through a PR.
-- Do **not** manually maintain `changeset-release/*` branches.
+- Merging `dev` into `prod` promotes the current beta line to a stable release directly on `prod`; no release PR is created.
 - Avoid routine manual `prod` → `dev` sync merges unless you are intentionally bringing over a stable-only hotfix.
-- The stable release workflow uses `PAT_TOKEN` for GitHub CLI release PR/release operations (required when repository setting **"Allow GitHub Actions to create and approve pull requests"** is disabled).
+- The stable release workflow uses `PAT_TOKEN` for direct pushes and GitHub release operations on `prod`.
 
 The version bump is determined automatically by changesets:
 
