@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.4.0
+
+### Minor Changes
+
+- feat: add player profile card image generation ([#301](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/301))
+
 ## 3.4.0-beta.0
 
 ### Minor Changes
