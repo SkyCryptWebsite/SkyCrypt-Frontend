@@ -6,15 +6,20 @@ import ErrorCard from "$src/lib/components/cards/default/ErrorCard.svelte";
 import { parseSettingsFromParams } from "$src/lib/components/cards/default/schema";
 import { getApiUuidUsername, type ModelsPlayerResolve } from "$src/lib/shared/api/orval-generated";
 import { getDungeonsSection, getNetworth, getProfileStats } from "$src/lib/shared/api/skycrypt-api.remote";
-import type { ImageResponseOptionsWithoutRenderer } from "@takumi-rs/image-response";
-import { ImageResponse } from "@takumi-rs/image-response";
 import { html as toReactNode } from "satori-html";
 import { render } from "svelte/server";
+import { Renderer, type Font, type ImageSource } from "takumi-js/node";
+import { ImageResponse } from "takumi-js/response";
 import type { RequestHandler } from "./$types";
 
 const { PUBLIC_ORIGIN: baseUrl } = env;
 
 const { fonts, persistentImages } = await initializeAssets();
+
+const renderer = new Renderer({
+  fonts,
+  persistentImages
+});
 
 export const GET: RequestHandler = async ({ params, request, url }) => {
   const { ign, profile } = params;
@@ -56,9 +61,8 @@ export const GET: RequestHandler = async ({ params, request, url }) => {
         "cache-control": dev || isSameOrigin ? "no-cache, no-store, must-revalidate" : "public, max-age=86400, immutable"
       },
       stylesheets: [appStyles],
-      fonts,
-      persistentImages,
-      emoji: "twemoji"
+      emoji: "twemoji",
+      renderer
     });
 
     const response = new Response(await imageResponse.arrayBuffer(), {
@@ -66,7 +70,6 @@ export const GET: RequestHandler = async ({ params, request, url }) => {
       statusText: imageResponse.statusText,
       headers: imageResponse.headers
     });
-
     return response;
   } catch (error) {
     console.error("Error generating image:", error);
@@ -83,9 +86,8 @@ export const GET: RequestHandler = async ({ params, request, url }) => {
           "cache-control": "no-cache, no-store, must-revalidate"
         },
         stylesheets: [appStyles],
-        fonts,
-        persistentImages,
-        emoji: "twemoji"
+        emoji: "twemoji",
+        renderer
       });
 
       return new Response(await errorResponse.arrayBuffer(), {
@@ -117,7 +119,7 @@ async function initializeAssets() {
     fetch(`${baseUrl}/img/bg.png`).then((res) => res.arrayBuffer())
   ]);
 
-  const fonts: ImageResponseOptionsWithoutRenderer["fonts"] = [
+  const fonts: Font[] = [
     {
       name: "Montserrat",
       data: montserratNormalBuffer
@@ -132,7 +134,7 @@ async function initializeAssets() {
     }
   ];
 
-  const persistentImages: ImageResponseOptionsWithoutRenderer["persistentImages"] = [
+  const persistentImages: ImageSource[] = [
     {
       src: "skycrypt-logo",
       data: skycryptLogo

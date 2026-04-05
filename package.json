@@ -106,9 +106,9 @@
   },
   "dependencies": {
     "@sentry/sveltekit": "^10.45.0",
-    "@takumi-rs/image-response": "1.0.0-beta.14",
     "culori": "^4.0.2",
-    "simple-git-hooks": "^2.13.1"
+    "simple-git-hooks": "^2.13.1",
+    "takumi-js": "1.0.0-rc.14"
   },
   "engines": {
     "node": "^24",
