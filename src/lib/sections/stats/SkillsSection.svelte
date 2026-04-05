@@ -22,6 +22,7 @@
   import { getSkillsSection } from "$lib/shared/api/skycrypt-api.remote";
   import { type Icon } from "@lucide/svelte";
   import FishIcon from "@lucide/svelte/icons/fish";
+  import CrosshairIcon from "@lucide/svelte/icons/crosshair";
   import PickaxeIcon from "@lucide/svelte/icons/pickaxe";
   import SparklesIcon from "@lucide/svelte/icons/sparkles";
   import TreesIcon from "@lucide/svelte/icons/trees";
@@ -35,6 +36,7 @@
   import Farming from "./skills/farming.svelte";
   import Fishing from "./skills/fishing.svelte";
   import Foraging from "./skills/foraging.svelte";
+  import Hunting from "./skills/hunting.svelte";
   import Mining from "./skills/mining.svelte";
   import { TabNamesEnum, type TabNames } from "./types";
 
@@ -62,7 +64,8 @@
     { name: TabNamesEnum.Foraging, component: Foraging, available: !!skills?.foraging, icon: TreesIcon },
     { name: TabNamesEnum.Farming, component: Farming, available: !!skills?.farming, icon: WheatIcon },
     { name: TabNamesEnum.Fishing, component: Fishing, available: !!skills?.fishing, icon: FishIcon },
-    { name: TabNamesEnum.Enchanting, component: Enchanting, available: !!skills?.enchanting, icon: SparklesIcon }
+    { name: TabNamesEnum.Enchanting, component: Enchanting, available: !!skills?.enchanting, icon: SparklesIcon },
+    { name: TabNamesEnum.Hunting, component: Hunting, available: !!skills?.hunting, icon: CrosshairIcon }
   ]) satisfies SkillTab[];
 
   const selectedTabState = new PersistedState<TabNames | null>("skillsActiveTab", null, { storage: "session", syncTabs: false });

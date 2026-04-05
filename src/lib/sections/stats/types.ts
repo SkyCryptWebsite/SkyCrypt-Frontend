@@ -4,6 +4,7 @@ enum TabNamesEnum {
   Farming = "farming",
   Fishing = "fishing",
   Enchanting = "enchanting",
+  Hunting = "hunting",
   Garden = "garden"
 }
 type TabNames = `${TabNamesEnum}`;
