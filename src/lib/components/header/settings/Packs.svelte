@@ -54,7 +54,6 @@
     <Button.Root
       class="mt-4 w-full rounded-lg bg-text/65 p-1.5 text-sm font-semibold text-background/80 uppercase transition-colors ease-out hover:bg-text/80"
       onclick={() => {
-        document.cookie = `disabledPacks=${JSON.stringify(disabledPacks.current)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
         window.location.reload();
       }}>
       Reload to apply changes

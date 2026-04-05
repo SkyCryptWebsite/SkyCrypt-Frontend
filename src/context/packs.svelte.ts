@@ -1,3 +1,4 @@
+import { browser } from "$app/environment";
 import { loadOldStorageKey } from "$ctx/utils";
 import { PersistedState } from "runed";
 import { createContext, untrack } from "svelte";
@@ -11,6 +12,7 @@ export class DisabledPacksContext {
     $effect.pre(() => {
       untrack(() => {
         this.loadOldDisabledPacks();
+        this.syncCookie(this.#data.current);
       });
     });
   }
@@ -21,6 +23,13 @@ export class DisabledPacksContext {
 
   set current(value: DisabledPacksData[]) {
     this.#data.current = value;
+    this.syncCookie(value);
+  }
+
+  syncCookie(value: DisabledPacksData[]) {
+    if (!browser) return;
+
+    document.cookie = `disabledPacks=${JSON.stringify(value)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
   }
 
   loadOldDisabledPacks() {
