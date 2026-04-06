@@ -31,7 +31,7 @@ function outputOptional(command) {
 run("git fetch origin prod dev");
 run('git config user.name "github-actions[bot]"');
 run('git config user.email "github-actions[bot]@users.noreply.github.com"');
-run("git checkout -B prod origin/prod");
+run("git checkout -B changeset-release/prod origin/prod");
 
 const preStatePath = path.join(changesetDir, "pre.json");
 
@@ -56,7 +56,20 @@ try {
   // There are changes to commit.
   run("git add -A");
   run('git commit -m "chore: version packages (stable) [skip ci]"');
-  run("git push origin HEAD:prod");
+  run("git push origin HEAD:changeset-release/prod --force");
+
+  let pullNumber = outputOptional("gh pr list --state open --head changeset-release/prod --base prod --json number --jq '.[0].number'");
+
+  if (!pullNumber) {
+    pullNumber = output('gh pr create --title "Version Packages (Stable)" --body "Automatically promotes the current beta release line on prod to a stable release." --base prod --head changeset-release/prod --json number --jq \'.number\'');
+  }
+
+  const mergeState = outputOptional(`gh pr view ${pullNumber} --json state,mergedAt --jq '.state + \"|\" + (.mergedAt // \"\")'`);
+
+  if (!mergeState.startsWith("MERGED|")) {
+    run(`gh pr merge ${pullNumber} --merge --delete-branch`);
+  }
+
   run("git fetch origin prod");
   run("git checkout -B prod origin/prod");
 }
