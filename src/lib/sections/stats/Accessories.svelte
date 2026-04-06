@@ -1,10 +1,9 @@
 <script lang="ts">
-  import { getProfileContext } from "$ctx";
+  import { getCombinedContext, getProfileContext } from "$ctx";
   import { Item } from "$lib/components/item";
   import { Section, SectionSubtitle } from "$lib/components/sections";
   import { AdditionStat, Bonus } from "$lib/components/stats";
   import Items from "$lib/layouts/stats/Items.svelte";
-  import { getAccessoriesSection } from "$lib/shared/api/skycrypt-api.remote";
   import { RARITY_COLORS } from "$lib/shared/constants/rarities";
   import { STATS_DATA } from "$lib/shared/constants/stats";
   import * as helper from "$lib/shared/helper";
@@ -15,10 +14,7 @@
   let { order }: { order: number } = $props();
 
   const profile = $derived(getProfileContext().current);
-  const profileUUID = $derived(profile?.uuid);
-  const profileId = $derived(profile?.profile_id);
-
-  const accessories = $derived(await getAccessoriesSection({ uuid: profileUUID!, profileId: profileId! }));
+  const accessories = $derived(getCombinedContext().current?.accessories);
 </script>
 
 <Section id="Accessories" {order}>
@@ -166,7 +162,7 @@
                         {STATS_DATA[key.toLowerCase()].name}
                       </span>
                       {#if Object.entries(accessories.enrichments).length - 1 !== index || (Object.entries(accessories.enrichments).length - 1 === index && accessories.enrichments.missing > 0)}
-                        // {" "}
+                        //
                       {/if}
                     {/if}
                   {/each}

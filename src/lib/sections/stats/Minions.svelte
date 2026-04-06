@@ -1,10 +1,9 @@
 <script lang="ts">
-  import { getProfileContext } from "$ctx";
+  import { getCombinedContext } from "$ctx";
   import { Chip, ScrollItems } from "$lib/components/misc";
   import { Section } from "$lib/components/sections";
   import { AdditionStat } from "$lib/components/stats";
   import Items from "$lib/layouts/stats/Items.svelte";
-  import { getMinionsSection } from "$lib/shared/api/skycrypt-api.remote";
   import { calculatePercentage } from "$lib/shared/helper";
   import { cn } from "$lib/shared/utils";
   import ExternalLink from "@lucide/svelte/icons/external-link";
@@ -12,11 +11,7 @@
 
   let { order }: { order: number } = $props();
 
-  const profile = $derived(getProfileContext().current);
-  const profileUUID = $derived(profile?.uuid);
-  const profileId = $derived(profile?.profile_id);
-
-  const minions = $derived(await getMinionsSection({ uuid: profileUUID!, profileId: profileId! }));
+  const minions = $derived(getCombinedContext().current?.minions);
 
   const romanTiers = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
   const arabicTiers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];

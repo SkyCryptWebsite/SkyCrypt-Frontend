@@ -1,17 +1,13 @@
 <script lang="ts">
-  import { getProfileContext } from "$ctx";
+  import { getCombinedContext, getProfileContext } from "$ctx";
   import { Section } from "$lib/components/sections";
   import { AdditionStat, DungeonCataCard, Skillbar } from "$lib/components/stats";
-  import { getDungeonsSection } from "$lib/shared/api/skycrypt-api.remote";
   import { format } from "numerable";
 
   let { order }: { order: number } = $props();
 
   const profile = $derived(getProfileContext().current);
-  const profileUUID = $derived(profile?.uuid);
-  const profileId = $derived(profile?.profile_id);
-
-  const dungeons = $derived(await getDungeonsSection({ uuid: profileUUID!, profileId: profileId! }));
+  const dungeons = $derived(getCombinedContext().current?.dungeons);
 </script>
 
 <Section id="Dungeons" {order}>

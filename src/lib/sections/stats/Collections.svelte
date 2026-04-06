@@ -1,21 +1,15 @@
 <script lang="ts">
-  import { getProfileContext } from "$ctx";
+  import { getCombinedContext } from "$ctx";
   import { Chip, ScrollItems } from "$lib/components/misc";
   import { Section } from "$lib/components/sections";
   import { AdditionStat } from "$lib/components/stats";
   import Items from "$lib/layouts/stats/Items.svelte";
-  import { getCollectionsSection } from "$lib/shared/api/skycrypt-api.remote";
   import { cn } from "$lib/shared/utils";
   import { format } from "numerable";
 
   let { order }: { order: number } = $props();
 
-  const profile = $derived(getProfileContext().current);
-
-  const profileUUID = $derived(profile?.uuid);
-  const profileId = $derived(profile?.profile_id);
-
-  const collections = $derived(await getCollectionsSection({ uuid: profileUUID!, profileId: profileId! }));
+  const collections = $derived(getCombinedContext().current?.collections);
 </script>
 
 <Section id="Collections" {order}>

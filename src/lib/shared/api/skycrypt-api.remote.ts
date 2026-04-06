@@ -1,6 +1,6 @@
 import { prerender, query } from "$app/server";
-import { getApiAccessoriesUuidProfileId, getApiBestiaryUuidProfileId, getApiCollectionsUuidProfileId, getApiCrimsonIsleUuidProfileId, getApiDungeonsUuidProfileId, getApiEmbedUuid, getApiGardenUuidProfileId, getApiGearUuidProfileId, getApiInventoryUuidProfileIdInventoryId, getApiMinionsUuidProfileId, getApiMiscUuidProfileId, getApiNetworthUuidProfileId, getApiPetsUuidProfileId, getApiPlayerStatsUuidProfileId, getApiResourcepacks, getApiRiftUuidProfileId, getApiSkillsUuidProfileId, getApiSlayerUuidProfileId, getApiStatsUuidProfileId, getApiUsernameUuid, getApiUuidUsername, type ModelsProcessingError } from "$lib/shared/api/orval-generated";
-import { GetApiAccessoriesUuidProfileIdParams, GetApiBestiaryUuidProfileIdParams, GetApiCollectionsUuidProfileIdParams, GetApiCrimsonIsleUuidProfileIdParams, GetApiDungeonsUuidProfileIdParams, GetApiEmbedUuidParams, GetApiEmbedUuidQueryParams, GetApiGardenUuidProfileIdParams, GetApiGearUuidProfileIdParams, GetApiInventoryUuidProfileIdInventoryIdParams, GetApiInventoryUuidProfileIdInventoryIdQueryParams, GetApiMinionsUuidProfileIdParams, GetApiMiscUuidProfileIdParams, GetApiNetworthUuidProfileIdParams, GetApiPetsUuidProfileIdParams, GetApiPlayerStatsUuidProfileIdParams, GetApiRiftUuidProfileIdParams, GetApiSkillsUuidProfileIdParams, GetApiSlayerUuidProfileIdParams, GetApiStatsUuidProfileIdParams, GetApiUsernameUuidParams, GetApiUuidUsernameParams } from "$lib/shared/api/orval-generated-zod";
+import { getApiCombinedUuidProfileId, getApiEmbedUuid, getApiGardenUuidProfileId, getApiInventoryUuidProfileIdInventoryId, getApiNetworthUuidProfileId, getApiPlayerStatsUuidProfileId, getApiResourcepacks, getApiStatsUuidProfileId, getApiUsernameUuid, getApiUuidUsername, type ModelsProcessingError } from "$lib/shared/api/orval-generated";
+import { GetApiCombinedUuidProfileIdParams, GetApiEmbedUuidParams, GetApiEmbedUuidQueryParams, GetApiGardenUuidProfileIdParams, GetApiInventoryUuidProfileIdInventoryIdParams, GetApiInventoryUuidProfileIdInventoryIdQueryParams, GetApiNetworthUuidProfileIdParams, GetApiPlayerStatsUuidProfileIdParams, GetApiStatsUuidProfileIdParams, GetApiUsernameUuidParams, GetApiUuidUsernameParams } from "$lib/shared/api/orval-generated-zod";
 import { APIEndpointName } from "$types";
 import { error, isHttpError, redirect } from "@sveltejs/kit";
 import z from "zod";
@@ -45,6 +45,11 @@ export const getProfileStats = query(GetApiStatsUuidProfileIdParams, async ({ uu
   return fetchSection(APIEndpointName.PROFILE, () => getApiStatsUuidProfileId(uuid, profileId));
 });
 
+/** Fetch combined section data for a specific profile */
+export const getCombined = query(GetApiCombinedUuidProfileIdParams, async ({ uuid, profileId }) => {
+  return fetchSection(APIEndpointName.COMBINED, () => getApiCombinedUuidProfileId(uuid, profileId));
+});
+
 /** Fetch additional stats data for a specific profile */
 export const getAdditionalStats = query(GetApiPlayerStatsUuidProfileIdParams, async ({ uuid, profileId }) => {
   return fetchSection(APIEndpointName.STATS, () => getApiPlayerStatsUuidProfileId(uuid, profileId));
@@ -55,21 +60,6 @@ export const getNetworth = query(GetApiNetworthUuidProfileIdParams, async ({ uui
   return fetchSection(APIEndpointName.NETWORTH, () => getApiNetworthUuidProfileId(uuid, profileId));
 });
 
-/** Fetch gear section data (armor, equipment) for a specific profile */
-export const getGearSection = query(GetApiGearUuidProfileIdParams, async ({ uuid, profileId }) => {
-  return fetchSection(APIEndpointName.GEAR, () => getApiGearUuidProfileId(uuid, profileId));
-});
-
-/** Fetch accessories section data (talismans, enrichments) for a specific profile */
-export const getAccessoriesSection = query(GetApiAccessoriesUuidProfileIdParams, async ({ uuid, profileId }) => {
-  return fetchSection(APIEndpointName.ACCESSORIES, () => getApiAccessoriesUuidProfileId(uuid, profileId));
-});
-
-/** Fetch pets section data for a specific profile */
-export const getPetsSection = query(GetApiPetsUuidProfileIdParams, async ({ uuid, profileId }) => {
-  return fetchSection(APIEndpointName.PETS, () => getApiPetsUuidProfileId(uuid, profileId));
-});
-
 /** Fetch inventory data for a specific profile and inventory type */
 export const getInventorySection = query(z.object({ ...GetApiInventoryUuidProfileIdInventoryIdParams.shape, ...GetApiInventoryUuidProfileIdInventoryIdQueryParams.shape }), async ({ uuid, profileId, inventoryId, query }) => {
   return fetchSection(APIEndpointName.INVENTORY, () => getApiInventoryUuidProfileIdInventoryId(uuid, profileId, inventoryId, { query }));
@@ -78,54 +68,9 @@ export const getInventorySection = query(z.object({ ...GetApiInventoryUuidProfil
 /** Fetch inventory data for a specific profile and inventory type */
 export const searchInventorySection = getInventorySection;
 
-/** Fetch skills section data (mining, farming, combat, etc.) for a specific profile */
-export const getSkillsSection = query(GetApiSkillsUuidProfileIdParams, async ({ uuid, profileId }) => {
-  return fetchSection(APIEndpointName.SKILLS, () => getApiSkillsUuidProfileId(uuid, profileId));
-});
-
 /** Fetch garden data for a specific profile */
 export const getGarden = query(GetApiGardenUuidProfileIdParams, async ({ uuid, profileId }) => {
   return fetchSection(APIEndpointName.GARDEN, () => getApiGardenUuidProfileId(uuid, profileId));
-});
-
-/** Fetch dungeons section data (catacombs, master mode) for a specific profile */
-export const getDungeonsSection = query(GetApiDungeonsUuidProfileIdParams, async ({ uuid, profileId }) => {
-  return fetchSection(APIEndpointName.DUNGEONS, () => getApiDungeonsUuidProfileId(uuid, profileId));
-});
-
-/** Fetch slayer section data (zombie, spider, wolf, etc.) for a specific profile */
-export const getSlayerSection = query(GetApiSlayerUuidProfileIdParams, async ({ uuid, profileId }) => {
-  return fetchSection(APIEndpointName.SLAYER, () => getApiSlayerUuidProfileId(uuid, profileId));
-});
-
-/** Fetch minions section data for a specific profile */
-export const getMinionsSection = query(GetApiMinionsUuidProfileIdParams, async ({ uuid, profileId }) => {
-  return fetchSection(APIEndpointName.MINIONS, () => getApiMinionsUuidProfileId(uuid, profileId));
-});
-
-/** Fetch bestiary section data for a specific profile */
-export const getBestiarySection = query(GetApiBestiaryUuidProfileIdParams, async ({ uuid, profileId }) => {
-  return fetchSection(APIEndpointName.BESTIARY, () => getApiBestiaryUuidProfileId(uuid, profileId));
-});
-
-/** Fetch collections section data for a specific profile */
-export const getCollectionsSection = query(GetApiCollectionsUuidProfileIdParams, async ({ uuid, profileId }) => {
-  return fetchSection(APIEndpointName.COLLECTIONS, () => getApiCollectionsUuidProfileId(uuid, profileId));
-});
-
-/** Fetch crimson isle section data for a specific profile */
-export const getCrimsonIsleSection = query(GetApiCrimsonIsleUuidProfileIdParams, async ({ uuid, profileId }) => {
-  return fetchSection(APIEndpointName.CRIMSON_ISLE, () => getApiCrimsonIsleUuidProfileId(uuid, profileId));
-});
-
-/** Fetch rift section data for a specific profile */
-export const getRiftSection = query(GetApiRiftUuidProfileIdParams, async ({ uuid, profileId }) => {
-  return fetchSection(APIEndpointName.RIFT, () => getApiRiftUuidProfileId(uuid, profileId));
-});
-
-/** Fetch misc section data for a specific profile */
-export const getMiscSection = query(GetApiMiscUuidProfileIdParams, async ({ uuid, profileId }) => {
-  return fetchSection(APIEndpointName.MISC, () => getApiMiscUuidProfileId(uuid, profileId));
 });
 
 /** Fetch embed data */

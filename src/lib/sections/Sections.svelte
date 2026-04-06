@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getInternalState, getPreferences } from "$ctx";
+  import { getCombinedQueryContext, getInternalState, getPreferences } from "$ctx";
   import { Notice } from "$lib/components/notices";
   import type { SectionName } from "$lib/sections/types";
   import { titleCase } from "$lib/shared/helper";
@@ -9,6 +9,8 @@
 
   const preferences = getPreferences();
   const internalState = getInternalState();
+  const combinedQuery = $derived(getCombinedQueryContext().current);
+  const shouldWaitForCombined = $derived(internalState.tabValue !== "Inventory");
 
   const COMPONENTS = {
     Gear: () => import("$lib/sections/stats/Gear.svelte"),
@@ -35,28 +37,41 @@
   {#if internalState.tabValue in COMPONENTS}
     <Tabs.Root value={internalState.tabValue} class="contents" data-section={internalState.tabValue}>
       <Tabs.Content value={internalState.tabValue} class="section">
-        {#await COMPONENTS[internalState.tabValue]()}
-          <div class={cn("rounded-lg bg-text/5 p-6", preferences.performanceMode ? "bg-background-lore" : "backdrop-blur-sm")}>
-            <div class="flex items-center gap-2">
-              <LoaderCircle class="size-5 animate-spin text-text/60" />
-              <span class="font-semibold text-text/80">Loading {titleCase(internalState.tabValue)}...</span>
+        {#if shouldWaitForCombined && !combinedQuery?.current}
+          {#if combinedQuery?.error}
+            <Notice title="An unexpected error has occurred" type="error" error={combinedQuery.error.message} />
+          {:else}
+            <div class={cn("rounded-lg bg-text/5 p-6", preferences.performanceMode ? "bg-background-lore" : "backdrop-blur-sm")}>
+              <div class="flex items-center gap-2">
+                <LoaderCircle class="size-5 animate-spin text-text/60" />
+                <span class="font-semibold text-text/80">Loading {titleCase(internalState.tabValue)}...</span>
+              </div>
             </div>
-          </div>
-        {:then { default: Component }}
-          <svelte:boundary>
-            {#snippet pending()}
-              <LoaderCircle class="animate-spin text-icon" />
-            {/snippet}
-            {#snippet failed(err, reset)}
-              <Notice title="An unexpected error has occurred" type="error" error={err} retry={reset} />
-            {/snippet}
-            <Component order={findIndex(internalState.tabValue)} />
-          </svelte:boundary>
-        {:catch}
-          <Notice type="error" title={`Failed to load section ${internalState.tabValue}`}>
-            <p class="text-text/80">This section may not be available or there was an error loading it.</p>
-          </Notice>
-        {/await}
+          {/if}
+        {:else}
+          {#await COMPONENTS[internalState.tabValue]()}
+            <div class={cn("rounded-lg bg-text/5 p-6", preferences.performanceMode ? "bg-background-lore" : "backdrop-blur-sm")}>
+              <div class="flex items-center gap-2">
+                <LoaderCircle class="size-5 animate-spin text-text/60" />
+                <span class="font-semibold text-text/80">Loading {titleCase(internalState.tabValue)}...</span>
+              </div>
+            </div>
+          {:then { default: Component }}
+            <svelte:boundary>
+              {#snippet pending()}
+                <LoaderCircle class="animate-spin text-icon" />
+              {/snippet}
+              {#snippet failed(err, reset)}
+                <Notice title="An unexpected error has occurred" type="error" error={err} retry={reset} />
+              {/snippet}
+              <Component order={findIndex(internalState.tabValue)} />
+            </svelte:boundary>
+          {:catch}
+            <Notice type="error" title={`Failed to load section ${internalState.tabValue}`}>
+              <p class="text-text/80">This section may not be available or there was an error loading it.</p>
+            </Notice>
+          {/await}
+        {/if}
       </Tabs.Content>
     </Tabs.Root>
   {:else}
