@@ -87,11 +87,6 @@ export const searchUser = query(GetApiUuidUsernameParams, async ({ username }) =
   error(404, `No user with the name '${username}' was found`);
 });
 
-/** Fetch embed data */
-export const getUsername = query(GetApiUsernameUuidParams, async ({ uuid }) => {
-  return fetchSection(APIEndpointName.USERNAME, () => getApiUsernameUuid(uuid));
-});
-
 export const getUsernamePrerendered = prerender(GetApiUsernameUuidParams, async ({ uuid }) => {
   return fetchSection(APIEndpointName.USERNAME, () => getApiUsernameUuid(uuid));
 });
