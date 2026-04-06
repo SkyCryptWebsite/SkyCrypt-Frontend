@@ -1,6 +1,6 @@
 import { prerender, query } from "$app/server";
-import { getApiCombinedUuidProfileId, getApiEmbedUuid, getApiGardenUuidProfileId, getApiInventoryUuidProfileIdInventoryId, getApiNetworthUuidProfileId, getApiPlayerStatsUuidProfileId, getApiResourcepacks, getApiStatsUuidProfileId, getApiUsernameUuid, getApiUuidUsername, type ModelsProcessingError } from "$lib/shared/api/orval-generated";
-import { GetApiCombinedUuidProfileIdParams, GetApiEmbedUuidParams, GetApiEmbedUuidQueryParams, GetApiGardenUuidProfileIdParams, GetApiInventoryUuidProfileIdInventoryIdParams, GetApiInventoryUuidProfileIdInventoryIdQueryParams, GetApiNetworthUuidProfileIdParams, GetApiPlayerStatsUuidProfileIdParams, GetApiStatsUuidProfileIdParams, GetApiUsernameUuidParams, GetApiUuidUsernameParams } from "$lib/shared/api/orval-generated-zod";
+import { getApiCombinedUuidProfileId, getApiEmbedUuid, getApiGardenUuidProfileId, getApiInventorySearchUuidProfileIdSearchParam, getApiInventoryUuidProfileId, getApiNetworthUuidProfileId, getApiPlayerStatsUuidProfileId, getApiResourcepacks, getApiStatsUuidProfileId, getApiUsernameUuid, getApiUuidUsername, type ModelsProcessingError } from "$lib/shared/api/orval-generated";
+import { GetApiCombinedUuidProfileIdParams, GetApiEmbedUuidParams, GetApiEmbedUuidQueryParams, GetApiGardenUuidProfileIdParams, GetApiInventorySearchUuidProfileIdSearchParamParams, GetApiInventoryUuidProfileIdParams, GetApiNetworthUuidProfileIdParams, GetApiPlayerStatsUuidProfileIdParams, GetApiStatsUuidProfileIdParams, GetApiUsernameUuidParams, GetApiUuidUsernameParams } from "$lib/shared/api/orval-generated-zod";
 import { APIEndpointName } from "$types";
 import { error, isHttpError, redirect } from "@sveltejs/kit";
 import z from "zod";
@@ -60,13 +60,15 @@ export const getNetworth = query(GetApiNetworthUuidProfileIdParams, async ({ uui
   return fetchSection(APIEndpointName.NETWORTH, () => getApiNetworthUuidProfileId(uuid, profileId));
 });
 
-/** Fetch inventory data for a specific profile and inventory type */
-export const getInventorySection = query(z.object({ ...GetApiInventoryUuidProfileIdInventoryIdParams.shape, ...GetApiInventoryUuidProfileIdInventoryIdQueryParams.shape }), async ({ uuid, profileId, inventoryId, query }) => {
-  return fetchSection(APIEndpointName.INVENTORY, () => getApiInventoryUuidProfileIdInventoryId(uuid, profileId, inventoryId, { query }));
+/** Fetch all inventory tabs for a specific profile */
+export const getInventories = query(GetApiInventoryUuidProfileIdParams, async ({ uuid, profileId }) => {
+  return fetchSection(APIEndpointName.INVENTORY, () => getApiInventoryUuidProfileId(uuid, profileId));
 });
 
-/** Fetch inventory data for a specific profile and inventory type */
-export const searchInventorySection = getInventorySection;
+/** Search all inventories for matching items */
+export const searchInventorySection = query(GetApiInventorySearchUuidProfileIdSearchParamParams, async ({ uuid, profileId, searchParam }) => {
+  return fetchSection(APIEndpointName.INVENTORY, () => getApiInventorySearchUuidProfileIdSearchParam(uuid, profileId, searchParam));
+});
 
 /** Fetch garden data for a specific profile */
 export const getGarden = query(GetApiGardenUuidProfileIdParams, async ({ uuid, profileId }) => {

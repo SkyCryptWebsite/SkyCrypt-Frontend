@@ -1,19 +1,12 @@
 <script lang="ts">
-  import { getCombinedContext, getCombinedQueryContext, getPreferences } from "$ctx";
-  import { SectionBoundary } from "$lib/components/sections";
+  import { getPreferences } from "$ctx";
   import { type ModelsStrippedItem } from "$lib/shared/api/orval-generated";
-  import { getInventorySection } from "$lib/shared/api/skycrypt-api.remote";
   import { shouldShine } from "$lib/shared/helper";
-  import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import type { Snippet } from "svelte";
 
   const preferences = getPreferences();
-  const combined = getCombinedContext();
-  const combinedQuery = getCombinedQueryContext();
 
-  let { uuid, profileId, inventoryId, gap, itemSnippet }: { uuid: string; profileId: string; inventoryId: string; gap: number; itemSnippet: Snippet<[ModelsStrippedItem]> } = $props();
-
-  const combinedInventory = $derived(inventoryId === "inventory" ? combined.current?.inventory : null);
+  let { inventoryId, gap, itemSnippet, items = [] }: { inventoryId: string; gap: number; itemSnippet: Snippet<[ModelsStrippedItem]>; items?: ModelsStrippedItem[] } = $props();
 </script>
 
 {#snippet content(items: ModelsStrippedItem[] | undefined)}
@@ -41,18 +34,4 @@
   {/if}
 {/snippet}
 
-{#if inventoryId === "inventory"}
-  {#if combinedInventory}
-    {@render content(combinedInventory)}
-  {:else if combinedQuery.current?.error}
-    <p class="mt-2 space-x-0.5 text-center leading-6">Failed to load inventory.</p>
-  {:else}
-    <LoaderCircle class="mx-auto mt-4 animate-spin text-icon" />
-  {/if}
-{:else}
-  <SectionBoundary promise={getInventorySection({ uuid, profileId, inventoryId })}>
-    {#snippet children(items)}
-      {@render content(items)}
-    {/snippet}
-  </SectionBoundary>
-{/if}
+{@render content(items)}
