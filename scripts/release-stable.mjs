@@ -65,7 +65,7 @@ try {
     pullNumber = output("gh pr list --state open --head changeset-release/prod --base prod --json number --jq '.[0].number'");
   }
 
-  const mergeState = outputOptional(`gh pr view ${pullNumber} --json state,mergedAt --jq '.state + \"|\" + (.mergedAt // \"\")'`);
+  const mergeState = outputOptional(`gh pr view ${pullNumber} --json state,mergedAt --jq '.state + "|" + (.mergedAt // "")'`);
 
   if (!mergeState.startsWith("MERGED|")) {
     run(`gh pr merge ${pullNumber} --merge --delete-branch`);
