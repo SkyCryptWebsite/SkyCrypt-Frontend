@@ -3,7 +3,7 @@
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import type { Snippet } from "svelte";
 
-  let { promise, children }: { promise: Promise<T>; children: Snippet<[T]> } = $props();
+  let { query, children }: { query: () => Promise<T>; children: Snippet<[T]> } = $props();
 </script>
 
 <svelte:boundary>
@@ -14,7 +14,7 @@
     <Notice title="An unexpected error has occurred" type="error" error={err} {retry} />
   {/snippet}
 
-  {#await promise then result}
+  {#await query() then result}
     {@render children(result)}
   {/await}
 </svelte:boundary>
