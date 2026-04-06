@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.4.1
+
+### Patch Changes
+
+- fix: move hunting shards into skills and improve the hunting shard browser ([#304](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/304))
+
+- fix: sync disabled packs localstorage with cookies ([#304](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/304))
+
+- feat: migrate to takumi-js for image rendering and update dependencies ([#304](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/304))
+
 ## 3.4.1-beta.0
 
 ### Patch Changes
