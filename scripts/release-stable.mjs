@@ -61,7 +61,8 @@ try {
   let pullNumber = outputOptional("gh pr list --state open --head changeset-release/prod --base prod --json number --jq '.[0].number'");
 
   if (!pullNumber) {
-    pullNumber = output('gh pr create --title "Version Packages (Stable)" --body "Automatically promotes the current beta release line on prod to a stable release." --base prod --head changeset-release/prod --json number --jq \'.number\'');
+    run('gh pr create --title "Version Packages (Stable)" --body "Automatically promotes the current beta release line on prod to a stable release." --base prod --head changeset-release/prod');
+    pullNumber = output("gh pr list --state open --head changeset-release/prod --base prod --json number --jq '.[0].number'");
   }
 
   const mergeState = outputOptional(`gh pr view ${pullNumber} --json state,mergedAt --jq '.state + \"|\" + (.mergedAt // \"\")'`);
