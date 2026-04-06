@@ -11,7 +11,7 @@
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import Server from "@lucide/svelte/icons/server";
   import Star from "@lucide/svelte/icons/star";
-  import { isHttpError, type RemoteQuery } from "@sveltejs/kit";
+  import { isHttpError } from "@sveltejs/kit";
   import { Button } from "bits-ui";
   import { onMount } from "svelte";
   import { Role } from "./enums";
@@ -25,7 +25,8 @@
   let searchQuery = $state<string>(null!);
   const searchQueryValidated = $derived(schema.safeParse({ query: searchQuery }));
 
-  let searchUserRemoteFn = $state<RemoteQuery<never>>();
+  let searchUserArgs = $state<{ username: string }>();
+  const searchUserRemoteFn = $derived(searchUserArgs ? searchUser(searchUserArgs) : undefined);
 
   const iconMapper: Record<Role, typeof CodeXml | typeof Server | typeof GitPullRequestArrow | typeof Star | string> = {
     [Role.MAINTAINER]: CodeXml,
@@ -90,7 +91,7 @@
       <div class="flex flex-col gap-6">
         <label for="search" class="m-1 w-full text-center font-semibold">Show SkyBlock stats for</label>
         <!-- svelte-ignore a11y_autofocus -->
-        <input id="search" type="search" required autofocus placeholder="Enter username" class="relative h-16 grow bg-text/10 text-center font-normal text-text placeholder:text-text/80 focus-visible:outline-hidden" bind:value={searchQuery} onchange={() => (searchUserRemoteFn = searchUser({ username: searchQuery }))} />
+        <input id="search" type="search" required autofocus placeholder="Enter username" class="relative h-16 grow bg-text/10 text-center font-normal text-text placeholder:text-text/80 focus-visible:outline-hidden" bind:value={searchQuery} onchange={() => (searchUserArgs = { username: searchQuery })} />
       </div>
 
       {#if !searchQueryValidated.success && searchQuery != null && searchQuery.length > 0}

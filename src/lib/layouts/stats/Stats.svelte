@@ -2,10 +2,8 @@
   import { getProfileContext } from "$ctx";
   import { Notice } from "$lib/components/notices";
   import { Stat } from "$lib/components/stats";
-  import type { ModelsStats } from "$lib/shared/api/orval-generated";
   import { getAdditionalStats } from "$lib/shared/api/skycrypt-api.remote";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
-  import type { RemoteQuery } from "@sveltejs/kit";
   import { Collapsible } from "bits-ui";
   import { cubicOut } from "svelte/easing";
   import { slide } from "svelte/transition";
@@ -15,23 +13,11 @@
   const profileUUID = $derived(profile?.uuid);
   const profileId = $derived(profile?.profile_id);
 
-  let stats = $state<RemoteQuery<ModelsStats>>();
-
-  $effect(() => {
-    if (openState) {
-      stats = getAdditionalStats({ uuid: profileUUID!, profileId: profileId! });
-    }
-  });
+  const stats = $derived(openState && profileUUID && profileId ? getAdditionalStats({ uuid: profileUUID, profileId }) : undefined);
 </script>
 
 <div class="stats flex flex-col">
-  <Collapsible.Root
-    bind:open={openState}
-    onOpenChange={(open) => {
-      if (open && !stats) {
-        stats = getAdditionalStats({ uuid: profileUUID!, profileId: profileId! });
-      }
-    }}>
+  <Collapsible.Root bind:open={openState}>
     {#key profile}
       <Collapsible.Content forceMount={true} class="columns-[12.5rem] *:motion-preset-focus *:motion-preset-slide-down *:motion-delay-[calc(sibling-index()*0.01s)]">
         {#snippet child({ props, open })}

@@ -5,7 +5,7 @@
   import CircleAlert from "@lucide/svelte/icons/circle-alert";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import Search from "@lucide/svelte/icons/search";
-  import { isHttpError, type RemoteQuery } from "@sveltejs/kit";
+  import { isHttpError } from "@sveltejs/kit";
   import { Button, Command, computeCommandScore, Dialog } from "bits-ui";
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
@@ -18,9 +18,10 @@
   let commandInput = $state<HTMLElement>(null!);
   let commandValue = $state<string | undefined>(null!);
   let searchQuery = $state<string>("");
-  let searchUserRemoteFn = $state<RemoteQuery<never>>();
+  let submittedSearchQuery = $state<string>("");
 
   const searchQueryValidated = $derived(schema.safeParse({ query: searchQuery }));
+  const searchUserRemoteFn = $derived(submittedSearchQuery ? searchUser({ username: submittedSearchQuery }) : undefined);
 
   const preferences = getPreferences();
   const internalState = getInternalState();
@@ -37,6 +38,7 @@
     internalState.openCommand = false;
     commandValue = undefined;
     searchQuery = "";
+    submittedSearchQuery = "";
   }
 
   function handleKeydown(e: KeyboardEvent) {
@@ -44,7 +46,7 @@
     const k = e.key.toLowerCase();
     if (k === "enter" || k === "search") {
       e.preventDefault();
-      searchUserRemoteFn = searchUser({ username: searchQuery });
+      submittedSearchQuery = searchQuery;
     }
   }
 </script>
@@ -77,7 +79,7 @@
                   type="button"
                   class="flex aspect-square h-full items-center justify-center text-text"
                   onclick={() => {
-                    searchUserRemoteFn = searchUser({ username: searchQuery });
+                    submittedSearchQuery = searchQuery;
                   }}>
                   {#if !searchQueryValidated.success && searchQuery.length > 0}
                     <CircleAlert class="size-4" />
@@ -112,7 +114,7 @@
                           class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}
                           keywords={[searchQuery, "search", "find", "profile"]}
                           onSelect={() => {
-                            searchUserRemoteFn = searchUser({ username: searchQuery });
+                            submittedSearchQuery = searchQuery;
                           }}>
                           {#if searchUserRemoteFn?.loading || loading}
                             <LoaderCircle class="size-4 animate-spin" />
