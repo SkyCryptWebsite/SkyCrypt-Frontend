@@ -129,6 +129,10 @@ function getLongDescription(embedData: ModelsEmbedData) {
 }
 
 function getMetaTitle(embedData: ModelsEmbedData) {
+  if (embedData == null || embedData.username == "") {
+    return "";
+  }
+
   let metaTitle = embedData.displayName;
 
   switch (embedData.game_mode) {
