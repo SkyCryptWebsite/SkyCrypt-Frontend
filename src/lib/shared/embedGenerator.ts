@@ -34,7 +34,7 @@ const slayerEmojis = {
 function getLongDescription(embedData: ModelsEmbedData) {
   let output = "";
 
-  if (embedData == null) {
+  if (embedData == null || embedData.username == "") {
     return output;
   }
 

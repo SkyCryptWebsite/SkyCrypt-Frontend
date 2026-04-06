@@ -46,11 +46,17 @@ export interface ModelsArmorResult {
 }
 
 export interface ModelsAttributeShard {
-  captured?: number;
+  abilityLevel?: number;
+  abilityMaxLevel?: number;
+  abilityName?: string;
+  capturedTimestamp?: number;
+  family?: string[];
   lore?: string[];
   maxSyphon?: number;
   name?: string;
   owned?: number;
+  rarity?: string;
+  shardId?: string;
   syphoned?: number;
   texture?: string;
 }
@@ -172,39 +178,43 @@ export interface ModelsCollectionsOutput {
   totalCollections?: number;
 }
 
-export interface ModelsCommissions {
-  completions?: number;
-  milestone?: number;
+export interface ModelsGetMagicalPowerRarities {
+  [key: string]: {
+    amount?: number;
+    magicalPower?: number;
+  };
 }
 
-export interface ModelsConsumable {
+export type ModelsGetMagicalPowerOutputHegemony = {
   amount?: number;
-  maxAmount?: number;
-  name?: string;
-  texture?: string;
+  rarity?: string;
+};
+
+export interface ModelsGetMagicalPowerOutput {
+  abiphone?: number;
+  accessories?: number;
+  hegemony?: ModelsGetMagicalPowerOutputHegemony;
+  rarities?: ModelsGetMagicalPowerRarities;
+  riftPrism?: number;
+  total?: number;
 }
 
-export type ModelsContestMedals = { [key: string]: number };
+export type ModelsGetMissingAccessoresOutputEnrichments = { [key: string]: number };
 
-export interface ModelsContest {
-  amount?: number;
-  collected?: number;
-  maxed?: boolean;
-  medals?: ModelsContestMedals;
-  name?: string;
-  texture?: string;
-}
+export type ModelsGetMissingAccessoresOutputStats = { [key: string]: number };
 
-export interface ModelsCorpse {
-  amount?: number;
-  name?: string;
-  texture_path?: string;
-}
-
-export interface ModelsCorpses {
-  corpses?: ModelsCorpse[];
-  found?: number;
-  max?: number;
+export interface ModelsGetMissingAccessoresOutput {
+  accessories?: ModelsStrippedItem[];
+  enrichments?: ModelsGetMissingAccessoresOutputEnrichments;
+  magicalPower?: ModelsGetMagicalPowerOutput;
+  missing?: ModelsStrippedItem[];
+  recombobulated?: number;
+  selectedPower?: string;
+  stats?: ModelsGetMissingAccessoresOutputStats;
+  total?: number;
+  totalRecombobulated?: number;
+  unique?: number;
+  upgrades?: ModelsStrippedItem[];
 }
 
 export interface ModelsCrimsonIsleDojoChallenge {
@@ -245,38 +255,6 @@ export interface ModelsCrimsonIsleOutput {
   kuudra?: ModelsCrimsonIsleKuudra;
 }
 
-export interface ModelsCropMilestone {
-  level?: ModelsSkill;
-  name?: string;
-  texture?: string;
-}
-
-export interface ModelsCropUpgrade {
-  level?: ModelsSkill;
-  name?: string;
-  texture?: string;
-}
-
-export type ModelsCrystalNucleusRunsCrystals = { [key: string]: string };
-
-export type ModelsCrystalNucleusRunsParts = { [key: string]: string };
-
-export interface ModelsCrystalNucleusRuns {
-  crystals?: ModelsCrystalNucleusRunsCrystals;
-  parts?: ModelsCrystalNucleusRunsParts;
-}
-
-export interface ModelsCrystalHollows {
-  crystalHollowsLastAccess?: number;
-  nucleusRuns?: number;
-  progress?: ModelsCrystalNucleusRuns;
-}
-
-export interface ModelsDNAAnalysisMilestone {
-  level?: number;
-  maxLevel?: number;
-}
-
 export interface ModelsMostDamageOutput {
   damage?: number;
   type?: string;
@@ -297,6 +275,13 @@ export interface ModelsDungeonFloorStats {
   watcher_kills?: number;
 }
 
+export interface ModelsFormattedDungeonFloor {
+  best_run?: ModelsBestRunOutput;
+  name?: string;
+  stats?: ModelsDungeonFloorStats;
+  texture?: string;
+}
+
 export interface ModelsSecretsOutput {
   found?: number;
   secretsPerRun?: number;
@@ -309,13 +294,6 @@ export interface ModelsDungeonStatsOutput {
   secrets?: ModelsSecretsOutput;
 }
 
-export interface ModelsFormattedDungeonFloor {
-  best_run?: ModelsBestRunOutput;
-  name?: string;
-  stats?: ModelsDungeonFloorStats;
-  texture?: string;
-}
-
 export interface ModelsDungeonsOutput {
   catacombs?: ModelsFormattedDungeonFloor[];
   classes?: ModelsClassData;
@@ -324,56 +302,273 @@ export interface ModelsDungeonsOutput {
   stats?: ModelsDungeonStatsOutput;
 }
 
-export type ModelsEmbedDataDungeonsClasses = { [key: string]: number };
+export type ModelsEquipmentResultStats = { [key: string]: number };
 
-export interface ModelsEmbedDataDungeons {
-  classAverage?: number;
-  classes?: ModelsEmbedDataDungeonsClasses;
-  dungeoneering?: number;
+export interface ModelsEquipmentResult {
+  equipment?: ModelsStrippedItem[];
+  stats?: ModelsEquipmentResultStats;
 }
 
-export interface ModelsEmbedNetworth {
-  nonCosmetic?: number;
-  normal?: number;
+export interface ModelsWeaponsResult {
+  highest_priority_weapon?: ModelsStrippedItem;
+  weapons?: ModelsStrippedItem[];
 }
 
-export interface ModelsRankOutput {
-  plusColor?: string;
-  plusText?: string;
-  rankColor?: string;
-  rankText?: string;
+export interface ModelsGear {
+  armor?: ModelsArmorResult;
+  equipment?: ModelsEquipmentResult;
+  wardrobe?: ModelsStrippedItem[][];
+  weapons?: ModelsWeaponsResult;
 }
 
-export type ModelsEmbedDataSkillsSkills = { [key: string]: number };
-
-export interface ModelsEmbedDataSkills {
-  skillAverage?: number;
-  skills?: ModelsEmbedDataSkillsSkills;
+export interface ModelsMinion {
+  maxTier?: number;
+  name?: string;
+  texture?: string;
+  tiers?: number[];
 }
 
-export type ModelsEmbedDataSlayersSlayers = { [key: string]: number };
-
-export interface ModelsEmbedDataSlayers {
-  slayers?: ModelsEmbedDataSlayersSlayers;
-  xp?: number;
+export interface ModelsMinionCategory {
+  maxedMinions?: number;
+  maxedTiers?: number;
+  minions?: ModelsMinion[];
+  texture?: string;
+  totalMinions?: number;
+  totalTiers?: number;
 }
 
-export interface ModelsEmbedData {
-  bank?: number;
-  displayName?: string;
-  dungeons?: ModelsEmbedDataDungeons;
-  game_mode?: string;
-  joined?: number;
-  networth?: ModelsEmbedNetworth;
-  profile_cute_name?: string;
-  profile_id?: string;
+export interface ModelsMinionSlotsOutput {
+  bonusSlots?: number;
+  current?: number;
+  next?: number;
+}
+
+export type ModelsMinionsOutputMinions = { [key: string]: ModelsMinionCategory };
+
+export interface ModelsMinionsOutput {
+  maxedMinions?: number;
+  maxedTiers?: number;
+  minions?: ModelsMinionsOutputMinions;
+  minionsSlots?: ModelsMinionSlotsOutput;
+  totalMinions?: number;
+  totalTiers?: number;
+}
+
+export type ModelsMiscAuctionsTotalBought = { [key: string]: number };
+
+export type ModelsMiscAuctionsTotalSold = { [key: string]: number };
+
+export interface ModelsMiscAuctions {
+  bids?: number;
+  created?: number;
+  fees?: number;
+  gold_earned?: number;
+  gold_spent?: number;
+  highest_bid?: number;
+  no_bids?: number;
+  total_bought?: ModelsMiscAuctionsTotalBought;
+  total_sold?: ModelsMiscAuctionsTotalSold;
+  won?: number;
+}
+
+export interface ModelsConsumable {
+  amount?: number;
+  maxAmount?: number;
+  name?: string;
+  texture?: string;
+}
+
+export interface ModelsMiscDamage {
+  highest_critical_damage?: number;
+}
+
+export type ModelsMiscDragonsDeaths = { [key: string]: number };
+
+export type ModelsMiscDragonsFastestKill = { [key: string]: number };
+
+export type ModelsMiscDragonsLastHits = { [key: string]: number };
+
+export type ModelsMiscDragonsMostDamage = { [key: string]: number };
+
+export interface ModelsMiscDragons {
+  deaths?: ModelsMiscDragonsDeaths;
+  ender_crystals_destroyed?: number;
+  fastest_kill?: ModelsMiscDragonsFastestKill;
+  last_hits?: ModelsMiscDragonsLastHits;
+  most_damage?: ModelsMiscDragonsMostDamage;
+}
+
+export interface ModelsMiscEndstoneProtector {
+  deaths?: number;
+  kills?: number;
+}
+
+export interface ModelsMiscEssence {
+  amount?: number;
+  name?: string;
+  texture?: string;
+}
+
+export interface ModelsMiscGifts {
+  given?: number;
+  received?: number;
+}
+
+export interface ModelsMiscKill {
+  amount?: number;
+  name?: string;
+}
+
+export interface ModelsMiscKills {
+  deaths?: ModelsMiscKill[];
+  kills?: ModelsMiscKill[];
+  total_deaths?: number;
+  total_kills?: number;
+}
+
+export type ModelsMiscMythologicalEventBurrowsChainsComplete = { [key: string]: number };
+
+export type ModelsMiscMythologicalEventBurrowsDugCombat = { [key: string]: number };
+
+export type ModelsMiscMythologicalEventBurrowsDugNext = { [key: string]: number };
+
+export type ModelsMiscMythologicalEventBurrowsDugTreasure = { [key: string]: number };
+
+export interface ModelsMiscMythologicalEvent {
+  burrows_chains_complete?: ModelsMiscMythologicalEventBurrowsChainsComplete;
+  burrows_dug_combat?: ModelsMiscMythologicalEventBurrowsDugCombat;
+  burrows_dug_next?: ModelsMiscMythologicalEventBurrowsDugNext;
+  burrows_dug_treasure?: ModelsMiscMythologicalEventBurrowsDugTreasure;
+  kills?: number;
+}
+
+export interface ModelsMiscPetMilestone {
+  amount?: number;
+  progress?: string;
+  rarity?: string;
+  total?: number;
+}
+
+export interface ModelsMiscProfileUpgrades {
+  [key: string]: number;
+}
+
+export interface ModelsMiscSeasonOfJerry {
+  most_cannonballs_hit?: number;
+  most_damage_dealt?: number;
+  most_magma_damage_dealt?: number;
+  most_snowballs_hit?: number;
+}
+
+export type ModelsMiscOutputClaimedItems = { [key: string]: number };
+
+export type ModelsMiscOutputPetMilestones = { [key: string]: ModelsMiscPetMilestone };
+
+export type ModelsMiscOutputUncategorized = { [key: string]: unknown };
+
+export interface ModelsMiscOutput {
+  auctions?: ModelsMiscAuctions;
+  claimed_items?: ModelsMiscOutputClaimedItems;
+  consumables?: ModelsConsumable[];
+  damage?: ModelsMiscDamage;
+  dragons?: ModelsMiscDragons;
+  endstone_protector?: ModelsMiscEndstoneProtector;
+  essence?: ModelsMiscEssence[];
+  gifts?: ModelsMiscGifts;
+  kills?: ModelsMiscKills;
+  mythological_event?: ModelsMiscMythologicalEvent;
+  pet_milestones?: ModelsMiscOutputPetMilestones;
+  profile_upgrades?: ModelsMiscProfileUpgrades;
+  season_of_jerry?: ModelsMiscSeasonOfJerry;
+  uncategorized?: ModelsMiscOutputUncategorized;
+}
+
+export type ModelsStrippedPetStats = { [key: string]: number };
+
+export interface ModelsStrippedPet {
+  active?: boolean;
+  display_name?: string;
+  level?: number;
+  lore?: string[];
+  rarity?: string;
+  stats?: ModelsStrippedPetStats;
+  texture_path?: string;
+  type?: string;
+}
+
+export interface ModelsPetScoreReward {
+  bonus?: number;
+  score?: number;
+  unlocked?: boolean;
+}
+
+export type ModelsPetScoreStats = { [key: string]: number };
+
+export interface ModelsPetScore {
+  amount?: number;
+  reward?: ModelsPetScoreReward[];
+  stats?: ModelsPetScoreStats;
+}
+
+export interface ModelsOutputPets {
+  amount?: number;
+  amountSkins?: number;
+  missing?: ModelsStrippedPet[];
+  petScore?: ModelsPetScore;
+  pets?: ModelsStrippedPet[];
+  total?: number;
+  totalCandyUsed?: number;
+  totalPetExp?: number;
+}
+
+export interface ModelsRiftCastleOutput {
+  grubberStacks?: number;
+  maxBurgers?: number;
+}
+
+export interface ModelsRiftEnigmaOutput {
+  souls?: number;
+  totalSouls?: number;
+}
+
+export interface ModelsRiftMotesOutput {
+  lifetime?: number;
+  orbs?: number;
   purse?: number;
-  rank?: ModelsRankOutput;
-  skills?: ModelsEmbedDataSkills;
-  skyblock_level?: number;
-  slayers?: ModelsEmbedDataSlayers;
-  username?: string;
-  uuid?: string;
+}
+
+export interface ModelsRiftPorhtal {
+  name?: string;
+  texture?: string;
+  unlocked?: boolean;
+}
+
+export interface ModelsRiftPortalsOutput {
+  porhtals?: ModelsRiftPorhtal[];
+  porhtalsFound?: number;
+}
+
+export interface ModelsRiftTimecharms {
+  name?: string;
+  texture?: string;
+  unlocked?: boolean;
+  unlockedAt?: number;
+}
+
+export interface ModelsRiftTimecharmsOutput {
+  timecharms?: ModelsRiftTimecharms[];
+  timecharmsFound?: number;
+}
+
+export interface ModelsRiftOutput {
+  armor?: ModelsArmorResult;
+  castle?: ModelsRiftCastleOutput;
+  enigma?: ModelsRiftEnigmaOutput;
+  equipment?: ModelsEquipmentResult;
+  motes?: ModelsRiftMotesOutput;
+  porhtal?: ModelsRiftPortalsOutput;
+  timecharms?: ModelsRiftTimecharmsOutput;
+  visits?: number;
 }
 
 export interface ModelsEnchantingGame {
@@ -403,31 +598,30 @@ export interface ModelsEnchantingOutput {
   unlocked?: boolean;
 }
 
-export type ModelsEquipmentResultStats = { [key: string]: number };
+export type ModelsContestMedals = { [key: string]: number };
 
-export interface ModelsEquipmentResult {
-  equipment?: ModelsStrippedItem[];
-  stats?: ModelsEquipmentResultStats;
+export interface ModelsContest {
+  amount?: number;
+  collected?: number;
+  maxed?: boolean;
+  medals?: ModelsContestMedals;
+  name?: string;
+  texture?: string;
 }
-
-export interface ModelsFairySouls {
-  found?: number;
-  total?: number;
-}
-
-export type ModelsFarmingOutputContests = { [key: string]: ModelsContest };
 
 export interface ModelsMedal {
   amount?: number;
   total?: number;
 }
 
-export type ModelsFarmingOutputMedals = { [key: string]: ModelsMedal };
-
 export interface ModelsSkillToolsResult {
   highest_priority_tool?: ModelsStrippedItem;
   tools?: ModelsStrippedItem[];
 }
+
+export type ModelsFarmingOutputContests = { [key: string]: ModelsContest };
+
+export type ModelsFarmingOutputMedals = { [key: string]: ModelsMedal };
 
 export interface ModelsFarmingOutput {
   contests?: ModelsFarmingOutputContests;
@@ -437,11 +631,6 @@ export interface ModelsFarmingOutput {
   pelts?: number;
   tools?: ModelsSkillToolsResult;
   uniqueGolds?: number;
-}
-
-export interface ModelsFishFamily {
-  collected?: number;
-  total?: number;
 }
 
 export interface ModelsKill {
@@ -493,13 +682,10 @@ export interface ModelsFishingOuput {
   waterSeaCreatures?: ModelsKill[];
 }
 
-export interface ModelsTreeGift {
-  maxMilestone?: number;
-  milestone?: number;
-  texture?: string;
+export interface ModelsFishFamily {
+  collected?: number;
+  total?: number;
 }
-
-export type ModelsForagingOutputTreeGift = { [key: string]: ModelsTreeGift };
 
 export interface ModelsHinaChapter {
   maxTier?: number;
@@ -641,11 +827,19 @@ export interface ModelsHotfTokens {
   total?: number;
 }
 
+export interface ModelsTreeGift {
+  maxMilestone?: number;
+  milestone?: number;
+  texture?: string;
+}
+
 export interface ModelsWhispers {
   available?: number;
   spent?: number;
   total?: number;
 }
+
+export type ModelsForagingOutputTreeGift = { [key: string]: ModelsTreeGift };
 
 export interface ModelsForagingOutput {
   cotf?: ModelsCenterOfTheForest;
@@ -661,6 +855,26 @@ export interface ModelsForagingOutput {
   whispers?: ModelsWhispers;
 }
 
+export interface ModelsCommissions {
+  completions?: number;
+  milestone?: number;
+}
+
+export type ModelsCrystalNucleusRunsCrystals = { [key: string]: string };
+
+export type ModelsCrystalNucleusRunsParts = { [key: string]: string };
+
+export interface ModelsCrystalNucleusRuns {
+  crystals?: ModelsCrystalNucleusRunsCrystals;
+  parts?: ModelsCrystalNucleusRunsParts;
+}
+
+export interface ModelsCrystalHollows {
+  crystalHollowsLastAccess?: number;
+  nucleusRuns?: number;
+  progress?: ModelsCrystalNucleusRuns;
+}
+
 export interface ModelsForgeOutput {
   duration?: number;
   endingTime?: number;
@@ -668,6 +882,18 @@ export interface ModelsForgeOutput {
   name?: string;
   slot?: number;
   startingTime?: number;
+}
+
+export interface ModelsCorpse {
+  amount?: number;
+  name?: string;
+  texture_path?: string;
+}
+
+export interface ModelsCorpses {
+  corpses?: ModelsCorpse[];
+  found?: number;
+  max?: number;
 }
 
 export interface ModelsFossil {
@@ -680,6 +906,177 @@ export interface ModelsFossils {
   fossils?: ModelsFossil[];
   found?: number;
   max?: number;
+}
+
+export interface ModelsGlaciteTunnels {
+  corpses?: ModelsCorpses;
+  fossilDust?: number;
+  fossils?: ModelsFossils;
+  mineshaftsEntered?: number;
+}
+
+export interface ModelsPeakOfTheMountain {
+  level?: number;
+  max_level?: number;
+}
+
+export interface ModelsPowderAmount {
+  available?: number;
+  spent?: number;
+  total?: number;
+}
+
+export interface ModelsPowderOutput {
+  gemstone?: ModelsPowderAmount;
+  glacite?: ModelsPowderAmount;
+  mithril?: ModelsPowderAmount;
+}
+
+export interface ModelsHotmTokens {
+  available?: number;
+  spent?: number;
+  total?: number;
+}
+
+export interface ModelsMiningOutput {
+  commissions?: ModelsCommissions;
+  crystalHollows?: ModelsCrystalHollows;
+  forge?: ModelsForgeOutput[];
+  glaciteTunnels?: ModelsGlaciteTunnels;
+  hotm?: ModelsProcessedItem[];
+  level?: ModelsSkill;
+  miningLevel?: ModelsSkill;
+  peakOfTheMountain?: ModelsPeakOfTheMountain;
+  powder?: ModelsPowderOutput;
+  selectedPickaxeAbility?: string;
+  tokens?: ModelsHotmTokens;
+  tools?: ModelsSkillToolsResult;
+}
+
+export interface ModelsSkillsOutput {
+  enchanting?: ModelsEnchantingOutput;
+  farming?: ModelsFarmingOutput;
+  fishing?: ModelsFishingOuput;
+  foraging?: ModelsForagingOutput;
+  hunting?: ModelsAttributeShardsOutput;
+  mining?: ModelsMiningOutput;
+}
+
+export interface ModelsSlayerLevel {
+  level?: number;
+  maxLevel?: number;
+  maxed?: boolean;
+  xp?: number;
+  xpForNext?: number;
+}
+
+export type ModelsSlayerDataKills = { [key: string]: number };
+
+export interface ModelsSlayerData {
+  kills?: ModelsSlayerDataKills;
+  level?: ModelsSlayerLevel;
+  name?: string;
+  texture?: string;
+}
+
+export type ModelsSlayersOutputData = { [key: string]: ModelsSlayerData };
+
+export type ModelsSlayersOutputStats = { [key: string]: number };
+
+export interface ModelsSlayersOutput {
+  data?: ModelsSlayersOutputData;
+  stats?: ModelsSlayersOutputStats;
+  totalSlayerExp?: number;
+}
+
+export interface ModelsCombinedOutput {
+  accessories?: ModelsGetMissingAccessoresOutput;
+  bestiary?: ModelsBestiaryOutput;
+  collections?: ModelsCollectionsOutput;
+  crimsonIsle?: ModelsCrimsonIsleOutput;
+  dungeons?: ModelsDungeonsOutput;
+  gear?: ModelsGear;
+  inventory?: ModelsStrippedItem[];
+  minions?: ModelsMinionsOutput;
+  misc?: ModelsMiscOutput;
+  pets?: ModelsOutputPets;
+  rift?: ModelsRiftOutput;
+  skills?: ModelsSkillsOutput;
+  slayers?: ModelsSlayersOutput;
+}
+
+export interface ModelsCropMilestone {
+  level?: ModelsSkill;
+  name?: string;
+  texture?: string;
+}
+
+export interface ModelsCropUpgrade {
+  level?: ModelsSkill;
+  name?: string;
+  texture?: string;
+}
+
+export interface ModelsDNAAnalysisMilestone {
+  level?: number;
+  maxLevel?: number;
+}
+
+export type ModelsEmbedDataDungeonsClasses = { [key: string]: number };
+
+export interface ModelsEmbedDataDungeons {
+  classAverage?: number;
+  classes?: ModelsEmbedDataDungeonsClasses;
+  dungeoneering?: number;
+}
+
+export interface ModelsEmbedNetworth {
+  nonCosmetic?: number;
+  normal?: number;
+}
+
+export interface ModelsRankOutput {
+  plusColor?: string;
+  plusText?: string;
+  rankColor?: string;
+  rankText?: string;
+}
+
+export type ModelsEmbedDataSkillsSkills = { [key: string]: number };
+
+export interface ModelsEmbedDataSkills {
+  skillAverage?: number;
+  skills?: ModelsEmbedDataSkillsSkills;
+}
+
+export type ModelsEmbedDataSlayersSlayers = { [key: string]: number };
+
+export interface ModelsEmbedDataSlayers {
+  slayers?: ModelsEmbedDataSlayersSlayers;
+  xp?: number;
+}
+
+export interface ModelsEmbedData {
+  bank?: number;
+  displayName?: string;
+  dungeons?: ModelsEmbedDataDungeons;
+  game_mode?: string;
+  joined?: number;
+  networth?: ModelsEmbedNetworth;
+  profile_cute_name?: string;
+  profile_id?: string;
+  purse?: number;
+  rank?: ModelsRankOutput;
+  skills?: ModelsEmbedDataSkills;
+  skyblock_level?: number;
+  slayers?: ModelsEmbedDataSlayers;
+  username?: string;
+  uuid?: string;
+}
+
+export interface ModelsFairySouls {
+  found?: number;
+  total?: number;
 }
 
 export type ModelsGardenComposter = { [key: string]: number };
@@ -741,263 +1138,12 @@ export interface ModelsGarden {
   visitors?: ModelsVisitors;
 }
 
-export interface ModelsWeaponsResult {
-  highest_priority_weapon?: ModelsStrippedItem;
-  weapons?: ModelsStrippedItem[];
-}
-
-export interface ModelsGear {
-  armor?: ModelsArmorResult;
-  equipment?: ModelsEquipmentResult;
-  wardrobe?: ModelsStrippedItem[][];
-  weapons?: ModelsWeaponsResult;
-}
-
-export type ModelsGetMagicalPowerOutputHegemony = {
-  amount?: number;
-  rarity?: string;
-};
-
-export interface ModelsGetMagicalPowerRarities {
-  [key: string]: {
-    amount?: number;
-    magicalPower?: number;
-  };
-}
-
-export interface ModelsGetMagicalPowerOutput {
-  abiphone?: number;
-  accessories?: number;
-  hegemony?: ModelsGetMagicalPowerOutputHegemony;
-  rarities?: ModelsGetMagicalPowerRarities;
-  riftPrism?: number;
-  total?: number;
-}
-
-export type ModelsGetMissingAccessoresOutputEnrichments = { [key: string]: number };
-
-export type ModelsGetMissingAccessoresOutputStats = { [key: string]: number };
-
-export interface ModelsGetMissingAccessoresOutput {
-  accessories?: ModelsStrippedItem[];
-  enrichments?: ModelsGetMissingAccessoresOutputEnrichments;
-  magicalPower?: ModelsGetMagicalPowerOutput;
-  missing?: ModelsStrippedItem[];
-  recombobulated?: number;
-  selectedPower?: string;
-  stats?: ModelsGetMissingAccessoresOutputStats;
-  total?: number;
-  totalRecombobulated?: number;
-  unique?: number;
-  upgrades?: ModelsStrippedItem[];
-}
-
-export interface ModelsGlaciteTunnels {
-  corpses?: ModelsCorpses;
-  fossilDust?: number;
-  fossils?: ModelsFossils;
-  mineshaftsEntered?: number;
-}
-
-export interface ModelsHotmTokens {
-  available?: number;
-  spent?: number;
-  total?: number;
-}
-
 export interface ModelsMemberStats {
   cute_name?: string;
   profile_id?: string;
   removed?: boolean;
   username?: string;
   uuid?: string;
-}
-
-export interface ModelsPeakOfTheMountain {
-  level?: number;
-  max_level?: number;
-}
-
-export interface ModelsPowderAmount {
-  available?: number;
-  spent?: number;
-  total?: number;
-}
-
-export interface ModelsPowderOutput {
-  gemstone?: ModelsPowderAmount;
-  glacite?: ModelsPowderAmount;
-  mithril?: ModelsPowderAmount;
-}
-
-export interface ModelsMiningOutput {
-  commissions?: ModelsCommissions;
-  crystalHollows?: ModelsCrystalHollows;
-  forge?: ModelsForgeOutput[];
-  glaciteTunnels?: ModelsGlaciteTunnels;
-  hotm?: ModelsProcessedItem[];
-  level?: ModelsSkill;
-  miningLevel?: ModelsSkill;
-  peakOfTheMountain?: ModelsPeakOfTheMountain;
-  powder?: ModelsPowderOutput;
-  selectedPickaxeAbility?: string;
-  tokens?: ModelsHotmTokens;
-  tools?: ModelsSkillToolsResult;
-}
-
-export interface ModelsMinion {
-  maxTier?: number;
-  name?: string;
-  texture?: string;
-  tiers?: number[];
-}
-
-export interface ModelsMinionCategory {
-  maxedMinions?: number;
-  maxedTiers?: number;
-  minions?: ModelsMinion[];
-  texture?: string;
-  totalMinions?: number;
-  totalTiers?: number;
-}
-
-export interface ModelsMinionSlotsOutput {
-  bonusSlots?: number;
-  current?: number;
-  next?: number;
-}
-
-export type ModelsMinionsOutputMinions = { [key: string]: ModelsMinionCategory };
-
-export interface ModelsMinionsOutput {
-  maxedMinions?: number;
-  maxedTiers?: number;
-  minions?: ModelsMinionsOutputMinions;
-  minionsSlots?: ModelsMinionSlotsOutput;
-  totalMinions?: number;
-  totalTiers?: number;
-}
-
-export type ModelsMiscAuctionsTotalBought = { [key: string]: number };
-
-export type ModelsMiscAuctionsTotalSold = { [key: string]: number };
-
-export interface ModelsMiscAuctions {
-  bids?: number;
-  created?: number;
-  fees?: number;
-  gold_earned?: number;
-  gold_spent?: number;
-  highest_bid?: number;
-  no_bids?: number;
-  total_bought?: ModelsMiscAuctionsTotalBought;
-  total_sold?: ModelsMiscAuctionsTotalSold;
-  won?: number;
-}
-
-export interface ModelsMiscDamage {
-  highest_critical_damage?: number;
-}
-
-export type ModelsMiscDragonsDeaths = { [key: string]: number };
-
-export type ModelsMiscDragonsFastestKill = { [key: string]: number };
-
-export type ModelsMiscDragonsLastHits = { [key: string]: number };
-
-export type ModelsMiscDragonsMostDamage = { [key: string]: number };
-
-export interface ModelsMiscDragons {
-  deaths?: ModelsMiscDragonsDeaths;
-  ender_crystals_destroyed?: number;
-  fastest_kill?: ModelsMiscDragonsFastestKill;
-  last_hits?: ModelsMiscDragonsLastHits;
-  most_damage?: ModelsMiscDragonsMostDamage;
-}
-
-export interface ModelsMiscEndstoneProtector {
-  deaths?: number;
-  kills?: number;
-}
-
-export interface ModelsMiscEssence {
-  amount?: number;
-  name?: string;
-  texture?: string;
-}
-
-export interface ModelsMiscGifts {
-  given?: number;
-  received?: number;
-}
-
-export interface ModelsMiscKill {
-  amount?: number;
-  name?: string;
-}
-
-export interface ModelsMiscKills {
-  deaths?: ModelsMiscKill[];
-  kills?: ModelsMiscKill[];
-  total_deaths?: number;
-  total_kills?: number;
-}
-
-export type ModelsMiscMythologicalEventBurrowsChainsComplete = { [key: string]: number };
-
-export type ModelsMiscMythologicalEventBurrowsDugCombat = { [key: string]: number };
-
-export type ModelsMiscMythologicalEventBurrowsDugNext = { [key: string]: number };
-
-export type ModelsMiscMythologicalEventBurrowsDugTreasure = { [key: string]: number };
-
-export interface ModelsMiscMythologicalEvent {
-  burrows_chains_complete?: ModelsMiscMythologicalEventBurrowsChainsComplete;
-  burrows_dug_combat?: ModelsMiscMythologicalEventBurrowsDugCombat;
-  burrows_dug_next?: ModelsMiscMythologicalEventBurrowsDugNext;
-  burrows_dug_treasure?: ModelsMiscMythologicalEventBurrowsDugTreasure;
-  kills?: number;
-}
-
-export type ModelsMiscOutputClaimedItems = { [key: string]: number };
-
-export interface ModelsMiscPetMilestone {
-  amount?: number;
-  progress?: string;
-  rarity?: string;
-  total?: number;
-}
-
-export type ModelsMiscOutputPetMilestones = { [key: string]: ModelsMiscPetMilestone };
-
-export type ModelsMiscOutputUncategorized = { [key: string]: unknown };
-
-export interface ModelsMiscProfileUpgrades {
-  [key: string]: number;
-}
-
-export interface ModelsMiscSeasonOfJerry {
-  most_cannonballs_hit?: number;
-  most_damage_dealt?: number;
-  most_magma_damage_dealt?: number;
-  most_snowballs_hit?: number;
-}
-
-export interface ModelsMiscOutput {
-  auctions?: ModelsMiscAuctions;
-  claimed_items?: ModelsMiscOutputClaimedItems;
-  consumables?: ModelsConsumable[];
-  damage?: ModelsMiscDamage;
-  dragons?: ModelsMiscDragons;
-  endstone_protector?: ModelsMiscEndstoneProtector;
-  essence?: ModelsMiscEssence[];
-  gifts?: ModelsMiscGifts;
-  kills?: ModelsMiscKills;
-  mythological_event?: ModelsMiscMythologicalEvent;
-  pet_milestones?: ModelsMiscOutputPetMilestones;
-  profile_upgrades?: ModelsMiscProfileUpgrades;
-  season_of_jerry?: ModelsMiscSeasonOfJerry;
-  uncategorized?: ModelsMiscOutputUncategorized;
 }
 
 export interface SkycryptSrcModelsNetworthType {
@@ -1021,44 +1167,6 @@ export interface SkycryptSrcModelsNetworthResult {
 export interface ModelsNetworth {
   nonCosmetic?: SkycryptSrcModelsNetworthResult;
   normal?: SkycryptSrcModelsNetworthResult;
-}
-
-export type ModelsStrippedPetStats = { [key: string]: number };
-
-export interface ModelsStrippedPet {
-  active?: boolean;
-  display_name?: string;
-  level?: number;
-  lore?: string[];
-  rarity?: string;
-  stats?: ModelsStrippedPetStats;
-  texture_path?: string;
-  type?: string;
-}
-
-export interface ModelsPetScoreReward {
-  bonus?: number;
-  score?: number;
-  unlocked?: boolean;
-}
-
-export type ModelsPetScoreStats = { [key: string]: number };
-
-export interface ModelsPetScore {
-  amount?: number;
-  reward?: ModelsPetScoreReward[];
-  stats?: ModelsPetScoreStats;
-}
-
-export interface ModelsOutputPets {
-  amount?: number;
-  amountSkins?: number;
-  missing?: ModelsStrippedPet[];
-  petScore?: ModelsPetScore;
-  pets?: ModelsStrippedPet[];
-  total?: number;
-  totalCandyUsed?: number;
-  totalPetExp?: number;
 }
 
 export interface ModelsPlayerResolve {
@@ -1090,56 +1198,6 @@ export interface ModelsResourcePackConfig {
   version?: string;
 }
 
-export interface ModelsRiftCastleOutput {
-  grubberStacks?: number;
-  maxBurgers?: number;
-}
-
-export interface ModelsRiftEnigmaOutput {
-  souls?: number;
-  totalSouls?: number;
-}
-
-export interface ModelsRiftMotesOutput {
-  lifetime?: number;
-  orbs?: number;
-  purse?: number;
-}
-
-export interface ModelsRiftPorhtal {
-  name?: string;
-  texture?: string;
-  unlocked?: boolean;
-}
-
-export interface ModelsRiftPortalsOutput {
-  porhtals?: ModelsRiftPorhtal[];
-  porhtalsFound?: number;
-}
-
-export interface ModelsRiftTimecharms {
-  name?: string;
-  texture?: string;
-  unlocked?: boolean;
-  unlockedAt?: number;
-}
-
-export interface ModelsRiftTimecharmsOutput {
-  timecharms?: ModelsRiftTimecharms[];
-  timecharmsFound?: number;
-}
-
-export interface ModelsRiftOutput {
-  armor?: ModelsArmorResult;
-  castle?: ModelsRiftCastleOutput;
-  enigma?: ModelsRiftEnigmaOutput;
-  equipment?: ModelsEquipmentResult;
-  motes?: ModelsRiftMotesOutput;
-  porhtal?: ModelsRiftPortalsOutput;
-  timecharms?: ModelsRiftTimecharmsOutput;
-  visits?: number;
-}
-
 export type ModelsSkillsSkills = { [key: string]: ModelsSkill };
 
 export interface ModelsSkills {
@@ -1147,41 +1205,6 @@ export interface ModelsSkills {
   averageSkillLevelWithProgress?: number;
   skills?: ModelsSkillsSkills;
   totalSkillXp?: number;
-}
-
-export interface ModelsSkillsOutput {
-  enchanting?: ModelsEnchantingOutput;
-  farming?: ModelsFarmingOutput;
-  fishing?: ModelsFishingOuput;
-  foraging?: ModelsForagingOutput;
-  mining?: ModelsMiningOutput;
-}
-
-export type ModelsSlayerDataKills = { [key: string]: number };
-
-export interface ModelsSlayerLevel {
-  level?: number;
-  maxLevel?: number;
-  maxed?: boolean;
-  xp?: number;
-  xpForNext?: number;
-}
-
-export interface ModelsSlayerData {
-  kills?: ModelsSlayerDataKills;
-  level?: ModelsSlayerLevel;
-  name?: string;
-  texture?: string;
-}
-
-export type ModelsSlayersOutputData = { [key: string]: ModelsSlayerData };
-
-export type ModelsSlayersOutputStats = { [key: string]: number };
-
-export interface ModelsSlayersOutput {
-  data?: ModelsSlayersOutputData;
-  stats?: ModelsSlayersOutputStats;
-  totalSlayerExp?: number;
 }
 
 export interface ModelsStatsInfo {
@@ -1290,40 +1313,6 @@ export const getApiAccessoriesUuidProfileId = async (uuid: string, profileId: st
 };
 
 /**
- * Returns attribute shards stats for the given user and profile ID
- * @summary Get attribute shards stats of a specified player
- */
-export type getApiAttributeShardsUuidProfileIdResponse200 = {
-  data: ModelsAttributeShardsOutput;
-  status: 200;
-};
-
-export type getApiAttributeShardsUuidProfileIdResponse400 = {
-  data: ModelsProcessingError;
-  status: 400;
-};
-
-export type getApiAttributeShardsUuidProfileIdResponseSuccess = getApiAttributeShardsUuidProfileIdResponse200 & {
-  headers: Headers;
-};
-export type getApiAttributeShardsUuidProfileIdResponseError = getApiAttributeShardsUuidProfileIdResponse400 & {
-  headers: Headers;
-};
-
-export type getApiAttributeShardsUuidProfileIdResponse = getApiAttributeShardsUuidProfileIdResponseSuccess | getApiAttributeShardsUuidProfileIdResponseError;
-
-export const getGetApiAttributeShardsUuidProfileIdUrl = (uuid: string, profileId: string) => {
-  return `/api/attribute_shards/${uuid}/${profileId}`;
-};
-
-export const getApiAttributeShardsUuidProfileId = async (uuid: string, profileId: string, options?: RequestInit): Promise<getApiAttributeShardsUuidProfileIdResponse> => {
-  return customFetch<getApiAttributeShardsUuidProfileIdResponse>(getGetApiAttributeShardsUuidProfileIdUrl(uuid, profileId), {
-    ...options,
-    method: "GET"
-  });
-};
-
-/**
  * Returns bestiary for the given user and profile ID
  * @summary Get bestiary stats of a specified player
  */
@@ -1386,6 +1375,45 @@ export const getGetApiCollectionsUuidProfileIdUrl = (uuid: string, profileId: st
 
 export const getApiCollectionsUuidProfileId = async (uuid: string, profileId: string, options?: RequestInit): Promise<getApiCollectionsUuidProfileIdResponse> => {
   return customFetch<getApiCollectionsUuidProfileIdResponse>(getGetApiCollectionsUuidProfileIdUrl(uuid, profileId), {
+    ...options,
+    method: "GET"
+  });
+};
+
+/**
+ * Returns combined  stats for the given user and profile ID
+ * @summary Get combined stats of a specified player
+ */
+export type getApiCombinedUuidProfileIdResponse200 = {
+  data: ModelsCombinedOutput;
+  status: 200;
+};
+
+export type getApiCombinedUuidProfileIdResponse400 = {
+  data: ModelsProcessingError;
+  status: 400;
+};
+
+export type getApiCombinedUuidProfileIdResponse500 = {
+  data: ModelsProcessingError;
+  status: 500;
+};
+
+export type getApiCombinedUuidProfileIdResponseSuccess = getApiCombinedUuidProfileIdResponse200 & {
+  headers: Headers;
+};
+export type getApiCombinedUuidProfileIdResponseError = (getApiCombinedUuidProfileIdResponse400 | getApiCombinedUuidProfileIdResponse500) & {
+  headers: Headers;
+};
+
+export type getApiCombinedUuidProfileIdResponse = getApiCombinedUuidProfileIdResponseSuccess | getApiCombinedUuidProfileIdResponseError;
+
+export const getGetApiCombinedUuidProfileIdUrl = (uuid: string, profileId: string) => {
+  return `/api/combined/${uuid}/${profileId}`;
+};
+
+export const getApiCombinedUuidProfileId = async (uuid: string, profileId: string, options?: RequestInit): Promise<getApiCombinedUuidProfileIdResponse> => {
+  return customFetch<getApiCombinedUuidProfileIdResponse>(getGetApiCombinedUuidProfileIdUrl(uuid, profileId), {
     ...options,
     method: "GET"
   });

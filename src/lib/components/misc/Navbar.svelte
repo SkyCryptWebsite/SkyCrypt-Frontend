@@ -4,7 +4,6 @@
   import { getInternalState, getPreferences, getProfileContext } from "$ctx";
   import ScrollAreaPrimitive from "$lib/components/ScrollAreaPrimitive.svelte";
   import type { SectionName } from "$lib/sections/types";
-  import { getSectionDisplayName } from "$lib/shared/april-fools";
   import { cn } from "$lib/shared/utils";
   import ChevronLeft from "@lucide/svelte/icons/chevron-left";
   import ChevronRight from "@lucide/svelte/icons/chevron-right";
@@ -133,9 +132,7 @@
       <div class={cn("absolute inset-0 bottom-2", preferences.performanceMode ? "group-data-[pinned=true]:bg-header" : "transition duration-50 ease-out group-data-[pinned=true]:group-data-[mode=dark]/html:bg-[oklch(19.13%_0_0)]/90 group-data-[pinned=true]:group-data-[mode=light]/html:bg-[oklch(95.51%_0_0)]/92")}></div>
       {#each filteredSectionOrderPreferences as section, index (index)}
         <Button.Root class="relative motion-preset-focus motion-preset-slide-right px-2 py-3 motion-delay-[calc(sibling-index()*0.05s)] after:absolute after:top-full after:left-0 after:h-0 after:w-full after:origin-top after:rounded-full after:bg-icon after:transition-all after:duration-100 after:ease-out hover:after:top-[calc(100%-4px)] hover:after:h-2 data-[active=true]:text-text data-[active=true]:after:top-[calc(100%-4px)] data-[active=true]:after:h-2" data-id={section.name} data-active={internalState.tabValue === section.name} onclick={() => handleSectionClick(section.name)}>
-          <!-- {section.name?.replaceAll("_", " ")} -->
-
-          {getSectionDisplayName(section.name)}
+          {section.name?.replaceAll("_", " ")}
         </Button.Root>
       {/each}
     </div>
@@ -153,16 +150,14 @@
     {#if previousSection}
       <Button.Root class="flex items-center justify-between rounded-lg bg-icon px-4 py-2 text-lg" onclick={() => handleSectionClick(previousSection.name ?? filteredSectionOrderPreferences[0].name)}>
         <ChevronLeft />
-        <!-- {previousSection.name.replaceAll("_", " ")} -->
-        {getSectionDisplayName(previousSection.name)}
+        {previousSection.name.replaceAll("_", " ")}
       </Button.Root>
     {:else}
       <div></div>
     {/if}
     {#if nextSection}
       <Button.Root class="flex items-center justify-between rounded-lg bg-icon px-4 py-2 text-lg" onclick={() => handleSectionClick(nextSection.name ?? filteredSectionOrderPreferences[filteredSectionOrderPreferences.length - 1].name)}>
-        <!-- {nextSection.name.replaceAll("_", " ")} -->
-        {getSectionDisplayName(nextSection.name)}
+        {nextSection.name.replaceAll("_", " ")}
         <ChevronRight />
       </Button.Root>
     {/if}

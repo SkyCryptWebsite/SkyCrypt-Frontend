@@ -2,7 +2,6 @@
   import { resolve } from "$app/paths";
   import { getFavorites, getHoverContext, getPreferences, getProfileContext } from "$ctx";
   import { APINotice } from "$lib/components/notices";
-  import { getAprilFoolsProfileBadge, isAprilFoolsActive } from "$lib/shared/april-fools";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import CardBuilder from "$src/lib/components/stats/CardBuilder.svelte";
   import Ban from "@lucide/svelte/icons/ban";
@@ -31,7 +30,6 @@
   const favorites = getFavorites();
 
   const apiSettings = $derived(Object.entries(profile?.apiSettings ?? {}).filter(([_, value]) => !value));
-  const aprilFoolsBadge = $derived(getAprilFoolsProfileBadge(profile?.uuid ?? profile?.username ?? profile?.displayName ?? "skycrypt"));
 
   const iconMapper: Record<string, string> = {
     TWITTER: "x-twitter.svg",
@@ -192,11 +190,6 @@
   </div>
 </div>
 <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
-  {#if isAprilFoolsActive()}
-    <div class="rounded-full border border-fuchsia-400/30 bg-fuchsia-500/15 px-3 py-1 text-sm font-semibold text-fuchsia-100 shadow-[0_0_20px_oklch(0.71_0.23_342_/_0.2)]">
-      {aprilFoolsBadge}
-    </div>
-  {/if}
   <div class="flex flex-wrap items-center gap-x-4 gap-y-2 *:motion-preset-focus *:motion-preset-slide-right *:motion-delay-[calc(sibling-index()*0.1s)]">
     <Tooltip.Root bind:open={favoriteTooltipOpen} disableCloseOnTriggerClick={false}>
       <Tooltip.Trigger
