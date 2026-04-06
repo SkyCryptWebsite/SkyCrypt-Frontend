@@ -996,7 +996,6 @@ export interface ModelsCombinedOutput {
   crimsonIsle?: ModelsCrimsonIsleOutput;
   dungeons?: ModelsDungeonsOutput;
   gear?: ModelsGear;
-  inventory?: ModelsStrippedItem[];
   minions?: ModelsMinionsOutput;
   misc?: ModelsMiscOutput;
   pets?: ModelsOutputPets;
@@ -1138,6 +1137,13 @@ export interface ModelsGarden {
   visitors?: ModelsVisitors;
 }
 
+export interface ModelsInventory {
+  items?: ModelsStrippedItem[];
+  name?: string;
+  separatorAfter?: number;
+  texture?: string;
+}
+
 export interface ModelsMemberStats {
   cute_name?: string;
   profile_id?: string;
@@ -1266,118 +1272,11 @@ export type GetApiEmbedUuidParams = {
 
 export type GetApiEmojis200 = { [key: string]: unknown };
 
-export type GetApiInventoryUuidProfileIdInventoryIdParams = {
+export type GetApiInventoryUuidProfileIdParams = {
   /**
    * Search query (required when inventoryId is 'search')
    */
   query?: string;
-};
-
-/**
- * Returns accessories for the given user and profile ID
- * @summary Get accessories stats of a specified player
- */
-export type getApiAccessoriesUuidProfileIdResponse200 = {
-  data: ModelsGetMissingAccessoresOutput;
-  status: 200;
-};
-
-export type getApiAccessoriesUuidProfileIdResponse400 = {
-  data: ModelsProcessingError;
-  status: 400;
-};
-
-export type getApiAccessoriesUuidProfileIdResponse500 = {
-  data: ModelsProcessingError;
-  status: 500;
-};
-
-export type getApiAccessoriesUuidProfileIdResponseSuccess = getApiAccessoriesUuidProfileIdResponse200 & {
-  headers: Headers;
-};
-export type getApiAccessoriesUuidProfileIdResponseError = (getApiAccessoriesUuidProfileIdResponse400 | getApiAccessoriesUuidProfileIdResponse500) & {
-  headers: Headers;
-};
-
-export type getApiAccessoriesUuidProfileIdResponse = getApiAccessoriesUuidProfileIdResponseSuccess | getApiAccessoriesUuidProfileIdResponseError;
-
-export const getGetApiAccessoriesUuidProfileIdUrl = (uuid: string, profileId: string) => {
-  return `/api/accessories/${uuid}/${profileId}`;
-};
-
-export const getApiAccessoriesUuidProfileId = async (uuid: string, profileId: string, options?: RequestInit): Promise<getApiAccessoriesUuidProfileIdResponse> => {
-  return customFetch<getApiAccessoriesUuidProfileIdResponse>(getGetApiAccessoriesUuidProfileIdUrl(uuid, profileId), {
-    ...options,
-    method: "GET"
-  });
-};
-
-/**
- * Returns bestiary for the given user and profile ID
- * @summary Get bestiary stats of a specified player
- */
-export type getApiBestiaryUuidProfileIdResponse200 = {
-  data: ModelsBestiaryOutput;
-  status: 200;
-};
-
-export type getApiBestiaryUuidProfileIdResponse400 = {
-  data: ModelsProcessingError;
-  status: 400;
-};
-
-export type getApiBestiaryUuidProfileIdResponseSuccess = getApiBestiaryUuidProfileIdResponse200 & {
-  headers: Headers;
-};
-export type getApiBestiaryUuidProfileIdResponseError = getApiBestiaryUuidProfileIdResponse400 & {
-  headers: Headers;
-};
-
-export type getApiBestiaryUuidProfileIdResponse = getApiBestiaryUuidProfileIdResponseSuccess | getApiBestiaryUuidProfileIdResponseError;
-
-export const getGetApiBestiaryUuidProfileIdUrl = (uuid: string, profileId: string) => {
-  return `/api/bestiary/${uuid}/${profileId}`;
-};
-
-export const getApiBestiaryUuidProfileId = async (uuid: string, profileId: string, options?: RequestInit): Promise<getApiBestiaryUuidProfileIdResponse> => {
-  return customFetch<getApiBestiaryUuidProfileIdResponse>(getGetApiBestiaryUuidProfileIdUrl(uuid, profileId), {
-    ...options,
-    method: "GET"
-  });
-};
-
-/**
- * Returns collections for the given user and profile ID
- * @summary Get collections stats of a specified player
- */
-export type getApiCollectionsUuidProfileIdResponse200 = {
-  data: ModelsCollectionsOutput;
-  status: 200;
-};
-
-export type getApiCollectionsUuidProfileIdResponse500 = {
-  data: ModelsProcessingError;
-  status: 500;
-};
-
-export type getApiCollectionsUuidProfileIdResponseSuccess = getApiCollectionsUuidProfileIdResponse200 & {
-  headers: Headers;
-};
-export type getApiCollectionsUuidProfileIdResponseError = getApiCollectionsUuidProfileIdResponse500 & {
-  headers: Headers;
-};
-
-export type getApiCollectionsUuidProfileIdResponse = getApiCollectionsUuidProfileIdResponseSuccess | getApiCollectionsUuidProfileIdResponseError;
-
-export const getGetApiCollectionsUuidProfileIdUrl = (uuid: string, profileId: string) => {
-  return `/api/collections/${uuid}/${profileId}`;
-};
-
-export const getApiCollectionsUuidProfileId = async (uuid: string, profileId: string, options?: RequestInit): Promise<getApiCollectionsUuidProfileIdResponse> => {
-  return customFetch<getApiCollectionsUuidProfileIdResponse>(getGetApiCollectionsUuidProfileIdUrl(uuid, profileId), {
-    ...options,
-    method: "GET"
-  });
 };
 
 /**
@@ -1414,74 +1313,6 @@ export const getGetApiCombinedUuidProfileIdUrl = (uuid: string, profileId: strin
 
 export const getApiCombinedUuidProfileId = async (uuid: string, profileId: string, options?: RequestInit): Promise<getApiCombinedUuidProfileIdResponse> => {
   return customFetch<getApiCombinedUuidProfileIdResponse>(getGetApiCombinedUuidProfileIdUrl(uuid, profileId), {
-    ...options,
-    method: "GET"
-  });
-};
-
-/**
- * Returns Crimson Isle stats for the given user and profile ID
- * @summary Get Crimson Isle stats of a specified player
- */
-export type getApiCrimsonIsleUuidProfileIdResponse200 = {
-  data: ModelsCrimsonIsleOutput;
-  status: 200;
-};
-
-export type getApiCrimsonIsleUuidProfileIdResponse400 = {
-  data: ModelsProcessingError;
-  status: 400;
-};
-
-export type getApiCrimsonIsleUuidProfileIdResponseSuccess = getApiCrimsonIsleUuidProfileIdResponse200 & {
-  headers: Headers;
-};
-export type getApiCrimsonIsleUuidProfileIdResponseError = getApiCrimsonIsleUuidProfileIdResponse400 & {
-  headers: Headers;
-};
-
-export type getApiCrimsonIsleUuidProfileIdResponse = getApiCrimsonIsleUuidProfileIdResponseSuccess | getApiCrimsonIsleUuidProfileIdResponseError;
-
-export const getGetApiCrimsonIsleUuidProfileIdUrl = (uuid: string, profileId: string) => {
-  return `/api/crimson_isle/${uuid}/${profileId}`;
-};
-
-export const getApiCrimsonIsleUuidProfileId = async (uuid: string, profileId: string, options?: RequestInit): Promise<getApiCrimsonIsleUuidProfileIdResponse> => {
-  return customFetch<getApiCrimsonIsleUuidProfileIdResponse>(getGetApiCrimsonIsleUuidProfileIdUrl(uuid, profileId), {
-    ...options,
-    method: "GET"
-  });
-};
-
-/**
- * Returns dungeons for the given user and profile ID
- * @summary Get dungeons stats of a specified player
- */
-export type getApiDungeonsUuidProfileIdResponse200 = {
-  data: ModelsDungeonsOutput;
-  status: 200;
-};
-
-export type getApiDungeonsUuidProfileIdResponse400 = {
-  data: ModelsProcessingError;
-  status: 400;
-};
-
-export type getApiDungeonsUuidProfileIdResponseSuccess = getApiDungeonsUuidProfileIdResponse200 & {
-  headers: Headers;
-};
-export type getApiDungeonsUuidProfileIdResponseError = getApiDungeonsUuidProfileIdResponse400 & {
-  headers: Headers;
-};
-
-export type getApiDungeonsUuidProfileIdResponse = getApiDungeonsUuidProfileIdResponseSuccess | getApiDungeonsUuidProfileIdResponseError;
-
-export const getGetApiDungeonsUuidProfileIdUrl = (uuid: string, profileId: string) => {
-  return `/api/dungeons/${uuid}/${profileId}`;
-};
-
-export const getApiDungeonsUuidProfileId = async (uuid: string, profileId: string, options?: RequestInit): Promise<getApiDungeonsUuidProfileIdResponse> => {
-  return customFetch<getApiDungeonsUuidProfileIdResponse>(getGetApiDungeonsUuidProfileIdUrl(uuid, profileId), {
     ...options,
     method: "GET"
   });
@@ -1605,45 +1436,6 @@ export const getApiGardenUuidProfileId = async (uuid: string, profileId: string,
 };
 
 /**
- * Returns gear for the given user and profile ID
- * @summary Get gear stats of a specified player
- */
-export type getApiGearUuidProfileIdResponse200 = {
-  data: ModelsGear;
-  status: 200;
-};
-
-export type getApiGearUuidProfileIdResponse400 = {
-  data: ModelsProcessingError;
-  status: 400;
-};
-
-export type getApiGearUuidProfileIdResponse500 = {
-  data: ModelsProcessingError;
-  status: 500;
-};
-
-export type getApiGearUuidProfileIdResponseSuccess = getApiGearUuidProfileIdResponse200 & {
-  headers: Headers;
-};
-export type getApiGearUuidProfileIdResponseError = (getApiGearUuidProfileIdResponse400 | getApiGearUuidProfileIdResponse500) & {
-  headers: Headers;
-};
-
-export type getApiGearUuidProfileIdResponse = getApiGearUuidProfileIdResponseSuccess | getApiGearUuidProfileIdResponseError;
-
-export const getGetApiGearUuidProfileIdUrl = (uuid: string, profileId: string) => {
-  return `/api/gear/${uuid}/${profileId}`;
-};
-
-export const getApiGearUuidProfileId = async (uuid: string, profileId: string, options?: RequestInit): Promise<getApiGearUuidProfileIdResponse> => {
-  return customFetch<getApiGearUuidProfileIdResponse>(getGetApiGearUuidProfileIdUrl(uuid, profileId), {
-    ...options,
-    method: "GET"
-  });
-};
-
-/**
  * Returns a PNG image of a head for the given texture ID
  * @summary Render and return a head image
  */
@@ -1688,34 +1480,73 @@ export const getApiHeadTextureId = async (textureId: string, options?: RequestIn
 };
 
 /**
- * Returns inventory items for the given user, profile ID, and inventory ID. Supports museum, search, and other inventories.
- * @summary Get inventory items for a specified player
+ * Returns inventory items that match the search parameter for the given user and profile ID. Searches across all inventories and returns items that contain the search parameter in their name or lore.
+ * @summary Get searched inventory items for a specified player and search parameter
  */
-export type getApiInventoryUuidProfileIdInventoryIdResponse200 = {
+export type getApiInventorySearchUuidProfileIdSearchParamResponse200 = {
   data: ModelsStrippedItem[];
   status: 200;
 };
 
-export type getApiInventoryUuidProfileIdInventoryIdResponse400 = {
+export type getApiInventorySearchUuidProfileIdSearchParamResponse400 = {
   data: ModelsProcessingError;
   status: 400;
 };
 
-export type getApiInventoryUuidProfileIdInventoryIdResponse500 = {
+export type getApiInventorySearchUuidProfileIdSearchParamResponse500 = {
   data: ModelsProcessingError;
   status: 500;
 };
 
-export type getApiInventoryUuidProfileIdInventoryIdResponseSuccess = getApiInventoryUuidProfileIdInventoryIdResponse200 & {
+export type getApiInventorySearchUuidProfileIdSearchParamResponseSuccess = getApiInventorySearchUuidProfileIdSearchParamResponse200 & {
   headers: Headers;
 };
-export type getApiInventoryUuidProfileIdInventoryIdResponseError = (getApiInventoryUuidProfileIdInventoryIdResponse400 | getApiInventoryUuidProfileIdInventoryIdResponse500) & {
+export type getApiInventorySearchUuidProfileIdSearchParamResponseError = (getApiInventorySearchUuidProfileIdSearchParamResponse400 | getApiInventorySearchUuidProfileIdSearchParamResponse500) & {
   headers: Headers;
 };
 
-export type getApiInventoryUuidProfileIdInventoryIdResponse = getApiInventoryUuidProfileIdInventoryIdResponseSuccess | getApiInventoryUuidProfileIdInventoryIdResponseError;
+export type getApiInventorySearchUuidProfileIdSearchParamResponse = getApiInventorySearchUuidProfileIdSearchParamResponseSuccess | getApiInventorySearchUuidProfileIdSearchParamResponseError;
 
-export const getGetApiInventoryUuidProfileIdInventoryIdUrl = (uuid: string, profileId: string, inventoryId: string, params?: GetApiInventoryUuidProfileIdInventoryIdParams) => {
+export const getGetApiInventorySearchUuidProfileIdSearchParamUrl = (uuid: string, profileId: string, searchParam: string) => {
+  return `/api/inventory/search/${uuid}/${profileId}/${searchParam}`;
+};
+
+export const getApiInventorySearchUuidProfileIdSearchParam = async (uuid: string, profileId: string, searchParam: string, options?: RequestInit): Promise<getApiInventorySearchUuidProfileIdSearchParamResponse> => {
+  return customFetch<getApiInventorySearchUuidProfileIdSearchParamResponse>(getGetApiInventorySearchUuidProfileIdSearchParamUrl(uuid, profileId, searchParam), {
+    ...options,
+    method: "GET"
+  });
+};
+
+/**
+ * Returns inventory items for the given user, profile ID
+ * @summary Get inventory items for a specified player
+ */
+export type getApiInventoryUuidProfileIdResponse200 = {
+  data: ModelsInventory[];
+  status: 200;
+};
+
+export type getApiInventoryUuidProfileIdResponse400 = {
+  data: ModelsProcessingError;
+  status: 400;
+};
+
+export type getApiInventoryUuidProfileIdResponse500 = {
+  data: ModelsProcessingError;
+  status: 500;
+};
+
+export type getApiInventoryUuidProfileIdResponseSuccess = getApiInventoryUuidProfileIdResponse200 & {
+  headers: Headers;
+};
+export type getApiInventoryUuidProfileIdResponseError = (getApiInventoryUuidProfileIdResponse400 | getApiInventoryUuidProfileIdResponse500) & {
+  headers: Headers;
+};
+
+export type getApiInventoryUuidProfileIdResponse = getApiInventoryUuidProfileIdResponseSuccess | getApiInventoryUuidProfileIdResponseError;
+
+export const getGetApiInventoryUuidProfileIdUrl = (uuid: string, profileId: string, params?: GetApiInventoryUuidProfileIdParams) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -1726,11 +1557,11 @@ export const getGetApiInventoryUuidProfileIdInventoryIdUrl = (uuid: string, prof
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/api/inventory/${uuid}/${profileId}/${inventoryId}?${stringifiedParams}` : `/api/inventory/${uuid}/${profileId}/${inventoryId}`;
+  return stringifiedParams.length > 0 ? `/api/inventory/${uuid}/${profileId}?${stringifiedParams}` : `/api/inventory/${uuid}/${profileId}`;
 };
 
-export const getApiInventoryUuidProfileIdInventoryId = async (uuid: string, profileId: string, inventoryId: string, params?: GetApiInventoryUuidProfileIdInventoryIdParams, options?: RequestInit): Promise<getApiInventoryUuidProfileIdInventoryIdResponse> => {
-  return customFetch<getApiInventoryUuidProfileIdInventoryIdResponse>(getGetApiInventoryUuidProfileIdInventoryIdUrl(uuid, profileId, inventoryId, params), {
+export const getApiInventoryUuidProfileId = async (uuid: string, profileId: string, params?: GetApiInventoryUuidProfileIdParams, options?: RequestInit): Promise<getApiInventoryUuidProfileIdResponse> => {
+  return customFetch<getApiInventoryUuidProfileIdResponse>(getGetApiInventoryUuidProfileIdUrl(uuid, profileId, params), {
     ...options,
     method: "GET"
   });
@@ -1825,74 +1656,6 @@ export const getApiLeatherTypeColor = async (type: string, color: string, option
 };
 
 /**
- * Returns minions for the given user and profile ID
- * @summary Get minions stats of a specified player
- */
-export type getApiMinionsUuidProfileIdResponse200 = {
-  data: ModelsMinionsOutput;
-  status: 200;
-};
-
-export type getApiMinionsUuidProfileIdResponse400 = {
-  data: ModelsProcessingError;
-  status: 400;
-};
-
-export type getApiMinionsUuidProfileIdResponseSuccess = getApiMinionsUuidProfileIdResponse200 & {
-  headers: Headers;
-};
-export type getApiMinionsUuidProfileIdResponseError = getApiMinionsUuidProfileIdResponse400 & {
-  headers: Headers;
-};
-
-export type getApiMinionsUuidProfileIdResponse = getApiMinionsUuidProfileIdResponseSuccess | getApiMinionsUuidProfileIdResponseError;
-
-export const getGetApiMinionsUuidProfileIdUrl = (uuid: string, profileId: string) => {
-  return `/api/minions/${uuid}/${profileId}`;
-};
-
-export const getApiMinionsUuidProfileId = async (uuid: string, profileId: string, options?: RequestInit): Promise<getApiMinionsUuidProfileIdResponse> => {
-  return customFetch<getApiMinionsUuidProfileIdResponse>(getGetApiMinionsUuidProfileIdUrl(uuid, profileId), {
-    ...options,
-    method: "GET"
-  });
-};
-
-/**
- * Returns misc stats for the given user and profile ID
- * @summary Get misc stats of a specified player
- */
-export type getApiMiscUuidProfileIdResponse200 = {
-  data: ModelsMiscOutput;
-  status: 200;
-};
-
-export type getApiMiscUuidProfileIdResponse400 = {
-  data: ModelsProcessingError;
-  status: 400;
-};
-
-export type getApiMiscUuidProfileIdResponseSuccess = getApiMiscUuidProfileIdResponse200 & {
-  headers: Headers;
-};
-export type getApiMiscUuidProfileIdResponseError = getApiMiscUuidProfileIdResponse400 & {
-  headers: Headers;
-};
-
-export type getApiMiscUuidProfileIdResponse = getApiMiscUuidProfileIdResponseSuccess | getApiMiscUuidProfileIdResponseError;
-
-export const getGetApiMiscUuidProfileIdUrl = (uuid: string, profileId: string) => {
-  return `/api/misc/${uuid}/${profileId}`;
-};
-
-export const getApiMiscUuidProfileId = async (uuid: string, profileId: string, options?: RequestInit): Promise<getApiMiscUuidProfileIdResponse> => {
-  return customFetch<getApiMiscUuidProfileIdResponse>(getGetApiMiscUuidProfileIdUrl(uuid, profileId), {
-    ...options,
-    method: "GET"
-  });
-};
-
-/**
  * Returns networth for the given user and profile ID
  * @summary Get networth of a specified player
  */
@@ -1926,40 +1689,6 @@ export const getGetApiNetworthUuidProfileIdUrl = (uuid: string, profileId: strin
 
 export const getApiNetworthUuidProfileId = async (uuid: string, profileId: string, options?: RequestInit): Promise<getApiNetworthUuidProfileIdResponse> => {
   return customFetch<getApiNetworthUuidProfileIdResponse>(getGetApiNetworthUuidProfileIdUrl(uuid, profileId), {
-    ...options,
-    method: "GET"
-  });
-};
-
-/**
- * Returns pets for the given user and profile ID
- * @summary Get pets stats of a specified player
- */
-export type getApiPetsUuidProfileIdResponse200 = {
-  data: ModelsOutputPets;
-  status: 200;
-};
-
-export type getApiPetsUuidProfileIdResponse400 = {
-  data: ModelsProcessingError;
-  status: 400;
-};
-
-export type getApiPetsUuidProfileIdResponseSuccess = getApiPetsUuidProfileIdResponse200 & {
-  headers: Headers;
-};
-export type getApiPetsUuidProfileIdResponseError = getApiPetsUuidProfileIdResponse400 & {
-  headers: Headers;
-};
-
-export type getApiPetsUuidProfileIdResponse = getApiPetsUuidProfileIdResponseSuccess | getApiPetsUuidProfileIdResponseError;
-
-export const getGetApiPetsUuidProfileIdUrl = (uuid: string, profileId: string) => {
-  return `/api/pets/${uuid}/${profileId}`;
-};
-
-export const getApiPetsUuidProfileId = async (uuid: string, profileId: string, options?: RequestInit): Promise<getApiPetsUuidProfileIdResponse> => {
-  return customFetch<getApiPetsUuidProfileIdResponse>(getGetApiPetsUuidProfileIdUrl(uuid, profileId), {
     ...options,
     method: "GET"
   });
@@ -2063,118 +1792,6 @@ export const getGetApiResourcepacksUrl = () => {
 
 export const getApiResourcepacks = async (options?: RequestInit): Promise<getApiResourcepacksResponse> => {
   return customFetch<getApiResourcepacksResponse>(getGetApiResourcepacksUrl(), {
-    ...options,
-    method: "GET"
-  });
-};
-
-/**
- * Returns rift data for the given user and profile ID
- * @summary Get rift stats of a specified player
- */
-export type getApiRiftUuidProfileIdResponse200 = {
-  data: ModelsRiftOutput;
-  status: 200;
-};
-
-export type getApiRiftUuidProfileIdResponse400 = {
-  data: ModelsProcessingError;
-  status: 400;
-};
-
-export type getApiRiftUuidProfileIdResponse500 = {
-  data: ModelsProcessingError;
-  status: 500;
-};
-
-export type getApiRiftUuidProfileIdResponseSuccess = getApiRiftUuidProfileIdResponse200 & {
-  headers: Headers;
-};
-export type getApiRiftUuidProfileIdResponseError = (getApiRiftUuidProfileIdResponse400 | getApiRiftUuidProfileIdResponse500) & {
-  headers: Headers;
-};
-
-export type getApiRiftUuidProfileIdResponse = getApiRiftUuidProfileIdResponseSuccess | getApiRiftUuidProfileIdResponseError;
-
-export const getGetApiRiftUuidProfileIdUrl = (uuid: string, profileId: string) => {
-  return `/api/rift/${uuid}/${profileId}`;
-};
-
-export const getApiRiftUuidProfileId = async (uuid: string, profileId: string, options?: RequestInit): Promise<getApiRiftUuidProfileIdResponse> => {
-  return customFetch<getApiRiftUuidProfileIdResponse>(getGetApiRiftUuidProfileIdUrl(uuid, profileId), {
-    ...options,
-    method: "GET"
-  });
-};
-
-/**
- * Returns skills for the given user and profile ID
- * @summary Get skills stats of a specified player
- */
-export type getApiSkillsUuidProfileIdResponse200 = {
-  data: ModelsSkillsOutput;
-  status: 200;
-};
-
-export type getApiSkillsUuidProfileIdResponse400 = {
-  data: ModelsProcessingError;
-  status: 400;
-};
-
-export type getApiSkillsUuidProfileIdResponse500 = {
-  data: ModelsProcessingError;
-  status: 500;
-};
-
-export type getApiSkillsUuidProfileIdResponseSuccess = getApiSkillsUuidProfileIdResponse200 & {
-  headers: Headers;
-};
-export type getApiSkillsUuidProfileIdResponseError = (getApiSkillsUuidProfileIdResponse400 | getApiSkillsUuidProfileIdResponse500) & {
-  headers: Headers;
-};
-
-export type getApiSkillsUuidProfileIdResponse = getApiSkillsUuidProfileIdResponseSuccess | getApiSkillsUuidProfileIdResponseError;
-
-export const getGetApiSkillsUuidProfileIdUrl = (uuid: string, profileId: string) => {
-  return `/api/skills/${uuid}/${profileId}`;
-};
-
-export const getApiSkillsUuidProfileId = async (uuid: string, profileId: string, options?: RequestInit): Promise<getApiSkillsUuidProfileIdResponse> => {
-  return customFetch<getApiSkillsUuidProfileIdResponse>(getGetApiSkillsUuidProfileIdUrl(uuid, profileId), {
-    ...options,
-    method: "GET"
-  });
-};
-
-/**
- * Returns slayer statistics for the given user and profile ID
- * @summary Get slayer stats of a specified player
- */
-export type getApiSlayerUuidProfileIdResponse200 = {
-  data: ModelsSlayersOutput;
-  status: 200;
-};
-
-export type getApiSlayerUuidProfileIdResponse400 = {
-  data: ModelsProcessingError;
-  status: 400;
-};
-
-export type getApiSlayerUuidProfileIdResponseSuccess = getApiSlayerUuidProfileIdResponse200 & {
-  headers: Headers;
-};
-export type getApiSlayerUuidProfileIdResponseError = getApiSlayerUuidProfileIdResponse400 & {
-  headers: Headers;
-};
-
-export type getApiSlayerUuidProfileIdResponse = getApiSlayerUuidProfileIdResponseSuccess | getApiSlayerUuidProfileIdResponseError;
-
-export const getGetApiSlayerUuidProfileIdUrl = (uuid: string, profileId: string) => {
-  return `/api/slayer/${uuid}/${profileId}`;
-};
-
-export const getApiSlayerUuidProfileId = async (uuid: string, profileId: string, options?: RequestInit): Promise<getApiSlayerUuidProfileIdResponse> => {
-  return customFetch<getApiSlayerUuidProfileIdResponse>(getGetApiSlayerUuidProfileIdUrl(uuid, profileId), {
     ...options,
     method: "GET"
   });
