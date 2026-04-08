@@ -85,7 +85,7 @@
   });
 </script>
 
-<main class="@container mx-auto mt-12 flex max-w-272 flex-col justify-center gap-6 pt-5 pr-[max(1.25rem+env(safe-area-inset-right))] pb-[max(1.25rem+env(safe-area-inset-bottom))] pl-[max(1.25rem+env(safe-area-inset-left))]">
+<main class="@container mx-auto flex max-w-272 flex-col justify-center gap-6 pt-5 pr-[max(1.25rem+env(safe-area-inset-right))] pb-[max(1.25rem+env(safe-area-inset-bottom))] pl-[max(1.25rem+env(safe-area-inset-left))]">
   <div class={cn("flex w-full flex-col justify-center gap-6 rounded-lg py-6 text-3xl", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
     <div class="flex flex-col justify-center gap-2">
       <div class="flex flex-col gap-6">

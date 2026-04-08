@@ -15,6 +15,7 @@
   const packageVersion = __NPM_PACKAGE_VERSION__;
 </script>
 
+<div class="invisible h-12 w-full"></div>
 <header class="@container fixed top-0 left-0 z-30 h-12 w-full overflow-clip bg-header px-2.5 pt-[env(safe-area-inset-top,0)] pr-[max(0.625rem,env(safe-area-inset-right))] pb-[env(safe-area-inset-bottom,0)] pl-[max(0.625rem,env(safe-area-inset-left))] leading-12">
   <div class="flex h-full w-full justify-center @md:justify-between">
     <div class="flex gap-2">
