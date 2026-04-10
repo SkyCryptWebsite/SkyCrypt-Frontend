@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.5.0
+
+### Minor Changes
+
+- feat: use the combined endpoint for the sections data ([#310](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/310))
+
+- feat: refactor inventory components to improve data fetching and rendering logic ([#310](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/310))
+
+### Patch Changes
+
+- fix: refactor SectionBoundary to use query function instead of promise ([#310](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/310))
+
 ## 3.5.0-beta.0
 
 ### Minor Changes
