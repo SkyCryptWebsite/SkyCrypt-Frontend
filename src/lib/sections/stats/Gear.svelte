@@ -1,12 +1,11 @@
 <script lang="ts">
-  import { getProfileContext } from "$ctx";
+  import { getCombinedContext, getProfileContext } from "$ctx";
   import { EmptyEquipment, Item } from "$lib/components/item";
   import { Wardrobe } from "$lib/components/misc";
   import ScrollAreaPrimitive from "$lib/components/ScrollAreaPrimitive.svelte";
   import { Section } from "$lib/components/sections";
   import { Bonus } from "$lib/components/stats";
   import Items from "$lib/layouts/stats/Items.svelte";
-  import { getGearSection } from "$lib/shared/api/skycrypt-api.remote";
   import { getRarityClass, renderLore } from "$lib/shared/helper";
   import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
   import { cn } from "$lib/shared/utils";
@@ -15,19 +14,14 @@
   let { order }: { order: number } = $props();
 
   const profile = $derived(getProfileContext().current);
-  const profileUUID = $derived(profile?.uuid);
-  const profileId = $derived(profile?.profile_id);
-
-  const { armor, equipment, wardrobe, weapons } = $derived(await getGearSection({ uuid: profileUUID!, profileId: profileId! }));
+  const gear = $derived(getCombinedContext().current?.gear);
+  const armor = $derived(gear?.armor);
+  const equipment = $derived(gear?.equipment);
+  const wardrobe = $derived(gear?.wardrobe);
+  const weapons = $derived(gear?.weapons);
   const firstWardrobeItems = $derived.by(() => {
     if (wardrobe?.length === 0) return [];
     return wardrobe?.map((wardrobeItems) => wardrobeItems.find((piece) => piece));
-  });
-
-  $effect.pre(() => {
-    if (!profileUUID || !profileId) {
-      throw new Error("Profile UUID or Profile ID is missing");
-    }
   });
 </script>
 

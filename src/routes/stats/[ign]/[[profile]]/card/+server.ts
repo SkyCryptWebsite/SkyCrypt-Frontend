@@ -5,7 +5,7 @@ import { DefaultCard } from "$src/lib/components/cards";
 import ErrorCard from "$src/lib/components/cards/default/ErrorCard.svelte";
 import { parseSettingsFromParams } from "$src/lib/components/cards/default/schema";
 import { getApiUuidUsername, type ModelsPlayerResolve } from "$src/lib/shared/api/orval-generated";
-import { getDungeonsSection, getNetworth, getProfileStats } from "$src/lib/shared/api/skycrypt-api.remote";
+import { getCombined, getNetworth, getProfileStats } from "$src/lib/shared/api/skycrypt-api.remote";
 import { html as toReactNode } from "satori-html";
 import { render } from "svelte/server";
 import { Renderer, type Font, type ImageSource } from "takumi-js/node";
@@ -32,19 +32,19 @@ export const GET: RequestHandler = async ({ params, request, url }) => {
       // prettier-ignore
       profileData,
       networthData,
-      dungeonsData
+      combinedData
     ] = await Promise.all([
       // prettier-ignore
       getProfileStats({ uuid: user.uuid ?? ign, profileId: profile ?? "" }),
       getNetworth({ uuid: user.uuid ?? ign, profileId: profile ?? "" }),
-      getDungeonsSection({ uuid: user.uuid ?? ign, profileId: profile ?? "" })
+      getCombined({ uuid: user.uuid ?? ign, profileId: profile ?? "" })
     ]);
 
     const { body: renderedHTML } = render(DefaultCard, {
       props: {
         profile: profileData,
         networth: networthData,
-        dungeons: dungeonsData,
+        dungeons: combinedData.dungeons,
         settings
       }
     });

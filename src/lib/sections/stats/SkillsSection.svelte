@@ -16,10 +16,9 @@
 
 <script lang="ts">
   import { beforeNavigate } from "$app/navigation";
-  import { getProfileContext, setSkillsContext, SkillsContext } from "$ctx";
+  import { getCombinedContext, setSkillsContext, SkillsContext } from "$ctx";
   import { ScrollItems } from "$lib/components/misc";
   import { Section } from "$lib/components/sections";
-  import { getSkillsSection } from "$lib/shared/api/skycrypt-api.remote";
   import { type Icon } from "@lucide/svelte";
   import FishIcon from "@lucide/svelte/icons/fish";
   import CrosshairIcon from "@lucide/svelte/icons/crosshair";
@@ -49,16 +48,12 @@
 
   let { order }: { order: number } = $props();
 
-  const profile = $derived(getProfileContext().current);
-  const profileUUID = $derived(profile?.uuid);
-  const profileId = $derived(profile?.profile_id);
-
   const skillsContext = new SkillsContext();
   setSkillsContext(skillsContext);
   const currentTabContext = new CurrentTabContext();
   setCurrentTabContext(currentTabContext);
 
-  const skills = $derived(await getSkillsSection({ uuid: profileUUID!, profileId: profileId! }));
+  const skills = $derived(getCombinedContext().current?.skills);
   const skillTabs = $derived([
     { name: TabNamesEnum.Mining, component: Mining, available: !!skills?.mining, icon: PickaxeIcon },
     { name: TabNamesEnum.Foraging, component: Foraging, available: !!skills?.foraging, icon: TreesIcon },
@@ -88,7 +83,7 @@
   });
 
   $effect(() => {
-    skillsContext.skills = skills;
+    skillsContext.skills = skills ?? null;
   });
 
   $effect(() => {

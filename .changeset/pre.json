@@ -1,0 +1,12 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "skycrypt-frontend": "3.4.1"
+  },
+  "changesets": [
+    "chilly-garlics-divide",
+    "modern-eggs-shave",
+    "ninety-plants-bathe"
+  ]
+}

@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { getProfileContext, MiscContext, setMiscContext } from "$ctx";
+  import { getCombinedContext, MiscContext, setMiscContext } from "$ctx";
   import { Section } from "$lib/components/sections";
-  import { getMiscSection } from "$lib/shared/api/skycrypt-api.remote";
   import Auctions from "./misc/auctions.svelte";
   import Chips from "./misc/chips.svelte";
   import Claimed from "./misc/claimed.svelte";
@@ -17,17 +16,14 @@
   import Upgrades from "./misc/upgrades.svelte";
 
   let { order }: { order: number } = $props();
-  const profile = $derived(getProfileContext().current);
-  const profileUUID = $derived(profile?.uuid);
-  const profileId = $derived(profile?.profile_id);
 
   const miscClass = new MiscContext();
   setMiscContext(miscClass);
 
-  const misc = $derived(await getMiscSection({ uuid: profileUUID!, profileId: profileId! }));
+  const misc = $derived(getCombinedContext().current?.misc);
 
   $effect(() => {
-    miscClass.misc = misc;
+    miscClass.misc = misc ?? null;
   });
 </script>
 

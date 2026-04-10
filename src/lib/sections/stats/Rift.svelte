@@ -1,11 +1,10 @@
 <script lang="ts">
-  import { getProfileContext } from "$ctx";
+  import { getCombinedContext, getProfileContext } from "$ctx";
   import { Item } from "$lib/components/item";
   import { Chip, ScrollItems } from "$lib/components/misc";
   import { Section, SectionSubtitle } from "$lib/components/sections";
   import { AdditionStat, Bonus } from "$lib/components/stats";
   import Items from "$lib/layouts/stats/Items.svelte";
-  import { getRiftSection } from "$lib/shared/api/skycrypt-api.remote";
   import { cn } from "$lib/shared/utils";
   import { tz } from "@date-fns/tz";
   import { formatDate, formatDistanceToNowStrict } from "date-fns";
@@ -15,10 +14,7 @@
 
   const profile = $derived(getProfileContext().current);
 
-  const profileUUID = $derived(profile?.uuid);
-  const profileId = $derived(profile?.profile_id);
-
-  const rift = $derived(await getRiftSection({ uuid: profileUUID!, profileId: profileId! }));
+  const rift = $derived(getCombinedContext().current?.rift);
 
   const equipment = $derived(rift?.equipment);
   const armor = $derived(rift?.armor);

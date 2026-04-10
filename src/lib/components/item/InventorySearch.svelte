@@ -23,8 +23,8 @@
     e.stopPropagation();
   }} />
 {#if debouncedSearch.current === "" || !debouncedSearch.current}{:else}
-  <SectionBoundary promise={searchInventorySection({ uuid, profileId, inventoryId: "search", query: debouncedSearch.current })}>
-    {#snippet children(items)}
+  <SectionBoundary query={() => searchInventorySection({ uuid, profileId, searchParam: debouncedSearch.current! })}>
+    {#snippet children(items: ModelsStrippedItem[])}
       {#if !items || items.length === 0}
         <p class="mx-auto w-fit leading-6">No items found.</p>
       {:else if debouncedSearch.current !== ""}

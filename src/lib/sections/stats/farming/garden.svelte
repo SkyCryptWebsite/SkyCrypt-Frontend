@@ -17,13 +17,6 @@
   const profileId = $derived(profile?.profile_id);
   const gardenLocked = $derived((profile?.skyblock_level?.level ?? 0) <= 5);
   let sectionOpen: boolean = $derived(getCurrentTabContext().current === TabNamesEnum.Farming);
-  let hasOpened = $state(false);
-
-  $effect(() => {
-    if (sectionOpen) {
-      hasOpened = true;
-    }
-  });
 </script>
 
 <Collapsible.Root bind:open={sectionOpen}>
@@ -34,8 +27,8 @@
   <Collapsible.Content>
     {#if gardenLocked}
       <p>This player does not have the Garden unlocked.</p>
-    {:else if hasOpened}
-      <SectionBoundary promise={getGarden({ uuid: profile?.uuid ?? "", profileId: profileId! })}>
+    {:else if sectionOpen}
+      <SectionBoundary query={() => getGarden({ uuid: profile?.uuid ?? "", profileId: profileId! })}>
         {#snippet children(garden)}
           {#if garden}
             {@const hasMaxed = garden.level?.maxed ?? false}

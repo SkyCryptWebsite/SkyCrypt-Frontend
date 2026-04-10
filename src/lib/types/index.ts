@@ -1,5 +1,6 @@
 // Enum for different API endpoint names
 export enum APIEndpointName {
+  COMBINED = "Combined",
   NETWORTH = "Networth",
   SKILLS = "Skills",
   GEAR = "Gear",

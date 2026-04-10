@@ -3,7 +3,7 @@
   import { replaceState } from "$app/navigation";
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
-  import { getHoverContext, getInternalState, getPreferences, getProfileContext, getRecentSearches, ProfileContext, setProfileContext } from "$ctx";
+  import { CombinedContext, CombinedQueryContext, getHoverContext, getInternalState, getPreferences, getProfileContext, getRecentSearches, ProfileContext, setCombinedContext, setCombinedQueryContext, setProfileContext } from "$ctx";
   import { ContainedItemsGrid, ItemContent } from "$lib/components/item";
   import { Navbar } from "$lib/components/misc";
   import Skin3D from "$lib/components/misc/Skin3D.svelte";
@@ -13,6 +13,7 @@
   import Stats from "$lib/layouts/stats/Stats.svelte";
   import Sections from "$lib/sections/Sections.svelte";
   import type { ModelsStatsOutput } from "$lib/shared/api/orval-generated";
+  import { getCombined } from "$lib/shared/api/skycrypt-api.remote";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import Image from "@lucide/svelte/icons/image";
   import { Avatar, Dialog } from "bits-ui";
@@ -44,7 +45,12 @@
 
   // Initialize the profile context
   const profileClass = new ProfileContext();
+  const combinedClass = new CombinedContext();
+  const combinedQueryClass = new CombinedQueryContext();
   setProfileContext(profileClass);
+  setCombinedContext(combinedClass);
+  setCombinedQueryContext(combinedQueryClass);
+  const combined = $derived(ctx.uuid && ctx.profile_id ? getCombined({ uuid: ctx.uuid, profileId: ctx.profile_id }) : null);
 
   function rewriteURL() {
     if (!(ctx as ModelsStatsOutput)) return;
@@ -100,6 +106,11 @@
   // Update the profile context when the data changes
   $effect.pre(() => {
     profileClass.current = profile;
+  });
+
+  $effect.pre(() => {
+    combinedQueryClass.current = combined;
+    combinedClass.current = combined?.current ?? null;
   });
 
   $effect(() => {
@@ -211,7 +222,7 @@
   </div>
 
   <div class={cn("fixed top-0 right-0 min-h-dvh w-full @[75rem]/parent:w-[calc(100%-30vw)]", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")}></div>
-  <main data-vaul-drawer-wrapper class="@container relative mx-auto mt-12 @[75rem]/parent:ml-[30vw]">
+  <main data-vaul-drawer-wrapper class="@container relative mx-auto @[75rem]/parent:ml-[30vw]">
     {#if getProfileContext().current}
       <div class="space-y-5 p-4 @[75rem]/parent:p-8">
         <PlayerProfile />

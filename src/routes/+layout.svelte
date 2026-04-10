@@ -262,7 +262,7 @@
 <CommandPalette {ign} bind:loading={commandLoading} />
 
 {#if internalState.themeEditorOpen && !isMobile.current}
-  <div class={cn("fixed top-12 left-0 isolate z-40 h-[calc(100dvh-3rem)] w-[30vw]", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")} transition:fly={{ x: -300, duration: 300 }}>
+  <div class={cn("fixed left-0 isolate z-40 h-[calc(100dvh-3rem)] w-[30vw]", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")} transition:fly={{ x: -300, duration: 300 }}>
     <ThemeEditor />
   </div>
 {/if}

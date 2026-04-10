@@ -1,10 +1,9 @@
 <script lang="ts">
-  import { getProfileContext } from "$ctx";
+  import { getCombinedContext, getProfileContext } from "$ctx";
   import { Item } from "$lib/components/item";
   import { Section, SectionSubtitle } from "$lib/components/sections";
   import { AdditionStat, Bonus } from "$lib/components/stats";
   import Items from "$lib/layouts/stats/Items.svelte";
-  import { getPetsSection } from "$lib/shared/api/skycrypt-api.remote";
   import { formatNumber, getRarityClass, renderLore, uniqBy } from "$lib/shared/helper";
   import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
   import { cn } from "$lib/shared/utils";
@@ -14,14 +13,11 @@
   let { order }: { order: number } = $props();
 
   const profile = $derived(getProfileContext().current);
-  const profileUUID = $derived(profile?.uuid);
-  const profileId = $derived(profile?.profile_id);
-
-  const pets = $derived(await getPetsSection({ uuid: profileUUID!, profileId: profileId! }));
+  const pets = $derived(getCombinedContext().current?.pets);
 
   const activePet = $derived(pets?.pets?.find((pet) => pet.active === true));
   const uniquePets = $derived(uniqBy(pets?.pets ?? [], "type"));
-  const otherPets = $derived(pets?.pets?.filter((pet) => !uniquePets.includes(pet)));
+  const otherPets = $derived((pets?.pets ?? []).filter((pet) => !uniquePets.includes(pet)));
 </script>
 
 <Section id="Pets" {order}>

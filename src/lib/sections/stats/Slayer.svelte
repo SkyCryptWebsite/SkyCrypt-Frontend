@@ -1,9 +1,8 @@
 <script lang="ts">
-  import { getProfileContext } from "$ctx";
+  import { getCombinedContext, getProfileContext } from "$ctx";
   import { ScrollItems } from "$lib/components/misc";
   import { Section } from "$lib/components/sections";
   import { AdditionStat, Bonus } from "$lib/components/stats";
-  import { getSlayerSection } from "$lib/shared/api/skycrypt-api.remote";
   import { calculatePercentage } from "$lib/shared/helper";
   import Image from "@lucide/svelte/icons/image";
   import { Avatar, Progress } from "bits-ui";
@@ -13,10 +12,7 @@
 
   const profile = $derived(getProfileContext().current);
 
-  const profileUUID = $derived(profile?.uuid);
-  const profileId = $derived(profile?.profile_id);
-
-  const slayer = $derived(await getSlayerSection({ uuid: profileUUID!, profileId: profileId! }));
+  const slayer = $derived(getCombinedContext().current?.slayers);
 </script>
 
 <Section id="Slayer" {order}>
