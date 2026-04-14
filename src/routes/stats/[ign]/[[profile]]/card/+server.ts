@@ -8,18 +8,13 @@ import { getApiUuidUsername, type ModelsPlayerResolve } from "$src/lib/shared/ap
 import { getCombined, getNetworth, getProfileStats } from "$src/lib/shared/api/skycrypt-api.remote";
 import { html as toReactNode } from "satori-html";
 import { render } from "svelte/server";
-import { Renderer, type Font, type ImageSource } from "takumi-js/node";
+import type { Font, ImageSource } from "takumi-js";
 import { ImageResponse } from "takumi-js/response";
 import type { RequestHandler } from "./$types";
 
 const { PUBLIC_ORIGIN: baseUrl } = env;
 
 const { fonts, persistentImages } = await initializeAssets();
-
-const renderer = new Renderer({
-  fonts,
-  persistentImages
-});
 
 export const GET: RequestHandler = async ({ params, request, url }) => {
   const { ign, profile } = params;
@@ -62,7 +57,8 @@ export const GET: RequestHandler = async ({ params, request, url }) => {
       },
       stylesheets: [appStyles],
       emoji: "twemoji",
-      renderer
+      fonts,
+      persistentImages
     });
 
     const response = new Response(await imageResponse.arrayBuffer(), {
@@ -87,7 +83,8 @@ export const GET: RequestHandler = async ({ params, request, url }) => {
         },
         stylesheets: [appStyles],
         emoji: "twemoji",
-        renderer
+        fonts,
+        persistentImages
       });
 
       return new Response(await errorResponse.arrayBuffer(), {

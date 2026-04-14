@@ -1,13 +1,11 @@
 <script lang="ts">
   import { getHoverContext, getInternalState, getPreferences } from "$ctx";
   import Misc from "$lib/components/header/settings/Misc.svelte";
-  import Order from "$lib/components/header/settings/Order.svelte";
   import Packs from "$lib/components/header/settings/Packs.svelte";
   import Themes from "$lib/components/header/settings/Themes.svelte";
   import { SettingsTab } from "$lib/components/header/types";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import Cog from "@lucide/svelte/icons/cog";
-  import ListOrdered from "@lucide/svelte/icons/list-ordered";
   import PackageOpen from "@lucide/svelte/icons/package-open";
   import PaintBucket from "@lucide/svelte/icons/paint-bucket";
   import Settings from "@lucide/svelte/icons/settings";
@@ -33,10 +31,6 @@
         <PaintBucket class="size-5" />
         Themes
       </Tabs.Trigger>
-      <Tabs.Trigger value={SettingsTab.Order} class="flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold data-[state=active]:bg-icon/80">
-        <ListOrdered class="size-5" />
-        Order
-      </Tabs.Trigger>
       <Tabs.Trigger value={SettingsTab.Misc} class="flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold data-[state=active]:bg-icon/80">
         <Settings class="size-5" />
         Misc
@@ -44,7 +38,6 @@
     </Tabs.List>
     <Packs />
     <Themes />
-    <Order />
     <Misc />
   </Tabs.Root>
 {/snippet}

@@ -6,6 +6,7 @@
   import BarChartHorizontal from "@lucide/svelte/icons/bar-chart-horizontal";
   import { Avatar, Progress } from "bits-ui";
   import { format } from "numerable";
+  import { createHover } from "svelte-interactions";
   import { cubicInOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
 
@@ -18,11 +19,10 @@
 
   let { skill, skillData, apiEnabled = true, class: className }: Props = $props();
 
+  const { hoverAction, isHovered } = createHover();
   const isMaxed = $derived(skillData.maxed);
   const preferences = getPreferences();
   const tween = new Tween(100, { duration: 1000, easing: cubicInOut });
-  let isHovered = $state(false);
-
   const skillbarProgress = $derived(100 - parseFloat(calculatePercentage(skillData.xpCurrent ?? 0, isMaxed ? (skillData.xpCurrent ?? 0) : (skillData.xpForNext ?? 0))));
 
   $effect(() => {
@@ -30,7 +30,7 @@
   });
 </script>
 
-<div class={cn("group relative flex grow basis-full flex-col sm:basis-1/3 sm:last:odd:grow sm:last:odd:basis-1/2", !apiEnabled && "opacity-50 grayscale", className)} data-maxed={isMaxed} data-api={apiEnabled} onpointerenter={() => (isHovered = true)} onpointerleave={() => (isHovered = false)} role="none">
+<div class={cn("group relative flex grow basis-full flex-col sm:basis-1/3 sm:last:odd:grow sm:last:odd:basis-1/2", !apiEnabled && "opacity-50 grayscale", className)} data-maxed={isMaxed} data-api={apiEnabled} use:hoverAction role="none">
   <div class={cn("absolute bottom-0 left-0 z-10 flex size-9 items-center justify-center rounded-full p-1 drop-shadow-sm group-data-[api=false]:bg-gray-600 group-data-[maxed=false]:bg-icon group-data-[maxed=true]:bg-maxed", { "group-data-[api=true]:group-data-[maxed=true]:shine": !preferences.performanceMode })}>
     <Avatar.Root class="select-none">
       <Avatar.Image loading="lazy" class="pointer-events-none size-6.5 [image-rendering:pixelated] group-[api=false]:grayscale" src={skillData.texture} alt={skill} />
@@ -50,13 +50,13 @@
     {#if apiEnabled}
       <div class="absolute z-10 flex h-full w-full justify-center">
         <div class="text-xs font-semibold shadow-background/50 text-shadow-md">
-          {#if isHovered && !isMaxed}
+          {#if $isHovered && !isMaxed}
             {format(skillData.xpCurrent, "0,0")} / {format(skillData.xpForNext)}
           {:else if !isMaxed}
             {formatNumber(skillData.xpCurrent ?? 0)} / {formatNumber(skillData.xpForNext ?? 0)}
           {/if}
 
-          {#if isHovered && isMaxed}
+          {#if $isHovered && isMaxed}
             {format(skillData.xpCurrent, "0,0")}
           {:else if isMaxed}
             {formatNumber(skillData.xpCurrent ?? 0)}

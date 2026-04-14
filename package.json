@@ -47,6 +47,7 @@
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
     "@playwright/test": "^1.59.1",
+    "@sveltejs/adapter-cloudflare": "^7.2.8",
     "@sveltejs/adapter-node": "^5.5.4",
     "@sveltejs/kit": "^2.56.1",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
@@ -108,7 +109,8 @@
     "@sentry/sveltekit": "^10.47.0",
     "culori": "^4.0.2",
     "simple-git-hooks": "^2.13.1",
-    "takumi-js": "1.0.0-rc.15"
+    "takumi-js": "1.0.0-rc.15",
+    "svelte-interactions": "^0.2.0"
   },
   "engines": {
     "node": "^24",

@@ -1,7 +1,7 @@
 <script lang="ts">
+  import { version } from "$app/environment";
   import { getHoverContext } from "$ctx";
   import { env } from "$env/dynamic/public";
-  import { PUBLIC_COMMIT_HASH } from "$env/static/public";
   import { flyAndScale } from "$lib/shared/utils";
   import ExternalLink from "@lucide/svelte/icons/external-link";
   import Info from "@lucide/svelte/icons/info";
@@ -12,12 +12,12 @@
 
   const { PUBLIC_DISCORD_INVITE, PUBLIC_PATREON } = env;
   const packageVersion = __NPM_PACKAGE_VERSION__;
-  const commitHash = PUBLIC_COMMIT_HASH;
+  const commitHash = version;
 </script>
 
 {#snippet info()}
   <p class="my-4">SkyCrypt is a free, open-source stats viewer for Hypixel SkyBlock.</p>
-  {#if __NPM_PACKAGE_VERSION__ || PUBLIC_COMMIT_HASH}
+  {#if __NPM_PACKAGE_VERSION__ || version}
     <p>
       Currently running version
       <span class="font-semibold">
