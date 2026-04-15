@@ -1,0 +1,12 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "skycrypt-frontend": "3.5.0"
+  },
+  "changesets": [
+    "blue-planes-brake",
+    "fresh-lamps-share",
+    "gentle-bananas-peel"
+  ]
+}
