@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
+  import { resolve } from "$app/paths";
   import { getFavorites, getPreferences } from "$ctx";
   import { env } from "$env/dynamic/public";
   import { ContributorCard, ContributorCardSkeleton, CtaCard } from "$lib/components/misc";
@@ -102,7 +103,7 @@
 
     try {
       const response = await searchUser({ username }).run();
-      await goto(`/stats/${response.username}`);
+      await goto(resolve("/stats/[ign]", { ign: response.username ?? "" }));
     } catch (err) {
       submittedSearchError = getErrorMessage(err);
     } finally {
