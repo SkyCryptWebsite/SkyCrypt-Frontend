@@ -3,6 +3,7 @@
   import { SettingsTab } from "$lib/components/header/types";
   import { sections } from "$lib/sections/constants";
   import { cn, flyAndScale } from "$lib/shared/utils";
+  import { Feedback } from "@dnd-kit/dom";
   import { RestrictToVerticalAxis } from "@dnd-kit/abstract/modifiers";
   import { move } from "@dnd-kit/helpers";
   import type { DragDropEventHandlers } from "@dnd-kit/svelte";
@@ -154,7 +155,13 @@
 
       <DragDropProvider {onDragEnd} modifiers={(defaults) => [...defaults, RestrictToVerticalAxis]}>
         {#each wikiOrder as wiki, index (wiki.id)}
-          {@const sortable = createSortable({ id: wiki.id, index, feedback: "clone" })}
+          {@const sortable = createSortable({
+            id: wiki.id,
+            get index() {
+              return index;
+            },
+            plugins: [Feedback.configure({ feedback: "clone" })]
+          })}
           {@render wikiRowContent(wiki, sortable, true)}
         {/each}
 

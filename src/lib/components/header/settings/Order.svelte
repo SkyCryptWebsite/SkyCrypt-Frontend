@@ -2,6 +2,7 @@
   import { getPreferences } from "$ctx";
   import { SettingsTab } from "$lib/components/header/types";
   import { sections } from "$lib/sections/constants";
+  import { Feedback } from "@dnd-kit/dom";
   import { RestrictToVerticalAxis } from "@dnd-kit/abstract/modifiers";
   import { move } from "@dnd-kit/helpers";
   import { DragDropProvider, DragOverlay, type DragDropEventHandlers } from "@dnd-kit/svelte";
@@ -36,7 +37,13 @@
   <div class="mt-4 flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto">
     <DragDropProvider {onDragEnd} modifiers={(defaults) => [...defaults, RestrictToVerticalAxis]}>
       {#each sectionOrder as section, index (section.id)}
-        {@const sortable = createSortable({ id: section.id, index, feedback: "clone" })}
+        {@const sortable = createSortable({
+          id: section.id,
+          get index() {
+            return index;
+          },
+          plugins: [Feedback.configure({ feedback: "clone" })]
+        })}
         {@render sectionRowContent(section, sortable, true)}
       {/each}
 
