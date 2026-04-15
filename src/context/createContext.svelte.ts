@@ -1,7 +1,6 @@
 import type { IsHover } from "$lib/hooks/is-hover.svelte";
 import type { IsMobile } from "$lib/hooks/is-mobile.svelte";
 import type { ModelsCombinedOutput, ModelsMiscOutput, ModelsResourcePackConfig, ModelsSkillsOutput, ModelsStatsOutput } from "$lib/shared/api/orval-generated";
-import type { RemoteQuery } from "@sveltejs/kit";
 import { createContext } from "svelte";
 
 export class ProfileContext {
@@ -24,18 +23,6 @@ export class CombinedContext {
   }
 
   set current(value: ModelsCombinedOutput | null) {
-    this.#current = value;
-  }
-}
-
-export class CombinedQueryContext {
-  #current: RemoteQuery<ModelsCombinedOutput> | null = $state(null);
-
-  get current() {
-    return this.#current;
-  }
-
-  set current(value: RemoteQuery<ModelsCombinedOutput> | null) {
     this.#current = value;
   }
 }
@@ -78,7 +65,6 @@ export class SkillsContext {
 
 export const [getProfileContext, setProfileContext] = createContext<ProfileContext>();
 export const [getCombinedContext, setCombinedContext] = createContext<CombinedContext>();
-export const [getCombinedQueryContext, setCombinedQueryContext] = createContext<CombinedQueryContext>();
 export const [getSkillsContext, setSkillsContext] = createContext<SkillsContext>();
 export const [getMiscContext, setMiscContext] = createContext<MiscContext>();
 export const [getMobileContext, setMobileContext] = createContext<IsMobile>();

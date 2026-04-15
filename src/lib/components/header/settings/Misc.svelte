@@ -3,10 +3,11 @@
   import { SettingsTab } from "$lib/components/header/types";
   import { sections } from "$lib/sections/constants";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { RestrictToVerticalAxis } from "@dnd-kit/abstract/modifiers";
+  import { Feedback } from "@dnd-kit/dom";
+  import { OptimisticSortingPlugin, SortableKeyboardPlugin } from "@dnd-kit/dom/sortable";
   import { move } from "@dnd-kit/helpers";
   import type { DragDropEventHandlers } from "@dnd-kit/svelte";
-  import { DragDropProvider, DragOverlay } from "@dnd-kit/svelte";
+  import { DragDropProvider } from "@dnd-kit/svelte";
   import { createSortable } from "@dnd-kit/svelte/sortable";
   import BookOpenText from "@lucide/svelte/icons/book-open-text";
   import CircleQuestionMark from "@lucide/svelte/icons/circle-question-mark";
@@ -26,7 +27,8 @@
   type SortableItem = ReturnType<typeof createSortable>;
 
   let isListening = $state(false);
-  let wikiOrder = $state(wikiOrderContext.current);
+  let wikiOrder = $state([...wikiOrderContext.current]);
+  let providerKey = $state(0);
 
   const defaultSectionOrder = sections;
   const differsFromDefault = $derived(JSON.stringify(preferences.sectionOrder) !== JSON.stringify(defaultSectionOrder));
@@ -56,7 +58,9 @@
   }
 
   function onDragEnd(event: Parameters<NonNullable<DragDropEventHandlers["onDragEnd"]>>[0]) {
-    wikiOrderContext.current = move(wikiOrder, event);
+    wikiOrder = move(wikiOrder, event);
+    wikiOrderContext.current = [...wikiOrder];
+    providerKey += 1;
   }
 </script>
 
@@ -152,21 +156,20 @@
         </div>
       </div>
 
-      <DragDropProvider {onDragEnd} modifiers={(defaults) => [...defaults, RestrictToVerticalAxis]}>
-        {#each wikiOrder as wiki, index (wiki.id)}
-          {@const sortable = createSortable({ id: wiki.id, index, feedback: "clone" })}
-          {@render wikiRowContent(wiki, sortable, true)}
-        {/each}
-
-        <DragOverlay>
-          {#snippet children(source)}
-            {@const activeWiki = wikiOrder.find((wiki) => wiki.id === source.id)}
-            {#if activeWiki}
-              {@render wikiRowContent(activeWiki)}
-            {/if}
-          {/snippet}
-        </DragOverlay>
-      </DragDropProvider>
+      {#key providerKey}
+        <DragDropProvider {onDragEnd}>
+          {#each wikiOrder as wiki, index (wiki.id)}
+            {@const sortable = createSortable({
+              id: wiki.id,
+              get index() {
+                return index;
+              },
+              plugins: [SortableKeyboardPlugin, OptimisticSortingPlugin, Feedback.configure({ feedback: "clone" })]
+            })}
+            {@render wikiRowContent(wiki, sortable, true)}
+          {/each}
+        </DragDropProvider>
+      {/key}
       {#if differsFromDefault}
         <Button.Root
           class="mt-4 w-full rounded-lg bg-text/65 p-1.5 text-sm font-semibold text-background/80 uppercase transition-colors ease-out hover:bg-text/80"

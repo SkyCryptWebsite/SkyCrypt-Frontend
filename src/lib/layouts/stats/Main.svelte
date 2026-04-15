@@ -3,7 +3,7 @@
   import { replaceState } from "$app/navigation";
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
-  import { CombinedContext, CombinedQueryContext, getHoverContext, getInternalState, getPreferences, getProfileContext, getRecentSearches, ProfileContext, setCombinedContext, setCombinedQueryContext, setProfileContext } from "$ctx";
+  import { CombinedContext, getHoverContext, getInternalState, getPreferences, getProfileContext, getRecentSearches, ProfileContext, setCombinedContext, setProfileContext } from "$ctx";
   import { ContainedItemsGrid, ItemContent } from "$lib/components/item";
   import { Navbar } from "$lib/components/misc";
   import Skin3D from "$lib/components/misc/Skin3D.svelte";
@@ -46,10 +46,8 @@
   // Initialize the profile context
   const profileClass = new ProfileContext();
   const combinedClass = new CombinedContext();
-  const combinedQueryClass = new CombinedQueryContext();
   setProfileContext(profileClass);
   setCombinedContext(combinedClass);
-  setCombinedQueryContext(combinedQueryClass);
   const combined = $derived(ctx.uuid && ctx.profile_id ? getCombined({ uuid: ctx.uuid, profileId: ctx.profile_id }) : null);
 
   function rewriteURL() {
@@ -109,7 +107,6 @@
   });
 
   $effect.pre(() => {
-    combinedQueryClass.current = combined;
     combinedClass.current = combined?.current ?? null;
   });
 

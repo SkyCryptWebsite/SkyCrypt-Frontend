@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
+  import { resolve } from "$app/paths";
   import { getInternalState, getPreferences } from "$ctx";
   import { searchUser } from "$lib/shared/api/skycrypt-api.remote";
   import { cn, flyAndScale } from "$lib/shared/utils";
@@ -16,15 +18,32 @@
   let { ign = "", loading = $bindable(false) } = $props();
 
   let commandInput = $state<HTMLElement>(null!);
-  let commandValue = $state<string | undefined>(null!);
+  let commandValue = $state("");
   let searchQuery = $state<string>("");
-  let submittedSearchQuery = $state<string>("");
+  let submittedSearchLoading = $state(false);
+  let submittedSearchError = $state<string>();
 
   const searchQueryValidated = $derived(schema.safeParse({ query: searchQuery }));
-  const searchUserRemoteFn = $derived(submittedSearchQuery ? searchUser({ username: submittedSearchQuery }) : undefined);
 
   const preferences = getPreferences();
   const internalState = getInternalState();
+
+  function getErrorMessage(err: unknown) {
+    const httpError = err as { body?: unknown };
+
+    if (isHttpError(err) && typeof httpError.body === "object" && httpError.body !== null && "message" in httpError.body && typeof httpError.body.message === "string") {
+      return httpError.body.message;
+    }
+
+    return "Something went wrong";
+  }
+
+  function resetSearchState() {
+    commandValue = "";
+    searchQuery = "";
+    submittedSearchLoading = false;
+    submittedSearchError = undefined;
+  }
 
   function customFilter(commandValue: string, search: string, commandKeywords?: string[]): number {
     const score = computeCommandScore(commandValue, search, commandKeywords);
@@ -36,9 +55,27 @@
 
   function closeCommand() {
     internalState.openCommand = false;
-    commandValue = undefined;
-    searchQuery = "";
-    submittedSearchQuery = "";
+    resetSearchState();
+  }
+
+  async function submitSearch() {
+    if (!searchQueryValidated.success) return;
+
+    const username = searchQuery.trim();
+    if (!username) return;
+
+    submittedSearchLoading = true;
+    submittedSearchError = undefined;
+
+    try {
+      const response = await searchUser({ username }).run();
+      closeCommand();
+      await goto(resolve("/stats/[ign]", { ign: response.username ?? "" }));
+    } catch (err) {
+      submittedSearchError = getErrorMessage(err);
+    } finally {
+      submittedSearchLoading = false;
+    }
   }
 
   function handleKeydown(e: KeyboardEvent) {
@@ -46,9 +83,15 @@
     const k = e.key.toLowerCase();
     if (k === "enter" || k === "search") {
       e.preventDefault();
-      submittedSearchQuery = searchQuery;
+      void submitSearch();
     }
   }
+
+  $effect(() => {
+    if (!internalState.openCommand) {
+      resetSearchState();
+    }
+  });
 </script>
 
 <Dialog.Root bind:open={internalState.openCommand}>
@@ -79,11 +122,11 @@
                   type="button"
                   class="flex aspect-square h-full items-center justify-center text-text"
                   onclick={() => {
-                    submittedSearchQuery = searchQuery;
+                    void submitSearch();
                   }}>
                   {#if !searchQueryValidated.success && searchQuery.length > 0}
                     <CircleAlert class="size-4" />
-                  {:else if searchUserRemoteFn?.loading || loading}
+                  {:else if submittedSearchLoading || loading}
                     <LoaderCircle class="size-4 animate-spin" />
                   {:else}
                     <Search class="size-4" />
@@ -95,8 +138,8 @@
               <Command.List class="max-h-120 overflow-x-hidden overflow-y-auto px-2 pb-2">
                 <Command.Viewport>
                   <Command.Empty class="text-muted-foreground flex w-full items-center justify-center pt-8 pb-6 text-sm">
-                    {#if searchUserRemoteFn?.error}
-                      {isHttpError(searchUserRemoteFn.error) ? searchUserRemoteFn.error.body.message : "Something went wrong"}
+                    {#if submittedSearchError}
+                      {submittedSearchError}
                     {:else}
                       Press Enter to search
                     {/if}
@@ -114,16 +157,16 @@
                           class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}
                           keywords={[searchQuery, "search", "find", "profile"]}
                           onSelect={() => {
-                            submittedSearchQuery = searchQuery;
+                            void submitSearch();
                           }}>
-                          {#if searchUserRemoteFn?.loading || loading}
+                          {#if submittedSearchLoading || loading}
                             <LoaderCircle class="size-4 animate-spin" />
                           {:else}
                             <Search class="size-4 text-text" />
                           {/if}
 
-                          {#if searchUserRemoteFn?.error}
-                            {isHttpError(searchUserRemoteFn.error) ? searchUserRemoteFn.error.body.message : "Something went wrong"}
+                          {#if submittedSearchError}
+                            {submittedSearchError}
                           {:else}
                             Search for {searchQuery}
                           {/if}

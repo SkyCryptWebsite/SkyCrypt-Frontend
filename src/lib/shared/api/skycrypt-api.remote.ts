@@ -2,7 +2,7 @@ import { prerender, query } from "$app/server";
 import { getApiCombinedUuidProfileId, getApiEmbedUuid, getApiGardenUuidProfileId, getApiInventorySearchUuidProfileIdSearchParam, getApiInventoryUuidProfileId, getApiNetworthUuidProfileId, getApiPlayerStatsUuidProfileId, getApiResourcepacks, getApiStatsUuidProfileId, getApiUsernameUuid, getApiUuidUsername, type ModelsProcessingError } from "$lib/shared/api/orval-generated";
 import { GetApiCombinedUuidProfileIdParams, GetApiEmbedUuidParams, GetApiEmbedUuidQueryParams, GetApiGardenUuidProfileIdParams, GetApiInventorySearchUuidProfileIdSearchParamParams, GetApiInventoryUuidProfileIdParams, GetApiNetworthUuidProfileIdParams, GetApiPlayerStatsUuidProfileIdParams, GetApiStatsUuidProfileIdParams, GetApiUsernameUuidParams, GetApiUuidUsernameParams } from "$lib/shared/api/orval-generated-zod";
 import { APIEndpointName } from "$types";
-import { error, isHttpError, redirect } from "@sveltejs/kit";
+import { error, isHttpError } from "@sveltejs/kit";
 import z from "zod";
 
 /**
@@ -84,7 +84,7 @@ export const getEmbedData = query(z.object({ ...GetApiEmbedUuidParams.shape, ...
 export const searchUser = query(GetApiUuidUsernameParams, async ({ username }) => {
   const response = await fetchSection(APIEndpointName.SEARCH, () => getApiUuidUsername(username));
   if (response.uuid && response.username) {
-    redirect(303, `/stats/${response.username}`);
+    return response;
   }
   error(404, `No user with the name '${username}' was found`);
 });

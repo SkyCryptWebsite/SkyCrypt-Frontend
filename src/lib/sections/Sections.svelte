@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { getCombinedQueryContext, getInternalState, getPreferences } from "$ctx";
+  import { getInternalState, getPreferences, getProfileContext } from "$ctx";
   import { Notice } from "$lib/components/notices";
   import type { SectionName } from "$lib/sections/types";
+  import { getCombined } from "$lib/shared/api/skycrypt-api.remote";
   import { titleCase } from "$lib/shared/helper";
   import { cn } from "$lib/shared/utils";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
@@ -9,7 +10,8 @@
 
   const preferences = getPreferences();
   const internalState = getInternalState();
-  const combinedQuery = $derived(getCombinedQueryContext().current);
+  const profile = $derived(getProfileContext().current);
+  const combinedQuery = $derived(profile?.uuid && profile?.profile_id ? getCombined({ uuid: profile.uuid, profileId: profile.profile_id }) : null);
   const shouldWaitForCombined = $derived(internalState.tabValue !== "Inventory");
 
   const COMPONENTS = {
