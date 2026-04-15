@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.5.1-beta.1
+
+### Patch Changes
+
+- Fix the settings drag-and-drop lists after the `@dnd-kit/svelte` 0.4.0 upgrade by restoring stable sortable behavior with the updated plugin configuration and provider lifecycle handling. This keeps whole-row dragging working reliably in the Order and Misc settings tabs. ([`0f2bb4b`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/0f2bb4b7f99c46b6beb969e4ba07ee4b6c5eaee8))
+
 ## 3.5.1-beta.0
 
 ### Patch Changes
