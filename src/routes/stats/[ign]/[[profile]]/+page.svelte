@@ -16,6 +16,7 @@
 
   const preferences = getPreferences();
   const internalState = getInternalState();
+  const profileStatsQuery = $derived(getProfileStats({ uuid: page.params.ign || "", profileId: page.params.profile || "" }));
 
   $effect.pre(() => {
     const hash = page.url.hash;
@@ -43,26 +44,30 @@
 {/if}
 
 {#key page.params.ign || page.params.profile}
-  <svelte:boundary>
-    {#snippet pending()}
-      <div class="flex h-screen items-center justify-center">
-        <div class={cn("rounded-lg bg-text/5 p-6", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-sm")}>
-          <div class="flex items-center gap-2">
-            <LoaderCircle class="size-5 animate-spin text-text/60" />
-            <span class="font-semibold text-text/80">Loading profile...</span>
-          </div>
+  {#if profileStatsQuery.error}
+    <div class="flex h-screen items-center justify-center">
+      <Notice title="An unexpected error has occurred" type="error" error={profileStatsQuery.error} retry={() => profileStatsQuery.refresh()} />
+    </div>
+  {:else if profileStatsQuery.current}
+    <svelte:boundary>
+      {#snippet failed(err, reset)}
+        <div class="flex h-screen items-center justify-center">
+          <Notice title="An unexpected error has occurred" type="error" error={err} retry={reset} />
+        </div>
+      {/snippet}
+
+      <Main data={profileStatsQuery.current} />
+    </svelte:boundary>
+  {:else}
+    <div class="flex h-screen items-center justify-center">
+      <div class={cn("rounded-lg bg-text/5 p-6", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-sm")}>
+        <div class="flex items-center gap-2">
+          <LoaderCircle class="size-5 animate-spin text-text/60" />
+          <span class="font-semibold text-text/80">Loading profile...</span>
         </div>
       </div>
-    {/snippet}
-
-    <Main data={await getProfileStats({ uuid: page.params.ign || "", profileId: page.params.profile || "" })} />
-
-    {#snippet failed(err, reset)}
-      <div class="flex h-screen items-center justify-center">
-        <Notice title="An unexpected error has occurred" type="error" error={err} retry={reset} />
-      </div>
-    {/snippet}
-  </svelte:boundary>
+    </div>
+  {/if}
 {/key}
 
 <TooltipSetup />

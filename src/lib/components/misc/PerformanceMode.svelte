@@ -20,7 +20,7 @@
   let shownToast = $state(false);
   let lowFpsStreak = 0;
   let fpsHistory: number[] = [];
-  let isTabActive = $state(true);
+  let isTabActive = true;
   let lastVisibilityChange = 0;
 
   // Handle visibility changes to avoid false positives when tab/window is inactive
