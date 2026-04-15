@@ -177,8 +177,8 @@
     const confirmedAt = surveyPrefs.confirmedAt ? new Date(surveyPrefs.confirmedAt) : null;
     const now = new Date();
 
-    const isDismissedExpired = dismissedAt == null || differenceInHours(now, dismissedAt) > 12;
-    const isConfirmedExpired = confirmedAt == null || differenceInHours(now, confirmedAt) > 12;
+    const isDismissedExpired = dismissedAt == null || differenceInHours(now, dismissedAt) > 1;
+    const isConfirmedExpired = confirmedAt == null || differenceInHours(now, confirmedAt) > 1;
 
     if (isDismissedExpired && isConfirmedExpired) {
       toast.custom(SurveyNotice, {
