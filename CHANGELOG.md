@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.5.1
+
+### Patch Changes
+
+- Fix SvelteKit 2.56 remote query lifecycle regressions by keeping the combined profile query local to the consuming components instead of passing a live query instance through context. This aligns the app with the remote function tracking changes from sveltejs/kit#15533 and the related refresh model changes in sveltejs/kit#15562. ([#313](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/313))
+
+- Reduce Svelte 5 `await_reactivity_loss` warnings after the SvelteKit remote function changes by keeping profile, networth, theme icon, and performance-mode reads in non-async reactive paths. This aligns the affected UI with the stricter query lifecycle introduced around sveltejs/kit#15533. ([#313](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/313))
+
+- Fix search flows after the SvelteKit remote query changes in sveltejs/kit#15533 by switching the home page and command palette to imperative `query().run()` calls with client-side navigation. This removes duplicate search requests, avoids redirect errors from reactive query usage, and resets command palette search state correctly. ([#313](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/313))
+
+- Fix the settings drag-and-drop lists after the `@dnd-kit/svelte` 0.4.0 upgrade by restoring stable sortable behavior with the updated plugin configuration and provider lifecycle handling. This keeps whole-row dragging working reliably in the Order and Misc settings tabs. ([#313](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/313))
+
 ## 3.5.1-beta.1
 
 ### Patch Changes
