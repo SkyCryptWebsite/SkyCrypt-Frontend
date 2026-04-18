@@ -16,7 +16,14 @@
 
   const preferences = getPreferences();
   const internalState = getInternalState();
-  const profileStatsQuery = $derived(getProfileStats({ uuid: page.params.ign || "", profileId: page.params.profile || "" }));
+  const profileStatsState = $derived.by(() => {
+    const query = getProfileStats({ uuid: page.params.ign || "", profileId: page.params.profile || "" });
+
+    return {
+      current: query.current,
+      error: query.error
+    };
+  });
 
   $effect.pre(() => {
     const hash = page.url.hash;
@@ -44,11 +51,11 @@
 {/if}
 
 {#key page.params.ign || page.params.profile}
-  {#if profileStatsQuery.error}
+  {#if profileStatsState.error}
     <div class="flex h-screen items-center justify-center">
-      <Notice title="An unexpected error has occurred" type="error" error={profileStatsQuery.error} retry={() => profileStatsQuery.refresh()} />
+      <Notice title="An unexpected error has occurred" type="error" error={profileStatsState.error} retry={() => getProfileStats({ uuid: page.params.ign || "", profileId: page.params.profile || "" }).refresh()} />
     </div>
-  {:else if profileStatsQuery.current}
+  {:else if profileStatsState.current}
     <svelte:boundary>
       {#snippet failed(err, reset)}
         <div class="flex h-screen items-center justify-center">
@@ -56,7 +63,7 @@
         </div>
       {/snippet}
 
-      <Main data={profileStatsQuery.current} />
+      <Main data={profileStatsState.current} />
     </svelte:boundary>
   {:else}
     <div class="flex h-screen items-center justify-center">

@@ -11,7 +11,18 @@
   const preferences = getPreferences();
   const internalState = getInternalState();
   const profile = $derived(getProfileContext().current);
-  const combinedQuery = $derived(profile?.uuid && profile?.profile_id ? getCombined({ uuid: profile.uuid, profileId: profile.profile_id }) : null);
+  const combinedState = $derived.by(() => {
+    if (!profile?.uuid || !profile?.profile_id) {
+      return { current: null, error: null };
+    }
+
+    const query = getCombined({ uuid: profile.uuid, profileId: profile.profile_id });
+
+    return {
+      current: query.current,
+      error: query.error
+    };
+  });
   const shouldWaitForCombined = $derived(internalState.tabValue !== "Inventory");
 
   const COMPONENTS = {
@@ -39,9 +50,9 @@
   {#if internalState.tabValue in COMPONENTS}
     <Tabs.Root value={internalState.tabValue} class="contents" data-section={internalState.tabValue}>
       <Tabs.Content value={internalState.tabValue} class="section">
-        {#if shouldWaitForCombined && !combinedQuery?.current}
-          {#if combinedQuery?.error}
-            <Notice title="An unexpected error has occurred" type="error" error={combinedQuery.error.message} />
+        {#if shouldWaitForCombined && !combinedState.current}
+          {#if combinedState.error}
+            <Notice title="An unexpected error has occurred" type="error" error={combinedState.error.message} />
           {:else}
             <div class={cn("rounded-lg bg-text/5 p-6", preferences.performanceMode ? "bg-background-lore" : "backdrop-blur-sm")}>
               <div class="flex items-center gap-2">
