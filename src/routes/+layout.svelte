@@ -163,7 +163,6 @@
 
     if (packsData) packs.packs = packsData;
   });
-
 </script>
 
 <svelte:document onkeydown={handleKeydown} />
