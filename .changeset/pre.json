@@ -1,0 +1,11 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "skycrypt-frontend": "3.5.1"
+  },
+  "changesets": [
+    "rare-snakes-vanish",
+    "ten-trees-beg"
+  ]
+}

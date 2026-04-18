@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.5.2-beta.0
+
+### Patch Changes
+
+- Fix remaining SvelteKit remote query lifecycle regressions by replacing stored live query instances with plain reactive snapshots in the stats route, combined section loading, inventory, networth, additional stats, and header theme icon flows. This aligns the app more closely with the stricter remote query behavior introduced around sveltejs/kit#15533 and prevents inactive query access during tab and section transitions. ([`3dd3f2f`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/3dd3f2fa7d77e2668c90755ec5e18933838c2752))
+
+- Improve the mobile stats header and profile action layout by collapsing the search trigger earlier on small screens and keeping the expanded profile actions inline with the always-visible buttons while preserving their staggered animation timing. ([`c677cbb`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/c677cbb95be31fcb9887beca90cdb607ade05efd))
+
 ## 3.5.1
 
 ### Patch Changes
