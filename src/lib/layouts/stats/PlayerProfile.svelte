@@ -6,7 +6,6 @@
   import CardBuilder from "$src/lib/components/stats/CardBuilder.svelte";
   import Ban from "@lucide/svelte/icons/ban";
   import ChevronLeft from "@lucide/svelte/icons/chevron-left";
-  import ChevronRight from "@lucide/svelte/icons/chevron-right";
   import ExternalLink from "@lucide/svelte/icons/external-link";
   import Link from "@lucide/svelte/icons/link";
   import Star from "@lucide/svelte/icons/star";
@@ -189,124 +188,118 @@
     {/if}
   </div>
 </div>
-<div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
-  <div class="flex flex-wrap items-center gap-x-4 gap-y-2 *:motion-preset-focus *:motion-preset-slide-right *:motion-delay-[calc(sibling-index()*0.1s)]">
-    <Tooltip.Root bind:open={favoriteTooltipOpen} disableCloseOnTriggerClick={false}>
-      <Tooltip.Trigger
-        class="aspect-square rounded-full bg-icon/90 p-2 transition-opacity duration-150 ease-out hover:bg-icon"
-        onclick={() => {
-          if (profile == null) return;
-          if (!favorites.current.some((fav) => fav.uuid === profile.uuid)) {
-            favorites.current = [...favorites.current, { uuid: profile.uuid ?? "", ign: profile.username ?? "", displayName: profile.displayName ?? undefined }];
-            toast.dismiss(toastId);
-            toastId = toast.success(`Added ${profile.username} to your favorites!`);
-          } else {
-            favorites.current = favorites.current.filter((fav) => fav.uuid !== profile.uuid);
-            toast.dismiss(toastId);
-            toastId = toast.success(`Removed ${profile.username} from your favorites!`);
-          }
-        }}
-        onpointerdown={() => (favoriteTooltipOpen = !favoriteTooltipOpen)}>
-        {#snippet child({ props })}
-          <button {...props}>
-            {#if favorites.current.some((fav) => fav.uuid === profile?.uuid)}
-              <Star class="size-4 fill-white" />
-            {:else}
-              <Star class="size-4" />
-            {/if}
-          </button>
-        {/snippet}
-      </Tooltip.Trigger>
-      <Tooltip.Portal>
-        <Tooltip.Content forceMount class="z-50 rounded-lg bg-background-grey p-4 font-semibold text-text/80" sideOffset={6} side="top" align="center">
-          {#snippet child({ wrapperProps, props, open })}
-            {#if open}
-              <div {...wrapperProps}>
-                <div {...props} transition:flyAndScale>
-                  <Tooltip.Arrow />
-                  {#if favorites.current.some((fav) => fav.uuid === profile?.uuid)}
-                    <p>Remove from favorites</p>
-                  {:else}
-                    <p>Add to favorites</p>
-                  {/if}
-                </div>
-              </div>
-            {/if}
-          {/snippet}
-        </Tooltip.Content>
-      </Tooltip.Portal>
-    </Tooltip.Root>
-
-    <Button.Root
+<div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 *:motion-preset-focus *:motion-preset-slide-right *:motion-delay-[calc(sibling-index()*0.1s)]">
+  <Tooltip.Root bind:open={favoriteTooltipOpen} disableCloseOnTriggerClick={false}>
+    <Tooltip.Trigger
       class="aspect-square rounded-full bg-icon/90 p-2 transition-opacity duration-150 ease-out hover:bg-icon"
       onclick={() => {
-        copyToClipboard(window.location.href);
-      }}>
-      <Link class="size-4" />
-    </Button.Root>
-
-    <CardBuilder />
-
-    <Button.Root href={`https://plancke.io/hypixel/player/stats/${profile?.username}`} target="_blank" class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon">
-      Plancke <ExternalLink class="size-4" />
-    </Button.Root>
-
-    <Button.Root href={`https://eliteskyblock.com/@${profile?.username}/${profile?.profile_cute_name}`} target="_blank" class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon">
-      Elite <ExternalLink class="size-4" />
-    </Button.Root>
-  </div>
-  {#if showMore}
-    <div class="flex flex-wrap items-center gap-x-4 gap-y-2 *:motion-preset-focus *:motion-preset-slide-right *:motion-delay-[calc(sibling-index()*0.1s)]">
-      <Button.Root
-        class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon"
-        onclick={() => {
-          copyToClipboard(profile?.uuid ?? "");
-        }}>
-        Copy UUID
-      </Button.Root>
-
-      <Button.Root
-        class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon"
-        onclick={() => {
-          copyToClipboard(profile?.profile_id ?? "");
-        }}>
-        Copy Profile UUID
-      </Button.Root>
-
-      {#if profile?.social}
-        {#each Object.entries(profile.social) as [key, value], index (index)}
-          {#if key === "DISCORD"}
-            <Button.Root class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon" onclick={() => copyToClipboard(value)}>
-              <Avatar.Root>
-                <Avatar.Image loading="lazy" src="/img/icons/{iconMapper[key]}" alt="{profile.username}'s {key.toLocaleLowerCase()}" class="size-4 text-white" />
-                <Avatar.Fallback>
-                  {profile.username?.slice(0, 2)}
-                </Avatar.Fallback>
-              </Avatar.Root>
-              {value}
-            </Button.Root>
+        if (profile == null) return;
+        if (!favorites.current.some((fav) => fav.uuid === profile.uuid)) {
+          favorites.current = [...favorites.current, { uuid: profile.uuid ?? "", ign: profile.username ?? "", displayName: profile.displayName ?? undefined }];
+          toast.dismiss(toastId);
+          toastId = toast.success(`Added ${profile.username} to your favorites!`);
+        } else {
+          favorites.current = favorites.current.filter((fav) => fav.uuid !== profile.uuid);
+          toast.dismiss(toastId);
+          toastId = toast.success(`Removed ${profile.username} from your favorites!`);
+        }
+      }}
+      onpointerdown={() => (favoriteTooltipOpen = !favoriteTooltipOpen)}>
+      {#snippet child({ props })}
+        <button {...props}>
+          {#if favorites.current.some((fav) => fav.uuid === profile?.uuid)}
+            <Star class="size-4 fill-white" />
           {:else}
-            <Button.Root href={value} target="_blank" class="flex aspect-square items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon">
-              <Avatar.Root>
-                <Avatar.Image loading="lazy" src="/img/icons/{iconMapper[key]}" alt="{profile.username}'s {key.toLocaleLowerCase()}" class="size-4 text-white" />
-                <Avatar.Fallback>
-                  {profile.username?.slice(0, 2)}
-                </Avatar.Fallback>
-              </Avatar.Root>
-            </Button.Root>
+            <Star class="size-4" />
           {/if}
-        {/each}
-      {/if}
-    </div>
-  {/if}
+        </button>
+      {/snippet}
+    </Tooltip.Trigger>
+    <Tooltip.Portal>
+      <Tooltip.Content forceMount class="z-50 rounded-lg bg-background-grey p-4 font-semibold text-text/80" sideOffset={6} side="top" align="center">
+        {#snippet child({ wrapperProps, props, open })}
+          {#if open}
+            <div {...wrapperProps}>
+              <div {...props} transition:flyAndScale>
+                <Tooltip.Arrow />
+                {#if favorites.current.some((fav) => fav.uuid === profile?.uuid)}
+                  <p>Remove from favorites</p>
+                {:else}
+                  <p>Add to favorites</p>
+                {/if}
+              </div>
+            </div>
+          {/if}
+        {/snippet}
+      </Tooltip.Content>
+    </Tooltip.Portal>
+  </Tooltip.Root>
+
+  <Button.Root
+    class="aspect-square rounded-full bg-icon/90 p-2 transition-opacity duration-150 ease-out hover:bg-icon"
+    onclick={() => {
+      copyToClipboard(window.location.href);
+    }}>
+    <Link class="size-4" />
+  </Button.Root>
+
+  <CardBuilder />
+
+  <Button.Root href={`https://plancke.io/hypixel/player/stats/${profile?.username}`} target="_blank" class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon">
+    Plancke <ExternalLink class="size-4" />
+  </Button.Root>
+
+  <Button.Root href={`https://eliteskyblock.com/@${profile?.username}/${profile?.profile_cute_name}`} target="_blank" class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon">
+    Elite <ExternalLink class="size-4" />
+  </Button.Root>
 
   <Button.Root class="motion-preset-focus motion-preset-slide-right rounded-full bg-icon/90 p-2 transition-opacity duration-150 ease-out motion-delay-[0.4s] hover:bg-icon" onclick={() => (showMore = !showMore)}>
-    {#if showMore}
-      <ChevronLeft class="size-4" />
-    {:else}
-      <ChevronRight class="size-4" />
-    {/if}
+    <ChevronLeft class="size-4 transition-[rotate] duration-300 data-[show=true]:rotate-180" data-show={showMore} />
   </Button.Root>
+  {#if showMore}
+    <Button.Root
+      class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon"
+      style="animation-delay: 0s"
+      onclick={() => {
+        copyToClipboard(profile?.uuid ?? "");
+      }}>
+      Copy UUID
+    </Button.Root>
+
+    <Button.Root
+      class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon"
+      style="animation-delay: 0.1s"
+      onclick={() => {
+        copyToClipboard(profile?.profile_id ?? "");
+      }}>
+      Copy Profile UUID
+    </Button.Root>
+
+    {#if profile?.social}
+      {#each Object.entries(profile.social) as [key, value], index (index)}
+        {#if key === "DISCORD"}
+          <Button.Root class="flex items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon" style={`animation-delay: ${(index + 2) * 0.1}s`} onclick={() => copyToClipboard(value)}>
+            <Avatar.Root>
+              <Avatar.Image loading="lazy" src="/img/icons/{iconMapper[key]}" alt="{profile.username}'s {key.toLocaleLowerCase()}" class="size-4 text-white" />
+              <Avatar.Fallback>
+                {profile.username?.slice(0, 2)}
+              </Avatar.Fallback>
+            </Avatar.Root>
+            {value}
+          </Button.Root>
+        {:else}
+          <Button.Root href={value} target="_blank" class="flex aspect-square items-center justify-center gap-1.5 rounded-full bg-icon/90 px-2 py-1 font-semibold transition-opacity duration-150 ease-out hover:bg-icon" style={`animation-delay: ${(index + 2) * 0.1}s`}>
+            <Avatar.Root>
+              <Avatar.Image loading="lazy" src="/img/icons/{iconMapper[key]}" alt="{profile.username}'s {key.toLocaleLowerCase()}" class="size-4 text-white" />
+              <Avatar.Fallback>
+                {profile.username?.slice(0, 2)}
+              </Avatar.Fallback>
+            </Avatar.Root>
+          </Button.Root>
+        {/if}
+      {/each}
+    {/if}
+  {/if}
 </div>
 
 {#snippet profileIcon(gameMode: string)}

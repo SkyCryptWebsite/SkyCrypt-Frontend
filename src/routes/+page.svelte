@@ -76,17 +76,6 @@
         src: "/img/icons/discord.svg",
         alt: "Discord logo"
       }
-    },
-    {
-      href: "https://forms.gle/wUSHhr8EACviaQVq8",
-      text: {
-        title: "Skyblock General Survey",
-        description: "Let us know what you think about the site and what features you'd like to see in the future"
-      },
-      img: {
-        src: "/img/icons/google-forms.svg",
-        alt: "Google Forms"
-      }
     }
   ];
 

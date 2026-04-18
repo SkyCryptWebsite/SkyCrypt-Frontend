@@ -11,7 +11,7 @@
   const preferences = getPreferences();
   const internalState = getInternalState();
   const theme = getTheme();
-  const themeIconQuery = $derived(getThemeIcons({ color: theme.activeTheme?.colors?.logo, invert: theme.activeTheme?.light }));
+  const themeIcon = $derived(getThemeIcons({ color: theme.activeTheme?.colors?.logo, invert: theme.activeTheme?.light }).current);
 
   const packageVersion = __NPM_PACKAGE_VERSION__;
 </script>
@@ -22,8 +22,8 @@
     <div class="flex gap-2">
       <Button.Root href="/" class="flex items-center justify-center gap-2 font-bold" data-sveltekit-preload-data="hover">
         <Avatar.Root class="size-6 shrink-0 rounded-lg select-none">
-          {#if themeIconQuery.current}
-            <Avatar.Image loading="lazy" src="data:image/svg+xml;base64,{btoa(themeIconQuery.current)}" alt="SkyCrypt" class="pointer-events-none h-6 select-none" />
+          {#if themeIcon}
+            <Avatar.Image loading="lazy" src="data:image/svg+xml;base64,{btoa(themeIcon)}" alt="SkyCrypt" class="pointer-events-none h-6 select-none" />
           {:else}
             <Avatar.Image loading="lazy" src="/img/app-icons/svg.svg" alt="SkyCrypt" class="pointer-events-none h-6 select-none" />
           {/if}
@@ -48,8 +48,8 @@
 
     {#if page.url.pathname.startsWith("/stats")}
       <div class="mx-auto my-1.5 w-full max-w-lg px-4 @[38rem]:block">
-        <Button.Root class="relative flex h-full w-4/5 items-center justify-start overflow-clip rounded-[1.125rem] bg-background/20 @[38rem]:w-full" onpointerdown={() => (internalState.openCommand = true)}>
-          <div class="peer flex h-full w-full shrink items-center rounded-r-3xl bg-transparent pr-0 pl-2 text-xs font-semibold text-text/80 outline-hidden transition-[colors_border-radius_opacity] duration-300 ease-out hover:rounded-r-none hover:bg-background/20 focus-visible:rounded-r-none focus-visible:bg-background/20 focus-visible:ring-transparent focus-visible:outline-hidden @[38rem]:grow @[38rem]:pl-4 @[38rem]:text-base">Press <kbd class="mx-1 rounded-sm bg-background/20 px-1">{preferences.keybind}</kbd> to search</div>
+        <Button.Root class="relative mx-auto flex h-full items-center justify-start overflow-clip rounded-[1.125rem] bg-background/20 @[26rem]:w-4/5 @[38rem]:w-full" onpointerdown={() => (internalState.openCommand = true)}>
+          <div class="peer hidden h-full w-full shrink items-center rounded-r-3xl bg-transparent pr-0 pl-2 text-xs font-semibold whitespace-nowrap text-text/80 outline-hidden transition-[colors_border-radius_opacity] duration-300 ease-out hover:rounded-r-none hover:bg-background/20 focus-visible:rounded-r-none focus-visible:bg-background/20 focus-visible:ring-transparent focus-visible:outline-hidden @[26rem]:flex @[38rem]:grow @[38rem]:pl-4 @[38rem]:text-base">Press <kbd class="mx-1 rounded-sm bg-background/20 px-1">{preferences.keybind}</kbd> to search</div>
 
           <div class="flex aspect-square h-full items-center justify-center rounded-full bg-background/15 transition-all duration-300 ease-out peer-hover:rounded-l-none peer-hover:bg-background/20 peer-focus-visible:rounded-l-none peer-focus-visible:bg-background/20 @[38rem]:aspect-video @[38rem]:px-4">
             <Search class="size-4 text-text @[38rem]:size-6" />

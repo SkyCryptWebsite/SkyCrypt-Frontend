@@ -4,3 +4,5 @@ allowBuilds:
   esbuild: true
   simple-git-hooks: true
   svelte-preprocess: true
+
+minimumReleaseAge: 1440 # 1 day
