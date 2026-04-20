@@ -1,0 +1,10 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "skycrypt-frontend": "3.5.2"
+  },
+  "changesets": [
+    "wet-apples-sell"
+  ]
+}
