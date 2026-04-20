@@ -2,7 +2,6 @@
   import { getInternalState, getPreferences } from "$ctx";
   import { SettingsTab } from "$lib/components/header/types";
   import { cn } from "$lib/shared/utils";
-  import BookOpenText from "@lucide/svelte/icons/book-open-text";
   import Fan from "@lucide/svelte/icons/fan";
   import Keyboard from "@lucide/svelte/icons/keyboard";
   import ListOrdered from "@lucide/svelte/icons/list-ordered";
@@ -48,14 +47,6 @@
       keywords: ["order", "change", "section", "settings"],
       label: "Change Section Order",
       tab: SettingsTab.Order
-    },
-    {
-      type: "tab",
-      value: "wiki-order",
-      icon: BookOpenText,
-      keywords: ["order", "misc", "change", "wiki", "settings"],
-      label: "Change Wiki Order",
-      tab: SettingsTab.Misc
     },
     {
       type: "tab",
