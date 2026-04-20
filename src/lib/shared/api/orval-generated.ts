@@ -17,11 +17,6 @@ export interface ModelsSourceTab {
   name?: string;
 }
 
-export interface ModelsWikipediaLinks {
-  fandom?: string;
-  official?: string;
-}
-
 export interface ModelsStrippedItem {
   Count?: number;
   containsItems?: ModelsStrippedItem[];
@@ -35,7 +30,7 @@ export interface ModelsStrippedItem {
   sourceTab?: ModelsSourceTab;
   texture_pack?: string;
   texture_path?: string;
-  wiki?: ModelsWikipediaLinks;
+  wiki?: string;
 }
 
 export interface ModelsArmorResult {
@@ -818,7 +813,7 @@ export interface ModelsProcessedItem {
   tag?: SkycrypttypesTag;
   texture_pack?: string;
   texture_path?: string;
-  wiki?: ModelsWikipediaLinks;
+  wiki?: string;
 }
 
 export interface ModelsHotfTokens {
