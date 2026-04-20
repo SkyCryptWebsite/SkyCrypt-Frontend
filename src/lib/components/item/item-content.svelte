@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getPacksContext, getPreferences, getWikiOrder, type WikiOrderData } from "$ctx";
+  import { getPacksContext, getPreferences } from "$ctx";
   import type { ModelsStrippedItem } from "$lib/shared/api/orval-generated";
   import { getRarityClass, removeFormatting, renderLore } from "$lib/shared/helper";
   import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
@@ -18,8 +18,6 @@
   let { piece, isDrawer }: Props = $props();
   const preferences = getPreferences();
 
-  const wikiOrderContext = getWikiOrder();
-
   const skyblockItem = $derived(piece);
   const itemName = $derived(piece?.display_name);
   const itemNameHtml = $derived(itemName ? renderLore(itemName) : "");
@@ -30,31 +28,6 @@
   const hasColor = $derived(skyblockItem?.lore?.some((lore) => lore.includes("Color:")) ?? false);
   const packs = $derived(getPacksContext().packs);
   const packData = $derived(packs?.find((pack) => pack.id === skyblockItem?.texture_pack));
-
-  // Get the wiki link for the item
-  const wikiInfo = $derived.by<Omit<WikiOrderData, "id"> | undefined>(() => {
-    const wiki = skyblockItem?.wiki;
-    if (!wiki) return undefined;
-
-    // Try to get the preferred wiki link first, then fall back to any available link
-    const preference = wikiOrderContext.current[0].name.toLowerCase();
-
-    // Type-safe approach: check if the preference is a valid key
-    if (preference === "independent" && wiki.independent) {
-      return { link: wiki.independent, name: "Independent" };
-    } else if (preference === "official" && wiki.official) {
-      return { link: wiki.official, name: "Official" };
-    }
-
-    // If no preferred links are available, return any available link or null
-    if (wiki.independent) {
-      return { link: wiki.independent, name: "Independent" };
-    } else if (wiki.official) {
-      return { link: wiki.official, name: "Official" };
-    }
-
-    return undefined;
-  });
 </script>
 
 <div class="group/itemtooltip data-[mctooltip=false]:contents data-[mctooltip=true]:relative data-[mctooltip=true]:rounded-lg data-[mctooltip=true]:bg-mctooltip-bg data-[mctooltip=true]:p-0.5" {@attach animateObfuscatedText} data-mctooltip={preferences.mctooltip}>
@@ -152,8 +125,8 @@
             </Button.Root>
           {/if}
 
-          {#if wikiInfo}
-            <Button.Root href={wikiInfo.link} target="_blank" class="flex shrink items-center justify-center rounded-[0.625rem] bg-text/5 p-2 whitespace-nowrap transition-colors ease-out hover:bg-text/8">
+          {#if skyblockItem?.wiki}
+            <Button.Root href={skyblockItem?.wiki} target="_blank" class="flex shrink items-center justify-center rounded-[0.625rem] bg-text/5 p-2 whitespace-nowrap transition-colors ease-out hover:bg-text/8">
               <Info class="mr-2 ml-2 size-6 p-0" />
             </Button.Root>
           {/if}

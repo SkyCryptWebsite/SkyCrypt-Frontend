@@ -5,2497 +5,1807 @@
  * API for SkyCrypt - A Hypixel SkyBlock Stats Viewer
  * OpenAPI spec version: 1.0
  */
-import * as zod from "zod";
+import * as zod from 'zod';
 
 /**
  * Returns combined  stats for the given user and profile ID
  * @summary Get combined stats of a specified player
  */
 export const GetApiCombinedUuidProfileIdParams = zod.object({
-  uuid: zod.string().describe("User UUID"),
-  profileId: zod.string().describe("Profile ID")
-});
+  "uuid": zod.string().describe('User UUID'),
+  "profileId": zod.string().describe('Profile ID')
+})
 
 export const GetApiCombinedUuidProfileIdResponse = zod.object({
-  accessories: zod
-    .object({
-      accessories: zod
-        .array(
-          zod.object({
-            Count: zod.number().optional(),
-            containsItems: zod.array(zod.unknown()).optional(),
-            display_name: zod.string().optional(),
-            isInactive: zod.boolean().optional(),
-            lore: zod.array(zod.string()).optional(),
-            rarity: zod.string().optional(),
-            recombobulated: zod.boolean().optional(),
-            shiny: zod.boolean().optional(),
-            source: zod.string().optional(),
-            sourceTab: zod
-              .object({
-                icon: zod.string().optional(),
-                name: zod.string().optional()
-              })
-              .optional(),
-            texture_pack: zod.string().optional(),
-            texture_path: zod.string().optional(),
-            wiki: zod
-              .object({
-                fandom: zod.string().optional(),
-                official: zod.string().optional()
-              })
-              .optional()
-          })
-        )
-        .optional(),
-      enrichments: zod.record(zod.string(), zod.number()).optional(),
-      magicalPower: zod
-        .object({
-          abiphone: zod.number().optional(),
-          accessories: zod.number().optional(),
-          hegemony: zod
-            .object({
-              amount: zod.number().optional(),
-              rarity: zod.string().optional()
-            })
-            .optional(),
-          rarities: zod
-            .record(
-              zod.string(),
-              zod.object({
-                amount: zod.number().optional(),
-                magicalPower: zod.number().optional()
-              })
-            )
-            .optional(),
-          riftPrism: zod.number().optional(),
-          total: zod.number().optional()
-        })
-        .optional(),
-      missing: zod
-        .array(
-          zod.object({
-            Count: zod.number().optional(),
-            containsItems: zod.array(zod.unknown()).optional(),
-            display_name: zod.string().optional(),
-            isInactive: zod.boolean().optional(),
-            lore: zod.array(zod.string()).optional(),
-            rarity: zod.string().optional(),
-            recombobulated: zod.boolean().optional(),
-            shiny: zod.boolean().optional(),
-            source: zod.string().optional(),
-            sourceTab: zod
-              .object({
-                icon: zod.string().optional(),
-                name: zod.string().optional()
-              })
-              .optional(),
-            texture_pack: zod.string().optional(),
-            texture_path: zod.string().optional(),
-            wiki: zod
-              .object({
-                fandom: zod.string().optional(),
-                official: zod.string().optional()
-              })
-              .optional()
-          })
-        )
-        .optional(),
-      recombobulated: zod.number().optional(),
-      selectedPower: zod.string().optional(),
-      stats: zod.record(zod.string(), zod.number()).optional(),
-      total: zod.number().optional(),
-      totalRecombobulated: zod.number().optional(),
-      unique: zod.number().optional(),
-      upgrades: zod
-        .array(
-          zod.object({
-            Count: zod.number().optional(),
-            containsItems: zod.array(zod.unknown()).optional(),
-            display_name: zod.string().optional(),
-            isInactive: zod.boolean().optional(),
-            lore: zod.array(zod.string()).optional(),
-            rarity: zod.string().optional(),
-            recombobulated: zod.boolean().optional(),
-            shiny: zod.boolean().optional(),
-            source: zod.string().optional(),
-            sourceTab: zod
-              .object({
-                icon: zod.string().optional(),
-                name: zod.string().optional()
-              })
-              .optional(),
-            texture_pack: zod.string().optional(),
-            texture_path: zod.string().optional(),
-            wiki: zod
-              .object({
-                fandom: zod.string().optional(),
-                official: zod.string().optional()
-              })
-              .optional()
-          })
-        )
-        .optional()
-    })
-    .optional(),
-  bestiary: zod
-    .object({
-      categories: zod
-        .record(
-          zod.string(),
-          zod.object({
-            mobs: zod
-              .array(
-                zod.object({
-                  kills: zod.number().optional(),
-                  maxKills: zod.number().optional(),
-                  maxTier: zod.number().optional(),
-                  name: zod.string().optional(),
-                  nextTierKills: zod.number().optional(),
-                  texture: zod.string().optional(),
-                  tier: zod.number().optional()
-                })
-              )
-              .optional(),
-            mobsMaxed: zod.number().optional(),
-            mobsUnlocked: zod.number().optional(),
-            name: zod.string().optional(),
-            texture: zod.string().optional()
-          })
-        )
-        .optional(),
-      familiesCompleted: zod.number().optional(),
-      familiesUnlocked: zod.number().optional(),
-      familyTiers: zod.number().optional(),
-      level: zod.number().optional(),
-      maxFamilyTiers: zod.number().optional(),
-      maxLevel: zod.number().optional(),
-      totalFamilies: zod.number().optional()
-    })
-    .optional(),
-  collections: zod
-    .object({
-      categories: zod
-        .record(
-          zod.string(),
-          zod.object({
-            items: zod
-              .array(
-                zod.object({
-                  amount: zod.number().optional(),
-                  amounts: zod
-                    .array(
-                      zod.object({
-                        amount: zod.number().optional(),
-                        username: zod.string().optional()
-                      })
-                    )
-                    .optional(),
-                  id: zod.string().optional(),
-                  maxTier: zod.number().optional(),
-                  name: zod.string().optional(),
-                  texture: zod.string().optional(),
-                  tier: zod.number().optional(),
-                  totalAmount: zod.number().optional()
-                })
-              )
-              .optional(),
-            maxTiers: zod.number().optional(),
-            name: zod.string().optional(),
-            texture: zod.string().optional(),
-            totalTiers: zod.number().optional()
-          })
-        )
-        .optional(),
-      maxedCollections: zod.number().optional(),
-      totalCollections: zod.number().optional()
-    })
-    .optional(),
-  crimsonIsle: zod
-    .object({
-      dojo: zod
-        .object({
-          challenges: zod
-            .array(
-              zod.object({
-                id: zod.string().optional(),
-                name: zod.string().optional(),
-                points: zod.number().optional(),
-                rank: zod.string().optional(),
-                texture: zod.string().optional(),
-                time: zod.number().optional()
-              })
-            )
-            .optional(),
-          totalPoints: zod.number().optional()
-        })
-        .optional(),
-      factions: zod
-        .object({
-          barbariansReputation: zod.number().optional(),
-          magesReputation: zod.number().optional(),
-          selectedFaction: zod.string().optional()
-        })
-        .optional(),
-      kuudra: zod
-        .object({
-          tiers: zod
-            .array(
-              zod.object({
-                id: zod.string().optional(),
-                kills: zod.number().optional(),
-                name: zod.string().optional(),
-                texture: zod.string().optional()
-              })
-            )
-            .optional(),
-          totalKills: zod.number().optional()
-        })
-        .optional()
-    })
-    .optional(),
-  dungeons: zod
-    .object({
-      catacombs: zod
-        .array(
-          zod.object({
-            best_run: zod
-              .object({
-                damage_dealt: zod.number().optional(),
-                damage_mitigated: zod.number().optional(),
-                deaths: zod.number().optional(),
-                dungeon_class: zod.string().optional(),
-                elapsed_time: zod.number().optional(),
-                grade: zod.string().optional(),
-                mobs_killed: zod.number().optional(),
-                score_bonus: zod.number().optional(),
-                score_exploration: zod.number().optional(),
-                score_skill: zod.number().optional(),
-                score_speed: zod.number().optional(),
-                secrets_found: zod.number().optional(),
-                timestamp: zod.number().optional()
-              })
-              .optional(),
-            name: zod.string().optional(),
-            stats: zod
-              .object({
-                best_score: zod.number().optional(),
-                fastest_time: zod.number().optional(),
-                fastest_time_s: zod.number().optional(),
-                fastest_time_s_plus: zod.number().optional(),
-                milestone_completions: zod.number().optional(),
-                mobs_killed: zod.number().optional(),
-                most_damage: zod
-                  .object({
-                    damage: zod.number().optional(),
-                    type: zod.string().optional()
-                  })
-                  .optional(),
-                most_healing: zod.number().optional(),
-                most_mobs_killed: zod.number().optional(),
-                tier_completions: zod.number().optional(),
-                times_played: zod.number().optional(),
-                watcher_kills: zod.number().optional()
-              })
-              .optional(),
-            texture: zod.string().optional()
-          })
-        )
-        .optional(),
-      classes: zod
-        .object({
-          classAverage: zod.number().optional(),
-          classAverageWithProgress: zod.number().optional(),
-          classes: zod
-            .record(
-              zod.string(),
-              zod.object({
-                level: zod.number().optional(),
-                levelCap: zod.number().optional(),
-                levelWithProgress: zod.number().optional(),
-                maxLevel: zod.number().optional(),
-                maxed: zod.boolean().optional(),
-                progress: zod.number().optional(),
-                texture: zod.string().optional(),
-                uncappedLevel: zod.number().optional(),
-                unlockableLevelWithProgress: zod.number().optional(),
-                xp: zod.number().optional(),
-                xpCurrent: zod.number().optional(),
-                xpForNext: zod.number().optional()
-              })
-            )
-            .optional(),
-          selectedClass: zod.string().optional(),
-          totalClassExp: zod.number().optional()
-        })
-        .optional(),
-      level: zod
-        .object({
-          level: zod.number().optional(),
-          levelCap: zod.number().optional(),
-          levelWithProgress: zod.number().optional(),
-          maxLevel: zod.number().optional(),
-          maxed: zod.boolean().optional(),
-          progress: zod.number().optional(),
-          texture: zod.string().optional(),
-          uncappedLevel: zod.number().optional(),
-          unlockableLevelWithProgress: zod.number().optional(),
-          xp: zod.number().optional(),
-          xpCurrent: zod.number().optional(),
-          xpForNext: zod.number().optional()
-        })
-        .optional(),
-      master_catacombs: zod
-        .array(
-          zod.object({
-            best_run: zod
-              .object({
-                damage_dealt: zod.number().optional(),
-                damage_mitigated: zod.number().optional(),
-                deaths: zod.number().optional(),
-                dungeon_class: zod.string().optional(),
-                elapsed_time: zod.number().optional(),
-                grade: zod.string().optional(),
-                mobs_killed: zod.number().optional(),
-                score_bonus: zod.number().optional(),
-                score_exploration: zod.number().optional(),
-                score_skill: zod.number().optional(),
-                score_speed: zod.number().optional(),
-                secrets_found: zod.number().optional(),
-                timestamp: zod.number().optional()
-              })
-              .optional(),
-            name: zod.string().optional(),
-            stats: zod
-              .object({
-                best_score: zod.number().optional(),
-                fastest_time: zod.number().optional(),
-                fastest_time_s: zod.number().optional(),
-                fastest_time_s_plus: zod.number().optional(),
-                milestone_completions: zod.number().optional(),
-                mobs_killed: zod.number().optional(),
-                most_damage: zod
-                  .object({
-                    damage: zod.number().optional(),
-                    type: zod.string().optional()
-                  })
-                  .optional(),
-                most_healing: zod.number().optional(),
-                most_mobs_killed: zod.number().optional(),
-                tier_completions: zod.number().optional(),
-                times_played: zod.number().optional(),
-                watcher_kills: zod.number().optional()
-              })
-              .optional(),
-            texture: zod.string().optional()
-          })
-        )
-        .optional(),
-      stats: zod
-        .object({
-          bloodMobKills: zod.number().optional(),
-          highestFloorBeatenMaster: zod.number().optional(),
-          highestFloorBeatenNormal: zod.number().optional(),
-          secrets: zod
-            .object({
-              found: zod.number().optional(),
-              secretsPerRun: zod.number().optional()
-            })
-            .optional()
-        })
-        .optional()
-    })
-    .optional(),
-  gear: zod
-    .object({
-      armor: zod
-        .object({
-          armor: zod
-            .array(
-              zod.object({
-                Count: zod.number().optional(),
-                containsItems: zod.array(zod.unknown()).optional(),
-                display_name: zod.string().optional(),
-                isInactive: zod.boolean().optional(),
-                lore: zod.array(zod.string()).optional(),
-                rarity: zod.string().optional(),
-                recombobulated: zod.boolean().optional(),
-                shiny: zod.boolean().optional(),
-                source: zod.string().optional(),
-                sourceTab: zod
-                  .object({
-                    icon: zod.string().optional(),
-                    name: zod.string().optional()
-                  })
-                  .optional(),
-                texture_pack: zod.string().optional(),
-                texture_path: zod.string().optional(),
-                wiki: zod
-                  .object({
-                    fandom: zod.string().optional(),
-                    official: zod.string().optional()
-                  })
-                  .optional()
-              })
-            )
-            .optional(),
-          set_name: zod.string().optional(),
-          set_rarity: zod.string().optional(),
-          stats: zod.record(zod.string(), zod.number()).optional()
-        })
-        .optional(),
-      equipment: zod
-        .object({
-          equipment: zod
-            .array(
-              zod.object({
-                Count: zod.number().optional(),
-                containsItems: zod.array(zod.unknown()).optional(),
-                display_name: zod.string().optional(),
-                isInactive: zod.boolean().optional(),
-                lore: zod.array(zod.string()).optional(),
-                rarity: zod.string().optional(),
-                recombobulated: zod.boolean().optional(),
-                shiny: zod.boolean().optional(),
-                source: zod.string().optional(),
-                sourceTab: zod
-                  .object({
-                    icon: zod.string().optional(),
-                    name: zod.string().optional()
-                  })
-                  .optional(),
-                texture_pack: zod.string().optional(),
-                texture_path: zod.string().optional(),
-                wiki: zod
-                  .object({
-                    fandom: zod.string().optional(),
-                    official: zod.string().optional()
-                  })
-                  .optional()
-              })
-            )
-            .optional(),
-          stats: zod.record(zod.string(), zod.number()).optional()
-        })
-        .optional(),
-      wardrobe: zod
-        .array(
-          zod.array(
-            zod.object({
-              Count: zod.number().optional(),
-              containsItems: zod.array(zod.unknown()).optional(),
-              display_name: zod.string().optional(),
-              isInactive: zod.boolean().optional(),
-              lore: zod.array(zod.string()).optional(),
-              rarity: zod.string().optional(),
-              recombobulated: zod.boolean().optional(),
-              shiny: zod.boolean().optional(),
-              source: zod.string().optional(),
-              sourceTab: zod
-                .object({
-                  icon: zod.string().optional(),
-                  name: zod.string().optional()
-                })
-                .optional(),
-              texture_pack: zod.string().optional(),
-              texture_path: zod.string().optional(),
-              wiki: zod
-                .object({
-                  fandom: zod.string().optional(),
-                  official: zod.string().optional()
-                })
-                .optional()
-            })
-          )
-        )
-        .optional(),
-      weapons: zod
-        .object({
-          highest_priority_weapon: zod
-            .object({
-              Count: zod.number().optional(),
-              containsItems: zod.array(zod.unknown()).optional(),
-              display_name: zod.string().optional(),
-              isInactive: zod.boolean().optional(),
-              lore: zod.array(zod.string()).optional(),
-              rarity: zod.string().optional(),
-              recombobulated: zod.boolean().optional(),
-              shiny: zod.boolean().optional(),
-              source: zod.string().optional(),
-              sourceTab: zod
-                .object({
-                  icon: zod.string().optional(),
-                  name: zod.string().optional()
-                })
-                .optional(),
-              texture_pack: zod.string().optional(),
-              texture_path: zod.string().optional(),
-              wiki: zod
-                .object({
-                  fandom: zod.string().optional(),
-                  official: zod.string().optional()
-                })
-                .optional()
-            })
-            .optional(),
-          weapons: zod
-            .array(
-              zod.object({
-                Count: zod.number().optional(),
-                containsItems: zod.array(zod.unknown()).optional(),
-                display_name: zod.string().optional(),
-                isInactive: zod.boolean().optional(),
-                lore: zod.array(zod.string()).optional(),
-                rarity: zod.string().optional(),
-                recombobulated: zod.boolean().optional(),
-                shiny: zod.boolean().optional(),
-                source: zod.string().optional(),
-                sourceTab: zod
-                  .object({
-                    icon: zod.string().optional(),
-                    name: zod.string().optional()
-                  })
-                  .optional(),
-                texture_pack: zod.string().optional(),
-                texture_path: zod.string().optional(),
-                wiki: zod
-                  .object({
-                    fandom: zod.string().optional(),
-                    official: zod.string().optional()
-                  })
-                  .optional()
-              })
-            )
-            .optional()
-        })
-        .optional()
-    })
-    .optional(),
-  minions: zod
-    .object({
-      maxedMinions: zod.number().optional(),
-      maxedTiers: zod.number().optional(),
-      minions: zod
-        .record(
-          zod.string(),
-          zod.object({
-            maxedMinions: zod.number().optional(),
-            maxedTiers: zod.number().optional(),
-            minions: zod
-              .array(
-                zod.object({
-                  maxTier: zod.number().optional(),
-                  name: zod.string().optional(),
-                  texture: zod.string().optional(),
-                  tiers: zod.array(zod.number()).optional()
-                })
-              )
-              .optional(),
-            texture: zod.string().optional(),
-            totalMinions: zod.number().optional(),
-            totalTiers: zod.number().optional()
-          })
-        )
-        .optional(),
-      minionsSlots: zod
-        .object({
-          bonusSlots: zod.number().optional(),
-          current: zod.number().optional(),
-          next: zod.number().optional()
-        })
-        .optional(),
-      totalMinions: zod.number().optional(),
-      totalTiers: zod.number().optional()
-    })
-    .optional(),
-  misc: zod
-    .object({
-      auctions: zod
-        .object({
-          bids: zod.number().optional(),
-          created: zod.number().optional(),
-          fees: zod.number().optional(),
-          gold_earned: zod.number().optional(),
-          gold_spent: zod.number().optional(),
-          highest_bid: zod.number().optional(),
-          no_bids: zod.number().optional(),
-          total_bought: zod.record(zod.string(), zod.number()).optional(),
-          total_sold: zod.record(zod.string(), zod.number()).optional(),
-          won: zod.number().optional()
-        })
-        .optional(),
-      claimed_items: zod.record(zod.string(), zod.number()).optional(),
-      consumables: zod
-        .array(
-          zod.object({
-            amount: zod.number().optional(),
-            maxAmount: zod.number().optional(),
-            name: zod.string().optional(),
-            texture: zod.string().optional()
-          })
-        )
-        .optional(),
-      damage: zod
-        .object({
-          highest_critical_damage: zod.number().optional()
-        })
-        .optional(),
-      dragons: zod
-        .object({
-          deaths: zod.record(zod.string(), zod.number()).optional(),
-          ender_crystals_destroyed: zod.number().optional(),
-          fastest_kill: zod.record(zod.string(), zod.number()).optional(),
-          last_hits: zod.record(zod.string(), zod.number()).optional(),
-          most_damage: zod.record(zod.string(), zod.number()).optional()
-        })
-        .optional(),
-      endstone_protector: zod
-        .object({
-          deaths: zod.number().optional(),
-          kills: zod.number().optional()
-        })
-        .optional(),
-      essence: zod
-        .array(
-          zod.object({
-            amount: zod.number().optional(),
-            name: zod.string().optional(),
-            texture: zod.string().optional()
-          })
-        )
-        .optional(),
-      gifts: zod
-        .object({
-          given: zod.number().optional(),
-          received: zod.number().optional()
-        })
-        .optional(),
-      kills: zod
-        .object({
-          deaths: zod
-            .array(
-              zod.object({
-                amount: zod.number().optional(),
-                name: zod.string().optional()
-              })
-            )
-            .optional(),
-          kills: zod
-            .array(
-              zod.object({
-                amount: zod.number().optional(),
-                name: zod.string().optional()
-              })
-            )
-            .optional(),
-          total_deaths: zod.number().optional(),
-          total_kills: zod.number().optional()
-        })
-        .optional(),
-      mythological_event: zod
-        .object({
-          burrows_chains_complete: zod.record(zod.string(), zod.number()).optional(),
-          burrows_dug_combat: zod.record(zod.string(), zod.number()).optional(),
-          burrows_dug_next: zod.record(zod.string(), zod.number()).optional(),
-          burrows_dug_treasure: zod.record(zod.string(), zod.number()).optional(),
-          kills: zod.number().optional()
-        })
-        .optional(),
-      pet_milestones: zod
-        .record(
-          zod.string(),
-          zod.object({
-            amount: zod.number().optional(),
-            progress: zod.string().optional(),
-            rarity: zod.string().optional(),
-            total: zod.number().optional()
-          })
-        )
-        .optional(),
-      profile_upgrades: zod.record(zod.string(), zod.number()).optional(),
-      season_of_jerry: zod
-        .object({
-          most_cannonballs_hit: zod.number().optional(),
-          most_damage_dealt: zod.number().optional(),
-          most_magma_damage_dealt: zod.number().optional(),
-          most_snowballs_hit: zod.number().optional()
-        })
-        .optional(),
-      uncategorized: zod.record(zod.string(), zod.unknown()).optional()
-    })
-    .optional(),
-  pets: zod
-    .object({
-      amount: zod.number().optional(),
-      amountSkins: zod.number().optional(),
-      missing: zod
-        .array(
-          zod.object({
-            active: zod.boolean().optional(),
-            display_name: zod.string().optional(),
-            level: zod.number().optional(),
-            lore: zod.array(zod.string()).optional(),
-            rarity: zod.string().optional(),
-            stats: zod.record(zod.string(), zod.number()).optional(),
-            texture_path: zod.string().optional(),
-            type: zod.string().optional()
-          })
-        )
-        .optional(),
-      petScore: zod
-        .object({
-          amount: zod.number().optional(),
-          reward: zod
-            .array(
-              zod.object({
-                bonus: zod.number().optional(),
-                score: zod.number().optional(),
-                unlocked: zod.boolean().optional()
-              })
-            )
-            .optional(),
-          stats: zod.record(zod.string(), zod.number()).optional()
-        })
-        .optional(),
-      pets: zod
-        .array(
-          zod.object({
-            active: zod.boolean().optional(),
-            display_name: zod.string().optional(),
-            level: zod.number().optional(),
-            lore: zod.array(zod.string()).optional(),
-            rarity: zod.string().optional(),
-            stats: zod.record(zod.string(), zod.number()).optional(),
-            texture_path: zod.string().optional(),
-            type: zod.string().optional()
-          })
-        )
-        .optional(),
-      total: zod.number().optional(),
-      totalCandyUsed: zod.number().optional(),
-      totalPetExp: zod.number().optional()
-    })
-    .optional(),
-  rift: zod
-    .object({
-      armor: zod
-        .object({
-          armor: zod
-            .array(
-              zod.object({
-                Count: zod.number().optional(),
-                containsItems: zod.array(zod.unknown()).optional(),
-                display_name: zod.string().optional(),
-                isInactive: zod.boolean().optional(),
-                lore: zod.array(zod.string()).optional(),
-                rarity: zod.string().optional(),
-                recombobulated: zod.boolean().optional(),
-                shiny: zod.boolean().optional(),
-                source: zod.string().optional(),
-                sourceTab: zod
-                  .object({
-                    icon: zod.string().optional(),
-                    name: zod.string().optional()
-                  })
-                  .optional(),
-                texture_pack: zod.string().optional(),
-                texture_path: zod.string().optional(),
-                wiki: zod
-                  .object({
-                    fandom: zod.string().optional(),
-                    official: zod.string().optional()
-                  })
-                  .optional()
-              })
-            )
-            .optional(),
-          set_name: zod.string().optional(),
-          set_rarity: zod.string().optional(),
-          stats: zod.record(zod.string(), zod.number()).optional()
-        })
-        .optional(),
-      castle: zod
-        .object({
-          grubberStacks: zod.number().optional(),
-          maxBurgers: zod.number().optional()
-        })
-        .optional(),
-      enigma: zod
-        .object({
-          souls: zod.number().optional(),
-          totalSouls: zod.number().optional()
-        })
-        .optional(),
-      equipment: zod
-        .object({
-          equipment: zod
-            .array(
-              zod.object({
-                Count: zod.number().optional(),
-                containsItems: zod.array(zod.unknown()).optional(),
-                display_name: zod.string().optional(),
-                isInactive: zod.boolean().optional(),
-                lore: zod.array(zod.string()).optional(),
-                rarity: zod.string().optional(),
-                recombobulated: zod.boolean().optional(),
-                shiny: zod.boolean().optional(),
-                source: zod.string().optional(),
-                sourceTab: zod
-                  .object({
-                    icon: zod.string().optional(),
-                    name: zod.string().optional()
-                  })
-                  .optional(),
-                texture_pack: zod.string().optional(),
-                texture_path: zod.string().optional(),
-                wiki: zod
-                  .object({
-                    fandom: zod.string().optional(),
-                    official: zod.string().optional()
-                  })
-                  .optional()
-              })
-            )
-            .optional(),
-          stats: zod.record(zod.string(), zod.number()).optional()
-        })
-        .optional(),
-      motes: zod
-        .object({
-          lifetime: zod.number().optional(),
-          orbs: zod.number().optional(),
-          purse: zod.number().optional()
-        })
-        .optional(),
-      porhtal: zod
-        .object({
-          porhtals: zod
-            .array(
-              zod.object({
-                name: zod.string().optional(),
-                texture: zod.string().optional(),
-                unlocked: zod.boolean().optional()
-              })
-            )
-            .optional(),
-          porhtalsFound: zod.number().optional()
-        })
-        .optional(),
-      timecharms: zod
-        .object({
-          timecharms: zod
-            .array(
-              zod.object({
-                name: zod.string().optional(),
-                texture: zod.string().optional(),
-                unlocked: zod.boolean().optional(),
-                unlockedAt: zod.number().optional()
-              })
-            )
-            .optional(),
-          timecharmsFound: zod.number().optional()
-        })
-        .optional(),
-      visits: zod.number().optional()
-    })
-    .optional(),
-  skills: zod
-    .object({
-      enchanting: zod
-        .object({
-          data: zod
-            .record(
-              zod.string(),
-              zod.object({
-                name: zod.string().optional(),
-                stats: zod
-                  .object({
-                    bonusClicks: zod.number().optional(),
-                    games: zod
-                      .array(
-                        zod.object({
-                          attempts: zod.number().optional(),
-                          bestScore: zod.number().optional(),
-                          claims: zod.number().optional(),
-                          name: zod.string().optional(),
-                          texture: zod.string().optional()
-                        })
-                      )
-                      .optional(),
-                    lastAttempt: zod.number().optional(),
-                    lastClaimed: zod.number().optional()
-                  })
-                  .optional()
-              })
-            )
-            .optional(),
-          unlocked: zod.boolean().optional()
-        })
-        .optional(),
-      farming: zod
-        .object({
-          contests: zod
-            .record(
-              zod.string(),
-              zod.object({
-                amount: zod.number().optional(),
-                collected: zod.number().optional(),
-                maxed: zod.boolean().optional(),
-                medals: zod.record(zod.string(), zod.number()).optional(),
-                name: zod.string().optional(),
-                texture: zod.string().optional()
-              })
-            )
-            .optional(),
-          contestsAttended: zod.number().optional(),
-          copper: zod.number().optional(),
-          medals: zod
-            .record(
-              zod.string(),
-              zod.object({
-                amount: zod.number().optional(),
-                total: zod.number().optional()
-              })
-            )
-            .optional(),
-          pelts: zod.number().optional(),
-          tools: zod
-            .object({
-              highest_priority_tool: zod
-                .object({
-                  Count: zod.number().optional(),
-                  containsItems: zod.array(zod.unknown()).optional(),
-                  display_name: zod.string().optional(),
-                  isInactive: zod.boolean().optional(),
-                  lore: zod.array(zod.string()).optional(),
-                  rarity: zod.string().optional(),
-                  recombobulated: zod.boolean().optional(),
-                  shiny: zod.boolean().optional(),
-                  source: zod.string().optional(),
-                  sourceTab: zod
-                    .object({
-                      icon: zod.string().optional(),
-                      name: zod.string().optional()
-                    })
-                    .optional(),
-                  texture_pack: zod.string().optional(),
-                  texture_path: zod.string().optional(),
-                  wiki: zod
-                    .object({
-                      fandom: zod.string().optional(),
-                      official: zod.string().optional()
-                    })
-                    .optional()
-                })
-                .optional(),
-              tools: zod
-                .array(
-                  zod.object({
-                    Count: zod.number().optional(),
-                    containsItems: zod.array(zod.unknown()).optional(),
-                    display_name: zod.string().optional(),
-                    isInactive: zod.boolean().optional(),
-                    lore: zod.array(zod.string()).optional(),
-                    rarity: zod.string().optional(),
-                    recombobulated: zod.boolean().optional(),
-                    shiny: zod.boolean().optional(),
-                    source: zod.string().optional(),
-                    sourceTab: zod
-                      .object({
-                        icon: zod.string().optional(),
-                        name: zod.string().optional()
-                      })
-                      .optional(),
-                    texture_pack: zod.string().optional(),
-                    texture_path: zod.string().optional(),
-                    wiki: zod
-                      .object({
-                        fandom: zod.string().optional(),
-                        official: zod.string().optional()
-                      })
-                      .optional()
-                  })
-                )
-                .optional()
-            })
-            .optional(),
-          uniqueGolds: zod.number().optional()
-        })
-        .optional(),
-      fishing: zod
-        .object({
-          itemsFished: zod.number().optional(),
-          lavaSeaCreatures: zod
-            .array(
-              zod.object({
-                amount: zod.number().optional(),
-                id: zod.string().optional(),
-                name: zod.string().optional(),
-                texture: zod.string().optional()
-              })
-            )
-            .optional(),
-          seaCreaturesFished: zod.number().optional(),
-          shredderBait: zod.number().optional(),
-          shredderFished: zod.number().optional(),
-          tools: zod
-            .object({
-              highest_priority_tool: zod
-                .object({
-                  Count: zod.number().optional(),
-                  containsItems: zod.array(zod.unknown()).optional(),
-                  display_name: zod.string().optional(),
-                  isInactive: zod.boolean().optional(),
-                  lore: zod.array(zod.string()).optional(),
-                  rarity: zod.string().optional(),
-                  recombobulated: zod.boolean().optional(),
-                  shiny: zod.boolean().optional(),
-                  source: zod.string().optional(),
-                  sourceTab: zod
-                    .object({
-                      icon: zod.string().optional(),
-                      name: zod.string().optional()
-                    })
-                    .optional(),
-                  texture_pack: zod.string().optional(),
-                  texture_path: zod.string().optional(),
-                  wiki: zod
-                    .object({
-                      fandom: zod.string().optional(),
-                      official: zod.string().optional()
-                    })
-                    .optional()
-                })
-                .optional(),
-              tools: zod
-                .array(
-                  zod.object({
-                    Count: zod.number().optional(),
-                    containsItems: zod.array(zod.unknown()).optional(),
-                    display_name: zod.string().optional(),
-                    isInactive: zod.boolean().optional(),
-                    lore: zod.array(zod.string()).optional(),
-                    rarity: zod.string().optional(),
-                    recombobulated: zod.boolean().optional(),
-                    shiny: zod.boolean().optional(),
-                    source: zod.string().optional(),
-                    sourceTab: zod
-                      .object({
-                        icon: zod.string().optional(),
-                        name: zod.string().optional()
-                      })
-                      .optional(),
-                    texture_pack: zod.string().optional(),
-                    texture_path: zod.string().optional(),
-                    wiki: zod
-                      .object({
-                        fandom: zod.string().optional(),
-                        official: zod.string().optional()
-                      })
-                      .optional()
-                  })
-                )
-                .optional()
-            })
-            .optional(),
-          treasure: zod.number().optional(),
-          treasureLarge: zod.number().optional(),
-          trophyFish: zod
-            .object({
-              stage: zod
-                .object({
-                  name: zod.string().optional(),
-                  progress: zod
-                    .array(
-                      zod.object({
-                        caught: zod.number().optional(),
-                        tier: zod.string().optional(),
-                        total: zod.number().optional()
-                      })
-                    )
-                    .optional()
-                })
-                .optional(),
-              totalCaught: zod.number().optional(),
-              trophyFish: zod
-                .array(
-                  zod.object({
-                    bronze: zod.number().optional(),
-                    description: zod.string().optional(),
-                    diamond: zod.number().optional(),
-                    gold: zod.number().optional(),
-                    id: zod.string().optional(),
-                    maxed: zod.boolean().optional(),
-                    name: zod.string().optional(),
-                    silver: zod.number().optional(),
-                    texture: zod.string().optional()
-                  })
-                )
-                .optional()
-            })
-            .optional(),
-          waterSeaCreatures: zod
-            .array(
-              zod.object({
-                amount: zod.number().optional(),
-                id: zod.string().optional(),
-                name: zod.string().optional(),
-                texture: zod.string().optional()
-              })
-            )
-            .optional()
-        })
-        .optional(),
-      foraging: zod
-        .object({
-          cotf: zod
-            .object({
-              level: zod.number().optional(),
-              maxLevel: zod.number().optional()
-            })
-            .optional(),
-          fishFamily: zod
-            .object({
-              collected: zod.number().optional(),
-              total: zod.number().optional()
-            })
-            .optional(),
-          foragingLevel: zod
-            .object({
-              level: zod.number().optional(),
-              levelCap: zod.number().optional(),
-              levelWithProgress: zod.number().optional(),
-              maxLevel: zod.number().optional(),
-              maxed: zod.boolean().optional(),
-              progress: zod.number().optional(),
-              texture: zod.string().optional(),
-              uncappedLevel: zod.number().optional(),
-              unlockableLevelWithProgress: zod.number().optional(),
-              xp: zod.number().optional(),
-              xpCurrent: zod.number().optional(),
-              xpForNext: zod.number().optional()
-            })
-            .optional(),
-          hinaChapter: zod
-            .object({
-              maxTier: zod.number().optional(),
-              tier: zod.number().optional()
-            })
-            .optional(),
-          hotf: zod
-            .array(
-              zod.object({
-                Count: zod.number().optional(),
-                Damage: zod.number().optional(),
-                categories: zod.array(zod.string()).optional(),
-                containsItems: zod.array(zod.unknown()).optional(),
-                display_name: zod.string().optional(),
-                id: zod.string().optional(),
-                isInactive: zod.boolean().optional(),
-                itemIndex: zod.number().optional(),
-                lore: zod.array(zod.string()).optional(),
-                price: zod.number().optional(),
-                rarity: zod.string().optional(),
-                recombobulated: zod.boolean().optional(),
-                shiny: zod.boolean().optional(),
-                source: zod.string().optional(),
-                tag: zod
-                  .object({
-                    ExtraAttributes: zod
-                      .object({
-                        ability_scroll: zod.array(zod.string()).optional(),
-                        additional_coins: zod.number().optional(),
-                        artOfPeaceApplied: zod.number().optional(),
-                        art_of_war_count: zod.number().optional(),
-                        attributes: zod.record(zod.string(), zod.number()).optional(),
-                        auction: zod.number().optional(),
-                        bid: zod.number().optional(),
-                        boosters: zod.array(zod.string()).optional(),
-                        champion_combat_xp: zod.number().optional(),
-                        collected_coins: zod.number().optional(),
-                        compact_blocks: zod.number().optional(),
-                        divan_powder_coating: zod.number().optional(),
-                        donated_museum: zod.boolean().optional(),
-                        drill_part_engine: zod.string().optional(),
-                        drill_part_fuel_tank: zod.string().optional(),
-                        drill_part_upgrade_module: zod.string().optional(),
-                        dungeon_item_level: zod.unknown().optional(),
-                        dye_item: zod.string().optional(),
-                        edition: zod.number().optional(),
-                        enchantments: zod.record(zod.string(), zod.number()).optional(),
-                        ethermerge: zod.number().optional(),
-                        expertise_kills: zod.number().optional(),
-                        farmed_cultivating: zod.number().optional(),
-                        farming_for_dummies_count: zod.number().optional(),
-                        gems: zod.record(zod.string(), zod.unknown()).optional(),
-                        hecatomb_s_runs: zod.number().optional(),
-                        hook: zod
-                          .object({
-                            donated_museum: zod.boolean().optional(),
-                            part: zod.string().optional()
-                          })
-                          .optional(),
-                        hot_potato_count: zod.number().optional(),
-                        id: zod.string().optional(),
-                        is_shiny: zod.boolean().optional(),
-                        item_tier: zod.number().optional(),
-                        jalapeno_count: zod.number().optional(),
-                        levelable_overclocks: zod.number().optional(),
-                        line: zod
-                          .object({
-                            donated_museum: zod.boolean().optional(),
-                            part: zod.string().optional()
-                          })
-                          .optional(),
-                        mana_disintegrator_count: zod.number().optional(),
-                        model: zod.string().optional(),
-                        modifier: zod.string().optional(),
-                        new_year_cake_bag_data: zod.array(zod.number()).optional(),
-                        new_year_cake_bag_years: zod.array(zod.number()).optional(),
-                        new_years_cake: zod.number().optional(),
-                        party_hat_color: zod.string().optional(),
-                        party_hat_emoji: zod.string().optional(),
-                        petInfo: zod.string().optional(),
-                        pickonimbus_durability: zod.number().optional(),
-                        polarvoid: zod.number().optional(),
-                        power_ability_scroll: zod.string().optional(),
-                        price: zod.number().optional(),
-                        rarity_upgrades: zod.number().optional(),
-                        runes: zod.record(zod.string(), zod.number()).optional(),
-                        sack_pss: zod.number().optional(),
-                        sinker: zod
-                          .object({
-                            donated_museum: zod.boolean().optional(),
-                            part: zod.string().optional()
-                          })
-                          .optional(),
-                        skin: zod.string().optional(),
-                        talisman_enrichment: zod.string().optional(),
-                        thunder_charge: zod.number().optional(),
-                        timestamp: zod.unknown().optional(),
-                        tuned_transmission: zod.number().optional(),
-                        upgrade_level: zod.unknown().optional(),
-                        uuid: zod.string().optional(),
-                        winning_bid: zod.number().optional(),
-                        wood_singularity_count: zod.number().optional()
-                      })
-                      .optional()
-                      .describe('HideFlags       int             `nbt:\"HideFlags\" json:\"HideFlags,omitempty\"`\nUnbreakable     int             `nbt:\"Unbreakable\" json:\"Unbreakable,omitempty\"`\nEnchantments    []Enchantment   `nbt:\"ench\" json:\"ench,omitempty\"`'),
-                    ItemModel: zod.string().optional(),
-                    SkullOwner: zod
-                      .object({
-                        Id: zod.string().optional(),
-                        Properties: zod
-                          .object({
-                            textures: zod
-                              .array(
-                                zod.object({
-                                  Signature: zod.string().optional(),
-                                  Value: zod.string().optional()
-                                })
-                              )
-                              .optional()
-                          })
-                          .optional()
-                      })
-                      .optional(),
-                    display: zod
-                      .object({
-                        Lore: zod.array(zod.string()).optional(),
-                        Name: zod.string().optional(),
-                        color: zod.number().optional()
-                      })
-                      .optional()
-                  })
-                  .optional(),
-                texture_pack: zod.string().optional(),
-                texture_path: zod.string().optional(),
-                wiki: zod
-                  .object({
-                    fandom: zod.string().optional(),
-                    official: zod.string().optional()
-                  })
-                  .optional()
-              })
-            )
-            .optional(),
-          level: zod
-            .object({
-              level: zod.number().optional(),
-              levelCap: zod.number().optional(),
-              levelWithProgress: zod.number().optional(),
-              maxLevel: zod.number().optional(),
-              maxed: zod.boolean().optional(),
-              progress: zod.number().optional(),
-              texture: zod.string().optional(),
-              uncappedLevel: zod.number().optional(),
-              unlockableLevelWithProgress: zod.number().optional(),
-              xp: zod.number().optional(),
-              xpCurrent: zod.number().optional(),
-              xpForNext: zod.number().optional()
-            })
-            .optional(),
-          selectedAxeAbility: zod.string().optional(),
-          tokens: zod
-            .object({
-              available: zod.number().optional(),
-              spent: zod.number().optional(),
-              total: zod.number().optional()
-            })
-            .optional(),
-          tools: zod
-            .object({
-              highest_priority_tool: zod
-                .object({
-                  Count: zod.number().optional(),
-                  containsItems: zod.array(zod.unknown()).optional(),
-                  display_name: zod.string().optional(),
-                  isInactive: zod.boolean().optional(),
-                  lore: zod.array(zod.string()).optional(),
-                  rarity: zod.string().optional(),
-                  recombobulated: zod.boolean().optional(),
-                  shiny: zod.boolean().optional(),
-                  source: zod.string().optional(),
-                  sourceTab: zod
-                    .object({
-                      icon: zod.string().optional(),
-                      name: zod.string().optional()
-                    })
-                    .optional(),
-                  texture_pack: zod.string().optional(),
-                  texture_path: zod.string().optional(),
-                  wiki: zod
-                    .object({
-                      fandom: zod.string().optional(),
-                      official: zod.string().optional()
-                    })
-                    .optional()
-                })
-                .optional(),
-              tools: zod
-                .array(
-                  zod.object({
-                    Count: zod.number().optional(),
-                    containsItems: zod.array(zod.unknown()).optional(),
-                    display_name: zod.string().optional(),
-                    isInactive: zod.boolean().optional(),
-                    lore: zod.array(zod.string()).optional(),
-                    rarity: zod.string().optional(),
-                    recombobulated: zod.boolean().optional(),
-                    shiny: zod.boolean().optional(),
-                    source: zod.string().optional(),
-                    sourceTab: zod
-                      .object({
-                        icon: zod.string().optional(),
-                        name: zod.string().optional()
-                      })
-                      .optional(),
-                    texture_pack: zod.string().optional(),
-                    texture_path: zod.string().optional(),
-                    wiki: zod
-                      .object({
-                        fandom: zod.string().optional(),
-                        official: zod.string().optional()
-                      })
-                      .optional()
-                  })
-                )
-                .optional()
-            })
-            .optional(),
-          treeGift: zod
-            .record(
-              zod.string(),
-              zod.object({
-                maxMilestone: zod.number().optional(),
-                milestone: zod.number().optional(),
-                texture: zod.string().optional()
-              })
-            )
-            .optional(),
-          whispers: zod
-            .object({
-              available: zod.number().optional(),
-              spent: zod.number().optional(),
-              total: zod.number().optional()
-            })
-            .optional()
-        })
-        .optional(),
-      hunting: zod
-        .object({
-          maxSyphoned: zod.number().optional(),
-          maxUnlocked: zod.number().optional(),
-          shards: zod
-            .array(
-              zod.object({
-                abilityLevel: zod.number().optional(),
-                abilityMaxLevel: zod.number().optional(),
-                abilityName: zod.string().optional(),
-                capturedTimestamp: zod.number().optional(),
-                family: zod.array(zod.string()).optional(),
-                lore: zod.array(zod.string()).optional(),
-                maxSyphon: zod.number().optional(),
-                name: zod.string().optional(),
-                owned: zod.number().optional(),
-                rarity: zod.string().optional(),
-                shardId: zod.string().optional(),
-                syphoned: zod.number().optional(),
-                texture: zod.string().optional()
-              })
-            )
-            .optional(),
-          syphoned: zod.number().optional(),
-          unlocked: zod.number().optional()
-        })
-        .optional(),
-      mining: zod
-        .object({
-          commissions: zod
-            .object({
-              completions: zod.number().optional(),
-              milestone: zod.number().optional()
-            })
-            .optional(),
-          crystalHollows: zod
-            .object({
-              crystalHollowsLastAccess: zod.number().optional(),
-              nucleusRuns: zod.number().optional(),
-              progress: zod
-                .object({
-                  crystals: zod.record(zod.string(), zod.string()).optional(),
-                  parts: zod.record(zod.string(), zod.string()).optional()
-                })
-                .optional()
-            })
-            .optional(),
-          forge: zod
-            .array(
-              zod.object({
-                duration: zod.number().optional(),
-                endingTime: zod.number().optional(),
-                id: zod.string().optional(),
-                name: zod.string().optional(),
-                slot: zod.number().optional(),
-                startingTime: zod.number().optional()
-              })
-            )
-            .optional(),
-          glaciteTunnels: zod
-            .object({
-              corpses: zod
-                .object({
-                  corpses: zod
-                    .array(
-                      zod.object({
-                        amount: zod.number().optional(),
-                        name: zod.string().optional(),
-                        texture_path: zod.string().optional()
-                      })
-                    )
-                    .optional(),
-                  found: zod.number().optional(),
-                  max: zod.number().optional()
-                })
-                .optional(),
-              fossilDust: zod.number().optional(),
-              fossils: zod
-                .object({
-                  fossils: zod
-                    .array(
-                      zod.object({
-                        found: zod.boolean().optional(),
-                        name: zod.string().optional(),
-                        texture_path: zod.string().optional()
-                      })
-                    )
-                    .optional(),
-                  found: zod.number().optional(),
-                  max: zod.number().optional()
-                })
-                .optional(),
-              mineshaftsEntered: zod.number().optional()
-            })
-            .optional(),
-          hotm: zod
-            .array(
-              zod.object({
-                Count: zod.number().optional(),
-                Damage: zod.number().optional(),
-                categories: zod.array(zod.string()).optional(),
-                containsItems: zod.array(zod.unknown()).optional(),
-                display_name: zod.string().optional(),
-                id: zod.string().optional(),
-                isInactive: zod.boolean().optional(),
-                itemIndex: zod.number().optional(),
-                lore: zod.array(zod.string()).optional(),
-                price: zod.number().optional(),
-                rarity: zod.string().optional(),
-                recombobulated: zod.boolean().optional(),
-                shiny: zod.boolean().optional(),
-                source: zod.string().optional(),
-                tag: zod
-                  .object({
-                    ExtraAttributes: zod
-                      .object({
-                        ability_scroll: zod.array(zod.string()).optional(),
-                        additional_coins: zod.number().optional(),
-                        artOfPeaceApplied: zod.number().optional(),
-                        art_of_war_count: zod.number().optional(),
-                        attributes: zod.record(zod.string(), zod.number()).optional(),
-                        auction: zod.number().optional(),
-                        bid: zod.number().optional(),
-                        boosters: zod.array(zod.string()).optional(),
-                        champion_combat_xp: zod.number().optional(),
-                        collected_coins: zod.number().optional(),
-                        compact_blocks: zod.number().optional(),
-                        divan_powder_coating: zod.number().optional(),
-                        donated_museum: zod.boolean().optional(),
-                        drill_part_engine: zod.string().optional(),
-                        drill_part_fuel_tank: zod.string().optional(),
-                        drill_part_upgrade_module: zod.string().optional(),
-                        dungeon_item_level: zod.unknown().optional(),
-                        dye_item: zod.string().optional(),
-                        edition: zod.number().optional(),
-                        enchantments: zod.record(zod.string(), zod.number()).optional(),
-                        ethermerge: zod.number().optional(),
-                        expertise_kills: zod.number().optional(),
-                        farmed_cultivating: zod.number().optional(),
-                        farming_for_dummies_count: zod.number().optional(),
-                        gems: zod.record(zod.string(), zod.unknown()).optional(),
-                        hecatomb_s_runs: zod.number().optional(),
-                        hook: zod
-                          .object({
-                            donated_museum: zod.boolean().optional(),
-                            part: zod.string().optional()
-                          })
-                          .optional(),
-                        hot_potato_count: zod.number().optional(),
-                        id: zod.string().optional(),
-                        is_shiny: zod.boolean().optional(),
-                        item_tier: zod.number().optional(),
-                        jalapeno_count: zod.number().optional(),
-                        levelable_overclocks: zod.number().optional(),
-                        line: zod
-                          .object({
-                            donated_museum: zod.boolean().optional(),
-                            part: zod.string().optional()
-                          })
-                          .optional(),
-                        mana_disintegrator_count: zod.number().optional(),
-                        model: zod.string().optional(),
-                        modifier: zod.string().optional(),
-                        new_year_cake_bag_data: zod.array(zod.number()).optional(),
-                        new_year_cake_bag_years: zod.array(zod.number()).optional(),
-                        new_years_cake: zod.number().optional(),
-                        party_hat_color: zod.string().optional(),
-                        party_hat_emoji: zod.string().optional(),
-                        petInfo: zod.string().optional(),
-                        pickonimbus_durability: zod.number().optional(),
-                        polarvoid: zod.number().optional(),
-                        power_ability_scroll: zod.string().optional(),
-                        price: zod.number().optional(),
-                        rarity_upgrades: zod.number().optional(),
-                        runes: zod.record(zod.string(), zod.number()).optional(),
-                        sack_pss: zod.number().optional(),
-                        sinker: zod
-                          .object({
-                            donated_museum: zod.boolean().optional(),
-                            part: zod.string().optional()
-                          })
-                          .optional(),
-                        skin: zod.string().optional(),
-                        talisman_enrichment: zod.string().optional(),
-                        thunder_charge: zod.number().optional(),
-                        timestamp: zod.unknown().optional(),
-                        tuned_transmission: zod.number().optional(),
-                        upgrade_level: zod.unknown().optional(),
-                        uuid: zod.string().optional(),
-                        winning_bid: zod.number().optional(),
-                        wood_singularity_count: zod.number().optional()
-                      })
-                      .optional()
-                      .describe('HideFlags       int             `nbt:\"HideFlags\" json:\"HideFlags,omitempty\"`\nUnbreakable     int             `nbt:\"Unbreakable\" json:\"Unbreakable,omitempty\"`\nEnchantments    []Enchantment   `nbt:\"ench\" json:\"ench,omitempty\"`'),
-                    ItemModel: zod.string().optional(),
-                    SkullOwner: zod
-                      .object({
-                        Id: zod.string().optional(),
-                        Properties: zod
-                          .object({
-                            textures: zod
-                              .array(
-                                zod.object({
-                                  Signature: zod.string().optional(),
-                                  Value: zod.string().optional()
-                                })
-                              )
-                              .optional()
-                          })
-                          .optional()
-                      })
-                      .optional(),
-                    display: zod
-                      .object({
-                        Lore: zod.array(zod.string()).optional(),
-                        Name: zod.string().optional(),
-                        color: zod.number().optional()
-                      })
-                      .optional()
-                  })
-                  .optional(),
-                texture_pack: zod.string().optional(),
-                texture_path: zod.string().optional(),
-                wiki: zod
-                  .object({
-                    fandom: zod.string().optional(),
-                    official: zod.string().optional()
-                  })
-                  .optional()
-              })
-            )
-            .optional(),
-          level: zod
-            .object({
-              level: zod.number().optional(),
-              levelCap: zod.number().optional(),
-              levelWithProgress: zod.number().optional(),
-              maxLevel: zod.number().optional(),
-              maxed: zod.boolean().optional(),
-              progress: zod.number().optional(),
-              texture: zod.string().optional(),
-              uncappedLevel: zod.number().optional(),
-              unlockableLevelWithProgress: zod.number().optional(),
-              xp: zod.number().optional(),
-              xpCurrent: zod.number().optional(),
-              xpForNext: zod.number().optional()
-            })
-            .optional(),
-          miningLevel: zod
-            .object({
-              level: zod.number().optional(),
-              levelCap: zod.number().optional(),
-              levelWithProgress: zod.number().optional(),
-              maxLevel: zod.number().optional(),
-              maxed: zod.boolean().optional(),
-              progress: zod.number().optional(),
-              texture: zod.string().optional(),
-              uncappedLevel: zod.number().optional(),
-              unlockableLevelWithProgress: zod.number().optional(),
-              xp: zod.number().optional(),
-              xpCurrent: zod.number().optional(),
-              xpForNext: zod.number().optional()
-            })
-            .optional(),
-          peakOfTheMountain: zod
-            .object({
-              level: zod.number().optional(),
-              max_level: zod.number().optional()
-            })
-            .optional(),
-          powder: zod
-            .object({
-              gemstone: zod
-                .object({
-                  available: zod.number().optional(),
-                  spent: zod.number().optional(),
-                  total: zod.number().optional()
-                })
-                .optional(),
-              glacite: zod
-                .object({
-                  available: zod.number().optional(),
-                  spent: zod.number().optional(),
-                  total: zod.number().optional()
-                })
-                .optional(),
-              mithril: zod
-                .object({
-                  available: zod.number().optional(),
-                  spent: zod.number().optional(),
-                  total: zod.number().optional()
-                })
-                .optional()
-            })
-            .optional(),
-          selectedPickaxeAbility: zod.string().optional(),
-          tokens: zod
-            .object({
-              available: zod.number().optional(),
-              spent: zod.number().optional(),
-              total: zod.number().optional()
-            })
-            .optional(),
-          tools: zod
-            .object({
-              highest_priority_tool: zod
-                .object({
-                  Count: zod.number().optional(),
-                  containsItems: zod.array(zod.unknown()).optional(),
-                  display_name: zod.string().optional(),
-                  isInactive: zod.boolean().optional(),
-                  lore: zod.array(zod.string()).optional(),
-                  rarity: zod.string().optional(),
-                  recombobulated: zod.boolean().optional(),
-                  shiny: zod.boolean().optional(),
-                  source: zod.string().optional(),
-                  sourceTab: zod
-                    .object({
-                      icon: zod.string().optional(),
-                      name: zod.string().optional()
-                    })
-                    .optional(),
-                  texture_pack: zod.string().optional(),
-                  texture_path: zod.string().optional(),
-                  wiki: zod
-                    .object({
-                      fandom: zod.string().optional(),
-                      official: zod.string().optional()
-                    })
-                    .optional()
-                })
-                .optional(),
-              tools: zod
-                .array(
-                  zod.object({
-                    Count: zod.number().optional(),
-                    containsItems: zod.array(zod.unknown()).optional(),
-                    display_name: zod.string().optional(),
-                    isInactive: zod.boolean().optional(),
-                    lore: zod.array(zod.string()).optional(),
-                    rarity: zod.string().optional(),
-                    recombobulated: zod.boolean().optional(),
-                    shiny: zod.boolean().optional(),
-                    source: zod.string().optional(),
-                    sourceTab: zod
-                      .object({
-                        icon: zod.string().optional(),
-                        name: zod.string().optional()
-                      })
-                      .optional(),
-                    texture_pack: zod.string().optional(),
-                    texture_path: zod.string().optional(),
-                    wiki: zod
-                      .object({
-                        fandom: zod.string().optional(),
-                        official: zod.string().optional()
-                      })
-                      .optional()
-                  })
-                )
-                .optional()
-            })
-            .optional()
-        })
-        .optional()
-    })
-    .optional(),
-  slayers: zod
-    .object({
-      data: zod
-        .record(
-          zod.string(),
-          zod.object({
-            kills: zod.record(zod.string(), zod.number()).optional(),
-            level: zod
-              .object({
-                level: zod.number().optional(),
-                maxLevel: zod.number().optional(),
-                maxed: zod.boolean().optional(),
-                xp: zod.number().optional(),
-                xpForNext: zod.number().optional()
-              })
-              .optional(),
-            name: zod.string().optional(),
-            texture: zod.string().optional()
-          })
-        )
-        .optional(),
-      stats: zod.record(zod.string(), zod.number()).optional(),
-      totalSlayerExp: zod.number().optional()
-    })
-    .optional()
-});
+  "accessories": zod.object({
+  "accessories": zod.array(zod.object({
+  "Count": zod.number().optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "sourceTab": zod.object({
+  "icon": zod.string().optional(),
+  "name": zod.string().optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+})).optional(),
+  "enrichments": zod.record(zod.string(), zod.number()).optional(),
+  "magicalPower": zod.object({
+  "abiphone": zod.number().optional(),
+  "accessories": zod.number().optional(),
+  "hegemony": zod.object({
+  "amount": zod.number().optional(),
+  "rarity": zod.string().optional()
+}).optional(),
+  "rarities": zod.record(zod.string(), zod.object({
+  "amount": zod.number().optional(),
+  "magicalPower": zod.number().optional()
+})).optional(),
+  "riftPrism": zod.number().optional(),
+  "total": zod.number().optional()
+}).optional(),
+  "missing": zod.array(zod.object({
+  "Count": zod.number().optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "sourceTab": zod.object({
+  "icon": zod.string().optional(),
+  "name": zod.string().optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+})).optional(),
+  "recombobulated": zod.number().optional(),
+  "selectedPower": zod.string().optional(),
+  "stats": zod.record(zod.string(), zod.number()).optional(),
+  "total": zod.number().optional(),
+  "totalRecombobulated": zod.number().optional(),
+  "unique": zod.number().optional(),
+  "upgrades": zod.array(zod.object({
+  "Count": zod.number().optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "sourceTab": zod.object({
+  "icon": zod.string().optional(),
+  "name": zod.string().optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+})).optional()
+}).optional(),
+  "bestiary": zod.object({
+  "categories": zod.record(zod.string(), zod.object({
+  "mobs": zod.array(zod.object({
+  "kills": zod.number().optional(),
+  "maxKills": zod.number().optional(),
+  "maxTier": zod.number().optional(),
+  "name": zod.string().optional(),
+  "nextTierKills": zod.number().optional(),
+  "texture": zod.string().optional(),
+  "tier": zod.number().optional()
+})).optional(),
+  "mobsMaxed": zod.number().optional(),
+  "mobsUnlocked": zod.number().optional(),
+  "name": zod.string().optional(),
+  "texture": zod.string().optional()
+})).optional(),
+  "familiesCompleted": zod.number().optional(),
+  "familiesUnlocked": zod.number().optional(),
+  "familyTiers": zod.number().optional(),
+  "level": zod.number().optional(),
+  "maxFamilyTiers": zod.number().optional(),
+  "maxLevel": zod.number().optional(),
+  "totalFamilies": zod.number().optional()
+}).optional(),
+  "collections": zod.object({
+  "categories": zod.record(zod.string(), zod.object({
+  "items": zod.array(zod.object({
+  "amount": zod.number().optional(),
+  "amounts": zod.array(zod.object({
+  "amount": zod.number().optional(),
+  "username": zod.string().optional()
+})).optional(),
+  "id": zod.string().optional(),
+  "maxTier": zod.number().optional(),
+  "name": zod.string().optional(),
+  "texture": zod.string().optional(),
+  "tier": zod.number().optional(),
+  "totalAmount": zod.number().optional()
+})).optional(),
+  "maxTiers": zod.number().optional(),
+  "name": zod.string().optional(),
+  "texture": zod.string().optional(),
+  "totalTiers": zod.number().optional()
+})).optional(),
+  "maxedCollections": zod.number().optional(),
+  "totalCollections": zod.number().optional()
+}).optional(),
+  "crimsonIsle": zod.object({
+  "dojo": zod.object({
+  "challenges": zod.array(zod.object({
+  "id": zod.string().optional(),
+  "name": zod.string().optional(),
+  "points": zod.number().optional(),
+  "rank": zod.string().optional(),
+  "texture": zod.string().optional(),
+  "time": zod.number().optional()
+})).optional(),
+  "totalPoints": zod.number().optional()
+}).optional(),
+  "factions": zod.object({
+  "barbariansReputation": zod.number().optional(),
+  "magesReputation": zod.number().optional(),
+  "selectedFaction": zod.string().optional()
+}).optional(),
+  "kuudra": zod.object({
+  "tiers": zod.array(zod.object({
+  "id": zod.string().optional(),
+  "kills": zod.number().optional(),
+  "name": zod.string().optional(),
+  "texture": zod.string().optional()
+})).optional(),
+  "totalKills": zod.number().optional()
+}).optional()
+}).optional(),
+  "dungeons": zod.object({
+  "catacombs": zod.array(zod.object({
+  "best_run": zod.object({
+  "damage_dealt": zod.number().optional(),
+  "damage_mitigated": zod.number().optional(),
+  "deaths": zod.number().optional(),
+  "dungeon_class": zod.string().optional(),
+  "elapsed_time": zod.number().optional(),
+  "grade": zod.string().optional(),
+  "mobs_killed": zod.number().optional(),
+  "score_bonus": zod.number().optional(),
+  "score_exploration": zod.number().optional(),
+  "score_skill": zod.number().optional(),
+  "score_speed": zod.number().optional(),
+  "secrets_found": zod.number().optional(),
+  "timestamp": zod.number().optional()
+}).optional(),
+  "name": zod.string().optional(),
+  "stats": zod.object({
+  "best_score": zod.number().optional(),
+  "fastest_time": zod.number().optional(),
+  "fastest_time_s": zod.number().optional(),
+  "fastest_time_s_plus": zod.number().optional(),
+  "milestone_completions": zod.number().optional(),
+  "mobs_killed": zod.number().optional(),
+  "most_damage": zod.object({
+  "damage": zod.number().optional(),
+  "type": zod.string().optional()
+}).optional(),
+  "most_healing": zod.number().optional(),
+  "most_mobs_killed": zod.number().optional(),
+  "tier_completions": zod.number().optional(),
+  "times_played": zod.number().optional(),
+  "watcher_kills": zod.number().optional()
+}).optional(),
+  "texture": zod.string().optional()
+})).optional(),
+  "classes": zod.object({
+  "classAverage": zod.number().optional(),
+  "classAverageWithProgress": zod.number().optional(),
+  "classes": zod.record(zod.string(), zod.object({
+  "level": zod.number().optional(),
+  "levelCap": zod.number().optional(),
+  "levelWithProgress": zod.number().optional(),
+  "maxLevel": zod.number().optional(),
+  "maxed": zod.boolean().optional(),
+  "progress": zod.number().optional(),
+  "texture": zod.string().optional(),
+  "uncappedLevel": zod.number().optional(),
+  "unlockableLevelWithProgress": zod.number().optional(),
+  "xp": zod.number().optional(),
+  "xpCurrent": zod.number().optional(),
+  "xpForNext": zod.number().optional()
+})).optional(),
+  "selectedClass": zod.string().optional(),
+  "totalClassExp": zod.number().optional()
+}).optional(),
+  "level": zod.object({
+  "level": zod.number().optional(),
+  "levelCap": zod.number().optional(),
+  "levelWithProgress": zod.number().optional(),
+  "maxLevel": zod.number().optional(),
+  "maxed": zod.boolean().optional(),
+  "progress": zod.number().optional(),
+  "texture": zod.string().optional(),
+  "uncappedLevel": zod.number().optional(),
+  "unlockableLevelWithProgress": zod.number().optional(),
+  "xp": zod.number().optional(),
+  "xpCurrent": zod.number().optional(),
+  "xpForNext": zod.number().optional()
+}).optional(),
+  "master_catacombs": zod.array(zod.object({
+  "best_run": zod.object({
+  "damage_dealt": zod.number().optional(),
+  "damage_mitigated": zod.number().optional(),
+  "deaths": zod.number().optional(),
+  "dungeon_class": zod.string().optional(),
+  "elapsed_time": zod.number().optional(),
+  "grade": zod.string().optional(),
+  "mobs_killed": zod.number().optional(),
+  "score_bonus": zod.number().optional(),
+  "score_exploration": zod.number().optional(),
+  "score_skill": zod.number().optional(),
+  "score_speed": zod.number().optional(),
+  "secrets_found": zod.number().optional(),
+  "timestamp": zod.number().optional()
+}).optional(),
+  "name": zod.string().optional(),
+  "stats": zod.object({
+  "best_score": zod.number().optional(),
+  "fastest_time": zod.number().optional(),
+  "fastest_time_s": zod.number().optional(),
+  "fastest_time_s_plus": zod.number().optional(),
+  "milestone_completions": zod.number().optional(),
+  "mobs_killed": zod.number().optional(),
+  "most_damage": zod.object({
+  "damage": zod.number().optional(),
+  "type": zod.string().optional()
+}).optional(),
+  "most_healing": zod.number().optional(),
+  "most_mobs_killed": zod.number().optional(),
+  "tier_completions": zod.number().optional(),
+  "times_played": zod.number().optional(),
+  "watcher_kills": zod.number().optional()
+}).optional(),
+  "texture": zod.string().optional()
+})).optional(),
+  "stats": zod.object({
+  "bloodMobKills": zod.number().optional(),
+  "highestFloorBeatenMaster": zod.number().optional(),
+  "highestFloorBeatenNormal": zod.number().optional(),
+  "secrets": zod.object({
+  "found": zod.number().optional(),
+  "secretsPerRun": zod.number().optional()
+}).optional()
+}).optional()
+}).optional(),
+  "gear": zod.object({
+  "armor": zod.object({
+  "armor": zod.array(zod.object({
+  "Count": zod.number().optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "sourceTab": zod.object({
+  "icon": zod.string().optional(),
+  "name": zod.string().optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+})).optional(),
+  "set_name": zod.string().optional(),
+  "set_rarity": zod.string().optional(),
+  "stats": zod.record(zod.string(), zod.number()).optional()
+}).optional(),
+  "equipment": zod.object({
+  "equipment": zod.array(zod.object({
+  "Count": zod.number().optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "sourceTab": zod.object({
+  "icon": zod.string().optional(),
+  "name": zod.string().optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+})).optional(),
+  "stats": zod.record(zod.string(), zod.number()).optional()
+}).optional(),
+  "wardrobe": zod.array(zod.array(zod.object({
+  "Count": zod.number().optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "sourceTab": zod.object({
+  "icon": zod.string().optional(),
+  "name": zod.string().optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+}))).optional(),
+  "weapons": zod.object({
+  "highest_priority_weapon": zod.object({
+  "Count": zod.number().optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "sourceTab": zod.object({
+  "icon": zod.string().optional(),
+  "name": zod.string().optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+}).optional(),
+  "weapons": zod.array(zod.object({
+  "Count": zod.number().optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "sourceTab": zod.object({
+  "icon": zod.string().optional(),
+  "name": zod.string().optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+})).optional()
+}).optional()
+}).optional(),
+  "minions": zod.object({
+  "maxedMinions": zod.number().optional(),
+  "maxedTiers": zod.number().optional(),
+  "minions": zod.record(zod.string(), zod.object({
+  "maxedMinions": zod.number().optional(),
+  "maxedTiers": zod.number().optional(),
+  "minions": zod.array(zod.object({
+  "maxTier": zod.number().optional(),
+  "name": zod.string().optional(),
+  "texture": zod.string().optional(),
+  "tiers": zod.array(zod.number()).optional()
+})).optional(),
+  "texture": zod.string().optional(),
+  "totalMinions": zod.number().optional(),
+  "totalTiers": zod.number().optional()
+})).optional(),
+  "minionsSlots": zod.object({
+  "bonusSlots": zod.number().optional(),
+  "current": zod.number().optional(),
+  "next": zod.number().optional()
+}).optional(),
+  "totalMinions": zod.number().optional(),
+  "totalTiers": zod.number().optional()
+}).optional(),
+  "misc": zod.object({
+  "auctions": zod.object({
+  "bids": zod.number().optional(),
+  "created": zod.number().optional(),
+  "fees": zod.number().optional(),
+  "gold_earned": zod.number().optional(),
+  "gold_spent": zod.number().optional(),
+  "highest_bid": zod.number().optional(),
+  "no_bids": zod.number().optional(),
+  "total_bought": zod.record(zod.string(), zod.number()).optional(),
+  "total_sold": zod.record(zod.string(), zod.number()).optional(),
+  "won": zod.number().optional()
+}).optional(),
+  "claimed_items": zod.record(zod.string(), zod.number()).optional(),
+  "consumables": zod.array(zod.object({
+  "amount": zod.number().optional(),
+  "maxAmount": zod.number().optional(),
+  "name": zod.string().optional(),
+  "texture": zod.string().optional()
+})).optional(),
+  "damage": zod.object({
+  "highest_critical_damage": zod.number().optional()
+}).optional(),
+  "dragons": zod.object({
+  "deaths": zod.record(zod.string(), zod.number()).optional(),
+  "ender_crystals_destroyed": zod.number().optional(),
+  "fastest_kill": zod.record(zod.string(), zod.number()).optional(),
+  "last_hits": zod.record(zod.string(), zod.number()).optional(),
+  "most_damage": zod.record(zod.string(), zod.number()).optional()
+}).optional(),
+  "endstone_protector": zod.object({
+  "deaths": zod.number().optional(),
+  "kills": zod.number().optional()
+}).optional(),
+  "essence": zod.array(zod.object({
+  "amount": zod.number().optional(),
+  "name": zod.string().optional(),
+  "texture": zod.string().optional()
+})).optional(),
+  "gifts": zod.object({
+  "given": zod.number().optional(),
+  "received": zod.number().optional()
+}).optional(),
+  "kills": zod.object({
+  "deaths": zod.array(zod.object({
+  "amount": zod.number().optional(),
+  "name": zod.string().optional()
+})).optional(),
+  "kills": zod.array(zod.object({
+  "amount": zod.number().optional(),
+  "name": zod.string().optional()
+})).optional(),
+  "total_deaths": zod.number().optional(),
+  "total_kills": zod.number().optional()
+}).optional(),
+  "mythological_event": zod.object({
+  "burrows_chains_complete": zod.record(zod.string(), zod.number()).optional(),
+  "burrows_dug_combat": zod.record(zod.string(), zod.number()).optional(),
+  "burrows_dug_next": zod.record(zod.string(), zod.number()).optional(),
+  "burrows_dug_treasure": zod.record(zod.string(), zod.number()).optional(),
+  "kills": zod.number().optional()
+}).optional(),
+  "pet_milestones": zod.record(zod.string(), zod.object({
+  "amount": zod.number().optional(),
+  "progress": zod.string().optional(),
+  "rarity": zod.string().optional(),
+  "total": zod.number().optional()
+})).optional(),
+  "profile_upgrades": zod.record(zod.string(), zod.number()).optional(),
+  "season_of_jerry": zod.object({
+  "most_cannonballs_hit": zod.number().optional(),
+  "most_damage_dealt": zod.number().optional(),
+  "most_magma_damage_dealt": zod.number().optional(),
+  "most_snowballs_hit": zod.number().optional()
+}).optional(),
+  "uncategorized": zod.record(zod.string(), zod.unknown()).optional()
+}).optional(),
+  "pets": zod.object({
+  "amount": zod.number().optional(),
+  "amountSkins": zod.number().optional(),
+  "missing": zod.array(zod.object({
+  "active": zod.boolean().optional(),
+  "display_name": zod.string().optional(),
+  "level": zod.number().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "rarity": zod.string().optional(),
+  "stats": zod.record(zod.string(), zod.number()).optional(),
+  "texture_path": zod.string().optional(),
+  "type": zod.string().optional()
+})).optional(),
+  "petScore": zod.object({
+  "amount": zod.number().optional(),
+  "reward": zod.array(zod.object({
+  "bonus": zod.number().optional(),
+  "score": zod.number().optional(),
+  "unlocked": zod.boolean().optional()
+})).optional(),
+  "stats": zod.record(zod.string(), zod.number()).optional()
+}).optional(),
+  "pets": zod.array(zod.object({
+  "active": zod.boolean().optional(),
+  "display_name": zod.string().optional(),
+  "level": zod.number().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "rarity": zod.string().optional(),
+  "stats": zod.record(zod.string(), zod.number()).optional(),
+  "texture_path": zod.string().optional(),
+  "type": zod.string().optional()
+})).optional(),
+  "total": zod.number().optional(),
+  "totalCandyUsed": zod.number().optional(),
+  "totalPetExp": zod.number().optional()
+}).optional(),
+  "rift": zod.object({
+  "armor": zod.object({
+  "armor": zod.array(zod.object({
+  "Count": zod.number().optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "sourceTab": zod.object({
+  "icon": zod.string().optional(),
+  "name": zod.string().optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+})).optional(),
+  "set_name": zod.string().optional(),
+  "set_rarity": zod.string().optional(),
+  "stats": zod.record(zod.string(), zod.number()).optional()
+}).optional(),
+  "castle": zod.object({
+  "grubberStacks": zod.number().optional(),
+  "maxBurgers": zod.number().optional()
+}).optional(),
+  "enigma": zod.object({
+  "souls": zod.number().optional(),
+  "totalSouls": zod.number().optional()
+}).optional(),
+  "equipment": zod.object({
+  "equipment": zod.array(zod.object({
+  "Count": zod.number().optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "sourceTab": zod.object({
+  "icon": zod.string().optional(),
+  "name": zod.string().optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+})).optional(),
+  "stats": zod.record(zod.string(), zod.number()).optional()
+}).optional(),
+  "motes": zod.object({
+  "lifetime": zod.number().optional(),
+  "orbs": zod.number().optional(),
+  "purse": zod.number().optional()
+}).optional(),
+  "porhtal": zod.object({
+  "porhtals": zod.array(zod.object({
+  "name": zod.string().optional(),
+  "texture": zod.string().optional(),
+  "unlocked": zod.boolean().optional()
+})).optional(),
+  "porhtalsFound": zod.number().optional()
+}).optional(),
+  "timecharms": zod.object({
+  "timecharms": zod.array(zod.object({
+  "name": zod.string().optional(),
+  "texture": zod.string().optional(),
+  "unlocked": zod.boolean().optional(),
+  "unlockedAt": zod.number().optional()
+})).optional(),
+  "timecharmsFound": zod.number().optional()
+}).optional(),
+  "visits": zod.number().optional()
+}).optional(),
+  "skills": zod.object({
+  "enchanting": zod.object({
+  "data": zod.record(zod.string(), zod.object({
+  "name": zod.string().optional(),
+  "stats": zod.object({
+  "bonusClicks": zod.number().optional(),
+  "games": zod.array(zod.object({
+  "attempts": zod.number().optional(),
+  "bestScore": zod.number().optional(),
+  "claims": zod.number().optional(),
+  "name": zod.string().optional(),
+  "texture": zod.string().optional()
+})).optional(),
+  "lastAttempt": zod.number().optional(),
+  "lastClaimed": zod.number().optional()
+}).optional()
+})).optional(),
+  "unlocked": zod.boolean().optional()
+}).optional(),
+  "farming": zod.object({
+  "contests": zod.record(zod.string(), zod.object({
+  "amount": zod.number().optional(),
+  "collected": zod.number().optional(),
+  "maxed": zod.boolean().optional(),
+  "medals": zod.record(zod.string(), zod.number()).optional(),
+  "name": zod.string().optional(),
+  "texture": zod.string().optional()
+})).optional(),
+  "contestsAttended": zod.number().optional(),
+  "copper": zod.number().optional(),
+  "medals": zod.record(zod.string(), zod.object({
+  "amount": zod.number().optional(),
+  "total": zod.number().optional()
+})).optional(),
+  "pelts": zod.number().optional(),
+  "tools": zod.object({
+  "highest_priority_tool": zod.object({
+  "Count": zod.number().optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "sourceTab": zod.object({
+  "icon": zod.string().optional(),
+  "name": zod.string().optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+}).optional(),
+  "tools": zod.array(zod.object({
+  "Count": zod.number().optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "sourceTab": zod.object({
+  "icon": zod.string().optional(),
+  "name": zod.string().optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+})).optional()
+}).optional(),
+  "uniqueGolds": zod.number().optional()
+}).optional(),
+  "fishing": zod.object({
+  "itemsFished": zod.number().optional(),
+  "lavaSeaCreatures": zod.array(zod.object({
+  "amount": zod.number().optional(),
+  "id": zod.string().optional(),
+  "name": zod.string().optional(),
+  "texture": zod.string().optional()
+})).optional(),
+  "seaCreaturesFished": zod.number().optional(),
+  "shredderBait": zod.number().optional(),
+  "shredderFished": zod.number().optional(),
+  "tools": zod.object({
+  "highest_priority_tool": zod.object({
+  "Count": zod.number().optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "sourceTab": zod.object({
+  "icon": zod.string().optional(),
+  "name": zod.string().optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+}).optional(),
+  "tools": zod.array(zod.object({
+  "Count": zod.number().optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "sourceTab": zod.object({
+  "icon": zod.string().optional(),
+  "name": zod.string().optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+})).optional()
+}).optional(),
+  "treasure": zod.number().optional(),
+  "treasureLarge": zod.number().optional(),
+  "trophyFish": zod.object({
+  "stage": zod.object({
+  "name": zod.string().optional(),
+  "progress": zod.array(zod.object({
+  "caught": zod.number().optional(),
+  "tier": zod.string().optional(),
+  "total": zod.number().optional()
+})).optional()
+}).optional(),
+  "totalCaught": zod.number().optional(),
+  "trophyFish": zod.array(zod.object({
+  "bronze": zod.number().optional(),
+  "description": zod.string().optional(),
+  "diamond": zod.number().optional(),
+  "gold": zod.number().optional(),
+  "id": zod.string().optional(),
+  "maxed": zod.boolean().optional(),
+  "name": zod.string().optional(),
+  "silver": zod.number().optional(),
+  "texture": zod.string().optional()
+})).optional()
+}).optional(),
+  "waterSeaCreatures": zod.array(zod.object({
+  "amount": zod.number().optional(),
+  "id": zod.string().optional(),
+  "name": zod.string().optional(),
+  "texture": zod.string().optional()
+})).optional()
+}).optional(),
+  "foraging": zod.object({
+  "cotf": zod.object({
+  "level": zod.number().optional(),
+  "maxLevel": zod.number().optional()
+}).optional(),
+  "fishFamily": zod.object({
+  "collected": zod.number().optional(),
+  "total": zod.number().optional()
+}).optional(),
+  "foragingLevel": zod.object({
+  "level": zod.number().optional(),
+  "levelCap": zod.number().optional(),
+  "levelWithProgress": zod.number().optional(),
+  "maxLevel": zod.number().optional(),
+  "maxed": zod.boolean().optional(),
+  "progress": zod.number().optional(),
+  "texture": zod.string().optional(),
+  "uncappedLevel": zod.number().optional(),
+  "unlockableLevelWithProgress": zod.number().optional(),
+  "xp": zod.number().optional(),
+  "xpCurrent": zod.number().optional(),
+  "xpForNext": zod.number().optional()
+}).optional(),
+  "hinaChapter": zod.object({
+  "maxTier": zod.number().optional(),
+  "tier": zod.number().optional()
+}).optional(),
+  "hotf": zod.array(zod.object({
+  "Count": zod.number().optional(),
+  "Damage": zod.number().optional(),
+  "categories": zod.array(zod.string()).optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "id": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "itemIndex": zod.number().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "price": zod.number().optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "tag": zod.object({
+  "ExtraAttributes": zod.object({
+  "ability_scroll": zod.array(zod.string()).optional(),
+  "additional_coins": zod.number().optional(),
+  "artOfPeaceApplied": zod.number().optional(),
+  "art_of_war_count": zod.number().optional(),
+  "attributes": zod.record(zod.string(), zod.number()).optional(),
+  "auction": zod.number().optional(),
+  "bid": zod.number().optional(),
+  "boosters": zod.array(zod.string()).optional(),
+  "champion_combat_xp": zod.number().optional(),
+  "collected_coins": zod.number().optional(),
+  "compact_blocks": zod.number().optional(),
+  "divan_powder_coating": zod.number().optional(),
+  "donated_museum": zod.boolean().optional(),
+  "drill_part_engine": zod.string().optional(),
+  "drill_part_fuel_tank": zod.string().optional(),
+  "drill_part_upgrade_module": zod.string().optional(),
+  "dungeon_item_level": zod.unknown().optional(),
+  "dye_item": zod.string().optional(),
+  "edition": zod.number().optional(),
+  "enchantments": zod.record(zod.string(), zod.number()).optional(),
+  "ethermerge": zod.number().optional(),
+  "expertise_kills": zod.number().optional(),
+  "farmed_cultivating": zod.number().optional(),
+  "farming_for_dummies_count": zod.number().optional(),
+  "gems": zod.record(zod.string(), zod.unknown()).optional(),
+  "hecatomb_s_runs": zod.number().optional(),
+  "hook": zod.object({
+  "donated_museum": zod.boolean().optional(),
+  "part": zod.string().optional()
+}).optional(),
+  "hot_potato_count": zod.number().optional(),
+  "id": zod.string().optional(),
+  "is_shiny": zod.boolean().optional(),
+  "item_tier": zod.number().optional(),
+  "jalapeno_count": zod.number().optional(),
+  "levelable_overclocks": zod.number().optional(),
+  "line": zod.object({
+  "donated_museum": zod.boolean().optional(),
+  "part": zod.string().optional()
+}).optional(),
+  "mana_disintegrator_count": zod.number().optional(),
+  "model": zod.string().optional(),
+  "modifier": zod.string().optional(),
+  "new_year_cake_bag_data": zod.array(zod.number()).optional(),
+  "new_year_cake_bag_years": zod.array(zod.number()).optional(),
+  "new_years_cake": zod.number().optional(),
+  "party_hat_color": zod.string().optional(),
+  "party_hat_emoji": zod.string().optional(),
+  "petInfo": zod.string().optional(),
+  "pickonimbus_durability": zod.number().optional(),
+  "polarvoid": zod.number().optional(),
+  "power_ability_scroll": zod.string().optional(),
+  "price": zod.number().optional(),
+  "rarity_upgrades": zod.number().optional(),
+  "runes": zod.record(zod.string(), zod.number()).optional(),
+  "sack_pss": zod.number().optional(),
+  "sinker": zod.object({
+  "donated_museum": zod.boolean().optional(),
+  "part": zod.string().optional()
+}).optional(),
+  "skin": zod.string().optional(),
+  "talisman_enrichment": zod.string().optional(),
+  "thunder_charge": zod.number().optional(),
+  "timestamp": zod.unknown().optional(),
+  "tuned_transmission": zod.number().optional(),
+  "upgrade_level": zod.unknown().optional(),
+  "uuid": zod.string().optional(),
+  "winning_bid": zod.number().optional(),
+  "wood_singularity_count": zod.number().optional()
+}).optional().describe('HideFlags       int             `nbt:\"HideFlags\" json:\"HideFlags,omitempty\"`\nUnbreakable     int             `nbt:\"Unbreakable\" json:\"Unbreakable,omitempty\"`\nEnchantments    []Enchantment   `nbt:\"ench\" json:\"ench,omitempty\"`'),
+  "ItemModel": zod.string().optional(),
+  "SkullOwner": zod.object({
+  "Id": zod.string().optional(),
+  "Properties": zod.object({
+  "textures": zod.array(zod.object({
+  "Signature": zod.string().optional(),
+  "Value": zod.string().optional()
+})).optional()
+}).optional()
+}).optional(),
+  "display": zod.object({
+  "Lore": zod.array(zod.string()).optional(),
+  "Name": zod.string().optional(),
+  "color": zod.number().optional()
+}).optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+})).optional(),
+  "level": zod.object({
+  "level": zod.number().optional(),
+  "levelCap": zod.number().optional(),
+  "levelWithProgress": zod.number().optional(),
+  "maxLevel": zod.number().optional(),
+  "maxed": zod.boolean().optional(),
+  "progress": zod.number().optional(),
+  "texture": zod.string().optional(),
+  "uncappedLevel": zod.number().optional(),
+  "unlockableLevelWithProgress": zod.number().optional(),
+  "xp": zod.number().optional(),
+  "xpCurrent": zod.number().optional(),
+  "xpForNext": zod.number().optional()
+}).optional(),
+  "selectedAxeAbility": zod.string().optional(),
+  "tokens": zod.object({
+  "available": zod.number().optional(),
+  "spent": zod.number().optional(),
+  "total": zod.number().optional()
+}).optional(),
+  "tools": zod.object({
+  "highest_priority_tool": zod.object({
+  "Count": zod.number().optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "sourceTab": zod.object({
+  "icon": zod.string().optional(),
+  "name": zod.string().optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+}).optional(),
+  "tools": zod.array(zod.object({
+  "Count": zod.number().optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "sourceTab": zod.object({
+  "icon": zod.string().optional(),
+  "name": zod.string().optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+})).optional()
+}).optional(),
+  "treeGift": zod.record(zod.string(), zod.object({
+  "maxMilestone": zod.number().optional(),
+  "milestone": zod.number().optional(),
+  "texture": zod.string().optional()
+})).optional(),
+  "whispers": zod.object({
+  "available": zod.number().optional(),
+  "spent": zod.number().optional(),
+  "total": zod.number().optional()
+}).optional()
+}).optional(),
+  "hunting": zod.object({
+  "maxSyphoned": zod.number().optional(),
+  "maxUnlocked": zod.number().optional(),
+  "shards": zod.array(zod.object({
+  "abilityLevel": zod.number().optional(),
+  "abilityMaxLevel": zod.number().optional(),
+  "abilityName": zod.string().optional(),
+  "capturedTimestamp": zod.number().optional(),
+  "family": zod.array(zod.string()).optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "maxSyphon": zod.number().optional(),
+  "name": zod.string().optional(),
+  "owned": zod.number().optional(),
+  "rarity": zod.string().optional(),
+  "shardId": zod.string().optional(),
+  "syphoned": zod.number().optional(),
+  "texture": zod.string().optional()
+})).optional(),
+  "syphoned": zod.number().optional(),
+  "unlocked": zod.number().optional()
+}).optional(),
+  "mining": zod.object({
+  "commissions": zod.object({
+  "completions": zod.number().optional(),
+  "milestone": zod.number().optional()
+}).optional(),
+  "crystalHollows": zod.object({
+  "crystalHollowsLastAccess": zod.number().optional(),
+  "nucleusRuns": zod.number().optional(),
+  "progress": zod.object({
+  "crystals": zod.record(zod.string(), zod.string()).optional(),
+  "parts": zod.record(zod.string(), zod.string()).optional()
+}).optional()
+}).optional(),
+  "forge": zod.array(zod.object({
+  "duration": zod.number().optional(),
+  "endingTime": zod.number().optional(),
+  "id": zod.string().optional(),
+  "name": zod.string().optional(),
+  "slot": zod.number().optional(),
+  "startingTime": zod.number().optional()
+})).optional(),
+  "glaciteTunnels": zod.object({
+  "corpses": zod.object({
+  "corpses": zod.array(zod.object({
+  "amount": zod.number().optional(),
+  "name": zod.string().optional(),
+  "texture_path": zod.string().optional()
+})).optional(),
+  "found": zod.number().optional(),
+  "max": zod.number().optional()
+}).optional(),
+  "fossilDust": zod.number().optional(),
+  "fossils": zod.object({
+  "fossils": zod.array(zod.object({
+  "found": zod.boolean().optional(),
+  "name": zod.string().optional(),
+  "texture_path": zod.string().optional()
+})).optional(),
+  "found": zod.number().optional(),
+  "max": zod.number().optional()
+}).optional(),
+  "mineshaftsEntered": zod.number().optional()
+}).optional(),
+  "hotm": zod.array(zod.object({
+  "Count": zod.number().optional(),
+  "Damage": zod.number().optional(),
+  "categories": zod.array(zod.string()).optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "id": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "itemIndex": zod.number().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "price": zod.number().optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "tag": zod.object({
+  "ExtraAttributes": zod.object({
+  "ability_scroll": zod.array(zod.string()).optional(),
+  "additional_coins": zod.number().optional(),
+  "artOfPeaceApplied": zod.number().optional(),
+  "art_of_war_count": zod.number().optional(),
+  "attributes": zod.record(zod.string(), zod.number()).optional(),
+  "auction": zod.number().optional(),
+  "bid": zod.number().optional(),
+  "boosters": zod.array(zod.string()).optional(),
+  "champion_combat_xp": zod.number().optional(),
+  "collected_coins": zod.number().optional(),
+  "compact_blocks": zod.number().optional(),
+  "divan_powder_coating": zod.number().optional(),
+  "donated_museum": zod.boolean().optional(),
+  "drill_part_engine": zod.string().optional(),
+  "drill_part_fuel_tank": zod.string().optional(),
+  "drill_part_upgrade_module": zod.string().optional(),
+  "dungeon_item_level": zod.unknown().optional(),
+  "dye_item": zod.string().optional(),
+  "edition": zod.number().optional(),
+  "enchantments": zod.record(zod.string(), zod.number()).optional(),
+  "ethermerge": zod.number().optional(),
+  "expertise_kills": zod.number().optional(),
+  "farmed_cultivating": zod.number().optional(),
+  "farming_for_dummies_count": zod.number().optional(),
+  "gems": zod.record(zod.string(), zod.unknown()).optional(),
+  "hecatomb_s_runs": zod.number().optional(),
+  "hook": zod.object({
+  "donated_museum": zod.boolean().optional(),
+  "part": zod.string().optional()
+}).optional(),
+  "hot_potato_count": zod.number().optional(),
+  "id": zod.string().optional(),
+  "is_shiny": zod.boolean().optional(),
+  "item_tier": zod.number().optional(),
+  "jalapeno_count": zod.number().optional(),
+  "levelable_overclocks": zod.number().optional(),
+  "line": zod.object({
+  "donated_museum": zod.boolean().optional(),
+  "part": zod.string().optional()
+}).optional(),
+  "mana_disintegrator_count": zod.number().optional(),
+  "model": zod.string().optional(),
+  "modifier": zod.string().optional(),
+  "new_year_cake_bag_data": zod.array(zod.number()).optional(),
+  "new_year_cake_bag_years": zod.array(zod.number()).optional(),
+  "new_years_cake": zod.number().optional(),
+  "party_hat_color": zod.string().optional(),
+  "party_hat_emoji": zod.string().optional(),
+  "petInfo": zod.string().optional(),
+  "pickonimbus_durability": zod.number().optional(),
+  "polarvoid": zod.number().optional(),
+  "power_ability_scroll": zod.string().optional(),
+  "price": zod.number().optional(),
+  "rarity_upgrades": zod.number().optional(),
+  "runes": zod.record(zod.string(), zod.number()).optional(),
+  "sack_pss": zod.number().optional(),
+  "sinker": zod.object({
+  "donated_museum": zod.boolean().optional(),
+  "part": zod.string().optional()
+}).optional(),
+  "skin": zod.string().optional(),
+  "talisman_enrichment": zod.string().optional(),
+  "thunder_charge": zod.number().optional(),
+  "timestamp": zod.unknown().optional(),
+  "tuned_transmission": zod.number().optional(),
+  "upgrade_level": zod.unknown().optional(),
+  "uuid": zod.string().optional(),
+  "winning_bid": zod.number().optional(),
+  "wood_singularity_count": zod.number().optional()
+}).optional().describe('HideFlags       int             `nbt:\"HideFlags\" json:\"HideFlags,omitempty\"`\nUnbreakable     int             `nbt:\"Unbreakable\" json:\"Unbreakable,omitempty\"`\nEnchantments    []Enchantment   `nbt:\"ench\" json:\"ench,omitempty\"`'),
+  "ItemModel": zod.string().optional(),
+  "SkullOwner": zod.object({
+  "Id": zod.string().optional(),
+  "Properties": zod.object({
+  "textures": zod.array(zod.object({
+  "Signature": zod.string().optional(),
+  "Value": zod.string().optional()
+})).optional()
+}).optional()
+}).optional(),
+  "display": zod.object({
+  "Lore": zod.array(zod.string()).optional(),
+  "Name": zod.string().optional(),
+  "color": zod.number().optional()
+}).optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+})).optional(),
+  "level": zod.object({
+  "level": zod.number().optional(),
+  "levelCap": zod.number().optional(),
+  "levelWithProgress": zod.number().optional(),
+  "maxLevel": zod.number().optional(),
+  "maxed": zod.boolean().optional(),
+  "progress": zod.number().optional(),
+  "texture": zod.string().optional(),
+  "uncappedLevel": zod.number().optional(),
+  "unlockableLevelWithProgress": zod.number().optional(),
+  "xp": zod.number().optional(),
+  "xpCurrent": zod.number().optional(),
+  "xpForNext": zod.number().optional()
+}).optional(),
+  "miningLevel": zod.object({
+  "level": zod.number().optional(),
+  "levelCap": zod.number().optional(),
+  "levelWithProgress": zod.number().optional(),
+  "maxLevel": zod.number().optional(),
+  "maxed": zod.boolean().optional(),
+  "progress": zod.number().optional(),
+  "texture": zod.string().optional(),
+  "uncappedLevel": zod.number().optional(),
+  "unlockableLevelWithProgress": zod.number().optional(),
+  "xp": zod.number().optional(),
+  "xpCurrent": zod.number().optional(),
+  "xpForNext": zod.number().optional()
+}).optional(),
+  "peakOfTheMountain": zod.object({
+  "level": zod.number().optional(),
+  "max_level": zod.number().optional()
+}).optional(),
+  "powder": zod.object({
+  "gemstone": zod.object({
+  "available": zod.number().optional(),
+  "spent": zod.number().optional(),
+  "total": zod.number().optional()
+}).optional(),
+  "glacite": zod.object({
+  "available": zod.number().optional(),
+  "spent": zod.number().optional(),
+  "total": zod.number().optional()
+}).optional(),
+  "mithril": zod.object({
+  "available": zod.number().optional(),
+  "spent": zod.number().optional(),
+  "total": zod.number().optional()
+}).optional()
+}).optional(),
+  "selectedPickaxeAbility": zod.string().optional(),
+  "tokens": zod.object({
+  "available": zod.number().optional(),
+  "spent": zod.number().optional(),
+  "total": zod.number().optional()
+}).optional(),
+  "tools": zod.object({
+  "highest_priority_tool": zod.object({
+  "Count": zod.number().optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "sourceTab": zod.object({
+  "icon": zod.string().optional(),
+  "name": zod.string().optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+}).optional(),
+  "tools": zod.array(zod.object({
+  "Count": zod.number().optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "sourceTab": zod.object({
+  "icon": zod.string().optional(),
+  "name": zod.string().optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+})).optional()
+}).optional()
+}).optional()
+}).optional(),
+  "slayers": zod.object({
+  "data": zod.record(zod.string(), zod.object({
+  "kills": zod.record(zod.string(), zod.number()).optional(),
+  "level": zod.object({
+  "level": zod.number().optional(),
+  "maxLevel": zod.number().optional(),
+  "maxed": zod.boolean().optional(),
+  "xp": zod.number().optional(),
+  "xpForNext": zod.number().optional()
+}).optional(),
+  "name": zod.string().optional(),
+  "texture": zod.string().optional()
+})).optional(),
+  "stats": zod.record(zod.string(), zod.number()).optional(),
+  "totalSlayerExp": zod.number().optional()
+}).optional()
+})
+
 
 /**
  * Returns embed data for the given user (UUID or username) and optional profile ID
  * @summary Get embed data for a specified player
  */
 export const GetApiEmbedUuidParams = zod.object({
-  uuid: zod.string().describe("User UUID or username")
-});
+  "uuid": zod.string().describe('User UUID or username')
+})
 
 export const GetApiEmbedUuidQueryParams = zod.object({
-  profileId: zod.string().optional().describe("Profile ID (optional, defaults to selected profile)")
-});
+  "profileId": zod.string().optional().describe('Profile ID (optional, defaults to selected profile)')
+})
 
 export const GetApiEmbedUuidResponse = zod.object({
-  bank: zod.number().optional(),
-  displayName: zod.string().optional(),
-  dungeons: zod
-    .object({
-      classAverage: zod.number().optional(),
-      classes: zod.record(zod.string(), zod.number()).optional(),
-      dungeoneering: zod.number().optional()
-    })
-    .optional(),
-  game_mode: zod.string().optional(),
-  joined: zod.number().optional(),
-  networth: zod
-    .object({
-      nonCosmetic: zod.number().optional(),
-      normal: zod.number().optional()
-    })
-    .optional(),
-  profile_cute_name: zod.string().optional(),
-  profile_id: zod.string().optional(),
-  purse: zod.number().optional(),
-  rank: zod
-    .object({
-      plusColor: zod.string().optional(),
-      plusText: zod.string().optional(),
-      rankColor: zod.string().optional(),
-      rankText: zod.string().optional()
-    })
-    .optional(),
-  skills: zod
-    .object({
-      skillAverage: zod.number().optional(),
-      skills: zod.record(zod.string(), zod.number()).optional()
-    })
-    .optional(),
-  skyblock_level: zod.number().optional(),
-  slayers: zod
-    .object({
-      slayers: zod.record(zod.string(), zod.number()).optional(),
-      xp: zod.number().optional()
-    })
-    .optional(),
-  username: zod.string().optional(),
-  uuid: zod.string().optional()
-});
+  "bank": zod.number().optional(),
+  "displayName": zod.string().optional(),
+  "dungeons": zod.object({
+  "classAverage": zod.number().optional(),
+  "classes": zod.record(zod.string(), zod.number()).optional(),
+  "dungeoneering": zod.number().optional()
+}).optional(),
+  "game_mode": zod.string().optional(),
+  "joined": zod.number().optional(),
+  "networth": zod.object({
+  "nonCosmetic": zod.number().optional(),
+  "normal": zod.number().optional()
+}).optional(),
+  "profile_cute_name": zod.string().optional(),
+  "profile_id": zod.string().optional(),
+  "purse": zod.number().optional(),
+  "rank": zod.object({
+  "plusColor": zod.string().optional(),
+  "plusText": zod.string().optional(),
+  "rankColor": zod.string().optional(),
+  "rankText": zod.string().optional()
+}).optional(),
+  "skills": zod.object({
+  "skillAverage": zod.number().optional(),
+  "skills": zod.record(zod.string(), zod.number()).optional()
+}).optional(),
+  "skyblock_level": zod.number().optional(),
+  "slayers": zod.object({
+  "slayers": zod.record(zod.string(), zod.number()).optional(),
+  "xp": zod.number().optional()
+}).optional(),
+  "username": zod.string().optional(),
+  "uuid": zod.string().optional()
+})
+
 
 /**
  * Retrieves all emojis from the database
  * @summary Get all emojis
  */
-export const GetApiEmojisResponse = zod.record(zod.string(), zod.unknown());
+export const GetApiEmojisResponse = zod.record(zod.string(), zod.unknown())
+
 
 /**
  * Returns garden data for the given profile ID
  * @summary Get garden stats of a specified profile
  */
 export const GetApiGardenUuidProfileIdParams = zod.object({
-  uuid: zod.string().describe("User UUID"),
-  profileId: zod.string().describe("Profile ID")
-});
+  "uuid": zod.string().describe('User UUID'),
+  "profileId": zod.string().describe('Profile ID')
+})
 
 export const GetApiGardenUuidProfileIdResponse = zod.object({
-  composter: zod.record(zod.string(), zod.number()).optional(),
-  cropMilestones: zod
-    .array(
-      zod.object({
-        level: zod
-          .object({
-            level: zod.number().optional(),
-            levelCap: zod.number().optional(),
-            levelWithProgress: zod.number().optional(),
-            maxLevel: zod.number().optional(),
-            maxed: zod.boolean().optional(),
-            progress: zod.number().optional(),
-            texture: zod.string().optional(),
-            uncappedLevel: zod.number().optional(),
-            unlockableLevelWithProgress: zod.number().optional(),
-            xp: zod.number().optional(),
-            xpCurrent: zod.number().optional(),
-            xpForNext: zod.number().optional()
-          })
-          .optional(),
-        name: zod.string().optional(),
-        texture: zod.string().optional()
-      })
-    )
-    .optional(),
-  cropUpgrades: zod
-    .array(
-      zod.object({
-        level: zod
-          .object({
-            level: zod.number().optional(),
-            levelCap: zod.number().optional(),
-            levelWithProgress: zod.number().optional(),
-            maxLevel: zod.number().optional(),
-            maxed: zod.boolean().optional(),
-            progress: zod.number().optional(),
-            texture: zod.string().optional(),
-            uncappedLevel: zod.number().optional(),
-            unlockableLevelWithProgress: zod.number().optional(),
-            xp: zod.number().optional(),
-            xpCurrent: zod.number().optional(),
-            xpForNext: zod.number().optional()
-          })
-          .optional(),
-        name: zod.string().optional(),
-        texture: zod.string().optional()
-      })
-    )
-    .optional(),
-  dnaAnalysisMilestone: zod
-    .object({
-      level: zod.number().optional(),
-      maxLevel: zod.number().optional()
-    })
-    .optional(),
-  gardenChips: zod
-    .array(
-      zod.object({
-        amount: zod.number().optional(),
-        maxLevel: zod.number().optional(),
-        name: zod.string().optional(),
-        texture: zod.string().optional()
-      })
-    )
-    .optional(),
-  gardenUpgrades: zod
-    .array(
-      zod.object({
-        level: zod.number().optional(),
-        maxLevel: zod.number().optional(),
-        name: zod.string().optional(),
-        texture: zod.string().optional()
-      })
-    )
-    .optional(),
-  level: zod
-    .object({
-      level: zod.number().optional(),
-      levelCap: zod.number().optional(),
-      levelWithProgress: zod.number().optional(),
-      maxLevel: zod.number().optional(),
-      maxed: zod.boolean().optional(),
-      progress: zod.number().optional(),
-      texture: zod.string().optional(),
-      uncappedLevel: zod.number().optional(),
-      unlockableLevelWithProgress: zod.number().optional(),
-      xp: zod.number().optional(),
-      xpCurrent: zod.number().optional(),
-      xpForNext: zod.number().optional()
-    })
-    .optional(),
-  mutations: zod
-    .array(
-      zod.object({
-        max: zod.boolean().optional(),
-        name: zod.string().optional(),
-        texture: zod.string().optional(),
-        unlocked: zod.boolean().optional()
-      })
-    )
-    .optional(),
-  plot: zod
-    .object({
-      barnSkin: zod.string().optional(),
-      layout: zod
-        .array(
-          zod.object({
-            Count: zod.number().optional(),
-            Damage: zod.number().optional(),
-            categories: zod.array(zod.string()).optional(),
-            containsItems: zod.array(zod.unknown()).optional(),
-            display_name: zod.string().optional(),
-            id: zod.string().optional(),
-            isInactive: zod.boolean().optional(),
-            itemIndex: zod.number().optional(),
-            lore: zod.array(zod.string()).optional(),
-            price: zod.number().optional(),
-            rarity: zod.string().optional(),
-            recombobulated: zod.boolean().optional(),
-            shiny: zod.boolean().optional(),
-            source: zod.string().optional(),
-            tag: zod
-              .object({
-                ExtraAttributes: zod
-                  .object({
-                    ability_scroll: zod.array(zod.string()).optional(),
-                    additional_coins: zod.number().optional(),
-                    artOfPeaceApplied: zod.number().optional(),
-                    art_of_war_count: zod.number().optional(),
-                    attributes: zod.record(zod.string(), zod.number()).optional(),
-                    auction: zod.number().optional(),
-                    bid: zod.number().optional(),
-                    boosters: zod.array(zod.string()).optional(),
-                    champion_combat_xp: zod.number().optional(),
-                    collected_coins: zod.number().optional(),
-                    compact_blocks: zod.number().optional(),
-                    divan_powder_coating: zod.number().optional(),
-                    donated_museum: zod.boolean().optional(),
-                    drill_part_engine: zod.string().optional(),
-                    drill_part_fuel_tank: zod.string().optional(),
-                    drill_part_upgrade_module: zod.string().optional(),
-                    dungeon_item_level: zod.unknown().optional(),
-                    dye_item: zod.string().optional(),
-                    edition: zod.number().optional(),
-                    enchantments: zod.record(zod.string(), zod.number()).optional(),
-                    ethermerge: zod.number().optional(),
-                    expertise_kills: zod.number().optional(),
-                    farmed_cultivating: zod.number().optional(),
-                    farming_for_dummies_count: zod.number().optional(),
-                    gems: zod.record(zod.string(), zod.unknown()).optional(),
-                    hecatomb_s_runs: zod.number().optional(),
-                    hook: zod
-                      .object({
-                        donated_museum: zod.boolean().optional(),
-                        part: zod.string().optional()
-                      })
-                      .optional(),
-                    hot_potato_count: zod.number().optional(),
-                    id: zod.string().optional(),
-                    is_shiny: zod.boolean().optional(),
-                    item_tier: zod.number().optional(),
-                    jalapeno_count: zod.number().optional(),
-                    levelable_overclocks: zod.number().optional(),
-                    line: zod
-                      .object({
-                        donated_museum: zod.boolean().optional(),
-                        part: zod.string().optional()
-                      })
-                      .optional(),
-                    mana_disintegrator_count: zod.number().optional(),
-                    model: zod.string().optional(),
-                    modifier: zod.string().optional(),
-                    new_year_cake_bag_data: zod.array(zod.number()).optional(),
-                    new_year_cake_bag_years: zod.array(zod.number()).optional(),
-                    new_years_cake: zod.number().optional(),
-                    party_hat_color: zod.string().optional(),
-                    party_hat_emoji: zod.string().optional(),
-                    petInfo: zod.string().optional(),
-                    pickonimbus_durability: zod.number().optional(),
-                    polarvoid: zod.number().optional(),
-                    power_ability_scroll: zod.string().optional(),
-                    price: zod.number().optional(),
-                    rarity_upgrades: zod.number().optional(),
-                    runes: zod.record(zod.string(), zod.number()).optional(),
-                    sack_pss: zod.number().optional(),
-                    sinker: zod
-                      .object({
-                        donated_museum: zod.boolean().optional(),
-                        part: zod.string().optional()
-                      })
-                      .optional(),
-                    skin: zod.string().optional(),
-                    talisman_enrichment: zod.string().optional(),
-                    thunder_charge: zod.number().optional(),
-                    timestamp: zod.unknown().optional(),
-                    tuned_transmission: zod.number().optional(),
-                    upgrade_level: zod.unknown().optional(),
-                    uuid: zod.string().optional(),
-                    winning_bid: zod.number().optional(),
-                    wood_singularity_count: zod.number().optional()
-                  })
-                  .optional()
-                  .describe('HideFlags       int             `nbt:\"HideFlags\" json:\"HideFlags,omitempty\"`\nUnbreakable     int             `nbt:\"Unbreakable\" json:\"Unbreakable,omitempty\"`\nEnchantments    []Enchantment   `nbt:\"ench\" json:\"ench,omitempty\"`'),
-                ItemModel: zod.string().optional(),
-                SkullOwner: zod
-                  .object({
-                    Id: zod.string().optional(),
-                    Properties: zod
-                      .object({
-                        textures: zod
-                          .array(
-                            zod.object({
-                              Signature: zod.string().optional(),
-                              Value: zod.string().optional()
-                            })
-                          )
-                          .optional()
-                      })
-                      .optional()
-                  })
-                  .optional(),
-                display: zod
-                  .object({
-                    Lore: zod.array(zod.string()).optional(),
-                    Name: zod.string().optional(),
-                    color: zod.number().optional()
-                  })
-                  .optional()
-              })
-              .optional(),
-            texture_pack: zod.string().optional(),
-            texture_path: zod.string().optional(),
-            wiki: zod
-              .object({
-                fandom: zod.string().optional(),
-                official: zod.string().optional()
-              })
-              .optional()
-          })
-        )
-        .optional(),
-      total: zod.number().optional(),
-      unlocked: zod.number().optional()
-    })
-    .optional(),
-  visitors: zod
-    .object({
-      completed: zod.number().optional(),
-      uniqueVisitors: zod.number().optional(),
-      visited: zod.number().optional(),
-      visitors: zod
-        .record(
-          zod.string(),
-          zod.object({
-            completed: zod.number().optional(),
-            maxUnique: zod.number().optional(),
-            unique: zod.number().optional(),
-            visited: zod.number().optional()
-          })
-        )
-        .optional()
-    })
-    .optional()
-});
+  "composter": zod.record(zod.string(), zod.number()).optional(),
+  "cropMilestones": zod.array(zod.object({
+  "level": zod.object({
+  "level": zod.number().optional(),
+  "levelCap": zod.number().optional(),
+  "levelWithProgress": zod.number().optional(),
+  "maxLevel": zod.number().optional(),
+  "maxed": zod.boolean().optional(),
+  "progress": zod.number().optional(),
+  "texture": zod.string().optional(),
+  "uncappedLevel": zod.number().optional(),
+  "unlockableLevelWithProgress": zod.number().optional(),
+  "xp": zod.number().optional(),
+  "xpCurrent": zod.number().optional(),
+  "xpForNext": zod.number().optional()
+}).optional(),
+  "name": zod.string().optional(),
+  "texture": zod.string().optional()
+})).optional(),
+  "cropUpgrades": zod.array(zod.object({
+  "level": zod.object({
+  "level": zod.number().optional(),
+  "levelCap": zod.number().optional(),
+  "levelWithProgress": zod.number().optional(),
+  "maxLevel": zod.number().optional(),
+  "maxed": zod.boolean().optional(),
+  "progress": zod.number().optional(),
+  "texture": zod.string().optional(),
+  "uncappedLevel": zod.number().optional(),
+  "unlockableLevelWithProgress": zod.number().optional(),
+  "xp": zod.number().optional(),
+  "xpCurrent": zod.number().optional(),
+  "xpForNext": zod.number().optional()
+}).optional(),
+  "name": zod.string().optional(),
+  "texture": zod.string().optional()
+})).optional(),
+  "dnaAnalysisMilestone": zod.object({
+  "level": zod.number().optional(),
+  "maxLevel": zod.number().optional()
+}).optional(),
+  "gardenChips": zod.array(zod.object({
+  "amount": zod.number().optional(),
+  "maxLevel": zod.number().optional(),
+  "name": zod.string().optional(),
+  "texture": zod.string().optional()
+})).optional(),
+  "gardenUpgrades": zod.array(zod.object({
+  "level": zod.number().optional(),
+  "maxLevel": zod.number().optional(),
+  "name": zod.string().optional(),
+  "texture": zod.string().optional()
+})).optional(),
+  "level": zod.object({
+  "level": zod.number().optional(),
+  "levelCap": zod.number().optional(),
+  "levelWithProgress": zod.number().optional(),
+  "maxLevel": zod.number().optional(),
+  "maxed": zod.boolean().optional(),
+  "progress": zod.number().optional(),
+  "texture": zod.string().optional(),
+  "uncappedLevel": zod.number().optional(),
+  "unlockableLevelWithProgress": zod.number().optional(),
+  "xp": zod.number().optional(),
+  "xpCurrent": zod.number().optional(),
+  "xpForNext": zod.number().optional()
+}).optional(),
+  "mutations": zod.array(zod.object({
+  "max": zod.boolean().optional(),
+  "name": zod.string().optional(),
+  "texture": zod.string().optional(),
+  "unlocked": zod.boolean().optional()
+})).optional(),
+  "plot": zod.object({
+  "barnSkin": zod.string().optional(),
+  "layout": zod.array(zod.object({
+  "Count": zod.number().optional(),
+  "Damage": zod.number().optional(),
+  "categories": zod.array(zod.string()).optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "id": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "itemIndex": zod.number().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "price": zod.number().optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "tag": zod.object({
+  "ExtraAttributes": zod.object({
+  "ability_scroll": zod.array(zod.string()).optional(),
+  "additional_coins": zod.number().optional(),
+  "artOfPeaceApplied": zod.number().optional(),
+  "art_of_war_count": zod.number().optional(),
+  "attributes": zod.record(zod.string(), zod.number()).optional(),
+  "auction": zod.number().optional(),
+  "bid": zod.number().optional(),
+  "boosters": zod.array(zod.string()).optional(),
+  "champion_combat_xp": zod.number().optional(),
+  "collected_coins": zod.number().optional(),
+  "compact_blocks": zod.number().optional(),
+  "divan_powder_coating": zod.number().optional(),
+  "donated_museum": zod.boolean().optional(),
+  "drill_part_engine": zod.string().optional(),
+  "drill_part_fuel_tank": zod.string().optional(),
+  "drill_part_upgrade_module": zod.string().optional(),
+  "dungeon_item_level": zod.unknown().optional(),
+  "dye_item": zod.string().optional(),
+  "edition": zod.number().optional(),
+  "enchantments": zod.record(zod.string(), zod.number()).optional(),
+  "ethermerge": zod.number().optional(),
+  "expertise_kills": zod.number().optional(),
+  "farmed_cultivating": zod.number().optional(),
+  "farming_for_dummies_count": zod.number().optional(),
+  "gems": zod.record(zod.string(), zod.unknown()).optional(),
+  "hecatomb_s_runs": zod.number().optional(),
+  "hook": zod.object({
+  "donated_museum": zod.boolean().optional(),
+  "part": zod.string().optional()
+}).optional(),
+  "hot_potato_count": zod.number().optional(),
+  "id": zod.string().optional(),
+  "is_shiny": zod.boolean().optional(),
+  "item_tier": zod.number().optional(),
+  "jalapeno_count": zod.number().optional(),
+  "levelable_overclocks": zod.number().optional(),
+  "line": zod.object({
+  "donated_museum": zod.boolean().optional(),
+  "part": zod.string().optional()
+}).optional(),
+  "mana_disintegrator_count": zod.number().optional(),
+  "model": zod.string().optional(),
+  "modifier": zod.string().optional(),
+  "new_year_cake_bag_data": zod.array(zod.number()).optional(),
+  "new_year_cake_bag_years": zod.array(zod.number()).optional(),
+  "new_years_cake": zod.number().optional(),
+  "party_hat_color": zod.string().optional(),
+  "party_hat_emoji": zod.string().optional(),
+  "petInfo": zod.string().optional(),
+  "pickonimbus_durability": zod.number().optional(),
+  "polarvoid": zod.number().optional(),
+  "power_ability_scroll": zod.string().optional(),
+  "price": zod.number().optional(),
+  "rarity_upgrades": zod.number().optional(),
+  "runes": zod.record(zod.string(), zod.number()).optional(),
+  "sack_pss": zod.number().optional(),
+  "sinker": zod.object({
+  "donated_museum": zod.boolean().optional(),
+  "part": zod.string().optional()
+}).optional(),
+  "skin": zod.string().optional(),
+  "talisman_enrichment": zod.string().optional(),
+  "thunder_charge": zod.number().optional(),
+  "timestamp": zod.unknown().optional(),
+  "tuned_transmission": zod.number().optional(),
+  "upgrade_level": zod.unknown().optional(),
+  "uuid": zod.string().optional(),
+  "winning_bid": zod.number().optional(),
+  "wood_singularity_count": zod.number().optional()
+}).optional().describe('HideFlags       int             `nbt:\"HideFlags\" json:\"HideFlags,omitempty\"`\nUnbreakable     int             `nbt:\"Unbreakable\" json:\"Unbreakable,omitempty\"`\nEnchantments    []Enchantment   `nbt:\"ench\" json:\"ench,omitempty\"`'),
+  "ItemModel": zod.string().optional(),
+  "SkullOwner": zod.object({
+  "Id": zod.string().optional(),
+  "Properties": zod.object({
+  "textures": zod.array(zod.object({
+  "Signature": zod.string().optional(),
+  "Value": zod.string().optional()
+})).optional()
+}).optional()
+}).optional(),
+  "display": zod.object({
+  "Lore": zod.array(zod.string()).optional(),
+  "Name": zod.string().optional(),
+  "color": zod.number().optional()
+}).optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+})).optional(),
+  "total": zod.number().optional(),
+  "unlocked": zod.number().optional()
+}).optional(),
+  "visitors": zod.object({
+  "completed": zod.number().optional(),
+  "uniqueVisitors": zod.number().optional(),
+  "visited": zod.number().optional(),
+  "visitors": zod.record(zod.string(), zod.object({
+  "completed": zod.number().optional(),
+  "maxUnique": zod.number().optional(),
+  "unique": zod.number().optional(),
+  "visited": zod.number().optional()
+})).optional()
+}).optional()
+})
+
 
 /**
  * Returns a PNG image of a head for the given texture ID
  * @summary Render and return a head image
  */
 export const GetApiHeadTextureIdParams = zod.object({
-  textureId: zod.string().describe("Texture ID")
-});
+  "textureId": zod.string().describe('Texture ID')
+})
 
-export const GetApiHeadTextureIdResponse = zod.file();
+export const GetApiHeadTextureIdResponse = zod.file()
+
 
 /**
  * Returns inventory items that match the search parameter for the given user and profile ID. Searches across all inventories and returns items that contain the search parameter in their name or lore.
  * @summary Get searched inventory items for a specified player and search parameter
  */
 export const GetApiInventorySearchUuidProfileIdSearchParamParams = zod.object({
-  uuid: zod.string().describe("User UUID"),
-  profileId: zod.string().describe("Profile ID"),
-  searchParam: zod.string().describe("Search parameter to filter inventory items")
-});
+  "uuid": zod.string().describe('User UUID'),
+  "profileId": zod.string().describe('Profile ID'),
+  "searchParam": zod.string().describe('Search parameter to filter inventory items')
+})
 
 export const GetApiInventorySearchUuidProfileIdSearchParamResponseItem = zod.object({
-  Count: zod.number().optional(),
-  containsItems: zod.array(zod.unknown()).optional(),
-  display_name: zod.string().optional(),
-  isInactive: zod.boolean().optional(),
-  lore: zod.array(zod.string()).optional(),
-  rarity: zod.string().optional(),
-  recombobulated: zod.boolean().optional(),
-  shiny: zod.boolean().optional(),
-  source: zod.string().optional(),
-  sourceTab: zod
-    .object({
-      icon: zod.string().optional(),
-      name: zod.string().optional()
-    })
-    .optional(),
-  texture_pack: zod.string().optional(),
-  texture_path: zod.string().optional(),
-  wiki: zod
-    .object({
-      fandom: zod.string().optional(),
-      official: zod.string().optional()
-    })
-    .optional()
-});
-export const GetApiInventorySearchUuidProfileIdSearchParamResponse = zod.array(GetApiInventorySearchUuidProfileIdSearchParamResponseItem);
+  "Count": zod.number().optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "sourceTab": zod.object({
+  "icon": zod.string().optional(),
+  "name": zod.string().optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+})
+export const GetApiInventorySearchUuidProfileIdSearchParamResponse = zod.array(GetApiInventorySearchUuidProfileIdSearchParamResponseItem)
+
 
 /**
  * Returns inventory items for the given user, profile ID
  * @summary Get inventory items for a specified player
  */
 export const GetApiInventoryUuidProfileIdParams = zod.object({
-  uuid: zod.string().describe("User UUID"),
-  profileId: zod.string().describe("Profile ID")
-});
+  "uuid": zod.string().describe('User UUID'),
+  "profileId": zod.string().describe('Profile ID')
+})
 
 export const GetApiInventoryUuidProfileIdQueryParams = zod.object({
-  query: zod.string().optional().describe("Search query (required when inventoryId is 'search')")
-});
+  "query": zod.string().optional().describe('Search query (required when inventoryId is \'search\')')
+})
 
 export const GetApiInventoryUuidProfileIdResponseItem = zod.object({
-  items: zod
-    .array(
-      zod.object({
-        Count: zod.number().optional(),
-        containsItems: zod.array(zod.unknown()).optional(),
-        display_name: zod.string().optional(),
-        isInactive: zod.boolean().optional(),
-        lore: zod.array(zod.string()).optional(),
-        rarity: zod.string().optional(),
-        recombobulated: zod.boolean().optional(),
-        shiny: zod.boolean().optional(),
-        source: zod.string().optional(),
-        sourceTab: zod
-          .object({
-            icon: zod.string().optional(),
-            name: zod.string().optional()
-          })
-          .optional(),
-        texture_pack: zod.string().optional(),
-        texture_path: zod.string().optional(),
-        wiki: zod
-          .object({
-            fandom: zod.string().optional(),
-            official: zod.string().optional()
-          })
-          .optional()
-      })
-    )
-    .optional(),
-  name: zod.string().optional(),
-  separatorAfter: zod.number().optional(),
-  texture: zod.string().optional()
-});
-export const GetApiInventoryUuidProfileIdResponse = zod.array(GetApiInventoryUuidProfileIdResponseItem);
+  "items": zod.array(zod.object({
+  "Count": zod.number().optional(),
+  "containsItems": zod.array(zod.unknown()).optional(),
+  "display_name": zod.string().optional(),
+  "isInactive": zod.boolean().optional(),
+  "lore": zod.array(zod.string()).optional(),
+  "rarity": zod.string().optional(),
+  "recombobulated": zod.boolean().optional(),
+  "shiny": zod.boolean().optional(),
+  "source": zod.string().optional(),
+  "sourceTab": zod.object({
+  "icon": zod.string().optional(),
+  "name": zod.string().optional()
+}).optional(),
+  "texture_pack": zod.string().optional(),
+  "texture_path": zod.string().optional(),
+  "wiki": zod.string().optional()
+})).optional(),
+  "name": zod.string().optional(),
+  "separatorAfter": zod.number().optional(),
+  "texture": zod.string().optional()
+})
+export const GetApiInventoryUuidProfileIdResponse = zod.array(GetApiInventoryUuidProfileIdResponseItem)
+
 
 /**
  * Returns a PNG image of an item for the given texture ID
  * @summary Render and return an item image
  */
 export const GetApiItemItemIdParams = zod.object({
-  itemId: zod.string().describe("Item ID")
-});
+  "itemId": zod.string().describe('Item ID')
+})
 
-export const GetApiItemItemIdResponse = zod.file();
+export const GetApiItemItemIdResponse = zod.file()
+
 
 /**
  * Returns a PNG image of leather armor for the given type and color
  * @summary Render and return a leather armor image
  */
 export const GetApiLeatherTypeColorParams = zod.object({
-  type: zod.string().describe("Armor Type"),
-  color: zod.string().describe("Armor Color")
-});
+  "type": zod.string().describe('Armor Type'),
+  "color": zod.string().describe('Armor Color')
+})
 
-export const GetApiLeatherTypeColorResponse = zod.file();
+export const GetApiLeatherTypeColorResponse = zod.file()
+
 
 /**
  * Returns networth for the given user and profile ID
  * @summary Get networth of a specified player
  */
 export const GetApiNetworthUuidProfileIdParams = zod.object({
-  uuid: zod.string().describe("User UUID"),
-  profileId: zod.string().describe("Profile ID")
-});
+  "uuid": zod.string().describe('User UUID'),
+  "profileId": zod.string().describe('Profile ID')
+})
 
 export const GetApiNetworthUuidProfileIdResponse = zod.object({
-  nonCosmetic: zod
-    .object({
-      bank: zod.number().optional(),
-      isNonCosmetic: zod.boolean().optional(),
-      networth: zod.number().optional(),
-      noInventory: zod.boolean().optional(),
-      personalBank: zod.number().optional(),
-      purse: zod.number().optional(),
-      types: zod
-        .record(
-          zod.string(),
-          zod.object({
-            total: zod.number().optional(),
-            unsoulboundTotal: zod.number().optional()
-          })
-        )
-        .optional(),
-      unsoulboundNetworth: zod.number().optional()
-    })
-    .optional(),
-  normal: zod
-    .object({
-      bank: zod.number().optional(),
-      isNonCosmetic: zod.boolean().optional(),
-      networth: zod.number().optional(),
-      noInventory: zod.boolean().optional(),
-      personalBank: zod.number().optional(),
-      purse: zod.number().optional(),
-      types: zod
-        .record(
-          zod.string(),
-          zod.object({
-            total: zod.number().optional(),
-            unsoulboundTotal: zod.number().optional()
-          })
-        )
-        .optional(),
-      unsoulboundNetworth: zod.number().optional()
-    })
-    .optional()
-});
+  "nonCosmetic": zod.object({
+  "bank": zod.number().optional(),
+  "isNonCosmetic": zod.boolean().optional(),
+  "networth": zod.number().optional(),
+  "noInventory": zod.boolean().optional(),
+  "personalBank": zod.number().optional(),
+  "purse": zod.number().optional(),
+  "types": zod.record(zod.string(), zod.object({
+  "total": zod.number().optional(),
+  "unsoulboundTotal": zod.number().optional()
+})).optional(),
+  "unsoulboundNetworth": zod.number().optional()
+}).optional(),
+  "normal": zod.object({
+  "bank": zod.number().optional(),
+  "isNonCosmetic": zod.boolean().optional(),
+  "networth": zod.number().optional(),
+  "noInventory": zod.boolean().optional(),
+  "personalBank": zod.number().optional(),
+  "purse": zod.number().optional(),
+  "types": zod.record(zod.string(), zod.object({
+  "total": zod.number().optional(),
+  "unsoulboundTotal": zod.number().optional()
+})).optional(),
+  "unsoulboundNetworth": zod.number().optional()
+}).optional()
+})
+
 
 /**
  * Returns player stats for the given user and profile ID
  * @summary Get player stats of a specified player
  */
 export const GetApiPlayerStatsUuidProfileIdParams = zod.object({
-  uuid: zod.string().describe("User UUID"),
-  profileId: zod.string().describe("Profile ID")
-});
+  "uuid": zod.string().describe('User UUID'),
+  "profileId": zod.string().describe('Profile ID')
+})
 
 export const GetApiPlayerStatsUuidProfileIdResponse = zod.object({
-  stats: zod.record(zod.string(), zod.record(zod.string(), zod.number())).optional()
-});
+  "stats": zod.record(zod.string(), zod.record(zod.string(), zod.number())).optional()
+})
+
 
 /**
  * Returns a PNG image of a potion for the given type and color
  * @summary Render and return a potion image
  */
 export const GetApiPotionTypeColorParams = zod.object({
-  type: zod.string().describe("Potion Type"),
-  color: zod.string().describe("Potion Color")
-});
+  "type": zod.string().describe('Potion Type'),
+  "color": zod.string().describe('Potion Color')
+})
 
-export const GetApiPotionTypeColorResponse = zod.file();
+export const GetApiPotionTypeColorResponse = zod.file()
+
 
 /**
  * Returns a list of resource packs
  * @summary Get list of resource packs
  */
 export const GetApiResourcepacksResponseItem = zod.object({
-  author: zod.string().optional(),
-  disabled: zod.boolean().optional(),
-  icon: zod.string().optional(),
-  id: zod.string().optional(),
-  name: zod.string().optional(),
-  url: zod.string().optional(),
-  version: zod.string().optional()
-});
-export const GetApiResourcepacksResponse = zod.array(GetApiResourcepacksResponseItem);
+  "author": zod.string().optional(),
+  "disabled": zod.boolean().optional(),
+  "icon": zod.string().optional(),
+  "id": zod.string().optional(),
+  "name": zod.string().optional(),
+  "url": zod.string().optional(),
+  "version": zod.string().optional()
+})
+export const GetApiResourcepacksResponse = zod.array(GetApiResourcepacksResponseItem)
+
 
 /**
  * Returns stats for the given user and profile ID
  * @summary Get stats of a specified player
  */
 export const GetApiStatsUuidProfileIdParams = zod.object({
-  uuid: zod.string().describe("User UUID"),
-  profileId: zod.string().describe("Profile ID")
-});
+  "uuid": zod.string().describe('User UUID'),
+  "profileId": zod.string().describe('Profile ID')
+})
 
 export const GetApiStatsUuidProfileIdResponse = zod.object({
-  apiSettings: zod.record(zod.string(), zod.boolean()).optional(),
-  bank: zod.number().optional(),
-  displayName: zod.string().optional(),
-  fairySouls: zod
-    .object({
-      found: zod.number().optional(),
-      total: zod.number().optional()
-    })
-    .optional(),
-  game_mode: zod.string().optional(),
-  joined: zod.number().optional(),
-  members: zod
-    .array(
-      zod.object({
-        cute_name: zod.string().optional(),
-        profile_id: zod.string().optional(),
-        removed: zod.boolean().optional(),
-        username: zod.string().optional(),
-        uuid: zod.string().optional()
-      })
-    )
-    .optional(),
-  personalBank: zod.number().optional(),
-  profile_cute_name: zod.string().optional(),
-  profile_id: zod.string().optional(),
-  profiles: zod
-    .array(
-      zod.object({
-        cute_name: zod.string().optional(),
-        game_mode: zod.string().optional(),
-        profile_id: zod.string().optional(),
-        selected: zod.boolean().optional()
-      })
-    )
-    .optional(),
-  purse: zod.number().optional(),
-  rank: zod
-    .object({
-      plusColor: zod.string().optional(),
-      plusText: zod.string().optional(),
-      rankColor: zod.string().optional(),
-      rankText: zod.string().optional()
-    })
-    .optional(),
-  selected: zod.boolean().optional(),
-  skills: zod
-    .object({
-      averageSkillLevel: zod.number().optional(),
-      averageSkillLevelWithProgress: zod.number().optional(),
-      skills: zod
-        .record(
-          zod.string(),
-          zod.object({
-            level: zod.number().optional(),
-            levelCap: zod.number().optional(),
-            levelWithProgress: zod.number().optional(),
-            maxLevel: zod.number().optional(),
-            maxed: zod.boolean().optional(),
-            progress: zod.number().optional(),
-            texture: zod.string().optional(),
-            uncappedLevel: zod.number().optional(),
-            unlockableLevelWithProgress: zod.number().optional(),
-            xp: zod.number().optional(),
-            xpCurrent: zod.number().optional(),
-            xpForNext: zod.number().optional()
-          })
-        )
-        .optional(),
-      totalSkillXp: zod.number().optional()
-    })
-    .optional(),
-  skyblock_level: zod
-    .object({
-      level: zod.number().optional(),
-      levelCap: zod.number().optional(),
-      levelWithProgress: zod.number().optional(),
-      maxLevel: zod.number().optional(),
-      maxed: zod.boolean().optional(),
-      progress: zod.number().optional(),
-      texture: zod.string().optional(),
-      uncappedLevel: zod.number().optional(),
-      unlockableLevelWithProgress: zod.number().optional(),
-      xp: zod.number().optional(),
-      xpCurrent: zod.number().optional(),
-      xpForNext: zod.number().optional()
-    })
-    .optional(),
-  social: zod
-    .object({
-      DISCORD: zod.string().optional(),
-      HYPIXEL: zod.string().optional(),
-      TWITCH: zod.string().optional(),
-      TWITTER: zod.string().optional()
-    })
-    .optional(),
-  username: zod.string().optional(),
-  uuid: zod.string().optional()
-});
+  "apiSettings": zod.record(zod.string(), zod.boolean()).optional(),
+  "bank": zod.number().optional(),
+  "displayName": zod.string().optional(),
+  "fairySouls": zod.object({
+  "found": zod.number().optional(),
+  "total": zod.number().optional()
+}).optional(),
+  "game_mode": zod.string().optional(),
+  "joined": zod.number().optional(),
+  "members": zod.array(zod.object({
+  "cute_name": zod.string().optional(),
+  "profile_id": zod.string().optional(),
+  "removed": zod.boolean().optional(),
+  "username": zod.string().optional(),
+  "uuid": zod.string().optional()
+})).optional(),
+  "personalBank": zod.number().optional(),
+  "profile_cute_name": zod.string().optional(),
+  "profile_id": zod.string().optional(),
+  "profiles": zod.array(zod.object({
+  "cute_name": zod.string().optional(),
+  "game_mode": zod.string().optional(),
+  "profile_id": zod.string().optional(),
+  "selected": zod.boolean().optional()
+})).optional(),
+  "purse": zod.number().optional(),
+  "rank": zod.object({
+  "plusColor": zod.string().optional(),
+  "plusText": zod.string().optional(),
+  "rankColor": zod.string().optional(),
+  "rankText": zod.string().optional()
+}).optional(),
+  "selected": zod.boolean().optional(),
+  "skills": zod.object({
+  "averageSkillLevel": zod.number().optional(),
+  "averageSkillLevelWithProgress": zod.number().optional(),
+  "skills": zod.record(zod.string(), zod.object({
+  "level": zod.number().optional(),
+  "levelCap": zod.number().optional(),
+  "levelWithProgress": zod.number().optional(),
+  "maxLevel": zod.number().optional(),
+  "maxed": zod.boolean().optional(),
+  "progress": zod.number().optional(),
+  "texture": zod.string().optional(),
+  "uncappedLevel": zod.number().optional(),
+  "unlockableLevelWithProgress": zod.number().optional(),
+  "xp": zod.number().optional(),
+  "xpCurrent": zod.number().optional(),
+  "xpForNext": zod.number().optional()
+})).optional(),
+  "totalSkillXp": zod.number().optional()
+}).optional(),
+  "skyblock_level": zod.object({
+  "level": zod.number().optional(),
+  "levelCap": zod.number().optional(),
+  "levelWithProgress": zod.number().optional(),
+  "maxLevel": zod.number().optional(),
+  "maxed": zod.boolean().optional(),
+  "progress": zod.number().optional(),
+  "texture": zod.string().optional(),
+  "uncappedLevel": zod.number().optional(),
+  "unlockableLevelWithProgress": zod.number().optional(),
+  "xp": zod.number().optional(),
+  "xpCurrent": zod.number().optional(),
+  "xpForNext": zod.number().optional()
+}).optional(),
+  "social": zod.object({
+  "DISCORD": zod.string().optional(),
+  "HYPIXEL": zod.string().optional(),
+  "TWITCH": zod.string().optional(),
+  "TWITTER": zod.string().optional()
+}).optional(),
+  "username": zod.string().optional(),
+  "uuid": zod.string().optional()
+})
+
 
 /**
  * Returns the username associated with the given UUID
  * @summary Get username for a specified UUID
  */
 export const GetApiUsernameUuidParams = zod.object({
-  uuid: zod.string().describe("UUID")
-});
+  "uuid": zod.string().describe('UUID')
+})
 
 export const GetApiUsernameUuidResponse = zod.object({
-  displayName: zod.string().optional(),
-  username: zod.string().optional(),
-  uuid: zod.string().optional()
-});
+  "displayName": zod.string().optional(),
+  "username": zod.string().optional(),
+  "uuid": zod.string().optional()
+})
+
 
 /**
  * Returns the UUID associated with the given username
  * @summary Get UUID for a specified username
  */
 export const GetApiUuidUsernameParams = zod.object({
-  username: zod.string().describe("Username")
-});
+  "username": zod.string().describe('Username')
+})
 
 export const GetApiUuidUsernameResponse = zod.object({
-  displayName: zod.string().optional(),
-  username: zod.string().optional(),
-  uuid: zod.string().optional()
-});
+  "displayName": zod.string().optional(),
+  "username": zod.string().optional(),
+  "uuid": zod.string().optional()
+})

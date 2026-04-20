@@ -14,7 +14,6 @@ context/
 ├── favorites.svelte.ts        # PersistedState: {uuid, ign, displayName?}[]
 ├── searches.svelte.ts         # PersistedState: recent searches
 ├── packs.svelte.ts            # PersistedState: disabled resource packs
-├── wiki.svelte.ts             # PersistedState: wiki order data
 ├── internal.svelte.ts         # Volatile: tabValue, showItem, itemContent, settingsOpen, openCommand
 ├── utils.ts                   # loadOldStorageKey migration helper
 └── index.ts                   # Barrel export (all get/init/set functions)
@@ -64,7 +63,6 @@ let name = $derived(profile.current?.name);
 | Favorites      | persisted | player favorites list                                                             |
 | RecentSearches | persisted | search history                                                                    |
 | DisabledPacks  | persisted | disabled resource pack IDs                                                        |
-| WikiOrder      | persisted | wiki ordering data                                                                |
 
 ## CONVENTIONS
 

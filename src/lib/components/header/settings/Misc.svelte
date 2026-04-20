@@ -1,37 +1,20 @@
 <script lang="ts">
-  import { getPreferences, getWikiOrder } from "$ctx";
+  import { getPreferences } from "$ctx";
   import { SettingsTab } from "$lib/components/header/types";
-  import { sections } from "$lib/sections/constants";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import { Feedback } from "@dnd-kit/dom";
-  import { OptimisticSortingPlugin, SortableKeyboardPlugin } from "@dnd-kit/dom/sortable";
-  import { move } from "@dnd-kit/helpers";
-  import type { DragDropEventHandlers } from "@dnd-kit/svelte";
-  import { DragDropProvider } from "@dnd-kit/svelte";
-  import { createSortable } from "@dnd-kit/svelte/sortable";
-  import BookOpenText from "@lucide/svelte/icons/book-open-text";
   import CircleQuestionMark from "@lucide/svelte/icons/circle-question-mark";
   import Fan from "@lucide/svelte/icons/fan";
-  import GripVertical from "@lucide/svelte/icons/grip-vertical";
   import Keyboard from "@lucide/svelte/icons/keyboard";
   import Pickaxe from "@lucide/svelte/icons/pickaxe";
   import Rainbow from "@lucide/svelte/icons/rainbow";
   import Settings2 from "@lucide/svelte/icons/settings-2";
   import Sparkle from "@lucide/svelte/icons/sparkle";
-  import { Button, Separator, Tabs, Tooltip } from "bits-ui";
+  import { Button, Tabs, Tooltip } from "bits-ui";
   import SettingToggleRow from "./SettingToggleRow.svelte";
 
   const preferences = getPreferences();
-  const wikiOrderContext = getWikiOrder();
-  type WikiSource = (typeof wikiOrderContext.current)[number];
-  type SortableItem = ReturnType<typeof createSortable>;
 
   let isListening = $state(false);
-  let wikiOrder = $state([...wikiOrderContext.current]);
-  let providerKey = $state(0);
-
-  const defaultSectionOrder = sections;
-  const differsFromDefault = $derived(JSON.stringify(preferences.sectionOrder) !== JSON.stringify(defaultSectionOrder));
 
   function handleKeybindKeydown(e: KeyboardEvent) {
     if (isListening) {
@@ -55,12 +38,6 @@
         isListening = false;
       }
     }, 5000);
-  }
-
-  function onDragEnd(event: Parameters<NonNullable<DragDropEventHandlers["onDragEnd"]>>[0]) {
-    wikiOrder = move(wikiOrder, event);
-    wikiOrderContext.current = [...wikiOrder];
-    providerKey += 1;
   }
 </script>
 
@@ -143,52 +120,5 @@
         </Button.Root>
       </div>
     </div>
-    <Separator.Root class="shrink-0 bg-icon/30 data-[orientation=horizontal]:h-0.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-0.5" />
-    <div class="space-y-4 rounded-lg bg-text/5 p-4">
-      <div class="flex items-start gap-2 rounded-lg p-2 font-semibold">
-        <BookOpenText class="size-5 h-lh shrink-0" />
-        <div class="">
-          <h4>Wiki Order</h4>
-          <div class="space-y-2">
-            <p class="text-text/60">Drag and drop the wiki sources to reorder them as you like.</p>
-            <p class="text-text/60">If the wiki source isn't available, the next one in the list will be used.</p>
-          </div>
-        </div>
-      </div>
-
-      {#key providerKey}
-        <DragDropProvider {onDragEnd}>
-          {#each wikiOrder as wiki, index (wiki.id)}
-            {@const sortable = createSortable({
-              id: wiki.id,
-              get index() {
-                return index;
-              },
-              plugins: [SortableKeyboardPlugin, OptimisticSortingPlugin, Feedback.configure({ feedback: "clone" })]
-            })}
-            {@render wikiRowContent(wiki, sortable, true)}
-          {/each}
-        </DragDropProvider>
-      {/key}
-      {#if differsFromDefault}
-        <Button.Root
-          class="mt-4 w-full rounded-lg bg-text/65 p-1.5 text-sm font-semibold text-background/80 uppercase transition-colors ease-out hover:bg-text/80"
-          onclick={() => {
-            preferences.sectionOrder = defaultSectionOrder;
-          }}>
-          Reset to default
-        </Button.Root>
-      {/if}
-    </div>
   </div>
 </Tabs.Content>
-
-{#snippet wikiRowContent(wiki: WikiSource, sortable: SortableItem | null = null, flipEnabled = false)}
-  <div {@attach sortable?.attach} class="relative flex items-center gap-2 rounded-lg bg-text/5 p-2 font-semibold data-[dragging=true]:animate-pulse data-[dragging=true]:opacity-30 data-[flip=true]:will-change-transform" data-dragging={sortable?.isDropTarget} data-flip={flipEnabled}>
-    <GripVertical class="size-5 shrink-0 text-text/60" />
-    <div class="flex flex-col">
-      {wiki.name.replaceAll("_", " ")}
-      <Button.Root href={wiki.link} target="_blank" class="text-link/60 underline">{new URL(wiki.link).hostname}</Button.Root>
-    </div>
-  </div>
-{/snippet}
