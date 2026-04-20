@@ -11,7 +11,7 @@ export interface WikiOrderData {
 export class WikiOrderContext {
   #data = new PersistedState<WikiOrderData[]>("skycryptWikiOrder", [
     { id: 1, name: "Official", link: "https://wiki.hypixel.net" },
-    { id: 2, name: "Fandom", link: "https://hypixel-skyblock.fandom.com" }
+    { id: 2, name: "Independent", link: "https://hypixelskyblock.minecraft.wiki" }
   ]);
 
   constructor() {

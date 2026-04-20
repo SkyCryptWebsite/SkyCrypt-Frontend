@@ -40,15 +40,15 @@
     const preference = wikiOrderContext.current[0].name.toLowerCase();
 
     // Type-safe approach: check if the preference is a valid key
-    if (preference === "fandom" && wiki.fandom) {
-      return { link: wiki.fandom, name: "Fandom" };
+    if (preference === "independent" && wiki.independent) {
+      return { link: wiki.independent, name: "Independent" };
     } else if (preference === "official" && wiki.official) {
       return { link: wiki.official, name: "Official" };
     }
 
     // If no preferred links are available, return any available link or null
-    if (wiki.fandom) {
-      return { link: wiki.fandom, name: "Fandom" };
+    if (wiki.independent) {
+      return { link: wiki.independent, name: "Independent" };
     } else if (wiki.official) {
       return { link: wiki.official, name: "Official" };
     }
