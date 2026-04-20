@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.6.0-beta.0
+
+### Minor Changes
+
+- Remove the official wiki and use the new independent wiki #317. Thanks @DespicableGoose! ([`ac42e56`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/ac42e5654b867a6e91e0310ee02e3f90d89313f7))
+
 ## 3.5.2
 
 ### Patch Changes

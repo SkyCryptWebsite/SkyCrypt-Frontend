@@ -2,7 +2,7 @@
   import { browser, dev } from "$app/environment";
   import { beforeNavigate, replaceState } from "$app/navigation";
   import { page, updated } from "$app/state";
-  import { initDisabledPacks, initFavorites, initInternalState, initPreferences, initRecentSearches, initTheme, initWikiOrder, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
+  import { initDisabledPacks, initFavorites, initInternalState, initPreferences, initRecentSearches, initTheme, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
   import Header from "$lib/components/header/Header.svelte";
   import { CommandPalette, PerformanceMode } from "$lib/components/misc";
   import ThemeEditor from "$lib/components/theme-editor/ThemeEditor.svelte";
@@ -85,7 +85,6 @@
   }
 
   initDisabledPacks();
-  initWikiOrder();
   initFavorites();
   initRecentSearches();
   setMobileContext(isMobile);

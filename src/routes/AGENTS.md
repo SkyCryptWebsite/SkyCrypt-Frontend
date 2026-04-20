@@ -28,7 +28,7 @@ routes/
 ## DATA FLOW
 
 ```
-+layout.svelte        → Inits ALL persisted contexts (preferences, theme, favorites, packs, searches, wiki, internal)
++layout.svelte        → Inits ALL persisted contexts (preferences, theme, favorites, packs, searches, internal)
                       → Sets volatile contexts (mobile, hover, packs)
                       → Renders Header, CommandPalette, Toaster, Drawer
 
