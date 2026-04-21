@@ -72,7 +72,7 @@
     "globals": "^17.5.0",
     "ky": "^2.0.1",
     "numerable": "^0.3.15",
-    "orval": "^8.8.0",
+    "orval": "^8.8.1",
     "paneforge": "^1.0.2",
     "playwright": "^1.59.1",
     "prettier": "^3.8.3",
@@ -98,7 +98,7 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.58.2",
     "vaul-svelte": "1.0.0-next.7",
-    "vite": "^8.0.8",
+    "vite": "^8.0.9",
     "vitest": "^4.1.4",
     "vitest-browser-svelte": "^2.1.1",
     "zod": "^4.3.6"
