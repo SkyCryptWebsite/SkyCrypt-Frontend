@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.6.1-beta.1
+
+### Patch Changes
+
+- Render the JSON-LD `<script type="application/ld+json">` block via `<svelte:element>` instead of `{@html}`, dropping the closing-tag-splitting workaround. The XSS-safe `safeJsonLd` escaping (`<` / `>` / `&`) is unchanged and still preserves data fidelity, so crawlers see exactly the same JSON content as before. ([`263c4f3`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/263c4f3560c04b0cbbdf288e5c7cfc780050665b))
+
 ## 3.6.1-beta.0
 
 ### Patch Changes
