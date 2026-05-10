@@ -15,6 +15,17 @@
   const profile = $derived(getProfileContext().current);
   const profileUUID = $derived(profile?.uuid);
   const profileId = $derived(profile?.profile_id);
+  const networthState = $derived.by(() => {
+    if (profileUUID == null || profileId == null) {
+      return { current: null };
+    }
+
+    const query = getNetworth({ uuid: profileUUID, profileId });
+
+    return {
+      current: query.current
+    };
+  });
 
   const defaultPatternDecimal: string = "0,0.##";
   const defaultPattern: string = "0,0";
@@ -133,14 +144,12 @@
           <Button.Root onclick={retry} class="text-icon hover:text-icon/80">Retry</Button.Root>
         </div>
       {/snippet}
-      {#if profileUUID != null && profileId != null}
-        {@const networthData = await getNetworth({ uuid: profileUUID, profileId: profileId })}
-
-        {#if networthData.normal}
-          <NetworthCard networth={networthData.normal} title="Networth" />
+      {#if networthState.current}
+        {#if networthState.current.normal}
+          <NetworthCard networth={networthState.current.normal} title="Networth" />
         {/if}
-        {#if networthData.nonCosmetic}
-          <NetworthCard networth={networthData.nonCosmetic} title="Non-Cosmetic Networth" />
+        {#if networthState.current.nonCosmetic}
+          <NetworthCard networth={networthState.current.nonCosmetic} title="Non-Cosmetic Networth" />
         {/if}
       {/if}
     </svelte:boundary>

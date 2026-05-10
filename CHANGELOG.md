@@ -1,5 +1,75 @@
 # Changelog
 
+## 3.6.1-beta.1
+
+### Patch Changes
+
+- Render the JSON-LD `<script type="application/ld+json">` block via `<svelte:element>` instead of `{@html}`, dropping the closing-tag-splitting workaround. The XSS-safe `safeJsonLd` escaping (`<` / `>` / `&`) is unchanged and still preserves data fidelity, so crawlers see exactly the same JSON content as before. ([`263c4f3`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/263c4f3560c04b0cbbdf288e5c7cfc780050665b))
+
+## 3.6.1-beta.0
+
+### Patch Changes
+
+- Restore the card background and inline-emoji rendering after upgrading to `takumi-js@1.1.x`. The underlying Rust crate's commit `adc48da` ("Treat absolute/floated children as out-of-flow for inline layout detection") reworked which children participate in inline formatting context, leaving the previous `<img class="absolute inset-0">` background unrendered — which made the white text and emoji appear to vanish too. The persistent image is now applied as `background-image` CSS on the parent `<main>`, matching the pattern shown in the takumi docs. ([`176b8c2`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/176b8c2296f3c79a1a217515f30a4d531fef9644))
+
+- Escape JSON-LD payload so user-controlled fields (e.g. the `ign` URL parameter on stats pages) cannot break out of the `<script type="application/ld+json">` tag. `svelte-seo`'s `jsonLd` prop emits `JSON.stringify(data)` raw, and `JSON.stringify` does not escape `<`, `>` or `&` — so visiting `/stats/<script>alert(1)</script>` was enough to inject arbitrary HTML/JS into `<head>`. The new `JsonLd` component escapes those three characters to their unicode escapes (still valid JSON) before emitting the tag. ([`5452ef7`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/5452ef74f36f90789224c53793444dfbc2297a74))
+
+## 3.6.0
+
+### Minor Changes
+
+- Remove the official wiki and use the new independent wiki #317. Thanks @DespicableGoose! ([#318](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/318))
+
+## 3.6.0-beta.0
+
+### Minor Changes
+
+- Remove the official wiki and use the new independent wiki #317. Thanks @DespicableGoose! ([`ac42e56`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/ac42e5654b867a6e91e0310ee02e3f90d89313f7))
+
+## 3.5.2
+
+### Patch Changes
+
+- Fix remaining SvelteKit remote query lifecycle regressions by replacing stored live query instances with plain reactive snapshots in the stats route, combined section loading, inventory, networth, additional stats, and header theme icon flows. This aligns the app more closely with the stricter remote query behavior introduced around sveltejs/kit#15533 and prevents inactive query access during tab and section transitions. ([#315](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/315))
+
+- Improve the mobile stats header and profile action layout by collapsing the search trigger earlier on small screens and keeping the expanded profile actions inline with the always-visible buttons while preserving their staggered animation timing. ([#315](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/315))
+
+## 3.5.2-beta.0
+
+### Patch Changes
+
+- Fix remaining SvelteKit remote query lifecycle regressions by replacing stored live query instances with plain reactive snapshots in the stats route, combined section loading, inventory, networth, additional stats, and header theme icon flows. This aligns the app more closely with the stricter remote query behavior introduced around sveltejs/kit#15533 and prevents inactive query access during tab and section transitions. ([`3dd3f2f`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/3dd3f2fa7d77e2668c90755ec5e18933838c2752))
+
+- Improve the mobile stats header and profile action layout by collapsing the search trigger earlier on small screens and keeping the expanded profile actions inline with the always-visible buttons while preserving their staggered animation timing. ([`c677cbb`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/c677cbb95be31fcb9887beca90cdb607ade05efd))
+
+## 3.5.1
+
+### Patch Changes
+
+- Fix SvelteKit 2.56 remote query lifecycle regressions by keeping the combined profile query local to the consuming components instead of passing a live query instance through context. This aligns the app with the remote function tracking changes from sveltejs/kit#15533 and the related refresh model changes in sveltejs/kit#15562. ([#313](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/313))
+
+- Reduce Svelte 5 `await_reactivity_loss` warnings after the SvelteKit remote function changes by keeping profile, networth, theme icon, and performance-mode reads in non-async reactive paths. This aligns the affected UI with the stricter query lifecycle introduced around sveltejs/kit#15533. ([#313](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/313))
+
+- Fix search flows after the SvelteKit remote query changes in sveltejs/kit#15533 by switching the home page and command palette to imperative `query().run()` calls with client-side navigation. This removes duplicate search requests, avoids redirect errors from reactive query usage, and resets command palette search state correctly. ([#313](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/313))
+
+- Fix the settings drag-and-drop lists after the `@dnd-kit/svelte` 0.4.0 upgrade by restoring stable sortable behavior with the updated plugin configuration and provider lifecycle handling. This keeps whole-row dragging working reliably in the Order and Misc settings tabs. ([#313](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/313))
+
+## 3.5.1-beta.1
+
+### Patch Changes
+
+- Fix the settings drag-and-drop lists after the `@dnd-kit/svelte` 0.4.0 upgrade by restoring stable sortable behavior with the updated plugin configuration and provider lifecycle handling. This keeps whole-row dragging working reliably in the Order and Misc settings tabs. ([`0f2bb4b`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/0f2bb4b7f99c46b6beb969e4ba07ee4b6c5eaee8))
+
+## 3.5.1-beta.0
+
+### Patch Changes
+
+- Fix SvelteKit 2.56 remote query lifecycle regressions by keeping the combined profile query local to the consuming components instead of passing a live query instance through context. This aligns the app with the remote function tracking changes from sveltejs/kit#15533 and the related refresh model changes in sveltejs/kit#15562. ([`b0727e1`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/b0727e181cc07f6dd3f349623c0dbc84a1e45ffc))
+
+- Reduce Svelte 5 `await_reactivity_loss` warnings after the SvelteKit remote function changes by keeping profile, networth, theme icon, and performance-mode reads in non-async reactive paths. This aligns the affected UI with the stricter query lifecycle introduced around sveltejs/kit#15533. ([`eb72f4a`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/eb72f4a9a43a0f342822fc4c7d86254b6a029f41))
+
+- Fix search flows after the SvelteKit remote query changes in sveltejs/kit#15533 by switching the home page and command palette to imperative `query().run()` calls with client-side navigation. This removes duplicate search requests, avoids redirect errors from reactive query usage, and resets command palette search state correctly. ([`b0727e1`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/b0727e181cc07f6dd3f349623c0dbc84a1e45ffc))
+
 ## 3.5.0
 
 ### Minor Changes

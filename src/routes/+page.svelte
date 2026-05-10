@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
+  import { resolve } from "$app/paths";
   import { getFavorites, getPreferences } from "$ctx";
   import { env } from "$env/dynamic/public";
   import { ContributorCard, ContributorCardSkeleton, CtaCard } from "$lib/components/misc";
@@ -25,8 +27,18 @@
   let searchQuery = $state<string>(null!);
   const searchQueryValidated = $derived(schema.safeParse({ query: searchQuery }));
 
-  let searchUserArgs = $state<{ username: string }>();
-  const searchUserRemoteFn = $derived(searchUserArgs ? searchUser(searchUserArgs) : undefined);
+  let submittedSearchLoading = $state(false);
+  let submittedSearchError = $state<string>();
+
+  function getErrorMessage(err: unknown) {
+    const httpError = err as { body?: unknown };
+
+    if (isHttpError(err) && typeof httpError.body === "object" && httpError.body !== null && "message" in httpError.body && typeof httpError.body.message === "string") {
+      return httpError.body.message;
+    }
+
+    return "Something went wrong";
+  }
 
   const iconMapper: Record<Role, typeof CodeXml | typeof Server | typeof GitPullRequestArrow | typeof Star | string> = {
     [Role.MAINTAINER]: CodeXml,
@@ -64,21 +76,29 @@
         src: "/img/icons/discord.svg",
         alt: "Discord logo"
       }
-    },
-    {
-      href: "https://forms.gle/wUSHhr8EACviaQVq8",
-      text: {
-        title: "Skyblock General Survey",
-        description: "Let us know what you think about the site and what features you'd like to see in the future"
-      },
-      img: {
-        src: "/img/icons/google-forms.svg",
-        alt: "Google Forms"
-      }
     }
   ];
 
   let selectedCta = $state<Cta>();
+
+  async function submitSearch() {
+    if (!searchQueryValidated.success) return;
+
+    const username = searchQuery.trim();
+    if (!username) return;
+
+    submittedSearchLoading = true;
+    submittedSearchError = undefined;
+
+    try {
+      const response = await searchUser({ username }).run();
+      await goto(resolve("/stats/[ign]", { ign: response.username ?? "" }));
+    } catch (err) {
+      submittedSearchError = getErrorMessage(err);
+    } finally {
+      submittedSearchLoading = false;
+    }
+  }
 
   onMount(() => {
     selectedCta = ctas[Math.floor(Math.random() * ctas.length)];
@@ -91,7 +111,21 @@
       <div class="flex flex-col gap-6">
         <label for="search" class="m-1 w-full text-center font-semibold">Show SkyBlock stats for</label>
         <!-- svelte-ignore a11y_autofocus -->
-        <input id="search" type="search" required autofocus placeholder="Enter username" class="relative h-16 grow bg-text/10 text-center font-normal text-text placeholder:text-text/80 focus-visible:outline-hidden" bind:value={searchQuery} onchange={() => (searchUserArgs = { username: searchQuery })} />
+        <input
+          id="search"
+          type="search"
+          required
+          autofocus
+          placeholder="Enter username"
+          class="relative h-16 grow bg-text/10 text-center font-normal text-text placeholder:text-text/80 focus-visible:outline-hidden"
+          bind:value={searchQuery}
+          onchange={() => void submitSearch()}
+          onkeydown={(e) => {
+            if (e.key.toLowerCase() === "enter" || e.key.toLowerCase() === "search") {
+              e.preventDefault();
+              void submitSearch();
+            }
+          }} />
       </div>
 
       {#if !searchQueryValidated.success && searchQuery != null && searchQuery.length > 0}
@@ -99,12 +133,12 @@
           {searchQueryValidated.error.issues[0].message}
         </div>
       {/if}
-      {#if searchUserRemoteFn?.error}
-        <div class="text-center text-sm font-semibold text-text/80">{isHttpError(searchUserRemoteFn.error) ? searchUserRemoteFn.error.body.message : "Something went wrong"}</div>
+      {#if submittedSearchError}
+        <div class="text-center text-sm font-semibold text-text/80">{submittedSearchError}</div>
       {/if}
     </div>
-    <Button.Root class="mx-auto flex w-full max-w-fit items-center justify-center rounded-3xl bg-icon px-6 py-3 text-base font-bold text-white uppercase transition-all duration-150 ease-out text-shadow-[0_0_3px_oklch(0%_0_0/50%)] hover:scale-[1.015] disabled:opacity-50 dark:text-text" disabled={searchQuery != null && searchQuery.length > 0 && !searchQueryValidated.success}>
-      {#if searchUserRemoteFn?.loading}
+    <Button.Root class="mx-auto flex w-full max-w-fit items-center justify-center rounded-3xl bg-icon px-6 py-3 text-base font-bold text-white uppercase transition-all duration-150 ease-out text-shadow-[0_0_3px_oklch(0%_0_0/50%)] hover:scale-[1.015] disabled:opacity-50 dark:text-text" disabled={searchQuery != null && searchQuery.length > 0 && !searchQueryValidated.success} onclick={() => void submitSearch()}>
+      {#if submittedSearchLoading}
         <LoaderCircle class="size-6 animate-spin" />
       {:else}
         Show me

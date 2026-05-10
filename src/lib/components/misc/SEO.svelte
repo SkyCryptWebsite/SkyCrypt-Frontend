@@ -1,6 +1,7 @@
 <script lang="ts">
   import { page } from "$app/state";
   import { getTheme } from "$ctx";
+  import { JsonLd } from "$lib/components/misc";
   import type { ModelsEmbedData } from "$lib/shared/api/orval-generated";
   import { getLongDescription, getMetaTitle, getShortDescription } from "$lib/shared/embedGenerator";
   import SvelteSeo from "svelte-seo";
@@ -19,7 +20,7 @@
   const profileImage = $derived(`https://nmsr.nickac.dev/bust/${embedData.uuid}?y=-20`);
   const themeColor = $derived(embedData.rank?.plusColor || embedData.rank?.rankColor || (themeContext.activeTheme?.light ? "#dbdbdb" : "#282828"));
 
-  const breadcrumbJsonLdString = $derived({
+  const breadcrumbJsonLd = $derived({
     "@type": "BreadcrumbList",
     itemListElement: [
       {
@@ -57,7 +58,7 @@
       image: profileImage,
       url: canonicalUrl
     },
-    breadcrumb: breadcrumbJsonLdString
+    breadcrumb: breadcrumbJsonLd
   } as const);
 </script>
 
@@ -96,5 +97,6 @@
     description: getLongDescription(embedData)
   }}
   {themeColor}
-  jsonLd={profileJsonLd}
   manifest="/manifest.webmanifest" />
+
+<JsonLd data={profileJsonLd} />

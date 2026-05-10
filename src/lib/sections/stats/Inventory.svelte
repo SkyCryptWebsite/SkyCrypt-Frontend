@@ -23,9 +23,20 @@
   const profile = $derived(getProfileContext().current);
   const profileId = $derived(profile?.profile_id);
   const uuid = $derived(profile?.uuid);
-  const inventoriesQuery = $derived(uuid && profileId ? getInventories({ uuid, profileId }) : null);
+  const inventoriesState = $derived.by(() => {
+    if (!uuid || !profileId) {
+      return { current: [], error: null } satisfies { current: ModelsInventory[]; error: unknown };
+    }
 
-  const inventories = $derived<ModelsInventory[]>(inventoriesQuery?.current ?? []);
+    const query = getInventories({ uuid, profileId });
+
+    return {
+      current: query.current ?? [],
+      error: query.error
+    };
+  });
+
+  const inventories = $derived<ModelsInventory[]>(inventoriesState.current);
   const selectedInventory = $derived(openTab ? inventories.find((inventory) => inventory.name === openTab) : undefined);
   const selectedTabName = $derived(selectedInventory?.name ?? inventories[0]?.name ?? "");
   const currentInventory = $derived(selectedInventory ?? inventories[0]);
@@ -89,7 +100,7 @@
         {/if}
       </Tabs.Content>
     </Tabs.Root>
-  {:else if inventoriesQuery?.error}
+  {:else if inventoriesState.error}
     <p class="mt-2 space-x-0.5 text-center leading-6">Failed to load inventories.</p>
   {:else}
     <LoaderCircle class="mx-auto mt-4 animate-spin text-icon" />

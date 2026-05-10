@@ -2,7 +2,7 @@
   import { replaceState } from "$app/navigation";
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
-  import { CombinedContext, CombinedQueryContext, getHoverContext, getInternalState, getPreferences, getProfileContext, getRecentSearches, ProfileContext, setCombinedContext, setCombinedQueryContext, setProfileContext } from "$ctx";
+  import { CombinedContext, getHoverContext, getInternalState, getPreferences, getProfileContext, getRecentSearches, ProfileContext, setCombinedContext, setProfileContext } from "$ctx";
   import { ContainedItemsGrid, ItemContent } from "$lib/components/item";
   import { Navbar } from "$lib/components/misc";
   import Sections from "$lib/sections/Sections.svelte";
@@ -31,11 +31,19 @@
   // Initialize the profile context
   const profileClass = new ProfileContext();
   const combinedClass = new CombinedContext();
-  const combinedQueryClass = new CombinedQueryContext();
   setProfileContext(profileClass);
   setCombinedContext(combinedClass);
-  setCombinedQueryContext(combinedQueryClass);
-  const combined = $derived(ctx.uuid && ctx.profile_id ? getCombined({ uuid: ctx.uuid, profileId: ctx.profile_id }) : null);
+  const combinedState = $derived.by(() => {
+    if (!ctx.uuid || !ctx.profile_id) {
+      return { current: null };
+    }
+
+    const query = getCombined({ uuid: ctx.uuid, profileId: ctx.profile_id });
+
+    return {
+      current: query.current
+    };
+  });
 
   function rewriteURL() {
     if (!(ctx as ModelsStatsOutput)) return;
@@ -94,8 +102,7 @@
   });
 
   $effect.pre(() => {
-    combinedQueryClass.current = combined;
-    combinedClass.current = combined?.current ?? null;
+    combinedClass.current = combinedState.current ?? null;
   });
 
   $effect(() => {

@@ -1,5 +1,4 @@
-<main class="relative h-full overflow-hidden rounded-4xl">
-  <img src="skycrypt-background" class="absolute inset-0 -z-10 h-screen w-screen object-cover" alt="" />
+<main class="relative h-full overflow-hidden rounded-4xl" style="background-image: url(skycrypt-background); background-size: cover; background-position: center">
   <div class="flex h-full w-full items-center justify-center p-8">
     <div class="relative z-50 flex max-w-lg flex-col items-center justify-center overflow-hidden rounded-3xl p-4 text-center shadow-2xl backdrop-blur-lg backdrop-brightness-50">
       <h1 class="text-3xl font-bold text-red-400">Card Generation Failed</h1>

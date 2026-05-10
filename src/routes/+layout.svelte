@@ -2,20 +2,17 @@
   import { browser, dev } from "$app/environment";
   import { beforeNavigate, replaceState } from "$app/navigation";
   import { page, updated } from "$app/state";
-  import { initDisabledPacks, initFavorites, initInternalState, initPreferences, initRecentSearches, initTheme, initWikiOrder, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
-  import { initInternalPreferences } from "$ctx/internal-preferences.svelte";
-  import { CommandPalette, PerformanceMode } from "$lib/components/misc";
+  import { initDisabledPacks, initFavorites, initInternalState, initPreferences, initRecentSearches, initTheme, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
+  import { CommandPalette, JsonLd, PerformanceMode } from "$lib/components/misc";
   import ThemeEditor from "$lib/components/theme-editor/ThemeEditor.svelte";
   import { IsHover } from "$lib/hooks/is-hover.svelte";
   import { IsMobile } from "$lib/hooks/is-mobile.svelte";
   import { getPacks } from "$lib/shared/api/skycrypt-api.remote";
   import { parseThemeFromURL } from "$lib/shared/themes/sharing";
   import { cn } from "$lib/shared/utils";
-  import SurveyNotice from "$src/lib/components/notices/SurveyNotice.svelte";
   import Wifi from "@lucide/svelte/icons/wifi";
   import WifiOff from "@lucide/svelte/icons/wifi-off";
   import { Tooltip } from "bits-ui";
-  import { differenceInHours } from "date-fns";
   import { onDestroy, onMount, type Snippet } from "svelte";
   import SvelteSeo from "svelte-seo";
   import { toast, Toaster, type ToasterProps } from "svelte-sonner";
@@ -32,7 +29,6 @@
   let commandLoading = $state(false);
   const { ign } = $derived(page.params);
   const preferences = initPreferences();
-  const internalPreferences = initInternalPreferences();
   const themeContext = initTheme();
   const internalState = initInternalState();
   const position = writable<ToasterProps["position"]>("bottom-right");
@@ -88,7 +84,6 @@
   }
 
   initDisabledPacks();
-  initWikiOrder();
   initFavorites();
   initRecentSearches();
   setMobileContext(isMobile);
@@ -196,7 +191,6 @@
     title="SkyCrypt"
     description="A beautiful site for sharing your SkyBlock profile 🍣"
     canonical="https://sky.shiiyu.moe/"
-    jsonLd={websiteJsonLd}
     openGraph={{
       title: "SkyBlock Stats",
       description: "A beautiful site for sharing your SkyBlock profile 🍣",
@@ -206,6 +200,7 @@
     }}
     themeColor={themeContext.activeTheme?.light ? "#dbdbdb" : "#282828"}
     manifest="/manifest.webmanifest" />
+  <JsonLd data={websiteJsonLd} />
 {/if}
 
 <Toaster

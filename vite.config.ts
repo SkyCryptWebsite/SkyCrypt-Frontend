@@ -2,7 +2,6 @@ import { sentrySvelteKit } from "@sentry/sveltekit";
 import { sveltekit } from "@sveltejs/kit/vite";
 import tailwindcss from "@tailwindcss/vite";
 import { playwright } from "@vitest/browser-playwright";
-import devtoolsJson from "vite-plugin-devtools-json";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
@@ -13,8 +12,7 @@ export default defineConfig({
       adapter: "node"
     }),
     tailwindcss(),
-    sveltekit(),
-    devtoolsJson()
+    sveltekit()
   ],
   build: { sourcemap: true },
   test: {
