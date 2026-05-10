@@ -1,0 +1,11 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "skycrypt-frontend": "3.6.0"
+  },
+  "changesets": [
+    "fast-tigers-run",
+    "quiet-mice-dance"
+  ]
+}
