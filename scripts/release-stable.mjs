@@ -1,8 +1,26 @@
 import { execSync } from "node:child_process";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 
 const changesetDir = path.join(process.cwd(), ".changeset");
+
+/**
+ * Extract the section for `version` out of CHANGELOG.md (everything between
+ * `## ${version}` and the next `## ` heading). We pass this to
+ * `gh release create --notes-file` instead of `--generate-notes`, because
+ * the latter only lists merged PRs since the previous tag, which silently
+ * drops any direct-to-branch commits that came in with a changeset.
+ */
+function extractChangelogSection(version) {
+  const changelogPath = path.join(process.cwd(), "CHANGELOG.md");
+  if (!fs.existsSync(changelogPath)) return "";
+  const lines = fs.readFileSync(changelogPath, "utf8").split("\n");
+  const start = lines.findIndex((line) => line === `## ${version}`);
+  if (start === -1) return "";
+  const next = lines.findIndex((line, i) => i > start && line.startsWith("## "));
+  return lines.slice(start + 1, next === -1 ? undefined : next).join("\n").trim();
+}
 
 function run(command) {
   execSync(command, { stdio: "inherit" });
@@ -97,5 +115,17 @@ const existingRelease = outputOptional(`gh release view ${tag} --json tagName --
 if (existingRelease) {
   console.info(`Release ${tag} already exists, skipping`);
 } else {
-  run(`gh release create ${tag} --title ${tag} --generate-notes`);
+  const notes = extractChangelogSection(version);
+  if (notes) {
+    const notesPath = path.join(os.tmpdir(), `release-notes-${tag}.md`);
+    fs.writeFileSync(notesPath, notes);
+    try {
+      run(`gh release create ${tag} --title ${tag} --notes-file "${notesPath}"`);
+    } finally {
+      fs.rmSync(notesPath, { force: true });
+    }
+  } else {
+    console.warn(`No CHANGELOG.md section for ${version}; falling back to --generate-notes`);
+    run(`gh release create ${tag} --title ${tag} --generate-notes`);
+  }
 }

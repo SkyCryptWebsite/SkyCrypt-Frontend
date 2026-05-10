@@ -1,8 +1,26 @@
 import { execSync } from "node:child_process";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 
 const changesetDir = path.join(process.cwd(), ".changeset");
+
+/**
+ * Extract the section for `version` out of CHANGELOG.md (everything between
+ * `## ${version}` and the next `## ` heading). We pass this to
+ * `gh release create --notes-file` instead of `--generate-notes`, because
+ * the latter only lists merged PRs since the previous tag — direct-to-`dev`
+ * commits with changesets would otherwise be invisible on the release page.
+ */
+function extractChangelogSection(version) {
+  const changelogPath = path.join(process.cwd(), "CHANGELOG.md");
+  if (!fs.existsSync(changelogPath)) return "";
+  const lines = fs.readFileSync(changelogPath, "utf8").split("\n");
+  const start = lines.findIndex((line) => line === `## ${version}`);
+  if (start === -1) return "";
+  const next = lines.findIndex((line, i) => i > start && line.startsWith("## "));
+  return lines.slice(start + 1, next === -1 ? undefined : next).join("\n").trim();
+}
 
 function run(command) {
   execSync(command, { stdio: "inherit" });
@@ -69,5 +87,18 @@ if (remoteTag) {
 } else {
   run(`git tag ${tag}`);
   run(`git push origin ${tag}`);
-  run(`gh release create ${tag} --title ${tag} --generate-notes --prerelease`);
+
+  const notes = extractChangelogSection(version);
+  if (notes) {
+    const notesPath = path.join(os.tmpdir(), `release-notes-${tag}.md`);
+    fs.writeFileSync(notesPath, notes);
+    try {
+      run(`gh release create ${tag} --title ${tag} --notes-file "${notesPath}" --prerelease`);
+    } finally {
+      fs.rmSync(notesPath, { force: true });
+    }
+  } else {
+    console.warn(`No CHANGELOG.md section for ${version}; falling back to --generate-notes`);
+    run(`gh release create ${tag} --title ${tag} --generate-notes --prerelease`);
+  }
 }
