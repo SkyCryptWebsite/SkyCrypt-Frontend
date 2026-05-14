@@ -63,7 +63,7 @@
     "bits-ui": "^2.18.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
-    "devalue": "^5.8.0",
+    "devalue": "^5.8.1",
     "dotenv-cli": "^11.0.0",
     "eslint": "^10.3.0",
     "eslint-config-prettier": "^10.1.8",
