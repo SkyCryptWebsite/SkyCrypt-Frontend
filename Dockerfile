@@ -15,6 +15,7 @@ ENV PUBLIC_SERVER_API_URL=$PUBLIC_SERVER_API_URL
 
 COPY package*.json .
 COPY pnpm-lock.yaml .
+COPY pnpm-workspace.yaml .
 
 RUN pnpm fetch
 RUN pnpm install --frozen-lockfile
