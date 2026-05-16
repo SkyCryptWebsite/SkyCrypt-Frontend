@@ -43,4 +43,4 @@ COPY pnpm-lock.yaml .
 
 EXPOSE 3000
 ENV NODE_ENV=production
-CMD ["pnpm", "run", "runbuild"]
+CMD ["node", "./build"]
