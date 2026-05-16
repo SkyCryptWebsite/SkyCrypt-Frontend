@@ -15,6 +15,7 @@ ENV PUBLIC_SERVER_API_URL=$PUBLIC_SERVER_API_URL
 
 COPY package*.json .
 COPY pnpm-lock.yaml .
+COPY pnpm-workspace.yaml .
 
 RUN pnpm fetch
 RUN pnpm install --frozen-lockfile
@@ -30,7 +31,7 @@ FROM node:24-alpine
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable pnpm && corepack install -g pnpm@latest-10
+RUN corepack enable pnpm && corepack install -g pnpm@latest-11
 
 WORKDIR /app
 
@@ -42,4 +43,4 @@ COPY pnpm-lock.yaml .
 
 EXPOSE 3000
 ENV NODE_ENV=production
-CMD ["pnpm", "run", "runbuild"]
+CMD ["node", "./build"]
