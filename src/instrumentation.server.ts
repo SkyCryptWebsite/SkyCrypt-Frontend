@@ -18,3 +18,11 @@ Sentry.init({
   enabled: !dev,
   environment: dev ? "development" : "production"
 });
+
+// Node 24's default --unhandled-rejections=throw will kill the process on any
+// orphaned promise rejection (e.g. losing-side promises in Promise.all when
+// one rejects first). Log and report so we get visibility, but don't crash.
+process.on("unhandledRejection", (reason) => {
+  console.error("Unhandled promise rejection:", reason);
+  Sentry.captureException(reason);
+});
