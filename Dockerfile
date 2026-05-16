@@ -31,7 +31,7 @@ FROM node:24-alpine
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable pnpm && corepack install -g pnpm@latest-10
+RUN corepack enable pnpm && corepack install -g pnpm@latest-11
 
 WORKDIR /app
 
