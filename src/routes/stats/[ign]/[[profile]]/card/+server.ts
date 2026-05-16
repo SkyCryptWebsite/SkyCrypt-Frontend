@@ -28,17 +28,28 @@ export const GET: RequestHandler = async ({ params, request, url }) => {
 
   try {
     const user = (await getApiUuidUsername(ign)).data as ModelsPlayerResolve;
+    // allSettled (not Promise.all) so a losing-side rejection is never orphaned:
+    // Promise.all rejects on the first failure but leaves the others running, and
+    // their later rejection becomes an unhandled rejection that crashes Node 24.
     const [
       // prettier-ignore
-      profileData,
-      networthData,
-      combinedData
-    ] = await Promise.all([
+      profileResult,
+      networthResult,
+      combinedResult
+    ] = await Promise.allSettled([
       // prettier-ignore
       getProfileStats({ uuid: user.uuid ?? ign, profileId: profile ?? "" }),
       getNetworth({ uuid: user.uuid ?? ign, profileId: profile ?? "" }),
       getCombined({ uuid: user.uuid ?? ign, profileId: profile ?? "" })
     ]);
+
+    if (profileResult.status === "rejected") throw profileResult.reason;
+    if (networthResult.status === "rejected") throw networthResult.reason;
+    if (combinedResult.status === "rejected") throw combinedResult.reason;
+
+    const profileData = profileResult.value;
+    const networthData = networthResult.value;
+    const combinedData = combinedResult.value;
 
     const { body: renderedHTML } = render(DefaultCard, {
       props: {
