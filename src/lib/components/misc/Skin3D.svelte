@@ -27,7 +27,7 @@
     if (loadedUuid === uuid) return;
     canvasIsLoading = true;
 
-    const capeData = await ky(`https://mowojang.matdoes.dev/session/minecraft/profile/${uuid}`).json<{ properties: { name: string; value: string; signature?: string }[] }>();
+    const capeData = await ky(`https://mowojang.seraph.si/session/minecraft/profile/${uuid}`).json<{ properties: { name: string; value: string; signature?: string }[] }>();
     const texturesProperty = capeData.properties.find((prop) => prop.name === "textures");
 
     if (!texturesProperty) {
