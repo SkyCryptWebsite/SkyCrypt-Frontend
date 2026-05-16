@@ -33,9 +33,7 @@ const config = {
         "worker-src": ["self", "blob:"],
         "style-src": ["self", "unsafe-inline", "https://fonts.googleapis.com"],
         "img-src": ["self", "data:", "https://textures.minecraft.net", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe", "https://nmsr.nickac.dev"],
-        "connect-src": ["self", "https://mowojang.seraph.si", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe"],
-        "font-src": ["self", "https://fonts.gstatic.com"]
-        "connect-src": ["self", "https://mowojang.matdoes.dev", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe"],
+        "connect-src": ["self", "https://mowojang.matdoes.dev", "https://mowojang.seraph.si", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe"],
         "font-src": ["self", "https://fonts.gstatic.com"],
         "frame-ancestors": ["self"]
       }
