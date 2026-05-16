@@ -29,11 +29,18 @@
   setDefaultCardSettingsContext({
     ...settings
   });
+
+  // The persistent image is referenced via background-image CSS rather than
+  // an absolutely-positioned <img>: takumi-js 1.1.x reworked inline-formatting-
+  // context detection (commit adc48da, "Treat absolute/floated children as
+  // out-of-flow"), which left the previous <img class="absolute inset-0">
+  // background unrendered. The CSS pattern is the one shown in the takumi
+  // docs ("The image key can be used in any `src` field or `background-image`,
+  // `mask-image` CSS property.") and is robust against further layout changes.
+  const mainStyle = $derived(["background-image: url(skycrypt-background)", "background-size: cover", "background-position: center", settings?.border && settings?.borderColor ? `border: 2px solid ${settings.borderColor}` : null].filter(Boolean).join("; "));
 </script>
 
-<main class="relative h-full overflow-hidden rounded-4xl" style={settings?.border && settings?.borderColor ? `border: 2px solid ${settings.borderColor}` : ""}>
-  <img src="skycrypt-background" class="absolute inset-0 -z-10 h-screen w-screen object-cover" alt="" />
-
+<main class="relative h-full overflow-hidden rounded-4xl" style={mainStyle}>
   <div class="flex h-full w-full items-start justify-start">
     <Player showMinecraftName={settings?.showMinecraftName ?? false} />
     <div

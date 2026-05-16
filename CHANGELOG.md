@@ -1,5 +1,25 @@
 # Changelog
 
+## 3.6.1-beta.2
+
+### Patch Changes
+
+- Harden security headers against iframe-based phishing. The phishing site `sky.shiiiyu.moe` was embedding the real site in an invisible cross-origin iframe and rewriting `history.pushState` to disguise the URL bar. The fix layers three browser-enforced controls: `Content-Security-Policy: frame-ancestors 'self'` (modern browsers) and `X-Frame-Options: DENY` (older-browser fallback) refuse the iframe outright, and `Cross-Origin-Opener-Policy: same-origin` isolates the top-level browsing context group so a malicious opener cannot reach back via `window.opener`. The `/api/*` surface is unaffected — partner integrations (e.g., Lunar Client) that call the Go backend directly continue to work. ([`43736ae`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/43736ae30e223ad18c6281484d728fafa2279365))
+
+## 3.6.1-beta.1
+
+### Patch Changes
+
+- Render the JSON-LD `<script type="application/ld+json">` block via `<svelte:element>` instead of `{@html}`, dropping the closing-tag-splitting workaround. The XSS-safe `safeJsonLd` escaping (`<` / `>` / `&`) is unchanged and still preserves data fidelity, so crawlers see exactly the same JSON content as before. ([`263c4f3`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/263c4f3560c04b0cbbdf288e5c7cfc780050665b))
+
+## 3.6.1-beta.0
+
+### Patch Changes
+
+- Restore the card background and inline-emoji rendering after upgrading to `takumi-js@1.1.x`. The underlying Rust crate's commit `adc48da` ("Treat absolute/floated children as out-of-flow for inline layout detection") reworked which children participate in inline formatting context, leaving the previous `<img class="absolute inset-0">` background unrendered — which made the white text and emoji appear to vanish too. The persistent image is now applied as `background-image` CSS on the parent `<main>`, matching the pattern shown in the takumi docs. ([`176b8c2`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/176b8c2296f3c79a1a217515f30a4d531fef9644))
+
+- Escape JSON-LD payload so user-controlled fields (e.g. the `ign` URL parameter on stats pages) cannot break out of the `<script type="application/ld+json">` tag. `svelte-seo`'s `jsonLd` prop emits `JSON.stringify(data)` raw, and `JSON.stringify` does not escape `<`, `>` or `&` — so visiting `/stats/<script>alert(1)</script>` was enough to inject arbitrary HTML/JS into `<head>`. The new `JsonLd` component escapes those three characters to their unicode escapes (still valid JSON) before emitting the tag. ([`5452ef7`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/5452ef74f36f90789224c53793444dfbc2297a74))
+
 ## 3.6.0
 
 ### Minor Changes

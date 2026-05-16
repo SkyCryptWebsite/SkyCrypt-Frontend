@@ -4,7 +4,7 @@
   import { page, updated } from "$app/state";
   import { initDisabledPacks, initFavorites, initInternalState, initPreferences, initRecentSearches, initTheme, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
   import Header from "$lib/components/header/Header.svelte";
-  import { CommandPalette, PerformanceMode } from "$lib/components/misc";
+  import { CommandPalette, JsonLd, PerformanceMode } from "$lib/components/misc";
   import ThemeEditor from "$lib/components/theme-editor/ThemeEditor.svelte";
   import { IsHover } from "$lib/hooks/is-hover.svelte";
   import { IsMobile } from "$lib/hooks/is-mobile.svelte";
@@ -188,7 +188,6 @@
     title="SkyCrypt"
     description="A beautiful site for sharing your SkyBlock profile 🍣"
     canonical="https://sky.shiiyu.moe/"
-    jsonLd={websiteJsonLd}
     openGraph={{
       title: "SkyBlock Stats",
       description: "A beautiful site for sharing your SkyBlock profile 🍣",
@@ -198,6 +197,7 @@
     }}
     themeColor={themeContext.activeTheme?.light ? "#dbdbdb" : "#282828"}
     manifest="/manifest.webmanifest" />
+  <JsonLd data={websiteJsonLd} />
 {/if}
 
 <Toaster
