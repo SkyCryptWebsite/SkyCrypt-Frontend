@@ -2,4 +2,3 @@ allowBuilds:
   "@sentry/cli": true
   esbuild: true
   simple-git-hooks: true
-  svelte-preprocess: true

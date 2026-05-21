@@ -140,7 +140,6 @@ All content injection uses Svelte 5 snippets. No `<slot>` usage.
 ### Formatting
 
 - Prettier: double quotes, no trailing comma, `printWidth: 999999`, `bracketSameLine: true`
-- `svelteStrictMode: true` — enforces Svelte best practices
 - Conventional commits enforced via commitlint + simple-git-hooks
 
 ## ANTI-PATTERNS
