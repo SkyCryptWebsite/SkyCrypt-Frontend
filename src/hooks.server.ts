@@ -1,6 +1,23 @@
+import { building } from "$app/environment";
+import { auth } from "$lib/server/auth";
+import { UserRole } from "$lib/shared/roles";
+import { runMigrations } from "$src/lib/server/db/migrate";
 import { handleErrorWithSentry, sentryHandle } from "@sentry/sveltekit";
-import type { Handle } from "@sveltejs/kit";
+import { redirect, type Handle, type ServerInit } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
+import { svelteKitHandler } from "better-auth/svelte-kit";
+
+const protectedRouteGroupName = "(protected)";
+const protectedAdminRouteGroupName = "(admin)";
+const signInPath = "/login";
+
+export const init: ServerInit = async () => {
+  if (building) {
+    console.info("Skipping migrations during build.");
+    return;
+  }
+  await runMigrations();
+};
 
 const headersHandler = (async ({ event, resolve }) => {
   const response = await resolve(event);
@@ -37,5 +54,40 @@ const headersHandler = (async ({ event, resolve }) => {
 // If you have a custom error handler, pass it to `handleErrorWithSentry`
 export const handleError = handleErrorWithSentry();
 
+const betterAuthHandler: Handle = async ({ event, resolve }) => {
+  const session = await auth.api.getSession({ headers: event.request.headers });
+
+  if (session) {
+    event.locals.session = session.session;
+    event.locals.user = session.user;
+  }
+
+  return svelteKitHandler({ event, resolve, auth, building });
+};
+
+const protectedHandler = (async ({ event, resolve }) => {
+  const { locals, route } = event;
+  if (!locals.user) {
+    if (route.id?.includes(protectedRouteGroupName)) {
+      console.info("Redirecting to sign-in page as user is not authenticated.");
+      redirect(307, signInPath);
+    }
+  }
+  if (locals.user) {
+    const roles = (locals.user.role ? locals.user.role.split(",") : []) as UserRole[];
+    const isAdmin = roles.includes(UserRole.Admin);
+    if (route.id?.includes(protectedAdminRouteGroupName) && !isAdmin) {
+      console.info("Redirecting to dashboard as user lacks admin role.");
+      redirect(307, "/dashboard");
+    }
+  }
+  if (locals.user && locals.session) {
+    if (route.id?.startsWith(signInPath)) {
+      redirect(307, "/dashboard");
+    }
+  }
+  return resolve(event);
+}) satisfies Handle;
+
 // If you have custom handlers, make sure to place them after `sentryHandle()` in the `sequence` function.
-export const handle = sequence(sentryHandle(), headersHandler) satisfies Handle;
+export const handle = sequence(sentryHandle(), betterAuthHandler, protectedHandler, headersHandler) satisfies Handle;
