@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.7.0-beta.0
+
+### Minor Changes
+
+- Add initial work for SkyCrypt accounts ([#328](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/328))
+
 ## 3.6.2
 
 ### Patch Changes

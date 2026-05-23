@@ -1,0 +1,10 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "skycrypt-frontend": "3.6.2"
+  },
+  "changesets": [
+    "crisp-tires-hang"
+  ]
+}
