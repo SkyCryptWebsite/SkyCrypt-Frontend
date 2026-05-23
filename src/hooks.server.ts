@@ -12,6 +12,10 @@ const protectedAdminRouteGroupName = "(admin)";
 const signInPath = "/login";
 
 export const init: ServerInit = async () => {
+  if (building) {
+    console.info("Skipping migrations during build.");
+    return;
+  }
   await runMigrations();
 };
 
