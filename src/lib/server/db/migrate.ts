@@ -1,14 +1,11 @@
 import { db } from "$src/lib/server/db";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 
 export async function runMigrations() {
   console.info("[migrate] Starting migrations...");
 
-  const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-  const migrationsFolder = path.resolve(__dirname, "../../shared/drizzle");
+  const migrationsFolder = path.resolve(process.cwd(), "drizzle");
 
   console.info(`[migrate] Migrations folder resolved to: ${migrationsFolder}`);
 

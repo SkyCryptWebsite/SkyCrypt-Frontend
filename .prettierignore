@@ -8,4 +8,4 @@ bun.lockb
 # Miscellaneous
 /static/
 .changeset/
-**/drizzle/**
+/drizzle/
