@@ -4,6 +4,7 @@ import { env as envPrivate } from "$env/dynamic/private";
 import { env as envPublic } from "$env/dynamic/public";
 import { db } from "$lib/server/db";
 import { apiKey } from "@better-auth/api-key";
+import type { BetterAuthPlugin } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { betterAuth } from "better-auth/minimal";
 import { admin, genericOAuth, patreon } from "better-auth/plugins";
@@ -42,6 +43,14 @@ const getWhitelist = () => {
 };
 
 const baseURL = getBaseURL();
+
+// Dynamically import the openAPI plugin only in development to avoid including it in the production bundle
+const openAPIPlugin: BetterAuthPlugin | null = dev
+  ? await (async () => {
+      const { openAPI } = await import("better-auth/plugins");
+      return openAPI();
+    })()
+  : null;
 
 export const auth = betterAuth({
   appName: "SkyCrypt",
@@ -130,6 +139,7 @@ export const auth = betterAuth({
         })
       ]
     }),
+    ...(openAPIPlugin ? [openAPIPlugin] : []), // Conditionally include the openAPI plugin only in development
     sveltekitCookies(getRequestEvent) // make sure this is the last plugin in the array
   ]
 });
