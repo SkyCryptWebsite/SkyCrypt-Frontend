@@ -22,7 +22,7 @@ export const GET: RequestHandler = async () => {
   return sitemap.response({
     origin: BASE_URL,
     additionalPaths: [...statsPaths],
-    excludeRoutePatterns: ["^/api/.*", "^/stats.*"],
+    excludeRoutePatterns: ["^/api/.*", "^/stats.*", "^/login.*", "(protected)", "(admin)"],
     headers: {
       "cache-control": "max-age=0, s-maxage=3600"
     }

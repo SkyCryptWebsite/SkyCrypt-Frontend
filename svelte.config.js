@@ -42,6 +42,12 @@ const config = {
       name: process.env.PUBLIC_COMMIT_HASH,
       // in ms
       pollInterval: 1000 * 60 // 1 minute
+    },
+    typescript: {
+      config: (config) => ({
+        ...config,
+        include: [...config.include, "../drizzle.config.ts"]
+      })
     }
   },
 
