@@ -88,7 +88,7 @@
     "playwright": "^1.60.0",
     "postgres": "^3.4.9",
     "prettier": "^3.8.3",
-    "prettier-plugin-svelte": "^4.0.0",
+    "prettier-plugin-svelte": "^4.0.1",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "pretty-ms": "^9.3.0",
     "runed": "^0.37.1",
