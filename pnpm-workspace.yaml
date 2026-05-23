@@ -4,3 +4,16 @@ allowBuilds:
   better-sqlite3: true
   esbuild: true
   simple-git-hooks: true
+minimumReleaseAgeExclude:
+  - "@takumi-rs/core-darwin-arm64@1.4.0"
+  - "@takumi-rs/core-darwin-x64@1.4.0"
+  - "@takumi-rs/core-linux-arm64-gnu@1.4.0"
+  - "@takumi-rs/core-linux-arm64-musl@1.4.0"
+  - "@takumi-rs/core-linux-x64-gnu@1.4.0"
+  - "@takumi-rs/core-linux-x64-musl@1.4.0"
+  - "@takumi-rs/core-win32-arm64-msvc@1.4.0"
+  - "@takumi-rs/core-win32-x64-msvc@1.4.0"
+  - "@takumi-rs/core@1.4.0"
+  - "@takumi-rs/helpers@1.4.0"
+  - "@takumi-rs/wasm@1.4.0"
+  - takumi-js@1.4.0
