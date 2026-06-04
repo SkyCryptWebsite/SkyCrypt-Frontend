@@ -1,12 +1,13 @@
+import { listPosts } from "$lib/shared/api/cms-api.remote";
 import { getContributors } from "$routes/contributors.remote";
 import type { RequestHandler } from "@sveltejs/kit";
 import * as sitemap from "super-sitemap";
 
 const BASE_URL = "https://sky.shiiyu.moe";
+const postSlugs = new Set<string>();
+const statsPaths = new Set<string>();
 
 export const GET: RequestHandler = async () => {
-  const statsPaths = new Set<string>();
-
   try {
     const contributors = await getContributors();
 
@@ -19,8 +20,22 @@ export const GET: RequestHandler = async () => {
     console.error("Failed to generate contributor sitemap entries", error);
   }
 
+  try {
+    const { docs: posts } = await listPosts({});
+    for (const post of posts) {
+      if (post.slug) {
+        postSlugs.add(post.slug);
+      }
+    }
+  } catch (error) {
+    console.error("Failed to generate newsroom sitemap entries", error);
+  }
+
   return sitemap.response({
     origin: BASE_URL,
+    paramValues: {
+      "/newsroom/[slug]": [...postSlugs]
+    },
     additionalPaths: [...statsPaths],
     excludeRoutePatterns: ["^/api/.*", "^/stats.*", "^/login.*", "(protected)", "(admin)"],
     headers: {

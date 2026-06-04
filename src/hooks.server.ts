@@ -1,4 +1,5 @@
 import { building } from "$app/environment";
+import { env as envPublic } from "$env/dynamic/public";
 import { auth } from "$lib/server/auth";
 import { UserRole } from "$lib/shared/roles";
 import { runMigrations } from "$src/lib/server/db/migrate";
@@ -28,7 +29,18 @@ const headersHandler = (async ({ event, resolve }) => {
   response.headers.set("Permissions-Policy", "accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), sync-xhr=(), usb=(), xr-spatial-tracking=(), geolocation=()");
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
-  response.headers.set("X-Frame-Options", "DENY");
+
+  // Clickjacking protection. The newsroom draft preview must be embeddable in the Payload
+  // CMS admin's live-preview iframe, so allow only the CMS origin to frame that one route;
+  // everything else stays frame-locked.
+  const isNewsroomPreview = url.pathname.startsWith("/newsroom/") && url.searchParams.get("preview") === "1";
+  if (isNewsroomPreview) {
+    const cms = envPublic.PUBLIC_CMS_URL?.trim();
+    response.headers.append("Content-Security-Policy", `frame-ancestors 'self'${cms ? ` ${cms}` : ""}`);
+  } else {
+    response.headers.set("X-Frame-Options", "DENY");
+    response.headers.append("Content-Security-Policy", "frame-ancestors 'none'");
+  }
 
   // Cross-Origin policies
   // COEP intentionally unsafe-none: tightening would require all cross-origin

@@ -4,10 +4,13 @@
   import { getFavorites, getPreferences } from "$ctx";
   import { env } from "$env/dynamic/public";
   import { ContributorCard, ContributorCardSkeleton, CtaCard } from "$lib/components/misc";
+  import PostCard from "$lib/components/newsroom/PostCard.svelte";
   import { Notice } from "$lib/components/notices";
+  import { listPosts } from "$lib/shared/api/cms-api.remote";
   import { searchUser } from "$lib/shared/api/skycrypt-api.remote";
   import { cn } from "$lib/shared/utils";
   import { getContributors } from "$routes/contributors.remote";
+  import ArrowRight from "@lucide/svelte/icons/arrow-right";
   import CodeXml from "@lucide/svelte/icons/code-xml";
   import GitPullRequestArrow from "@lucide/svelte/icons/git-pull-request-arrow";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
@@ -149,6 +152,48 @@
   {#if selectedCta}
     <CtaCard href={selectedCta.href} text={selectedCta.text} img={selectedCta.img} />
   {/if}
+
+  <svelte:boundary>
+    {#snippet pending()}
+      <section class="flex flex-col gap-4">
+        <div class={cn("h-16 animate-pulse rounded-lg", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}></div>
+        <div class="grid grid-cols-1 gap-5 @md:grid-cols-2 @xl:grid-cols-3">
+          {#each new Array(3) as _, i (i)}
+            <div class={cn("flex flex-col overflow-hidden rounded-lg", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
+              <div class="aspect-video w-full animate-pulse bg-text/10"></div>
+              <div class="flex flex-col gap-2.5 p-4">
+                <div class="h-4 w-2/5 animate-pulse rounded bg-text/10"></div>
+                <div class="h-6 w-4/5 animate-pulse rounded bg-text/10"></div>
+                <div class="h-12 w-full animate-pulse rounded bg-text/10"></div>
+              </div>
+            </div>
+          {/each}
+        </div>
+      </section>
+    {/snippet}
+    {#snippet failed()}{/snippet}
+
+    {@const newsroom = await listPosts({ page: 1, limit: 3 })}
+    {#if newsroom.docs.length > 0}
+      <section class="flex flex-col gap-4">
+        <div class={cn("flex items-center justify-between gap-4 rounded-lg px-5 py-4", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
+          <div class="flex flex-col gap-0.5">
+            <h2 class="text-xl leading-tight font-bold text-text">Newsroom</h2>
+            <p class="text-xs text-text/70">Latest announcements and updates</p>
+          </div>
+          <Button.Root href="/newsroom" data-sveltekit-preload-data="hover" class="flex shrink-0 items-center gap-1 text-sm font-semibold text-link transition-colors hover:text-hover">
+            View all
+            <ArrowRight class="size-4" />
+          </Button.Root>
+        </div>
+        <div class="grid grid-cols-1 gap-5 @md:grid-cols-2 @xl:grid-cols-3">
+          {#each newsroom.docs as post (post.id)}
+            <PostCard {post} />
+          {/each}
+        </div>
+      </section>
+    {/if}
+  </svelte:boundary>
 
   <div class="grid grid-cols-1 gap-5 @xl:grid-cols-2 @5xl:grid-cols-3">
     {#if favorites.current.length === 0}

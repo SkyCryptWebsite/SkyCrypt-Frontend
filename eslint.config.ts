@@ -58,5 +58,5 @@ export default defineConfig(
       "svelte/no-useless-mustaches": "off"
     }
   },
-  { ignores: ["**/.DS_Store", "**/node_modules/", "**/build/", "**/.svelte-kit/", "**/package/", "**/.env", "**/.env.*", "**/pnpm-lock.yaml", "**/package-lock.json", "**/yarn.lock", "**/static/", "**/cache/", "**/api/*-generated-zod.ts"] }
+  { ignores: ["**/.DS_Store", "**/node_modules/", "**/build/", "**/.svelte-kit/", "**/package/", "**/.env", "**/.env.*", "**/pnpm-lock.yaml", "**/package-lock.json", "**/yarn.lock", "**/static/", "**/cache/", "**/api/*-generated-zod.ts", "**/api/cms-generated.ts"] }
 );

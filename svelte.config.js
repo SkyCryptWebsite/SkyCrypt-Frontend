@@ -32,10 +32,11 @@ const config = {
         "script-src": ["self", "unsafe-inline"],
         "worker-src": ["self", "blob:"],
         "style-src": ["self", "unsafe-inline", "https://fonts.googleapis.com"],
-        "img-src": ["self", "data:", "https://textures.minecraft.net", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe", "https://nmsr.nickac.dev"],
-        "connect-src": ["self", "https://mowojang.matdoes.dev", "https://mowojang.seraph.si", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe"],
+        "img-src": ["self", "data:", "https://textures.minecraft.net", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe", "https://nmsr.nickac.dev", "https://cms.shiiyu.moe", "http://localhost:3000"],
+        "connect-src": ["self", "https://mowojang.matdoes.dev", "https://mowojang.seraph.si", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe", "https://cms.shiiyu.moe", "http://localhost:3000"],
         "font-src": ["self", "https://fonts.gstatic.com"],
-        "frame-ancestors": ["self"]
+        "frame-ancestors": ["self", "https://cms.shiiyu.moe", "http://localhost:3000"],
+        "frame-src": ["self"]
       }
     },
     version: {
