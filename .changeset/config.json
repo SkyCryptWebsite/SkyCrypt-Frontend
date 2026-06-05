@@ -1,6 +1,6 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@3.1.2/schema.json",
-  "changelog": ["@svitejs/changesets-changelog-github-compact", { "repo": "SkyCryptWebsite/SkyCrypt-Frontend" }],
+  "changelog": ["changesets-changelog-clean", { "repo": "SkyCryptWebsite/SkyCrypt-Frontend" }],
   "commit": false,
   "fixed": [],
   "linked": [],
