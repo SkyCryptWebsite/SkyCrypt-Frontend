@@ -48,7 +48,7 @@
   const heroHeight = $derived(post.heroImage?.sizes?.hero?.height ?? post.heroImage?.height ?? undefined);
   const heroAlt = $derived(post.heroImage?.alt ?? post.title);
 
-  const ogImages = $derived(post.heroImage?.url ? [{ url: post.heroImage.url, width: post.heroImage.width ?? undefined, height: post.heroImage.height ?? undefined, alt: post.heroImage.alt ?? post.title }] : []);
+  const ogImages = $derived(heroSrc ? [{ url: heroSrc, width: heroWidth, height: heroHeight, alt: heroAlt }] : []);
 
   const containerClass = $derived(cn("rounded-lg", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100"));
 
@@ -67,11 +67,19 @@
     type: "article",
     title: post.title,
     description: post.excerpt ?? post.title,
+    site_name: "SkyCrypt",
     images: ogImages,
     article: {
       published_time: post.publishedAt ?? undefined,
       author: [displayName]
     }
+  }}
+  twitter={{
+    card: "summary_large_image",
+    title: post.title,
+    description: post.excerpt ?? post.title,
+    image: heroSrc ?? undefined,
+    imageAlt: heroAlt
   }} />
 
 <article class="mx-auto flex max-w-3xl flex-col gap-6 px-[max(1.25rem,env(safe-area-inset-right))] py-8">

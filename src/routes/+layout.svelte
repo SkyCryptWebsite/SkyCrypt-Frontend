@@ -37,7 +37,7 @@
   const internalState = initInternalState();
   const position = writable<ToasterProps["position"]>("bottom-right");
   const theme = writable<ToasterProps["theme"]>("dark");
-  const noEmbedUrls = ["/stats/"];
+  const noEmbedUrls = ["/stats/", "/newsroom"];
   const packs = new PacksContext();
   const websiteJsonLd = {
     "@context": "https://schema.org",

@@ -28,7 +28,24 @@
   afterNavigate(markVisiblePostsSeen);
 </script>
 
-<SvelteSeo title="Newsroom | SkyCrypt" description="Latest announcements and updates from the SkyCrypt team" canonical="https://sky.shiiyu.moe/newsroom" />
+<SvelteSeo
+  title="Newsroom | SkyCrypt"
+  description="Latest announcements and updates from the SkyCrypt team"
+  canonical="https://sky.shiiyu.moe/newsroom"
+  openGraph={{
+    type: "website",
+    title: "Newsroom | SkyCrypt",
+    description: "Latest announcements and updates from the SkyCrypt team",
+    site_name: "SkyCrypt",
+    images: [{ url: "https://sky.shiiyu.moe/img/newsroom.avif", width: 1200, height: 630, alt: "SkyCrypt Newsroom" }]
+  }}
+  twitter={{
+    card: "summary_large_image",
+    title: "Newsroom | SkyCrypt",
+    description: "Latest announcements and updates from the SkyCrypt team",
+    image: "https://sky.shiiyu.moe/img/newsroom.avif",
+    imageAlt: "SkyCrypt Newsroom"
+  }} />
 
 <main class="@container mx-auto flex max-w-272 flex-col gap-6 pt-5 pr-[max(1.25rem,env(safe-area-inset-right))] pb-[max(1.25rem,env(safe-area-inset-bottom))] pl-[max(1.25rem,env(safe-area-inset-left))]">
   <div class={cn("flex flex-col gap-4 rounded-lg p-5 @md:flex-row @md:items-center @md:justify-between", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
