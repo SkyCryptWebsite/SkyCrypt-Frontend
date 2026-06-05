@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { getPreferences } from "$ctx";
+  import { afterNavigate } from "$app/navigation";
+  import { getNewsroomNotifications, getPreferences } from "$ctx";
   import { clientLocale } from "$lib/hooks/client-locale.svelte";
   import { cn } from "$lib/shared/utils";
   import PostRenderer from "$src/lib/components/newsroom/PostRenderer.svelte";
@@ -14,6 +15,7 @@
   const { data }: { data: PageData } = $props();
 
   const preferences = getPreferences();
+  const notifications = getNewsroomNotifications();
 
   const dateFormatter = $derived(
     new Intl.DateTimeFormat(clientLocale.current, {
@@ -49,6 +51,12 @@
   const ogImages = $derived(post.heroImage?.url ? [{ url: post.heroImage.url, width: post.heroImage.width ?? undefined, height: post.heroImage.height ?? undefined, alt: post.heroImage.alt ?? post.title }] : []);
 
   const containerClass = $derived(cn("rounded-lg", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100"));
+
+  const markCurrentPostSeen = () => {
+    if (!data.preview) notifications.markPostSeen(data.post);
+  };
+
+  afterNavigate(markCurrentPostSeen);
 </script>
 
 <SvelteSeo

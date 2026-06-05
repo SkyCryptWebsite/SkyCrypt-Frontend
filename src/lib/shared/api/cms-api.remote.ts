@@ -35,6 +35,17 @@ export const listPosts = query(
   }
 );
 
+/** List the latest published posts for local unread notifications. */
+export const listLatestPostsForNotifications = query(
+  z.object({
+    limit: z.number().int().min(1).max(10).default(5)
+  }),
+  async ({ limit }) => {
+    const { data } = await listPostsRequest(asListParams({ page: 1, limit, depth: 1, sort: "-publishedAt", "where[_status][equals]": "published" }));
+    return data as PostListResponse;
+  }
+);
+
 /** Get a single published post by slug. */
 export const getPostBySlug = query(z.object({ slug: z.string() }), async ({ slug }) => {
   const { data } = await listPostsRequest(asListParams({ limit: 1, depth: 2, "where[slug][equals]": slug, "where[_status][equals]": "published" }));

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
-  import { getPreferences } from "$ctx";
+  import { afterNavigate, goto } from "$app/navigation";
+  import { getNewsroomNotifications, getPreferences } from "$ctx";
   import Pagination from "$lib/components/newsroom/Pagination.svelte";
   import PostCard from "$lib/components/newsroom/PostCard.svelte";
   import { POST_TYPE_LABELS } from "$lib/components/newsroom/TypeBadge.svelte";
@@ -12,6 +12,7 @@
   const { data }: { data: PageData } = $props();
 
   const preferences = getPreferences();
+  const notifications = getNewsroomNotifications();
 
   const filterHref = (t?: PostType) => (t ? `/newsroom?type=${t}` : "/newsroom");
   const baseHref = $derived(filterHref(data.type));
@@ -21,6 +22,10 @@
     // eslint-disable-next-line svelte/no-navigation-without-resolve
     void goto(filterHref(value === "" ? undefined : (value as PostType)));
   }
+
+  const markVisiblePostsSeen = () => notifications.markAllSeen(data.docs);
+
+  afterNavigate(markVisiblePostsSeen);
 </script>
 
 <SvelteSeo title="Newsroom | SkyCrypt" description="Latest announcements and updates from the SkyCrypt team" canonical="https://sky.shiiyu.moe/newsroom" />
