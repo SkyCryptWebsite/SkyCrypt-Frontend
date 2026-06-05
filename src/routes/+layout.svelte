@@ -160,10 +160,9 @@
     };
   });
 
-  const packsData = $derived(await getPacks());
-
   $effect(() => {
-    if (packsData) packs.packs = packsData;
+    const query = getPacks();
+    if (query.current) packs.packs = query.current;
   });
 </script>
 
