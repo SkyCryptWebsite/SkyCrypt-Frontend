@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.7.0-beta.2
+
+### Patch Changes
+
+- Migrate remote query search calls to the current SvelteKit API. ([`31d283e`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/31d283ec8c027cb27583a8bb9c026bacf01759a4))
+
+- Render newsroom rich text with Payload's Lexical HTML converter while preserving SkyCrypt-specific links, uploads, checklists, and relationship nodes. ([`0ae985e`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/0ae985e966ec97090b050f4d4607f516359bedd5))
+
 ## 3.7.0-beta.1
 
 ### Minor Changes
