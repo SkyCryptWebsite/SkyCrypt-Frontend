@@ -19,8 +19,8 @@
             {#if misc.pet_milestones.sea_creatures_killed.rarity}
               <AdditionStat text="Pet" data={titleCase(misc.pet_milestones.sea_creatures_killed.rarity)} dataRarityColor={misc.pet_milestones.sea_creatures_killed.rarity} />
             {/if}
-            {#if misc.pet_milestones.sea_creatures_killed.progress}
-              <AdditionStat text="Progress" data={misc.pet_milestones.sea_creatures_killed.progress === "100.00" ? "Maxed!" : `${misc.pet_milestones.sea_creatures_killed.progress}%`} dataMaxed={misc.pet_milestones.sea_creatures_killed.progress === "100.00"} />
+            {#if misc.pet_milestones.sea_creatures_killed.progress !== null}
+              <AdditionStat text="Progress" data={misc.pet_milestones.sea_creatures_killed.progress === 100.0 ? "Maxed!" : `${misc.pet_milestones.sea_creatures_killed.progress}%`} dataMaxed={misc.pet_milestones.sea_creatures_killed.progress === 100.0} />
             {/if}
           </AdditionStat>
 
@@ -30,8 +30,8 @@
                 <AdditionStat text="Pet" data={titleCase(misc.pet_milestones.ores_mined.rarity)} dataRarityColor={misc.pet_milestones.ores_mined.rarity} />
               {/if}
 
-              {#if misc.pet_milestones.ores_mined.progress}
-                <AdditionStat text="Progress" data={misc.pet_milestones.ores_mined.progress === "100.00" ? "Maxed!" : `${misc.pet_milestones.ores_mined.progress}%`} dataMaxed={misc.pet_milestones.ores_mined.progress === "100.00"} />
+              {#if misc.pet_milestones.ores_mined.progress !== null}
+                <AdditionStat text="Progress" data={misc.pet_milestones.ores_mined.progress === 100.0 ? "Maxed!" : `${misc.pet_milestones.ores_mined.progress}%`} dataMaxed={misc.pet_milestones.ores_mined.progress === 100.0} />
               {/if}
             </AdditionStat>
           {/if}
