@@ -82,6 +82,7 @@
     "formsnap": "^2.0.1",
     "globals": "^17.6.0",
     "ky": "^2.0.2",
+    "kysely": "0.28.17",
     "numerable": "^0.3.15",
     "orval": "^8.15.0",
     "paneforge": "^1.0.2",
