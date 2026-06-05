@@ -7,4 +7,4 @@ allowBuilds:
   sharp: true
   simple-git-hooks: true
 overrides:
-  kysely: ^0.28.17
+  kysely: 0.28.17
