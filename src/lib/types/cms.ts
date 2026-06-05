@@ -30,34 +30,6 @@ export type BlockImage = Extract<PostBodyItem, { blockType: "image" }>;
 export type BlockRichText = Extract<PostBodyItem, { blockType: "richText" }>;
 
 /**
- * Minimal subset of Lexical's serialized JSON shape that the newsroom renderer
- * understands. The generated schema only types Lexical content as a loose
- * `{ type, version, ... }` object, so the renderer keeps this richer view and
- * casts at the boundary.
- */
-export type LexicalNode = {
-  type: string;
-  children?: LexicalNode[];
-  text?: string;
-  /** Text nodes: bitfield (1=bold, 2=italic, 4=strikethrough, 8=underline, 16=code). Block nodes: alignment string. */
-  format?: number | string;
-  /** Headings: "h1".."h6"; legacy list tag: "ul"|"ol". */
-  tag?: string;
-  /** Lists: "bullet" | "number" | "check". */
-  listType?: string;
-  /** Checklist items. */
-  checked?: boolean;
-  /** Legacy/custom links (Payload links use `fields.url`). */
-  url?: string;
-  /** Payload link node fields. */
-  fields?: { url?: string | null; newTab?: boolean | null; [key: string]: unknown } | null;
-  /** Upload media object, relationship doc, or list-item number. */
-  value?: unknown;
-  /** Upload / relationship target collection. */
-  relationTo?: string;
-};
-
-/**
  * A post as consumed by the UI. Identical to the generated `Post`, but with the
  * relationship fields narrowed to their populated shape — every query runs with
  * `depth >= 1`, so `heroImage`/`author` are always resolved objects, never IDs.

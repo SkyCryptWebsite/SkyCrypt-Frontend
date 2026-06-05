@@ -115,6 +115,7 @@
     "zod": "^4.4.3"
   },
   "dependencies": {
+    "@payloadcms/richtext-lexical": "^3.85.0",
     "@sentry/sveltekit": "^10.53.1",
     "culori": "^4.0.2",
     "simple-git-hooks": "^2.13.1",
