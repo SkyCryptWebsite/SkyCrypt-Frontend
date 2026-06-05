@@ -48,17 +48,7 @@
   const combinedClass = new CombinedContext();
   setProfileContext(profileClass);
   setCombinedContext(combinedClass);
-  const combinedState = $derived.by(() => {
-    if (!ctx.uuid || !ctx.profile_id) {
-      return { current: null };
-    }
-
-    const query = getCombined({ uuid: ctx.uuid, profileId: ctx.profile_id });
-
-    return {
-      current: query.current
-    };
-  });
+  const combined = $derived(ctx.uuid && ctx.profile_id ? await getCombined({ uuid: ctx.uuid, profileId: ctx.profile_id }) : null);
 
   function rewriteURL() {
     if (!(ctx as ModelsStatsOutput)) return;
@@ -117,7 +107,7 @@
   });
 
   $effect.pre(() => {
-    combinedClass.current = combinedState.current ?? null;
+    combinedClass.current = combined ?? null;
   });
 
   $effect(() => {

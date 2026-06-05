@@ -41,11 +41,11 @@
   let hasBeenInViewport = $state(false);
   let open = $state(false);
 
-  const inViewport = $derived(image ? new IsInViewport(() => targetNode, { rootMargin: "200px 0px", threshold: 0 }) : undefined);
+  const inViewport = new IsInViewport(() => (image ? targetNode : null), { rootMargin: "200px 0px", threshold: 0 });
   const internalState = getInternalState();
 
   $effect(() => {
-    if (inViewport?.current && !hasBeenInViewport) {
+    if (inViewport.current && !hasBeenInViewport) {
       hasBeenInViewport = true;
     }
   });

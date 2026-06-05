@@ -1,8 +1,7 @@
 <script lang="ts">
-  import { getInternalState, getPreferences, getProfileContext } from "$ctx";
+  import { getCombinedContext, getInternalState, getPreferences } from "$ctx";
   import { Notice } from "$lib/components/notices";
   import type { SectionName } from "$lib/sections/types";
-  import { getCombined } from "$lib/shared/api/skycrypt-api.remote";
   import { titleCase } from "$lib/shared/helper";
   import { cn } from "$lib/shared/utils";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
@@ -10,19 +9,7 @@
 
   const preferences = getPreferences();
   const internalState = getInternalState();
-  const profile = $derived(getProfileContext().current);
-  const combinedState = $derived.by(() => {
-    if (!profile?.uuid || !profile?.profile_id) {
-      return { current: null, error: null };
-    }
-
-    const query = getCombined({ uuid: profile.uuid, profileId: profile.profile_id });
-
-    return {
-      current: query.current,
-      error: query.error
-    };
-  });
+  const combinedCtx = getCombinedContext();
   const shouldWaitForCombined = $derived(internalState.tabValue !== "Inventory");
 
   const COMPONENTS = {
@@ -50,17 +37,13 @@
   {#if internalState.tabValue in COMPONENTS}
     <Tabs.Root value={internalState.tabValue} class="contents" data-section={internalState.tabValue}>
       <Tabs.Content value={internalState.tabValue} class="section">
-        {#if shouldWaitForCombined && !combinedState.current}
-          {#if combinedState.error}
-            <Notice title="An unexpected error has occurred" type="error" error={combinedState.error.message} />
-          {:else}
-            <div class={cn("rounded-lg bg-text/5 p-6", preferences.performanceMode ? "bg-background-lore" : "backdrop-blur-sm")}>
-              <div class="flex items-center gap-2">
-                <LoaderCircle class="size-5 animate-spin text-text/60" />
-                <span class="font-semibold text-text/80">Loading {titleCase(internalState.tabValue)}...</span>
-              </div>
+        {#if shouldWaitForCombined && !combinedCtx.current}
+          <div class={cn("rounded-lg bg-text/5 p-6", preferences.performanceMode ? "bg-background-lore" : "backdrop-blur-sm")}>
+            <div class="flex items-center gap-2">
+              <LoaderCircle class="size-5 animate-spin text-text/60" />
+              <span class="font-semibold text-text/80">Loading {titleCase(internalState.tabValue)}...</span>
             </div>
-          {/if}
+          </div>
         {:else}
           {#await COMPONENTS[internalState.tabValue]()}
             <div class={cn("rounded-lg bg-text/5 p-6", preferences.performanceMode ? "bg-background-lore" : "backdrop-blur-sm")}>
@@ -75,7 +58,7 @@
                 <LoaderCircle class="animate-spin text-icon" />
               {/snippet}
               {#snippet failed(err, reset)}
-                <Notice title="An unexpected error has occurred" type="error" error={err} retry={reset} />
+                <Notice title="An unexpected error has occurred" type="error" error={err instanceof Error ? err.message : String(err)} retry={reset} />
               {/snippet}
               <Component order={findIndex(internalState.tabValue)} />
             </svelte:boundary>

@@ -159,10 +159,9 @@
     };
   });
 
-  $effect(() => {
-    const packsDataRemoteFunction = getPacks();
-    const packsData = packsDataRemoteFunction.current;
+  const packsData = $derived(await getPacks());
 
+  $effect(() => {
     if (packsData) packs.packs = packsData;
   });
 </script>
