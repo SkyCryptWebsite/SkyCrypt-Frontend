@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.7.0-beta.3
+
+### Patch Changes
+
+- Render newsroom posts and the listing page as `summary_large_image` social embeds with the post's hero image (or a branded graphic on the listing), and stop the homepage SEO defaults from leaking into them. _[`793cd0e`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/793cd0ef92bdc01a1de274880f5b00487422d59a) [@DarthGigi](https://github.com/DarthGigi)_
+- Eliminate `derived_inert` runtime warnings by hoisting `new IsInViewport(...)` out of a `$derived` in `Chip.svelte` and splitting `getThemeIcons(...).current` in the header. Align remaining stats-view remote queries with the post-2.61 docs idiom (`await` for template/context-feed sites; `.current`/`.loading`/`.error` kept only for the loading-button-spinner case). Drop the redundant `getCombined()` in `Sections.svelte`. Make the navbar's tab scroll-on-mount race-resistant and its `IntersectionObserver` `rootMargin` NaN-safe. _[`d99d081`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/d99d0812879edad2cd6cdcfc5a60e925099c61fc) [@DarthGigi](https://github.com/DarthGigi)_
+
 ## 3.7.0-beta.2
 
 ### Patch Changes
