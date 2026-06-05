@@ -7,7 +7,7 @@
   },
   "files.associations": {
     "*.css": "tailwindcss",
-    ".env*": "properties"
+    ".env*": "dotenv"
   },
   "git.autofetch": true,
   "svelte.enable-ts-plugin": true,

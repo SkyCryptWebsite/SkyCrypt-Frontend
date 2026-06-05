@@ -6,7 +6,7 @@ const config = {
   // Consult https://svelte.dev/docs/kit/integrations
   // for more information about preprocessors
   preprocess: vitePreprocess(),
-  compilerOptions: { experimental: { async: true } },
+  compilerOptions: { experimental: { async: true }, runes: true },
   kit: {
     experimental: {
       remoteFunctions: true,
@@ -50,18 +50,6 @@ const config = {
         include: [...config.include, "../drizzle.config.ts"]
       })
     }
-  },
-
-  // Hide build warnings from node_modules
-  onwarn: (warning, handler) => {
-    if (warning.filename?.includes("node_modules")) return;
-
-    handler(warning);
-  },
-
-  vitePlugin: {
-    // Can be removed once Svelte 6 is released, as `true` will be the default
-    dynamicCompileOptions: () => ({ runes: true })
   }
 };
 

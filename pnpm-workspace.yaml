@@ -1,9 +1,10 @@
 allowBuilds:
-  "@prisma/client": true
+  "@prisma/client": false
+  "@tailwindcss/oxide": true
   "@sentry/cli": true
   better-sqlite3: true
   esbuild: true
-  sharp: false
+  sharp: true
   simple-git-hooks: true
 minimumReleaseAgeExclude:
   - "@takumi-rs/core-darwin-arm64@1.4.0"
