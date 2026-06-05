@@ -80,7 +80,7 @@
   <div class="flex items-center justify-end gap-2">
     <Button.Root aria-label="Dismiss newsroom notifications" class="rounded-lg px-3 py-1.5 text-sm font-bold transition-colors hover:text-hover text-text/70" onclick={dismiss}>Close</Button.Root>
     {#if newestUnseen.slug}
-      <Button.Root href="/newsroom/{newestUnseen.slug}" data-sveltekit-preload-data="hover" class="rounded-lg bg-link px-3 py-1.5 text-sm font-bold text-background transition-colors hover:bg-hover" onclick={closeToast}>Read</Button.Root>
+      <Button.Root href="/newsroom/{newestUnseen.slug}" data-sveltekit-preload-data="hover" class="rounded-lg bg-link px-3 py-1.5 text-sm font-bold text-background transition-colors hover:bg-hover" onclick={dismiss}>Read</Button.Root>
     {/if}
   </div>
 </section>

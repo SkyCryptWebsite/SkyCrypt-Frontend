@@ -39,13 +39,17 @@
       dismissible: true,
       componentProps: {
         posts,
-        newestUnseen
+        newestUnseen,
+        closeToast: () => toast.dismiss("newsroom-new-posts")
       },
       onDismiss: () => {
-        notifications.markAllSeen(posts);
         toastId = undefined;
         shownSignature = "";
       }
     });
+  });
+
+  $effect(() => {
+    return () => toast.dismiss("newsroom-new-posts");
   });
 </script>

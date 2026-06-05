@@ -32,11 +32,17 @@ const newestDate = (current: string | null, next: string | null | undefined): st
   return Date.parse(next) > Date.parse(current) ? next : current;
 };
 
+const toPostId = (id: unknown): string | null => {
+  if (typeof id === "string") return id.length > 0 ? id : null;
+  if (typeof id === "number" && Number.isFinite(id)) return String(id);
+  return null;
+};
+
 const sanitizeData = (value: unknown): NewsroomNotificationsData => {
   if (!value || typeof value !== "object") return defaultData();
 
   const data = value as Partial<NewsroomNotificationsData>;
-  const seenPostIds = Array.isArray(data.seenPostIds) ? data.seenPostIds.filter((id): id is string => typeof id === "string" && id.length > 0) : [];
+  const seenPostIds = Array.isArray(data.seenPostIds) ? data.seenPostIds.map(toPostId).filter((id): id is string => id !== null) : [];
   return {
     seenPostIds: seenPostIds.filter((id, index) => seenPostIds.indexOf(id) === index).slice(-MAX_SEEN_POST_IDS),
     lastSeenPublishedAt: isValidDate(data.lastSeenPublishedAt) ? data.lastSeenPublishedAt : null
@@ -70,7 +76,10 @@ export class NewsroomNotificationsContext {
   getUnseenPosts(posts: Post[] = this.#latestPosts) {
     const seen = this.current.seenPostIds;
     return posts
-      .filter((post) => !seen.includes(post.id))
+      .filter((post) => {
+        const id = toPostId(post.id);
+        return id === null || !seen.includes(id);
+      })
       .map((post, index) => ({ post, index }))
       .sort((a, b) => {
         const aTime = isValidDate(a.post.publishedAt) ? Date.parse(a.post.publishedAt) : null;
@@ -97,8 +106,11 @@ export class NewsroomNotificationsContext {
   }
 
   markPostSeen(post: Pick<Post, "id" | "slug" | "publishedAt">) {
+    const id = toPostId(post.id);
+    if (id === null) return;
+
     const current = this.current;
-    const seenPostIds = current.seenPostIds.includes(post.id) ? current.seenPostIds : [...current.seenPostIds, post.id];
+    const seenPostIds = current.seenPostIds.includes(id) ? current.seenPostIds : [...current.seenPostIds, id];
 
     this.current = {
       seenPostIds: seenPostIds.slice(-MAX_SEEN_POST_IDS),
@@ -111,7 +123,8 @@ export class NewsroomNotificationsContext {
     const seenPostIds = [...this.current.seenPostIds];
 
     for (const post of posts) {
-      if (!seenPostIds.includes(post.id)) seenPostIds.push(post.id);
+      const id = toPostId(post.id);
+      if (id !== null && !seenPostIds.includes(id)) seenPostIds.push(id);
       lastSeenPublishedAt = newestDate(lastSeenPublishedAt, post.publishedAt);
     }
 

@@ -31,6 +31,7 @@
   let toastId: string | number = $state(0);
   let commandLoading = $state(false);
   const { ign } = $derived(page.params);
+  const showNewsroomToast = $derived(page.url.pathname !== "/" && !page.url.pathname.startsWith("/newsroom"));
   const preferences = initPreferences();
   const themeContext = initTheme();
   const internalState = initInternalState();
@@ -231,11 +232,13 @@
 <div class="pointer-events-none fixed inset-0 z-[-1] h-dvh w-screen [background-image:var(--bg-url)] bg-cover bg-scroll bg-center bg-no-repeat"></div>
 
 <Header />
-<svelte:boundary>
-  {#snippet failed()}{/snippet}
-  {@const latestNewsroom = await listLatestPostsForNotifications({ limit: 5 })}
-  <NewPostsNotifier posts={latestNewsroom.docs} />
-</svelte:boundary>
+{#if showNewsroomToast}
+  <svelte:boundary>
+    {#snippet failed()}{/snippet}
+    {@const latestNewsroom = await listLatestPostsForNotifications({ limit: 5 })}
+    <NewPostsNotifier posts={latestNewsroom.docs} />
+  </svelte:boundary>
+{/if}
 <Tooltip.Provider delayDuration={0}>
   {@render children()}
 </Tooltip.Provider>
