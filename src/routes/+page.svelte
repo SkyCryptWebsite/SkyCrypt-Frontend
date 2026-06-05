@@ -94,7 +94,7 @@
     submittedSearchError = undefined;
 
     try {
-      const response = await searchUser({ username }).run();
+      const response = await searchUser({ username });
       await goto(resolve("/stats/[ign]", { ign: response.username ?? "" }));
     } catch (err) {
       submittedSearchError = getErrorMessage(err);

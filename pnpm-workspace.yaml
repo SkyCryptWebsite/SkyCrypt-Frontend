@@ -17,3 +17,4 @@ minimumReleaseAgeExclude:
   - "@takumi-rs/helpers@1.4.0"
   - "@takumi-rs/wasm@1.4.0"
   - takumi-js@1.4.0
+  - "@sveltejs/kit@2.63.0"
