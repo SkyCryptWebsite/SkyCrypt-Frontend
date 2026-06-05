@@ -14,7 +14,6 @@
       }
     }
   ],
-  "svelteStrictMode": true,
   "tailwindStylesheet": "./src/app.css",
   "tailwindAttributes": ["class", "class:*", "class:name", "payload"],
   "tailwindFunctions": ["cn"],

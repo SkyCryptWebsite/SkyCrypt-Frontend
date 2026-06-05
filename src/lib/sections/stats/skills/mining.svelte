@@ -185,9 +185,6 @@
   {#if mining.glaciteTunnels}
     <SectionSubtitle class="mt-5">Glacite Tunnels</SectionSubtitle>
     <div class="space-y-0.5">
-      {#if mining.glaciteTunnels.fossilDust != null}
-        <AdditionStat text="Fossil Dust" data={mining.glaciteTunnels.fossilDust.toString()} />
-      {/if}
       {#if mining.glaciteTunnels.mineshaftsEntered != null}
         <AdditionStat text="Mineshafts Entered" data={mining.glaciteTunnels.mineshaftsEntered.toString()} />
       {/if}

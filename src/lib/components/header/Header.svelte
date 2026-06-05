@@ -11,7 +11,7 @@
   const preferences = getPreferences();
   const internalState = getInternalState();
   const theme = getTheme();
-  const themeIcon = $derived(getThemeIcons({ color: theme.activeTheme?.colors?.logo, invert: theme.activeTheme?.light }).current);
+  const themeIconQuery = $derived(getThemeIcons({ color: theme.activeTheme?.colors?.logo, invert: theme.activeTheme?.light }));
 
   const packageVersion = __NPM_PACKAGE_VERSION__;
 </script>
@@ -22,8 +22,8 @@
     <div class="flex gap-2">
       <Button.Root href="/" class="flex items-center justify-center gap-2 font-bold" data-sveltekit-preload-data="hover">
         <Avatar.Root class="size-6 shrink-0 rounded-lg select-none">
-          {#if themeIcon}
-            <Avatar.Image loading="lazy" src="data:image/svg+xml;base64,{btoa(themeIcon)}" alt="SkyCrypt" class="pointer-events-none h-6 select-none" />
+          {#if themeIconQuery.current}
+            <Avatar.Image loading="lazy" src="data:image/svg+xml;base64,{btoa(themeIconQuery.current)}" alt="SkyCrypt" class="pointer-events-none h-6 select-none" />
           {:else}
             <Avatar.Image loading="lazy" src="/img/app-icons/svg.svg" alt="SkyCrypt" class="pointer-events-none h-6 select-none" />
           {/if}

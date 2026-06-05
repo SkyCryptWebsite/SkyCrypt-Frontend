@@ -51,11 +51,13 @@
   function scrollToTab({
     element,
     smooth = true,
-    options
+    options,
+    retries = 5
   }: {
     element?: HTMLElement | null;
     smooth?: boolean;
     options?: ScrollIntoViewOptions;
+    retries?: number;
   } = {}) {
     const scrollOptions = options ?? {
       behavior: smooth ? "smooth" : "auto",
@@ -66,7 +68,11 @@
     const link = element ?? document.querySelector<HTMLAnchorElement>(`button[data-id="${internalState.tabValue}"]`);
 
     if (link == null) {
-      console.warn(`could not scroll to ${location.hash} tab because it does not exist`, link);
+      // Button may not be in the DOM yet — bits-ui's ScrollArea.Viewport sometimes mounts children
+      // a frame later than its root. Retry on rAF, bounded.
+      if (retries > 0) {
+        requestAnimationFrame(() => scrollToTab({ smooth, options, retries: retries - 1 }));
+      }
       return;
     }
 
@@ -79,7 +85,8 @@
       return;
     }
 
-    const topValue = parseInt(window.getComputedStyle(navbarElement).getPropertyValue("top"));
+    const parsedTop = parseInt(window.getComputedStyle(navbarElement).getPropertyValue("top"));
+    const topValue = Number.isFinite(parsedTop) ? parsedTop : 0;
 
     observer = new IntersectionObserver(
       ([e]) => {
@@ -113,15 +120,18 @@
     observerCleanup();
   });
 
-  // Effect to handle tab value changes and update URL
+  // Effect to handle tab value changes and update URL.
+  // Depends on filteredSectionOrderPreferences so it re-runs once the tab buttons populate,
+  // since the target button is rendered from that list and may not exist on the initial mount tick.
   $effect(() => {
-    if (navbarElement && internalState.tabValue) {
-      tick().then(() => {
-        scrollToTab({ smooth: true });
-        // eslint-disable-next-line svelte/no-navigation-without-resolve
-        replaceState("#" + internalState.tabValue, page.state);
-      });
-    }
+    if (!navbarElement || !internalState.tabValue) return;
+    if (!filteredSectionOrderPreferences.some((s) => s.name === internalState.tabValue)) return;
+
+    tick().then(() => {
+      scrollToTab({ smooth: true });
+      // eslint-disable-next-line svelte/no-navigation-without-resolve
+      replaceState("#" + internalState.tabValue, page.state);
+    });
   });
 </script>
 
@@ -138,7 +148,7 @@
     </div>
   {/snippet}
 
-  <ScrollArea.Scrollbar orientation="horizontal" class="z-10 flex h-0.5 w-full origin-center -translate-y-[0.44rem] touch-none transition-all duration-300 ease-out select-none group-hover:h-2 group-hover:-translate-y-1">
+  <ScrollArea.Scrollbar orientation="horizontal" class="z-10 flex h-0.5 w-full origin-center translate-y-[-0.44rem] touch-none transition-all duration-300 ease-out select-none group-hover:h-2 group-hover:-translate-y-1">
     <ScrollArea.Thumb class="rounded-full bg-icon" />
   </ScrollArea.Scrollbar>
 </ScrollAreaPrimitive>

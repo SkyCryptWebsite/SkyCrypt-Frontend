@@ -23,20 +23,7 @@
   const profile = $derived(getProfileContext().current);
   const profileId = $derived(profile?.profile_id);
   const uuid = $derived(profile?.uuid);
-  const inventoriesState = $derived.by(() => {
-    if (!uuid || !profileId) {
-      return { current: [], error: null } satisfies { current: ModelsInventory[]; error: unknown };
-    }
-
-    const query = getInventories({ uuid, profileId });
-
-    return {
-      current: query.current ?? [],
-      error: query.error
-    };
-  });
-
-  const inventories = $derived<ModelsInventory[]>(inventoriesState.current);
+  const inventories = $derived<ModelsInventory[]>(uuid && profileId ? ((await getInventories({ uuid, profileId })) ?? []) : []);
   const selectedInventory = $derived(openTab ? inventories.find((inventory) => inventory.name === openTab) : undefined);
   const selectedTabName = $derived(selectedInventory?.name ?? inventories[0]?.name ?? "");
   const currentInventory = $derived(selectedInventory ?? inventories[0]);
@@ -58,53 +45,57 @@
 </script>
 
 <Section id="Inventory" {order} class="min-h-150">
-  {#if inventories.length && currentInventory}
-    <Tabs.Root bind:value={() => selectedTabName, handleTabChange} class="@container relative mb-0 rounded-lg bg-background/30 p-5 pt-4">
-      <Tabs.List>
-        <ScrollAreaPrimitive viewClass="border-b border-icon" orientation="horizontal">
-          {#snippet viewportChildren()}
-            <div class="flex! h-full shrink-0 flex-nowrap items-center gap-3 px-4 whitespace-nowrap">
-              {#each inventories as tabItem (tabItem.name)}
-                <Tabs.Trigger value={tabItem.name || ""} class="group relative flex items-center justify-center gap-0.5 pb-2 text-xs uppercase">
-                  <Avatar.Root class="size-8">
-                    <Avatar.Image loading="lazy" src={tabItem.texture} class="size-8 object-contain" />
-                    <Avatar.Fallback>
-                      <Image class="size-8" />
-                    </Avatar.Fallback>
-                  </Avatar.Root>
-                  {tabItem.name}
-                  {#if selectedTabName === tabItem.name}
-                    <div class="absolute -bottom-1 h-2 w-full rounded-full bg-icon" in:send={{ key: "active-tab" }} out:receive={{ key: "active-tab" }}></div>
-                  {:else}
-                    <div class="absolute -bottom-1 h-2 w-full rounded-full bg-icon opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100" out:fade={{ duration: 300, easing: cubicOut }}></div>
-                  {/if}
-                </Tabs.Trigger>
-              {/each}
-            </div>
-          {/snippet}
-          <ScrollArea.Scrollbar orientation="horizontal">
-            <ScrollArea.Thumb />
-          </ScrollArea.Scrollbar>
-        </ScrollAreaPrimitive>
-      </Tabs.List>
+  <svelte:boundary>
+    {#snippet pending()}
+      <LoaderCircle class="mx-auto mt-4 animate-spin text-icon" />
+    {/snippet}
+    {#snippet failed()}
+      <p class="mt-2 space-x-0.5 text-center leading-6">Failed to load inventories.</p>
+    {/snippet}
+    {#if inventories.length && currentInventory}
+      <Tabs.Root bind:value={() => selectedTabName, handleTabChange} class="@container relative mb-0 rounded-lg bg-background/30 p-5 pt-4">
+        <Tabs.List>
+          <ScrollAreaPrimitive viewClass="border-b border-icon" orientation="horizontal">
+            {#snippet viewportChildren()}
+              <div class="flex! h-full shrink-0 flex-nowrap items-center gap-3 px-4 whitespace-nowrap">
+                {#each inventories as tabItem (tabItem.name)}
+                  <Tabs.Trigger value={tabItem.name || ""} class="group relative flex items-center justify-center gap-0.5 pb-2 text-xs uppercase">
+                    <Avatar.Root class="size-8">
+                      <Avatar.Image loading="lazy" src={tabItem.texture} class="size-8 object-contain" />
+                      <Avatar.Fallback>
+                        <Image class="size-8" />
+                      </Avatar.Fallback>
+                    </Avatar.Root>
+                    {tabItem.name}
+                    {#if selectedTabName === tabItem.name}
+                      <div class="absolute -bottom-1 h-2 w-full rounded-full bg-icon" in:send={{ key: "active-tab" }} out:receive={{ key: "active-tab" }}></div>
+                    {:else}
+                      <div class="absolute -bottom-1 h-2 w-full rounded-full bg-icon opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100" out:fade={{ duration: 300, easing: cubicOut }}></div>
+                    {/if}
+                  </Tabs.Trigger>
+                {/each}
+              </div>
+            {/snippet}
+            <ScrollArea.Scrollbar orientation="horizontal">
+              <ScrollArea.Thumb />
+            </ScrollArea.Scrollbar>
+          </ScrollAreaPrimitive>
+        </Tabs.List>
 
-      <Tabs.Content value={selectedTabName}>
-        {#if selectedTabName === "Search"}
-          {#if uuid && profileId}
-            <InventorySearch bind:search={searchValue} {uuid} {profileId} {itemSnippet} />
+        <Tabs.Content value={selectedTabName}>
+          {#if selectedTabName === "Search"}
+            {#if uuid && profileId}
+              <InventorySearch bind:search={searchValue} {uuid} {profileId} {itemSnippet} />
+            {/if}
+          {:else if usesNestedInventoryView}
+            {@render multipleInventorySection(currentInventory?.items ?? [])}
+          {:else}
+            <InventoryGrid inventoryId={selectedTabName} gap={currentInventory.separatorAfter ?? 45} {itemSnippet} items={currentInventory.items ?? []} />
           {/if}
-        {:else if usesNestedInventoryView}
-          {@render multipleInventorySection(currentInventory?.items ?? [])}
-        {:else}
-          <InventoryGrid inventoryId={selectedTabName} gap={currentInventory.separatorAfter ?? 45} {itemSnippet} items={currentInventory.items ?? []} />
-        {/if}
-      </Tabs.Content>
-    </Tabs.Root>
-  {:else if inventoriesState.error}
-    <p class="mt-2 space-x-0.5 text-center leading-6">Failed to load inventories.</p>
-  {:else}
-    <LoaderCircle class="mx-auto mt-4 animate-spin text-icon" />
-  {/if}
+        </Tabs.Content>
+      </Tabs.Root>
+    {/if}
+  </svelte:boundary>
 </Section>
 
 {#snippet itemSnippet(item: ModelsStrippedItem)}

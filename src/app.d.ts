@@ -1,3 +1,5 @@
+import type { Session, User } from "better-auth/minimal";
+
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 declare global {
@@ -5,15 +7,16 @@ declare global {
 
   namespace App {
     // interface Error {}
-    // interface Locals {}
     // interface PageData {}
     // interface PageState {}
     // interface Platform {}
     namespace Superforms {
-      type Message = {
-        type: "error" | "success";
-        text: string;
-      };
+      type Message = { type: "error" | "success"; text: string };
+    }
+
+    interface Locals {
+      user?: User;
+      session?: Session;
     }
   }
 }

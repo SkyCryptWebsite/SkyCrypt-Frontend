@@ -38,6 +38,7 @@ WORKDIR /app
 COPY --from=builder /app/build build/
 COPY --from=builder /app/node_modules node_modules/
 COPY --from=builder /app/static static/
+COPY --from=builder /app/drizzle drizzle/
 COPY package.json .
 COPY pnpm-lock.yaml .
 

@@ -53,9 +53,15 @@
     return score;
   }
 
+  function setCommandOpen(open: boolean) {
+    internalState.openCommand = open;
+    if (!open) {
+      resetSearchState();
+    }
+  }
+
   function closeCommand() {
-    internalState.openCommand = false;
-    resetSearchState();
+    setCommandOpen(false);
   }
 
   async function submitSearch() {
@@ -68,7 +74,7 @@
     submittedSearchError = undefined;
 
     try {
-      const response = await searchUser({ username }).run();
+      const response = await searchUser({ username });
       closeCommand();
       await goto(resolve("/stats/[ign]", { ign: response.username ?? "" }));
     } catch (err) {
@@ -86,15 +92,9 @@
       void submitSearch();
     }
   }
-
-  $effect(() => {
-    if (!internalState.openCommand) {
-      resetSearchState();
-    }
-  });
 </script>
 
-<Dialog.Root bind:open={internalState.openCommand}>
+<Dialog.Root bind:open={() => internalState.openCommand, setCommandOpen}>
   <Dialog.Portal>
     <Dialog.Overlay forceMount class={cn("fixed inset-0 z-40", preferences.performanceMode ? "bg-background-lore" : "backdrop-blur-lg backdrop-brightness-50")}>
       {#snippet child({ props, open })}

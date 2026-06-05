@@ -1,5 +1,7 @@
 import { sentrySvelteKit } from "@sentry/sveltekit";
+import adapter from "@sveltejs/adapter-node";
 import { sveltekit } from "@sveltejs/kit/vite";
+import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 import tailwindcss from "@tailwindcss/vite";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vitest/config";
@@ -12,7 +14,54 @@ export default defineConfig({
       adapter: "node"
     }),
     tailwindcss(),
-    sveltekit()
+    sveltekit({
+      // Consult https://svelte.dev/docs/kit/integrations
+      // for more information about preprocessors
+      preprocess: vitePreprocess(),
+      compilerOptions: { experimental: { async: true }, runes: true },
+      experimental: {
+        remoteFunctions: true,
+        tracing: { server: true },
+        instrumentation: { server: true }
+      },
+      adapter: adapter(),
+      alias: {
+        $params: "./src/params",
+        $types: "./src/lib/types",
+        $db: "./src/db",
+        $constants: "./src/lib/server/constants",
+        $ctx: "./src/context",
+        $routes: "./src/routes",
+        $src: "./src"
+      },
+      csrf: {
+        trustedOrigins: ["https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe", "http://localhost:5173", "http://localhost:4173", "http://localhost:3000", "http://localhost:8080"]
+      },
+      csp: {
+        mode: "auto",
+        directives: {
+          "script-src": ["self", "unsafe-inline"],
+          "worker-src": ["self", "blob:"],
+          "style-src": ["self", "unsafe-inline", "https://fonts.googleapis.com"],
+          "img-src": ["self", "data:", "https://textures.minecraft.net", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe", "https://nmsr.nickac.dev", "https://cms.shiiyu.moe", "http://localhost:3000"],
+          "connect-src": ["self", "https://mowojang.matdoes.dev", "https://mowojang.seraph.si", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe", "https://cms.shiiyu.moe", "http://localhost:3000"],
+          "font-src": ["self", "https://fonts.gstatic.com"],
+          "frame-ancestors": ["self", "https://cms.shiiyu.moe", "http://localhost:3000"],
+          "frame-src": ["self"]
+        }
+      },
+      version: {
+        name: process.env.PUBLIC_COMMIT_HASH,
+        // in ms
+        pollInterval: 1000 * 60 // 1 minute
+      },
+      typescript: {
+        config: (config) => ({
+          ...config,
+          include: [...config.include, "../drizzle.config.ts"]
+        })
+      }
+    })
   ],
   build: { sourcemap: true },
   test: {

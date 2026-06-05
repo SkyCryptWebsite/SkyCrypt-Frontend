@@ -12,19 +12,7 @@
   const profile = $derived(getProfileContext().current);
   const profileUUID = $derived(profile?.uuid);
   const profileId = $derived(profile?.profile_id);
-  const statsState = $derived.by(() => {
-    if (!openState || !profileUUID || !profileId) {
-      return { current: null, error: null, loading: false };
-    }
-
-    const query = getAdditionalStats({ uuid: profileUUID, profileId });
-
-    return {
-      current: query.current,
-      error: query.error,
-      loading: query.loading
-    };
-  });
+  const statsQuery = $derived(openState && profileUUID && profileId ? getAdditionalStats({ uuid: profileUUID, profileId }) : null);
 </script>
 
 <div class="stats flex flex-col">
@@ -33,12 +21,12 @@
       <Collapsible.Content forceMount={true} class="columns-[12.5rem] *:motion-preset-focus *:motion-preset-slide-down *:motion-delay-[calc(sibling-index()*0.01s)]">
         {#snippet child({ props, open })}
           {#if open}
-            {#if statsState.error}
-              <Notice title="An unexpected error has occurred" type="error" error={statsState.error.message} />
+            {#if statsQuery?.error}
+              <Notice title="An unexpected error has occurred" type="error" error={statsQuery.error instanceof Error ? statsQuery.error.message : String(statsQuery.error)} />
             {/if}
-            {#if statsState.current?.stats}
+            {#if statsQuery?.current?.stats}
               <div {...props} transition:slide|global={{ duration: 300, easing: cubicOut, axis: "y" }}>
-                {#each Object.entries(statsState.current.stats) as [statName, statData], index (index)}
+                {#each Object.entries(statsQuery.current.stats) as [statName, statData], index (index)}
                   {#if statData.total > 0}
                     <Stat stat={statName} {statData} />
                   {/if}
@@ -50,7 +38,7 @@
       </Collapsible.Content>
     {/key}
     <Collapsible.Trigger class="mx-auto mt-3.5 w-full rounded-full bg-text/10 p-2.5 text-xs font-semibold uppercase">
-      {#if statsState.loading}
+      {#if statsQuery?.loading}
         <LoaderCircle class="mx-auto animate-spin text-icon" />
       {:else}
         {openState ? "Hide Stats" : "Show Stats"}
