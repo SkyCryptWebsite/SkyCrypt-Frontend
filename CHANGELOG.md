@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.7.0-beta.1
+
+### Minor Changes
+
+- Add local newsroom notifications for new CMS posts. ([`c2b599e`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/c2b599e7e729a61d029f4998f736ae3fa1f0571d))
+
+- Add the CMS-backed newsroom with post listing, article pages, previews, and sitemap entries. ([`a74b033`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/a74b0339f66196ae719dbc19c06ab704995e502c))
+
 ## 3.7.0-beta.0
 
 ### Minor Changes
