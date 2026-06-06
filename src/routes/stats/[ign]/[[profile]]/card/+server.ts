@@ -1,6 +1,6 @@
 import { building, dev } from "$app/environment";
 import { env } from "$env/dynamic/public";
-import appStyles from "$src/app.css?inline";
+import appStyles from "$routes/layout.css?inline";
 import { DefaultCard } from "$src/lib/components/cards";
 import ErrorCard from "$src/lib/components/cards/default/ErrorCard.svelte";
 import { parseSettingsFromParams } from "$src/lib/components/cards/default/schema";

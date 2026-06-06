@@ -22,7 +22,7 @@
   import { writable } from "svelte/store";
   import { fly } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
-  import "../app.css";
+  import "./layout.css";
 
   let { children }: { children: Snippet } = $props();
   let isMobile = $state(new IsMobile());

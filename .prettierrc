@@ -14,7 +14,7 @@
       }
     }
   ],
-  "tailwindStylesheet": "./src/app.css",
+  "tailwindStylesheet": "./src/routes/layout.css",
   "tailwindAttributes": ["class", "class:*", "class:name", "payload"],
   "tailwindFunctions": ["cn"],
   "tailwindPreserveWhitespace": false
