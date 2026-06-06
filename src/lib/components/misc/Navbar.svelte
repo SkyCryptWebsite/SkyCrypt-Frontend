@@ -4,7 +4,6 @@
   import { getInternalState, getPreferences, getProfileContext } from "$ctx";
   import ScrollAreaPrimitive from "$lib/components/ScrollAreaPrimitive.svelte";
   import type { SectionName } from "$lib/sections/types";
-  import { cn } from "$lib/shared/utils";
   import ChevronLeft from "@lucide/svelte/icons/chevron-left";
   import ChevronRight from "@lucide/svelte/icons/chevron-right";
   import { Button, ScrollArea } from "bits-ui";
@@ -139,7 +138,7 @@
   {#snippet viewportChildren()}
     <div class="mx-6 flex! flex-nowrap items-center gap-2 pb-2 font-semibold whitespace-nowrap text-text/80">
       <div class="absolute bottom-1.75 -left-6 z-1 h-0.5 w-[calc(100%+1.5rem)] bg-icon"></div>
-      <div class={cn("absolute inset-0 bottom-2", preferences.performanceMode ? "group-data-[pinned=true]:bg-header" : "transition duration-50 ease-out group-data-[pinned=true]:group-data-[mode=dark]/html:bg-[oklch(19.13%_0_0)]/90 group-data-[pinned=true]:group-data-[mode=light]/html:bg-[oklch(95.51%_0_0)]/92")}></div>
+      <div class="absolute inset-0 bottom-2 performance:group-data-[pinned=true]:bg-header standard:transition standard:duration-50 standard:ease-out standard:group-data-[pinned=true]:group-data-[mode=dark]/html:bg-[oklch(19.13%_0_0)]/90 standard:group-data-[pinned=true]:group-data-[mode=light]/html:bg-[oklch(95.51%_0_0)]/92"></div>
       {#each filteredSectionOrderPreferences as section, index (index)}
         <Button.Root class="relative motion-preset-focus motion-preset-slide-right px-2 py-3 motion-delay-[calc(sibling-index()*0.05s)] after:absolute after:top-full after:left-0 after:h-0 after:w-full after:origin-top after:rounded-full after:bg-icon after:transition-all after:duration-100 after:ease-out hover:after:top-[calc(100%-4px)] hover:after:h-2 data-[active=true]:text-text data-[active=true]:after:top-[calc(100%-4px)] data-[active=true]:after:h-2" data-id={section.name} data-active={internalState.tabValue === section.name} onclick={() => handleSectionClick(section.name)}>
           {section.name?.replaceAll("_", " ")}

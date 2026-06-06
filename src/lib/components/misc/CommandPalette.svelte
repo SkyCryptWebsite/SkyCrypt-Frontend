@@ -1,9 +1,9 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { resolve } from "$app/paths";
-  import { getInternalState, getPreferences } from "$ctx";
+  import { getInternalState } from "$ctx";
   import { searchUser } from "$lib/shared/api/skycrypt-api.remote";
-  import { cn, flyAndScale } from "$lib/shared/utils";
+  import { flyAndScale } from "$lib/shared/utils";
   import CircleAlert from "@lucide/svelte/icons/circle-alert";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import Search from "@lucide/svelte/icons/search";
@@ -24,8 +24,6 @@
   let submittedSearchError = $state<string>();
 
   const searchQueryValidated = $derived(schema.safeParse({ query: searchQuery }));
-
-  const preferences = getPreferences();
   const internalState = getInternalState();
 
   function getErrorMessage(err: unknown) {
@@ -96,7 +94,7 @@
 
 <Dialog.Root bind:open={() => internalState.openCommand, setCommandOpen}>
   <Dialog.Portal>
-    <Dialog.Overlay forceMount class={cn("fixed inset-0 z-40", preferences.performanceMode ? "bg-background-lore" : "backdrop-blur-lg backdrop-brightness-50")}>
+    <Dialog.Overlay forceMount class="fixed inset-0 z-40 glass glass-bg-background-lore">
       {#snippet child({ props, open })}
         {#if open}
           <div {...props} transition:fade={{ duration: 150, easing: cubicOut }}></div>
@@ -105,7 +103,7 @@
     </Dialog.Overlay>
     <Dialog.Content
       forceMount
-      class={cn("fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg font-icomoon select-text", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}
+      class="fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg font-icomoon select-text glass"
       onOpenAutoFocus={(e) => {
         e.preventDefault();
         commandInput?.focus();
@@ -154,7 +152,7 @@
                       <Command.GroupItems>
                         <Command.Item
                           value="search"
-                          class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", preferences.performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")}
+                          class="flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none standard:data-selected:bg-background-grey performance:data-selected:bg-background-lore"
                           keywords={[searchQuery, "search", "find", "profile"]}
                           onSelect={() => {
                             void submitSearch();

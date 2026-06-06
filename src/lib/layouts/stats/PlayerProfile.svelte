@@ -1,6 +1,6 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
-  import { getFavorites, getHoverContext, getPreferences, getProfileContext } from "$ctx";
+  import { getFavorites, getHoverContext, getProfileContext } from "$ctx";
   import { APINotice } from "$lib/components/notices";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import CardBuilder from "$src/lib/components/stats/CardBuilder.svelte";
@@ -25,7 +25,6 @@
 
   const profile = $derived(getProfileContext().current);
   const isHover = getHoverContext();
-  const preferences = getPreferences();
   const favorites = getFavorites();
 
   const apiSettings = $derived(Object.entries(profile?.apiSettings ?? {}).filter(([_, value]) => !value));
@@ -76,7 +75,7 @@
     </Popover.Trigger>
 
     <Popover.Portal>
-      <Popover.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", preferences.performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={ignRef} strategy="absolute">
+      <Popover.Content forceMount class="z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold glass glass-bg-background" sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={ignRef} strategy="absolute">
         {#snippet child({ wrapperProps, props, open })}
           {#if open}
             <div {...wrapperProps}>
@@ -134,7 +133,7 @@
         {@render profileIcon(profile?.game_mode ?? "")}
       </Popover.Trigger>
       <Popover.Portal>
-        <Popover.Content forceMount class={cn("z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold", preferences.performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={noticeRef} strategy="absolute">
+        <Popover.Content forceMount class="z-50 min-w-64 overflow-hidden rounded-lg text-3xl font-semibold glass glass-bg-background" sideOffset={8} side="bottom" align="start" collisionPadding={6} customAnchor={noticeRef} strategy="absolute">
           {#snippet child({ wrapperProps, props, open })}
             {#if open}
               <div {...wrapperProps}>

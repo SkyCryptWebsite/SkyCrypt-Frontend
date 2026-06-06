@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { getPreferences } from "$ctx";
-  import { cn } from "$lib/shared/utils";
   import { Avatar, Button } from "bits-ui";
 
   interface Props {
@@ -16,11 +14,9 @@
   }
 
   let { href, text, img }: Props = $props();
-
-  const preferences = getPreferences();
 </script>
 
-<Button.Root {href} target="_blank" rel="noreferrer" class={cn("flex w-full items-center gap-4 rounded-lg p-4 transition-all duration-300 ease-out hover:scale-[1.05]", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
+<Button.Root {href} target="_blank" rel="noreferrer" class="flex w-full items-center gap-4 rounded-lg p-4 transition-all duration-300 ease-out hover:scale-[1.05] glass glass-brightness-150 dark:glass-brightness-50 glass-contrast-60 dark:glass-contrast-100">
   <Avatar.Root class="size-12 shrink-0 rounded-lg select-none">
     <Avatar.Image loading="lazy" src={img.src} alt={img.alt} class="pointer-events-none size-12 rounded-lg" />
     <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">{img.alt.slice(0, 2)}</Avatar.Fallback>

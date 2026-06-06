@@ -14,7 +14,7 @@
   import Sections from "$lib/sections/Sections.svelte";
   import type { ModelsStatsOutput } from "$lib/shared/api/orval-generated";
   import { getCombined } from "$lib/shared/api/skycrypt-api.remote";
-  import { cn, flyAndScale } from "$lib/shared/utils";
+  import { flyAndScale } from "$lib/shared/utils";
   import Image from "@lucide/svelte/icons/image";
   import { Avatar, Dialog } from "bits-ui";
   import { Pane } from "paneforge";
@@ -185,7 +185,7 @@
       onResize={(size) => {
         rightSize = size;
       }}>
-      <div class={cn("fixed top-0 right-0 h-dvh w-(--width)", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")} style="--width: {skinCollapsed ? 100 : rightSize}%"></div>
+      <div class="fixed top-0 right-0 h-dvh w-(--width) glass dark:glass-brightness-50 light:glass-brightness-100" style="--width: {skinCollapsed ? 100 : rightSize}%"></div>
       <main data-vaul-drawer-wrapper class="@container relative mx-auto mt-12">
         <div class="space-y-5 p-4 @[75rem]/parent:p-8">
           <PlayerProfile />
@@ -218,7 +218,7 @@
     {/if}
   </div>
 
-  <div class={cn("fixed top-0 right-0 min-h-dvh w-full @[75rem]/parent:w-[calc(100%-30vw)]", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")}></div>
+  <div class="fixed top-0 right-0 min-h-dvh w-full glass dark:glass-brightness-50 light:glass-brightness-100 @[75rem]/parent:w-[calc(100%-30vw)]"></div>
   <main data-vaul-drawer-wrapper class="@container relative mx-auto @[75rem]/parent:ml-[30vw]">
     {#if getProfileContext().current}
       <div class="space-y-5 p-4 @[75rem]/parent:p-8">

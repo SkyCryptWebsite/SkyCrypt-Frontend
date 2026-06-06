@@ -3,6 +3,8 @@
 @source inline("{group-data-[rainbow=false]/html:,}{text-,bg-}minecraft-{0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f}");
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant light (&:where(.light, .light *));
+@custom-variant performance (&:where([data-performance="true"], [data-performance="true"] *));
+@custom-variant standard (&:where([data-performance="false"], [data-performance="false"] *));
 
 @plugin "tailwindcss-motion";
 
@@ -343,6 +345,45 @@
 
 @utility shine {
   @apply overflow-hidden before:pointer-events-none before:absolute before:inset-0 before:z-8 before:size-full before:animate-shine before:rounded-lg before:bg-linear-to-t before:from-[oklch(1_0_0/0)] before:via-[oklch(1_0_0/0.50)] before:to-[oklch(0.77_0.09_243.21/0)];
+}
+
+@utility glass {
+  --glass-bg: transparent;
+  --glass-performance-bg: var(--color-background-grey);
+  --glass-brightness: 50%;
+  --glass-contrast: 100%;
+
+  background-color: var(--glass-bg);
+
+  @variant standard {
+    backdrop-filter: blur(var(--blur-lg)) brightness(var(--glass-brightness)) contrast(var(--glass-contrast));
+  }
+
+  @variant performance {
+    background-color: var(--glass-performance-bg);
+  }
+}
+
+@utility glass-bg-* {
+  --glass-performance-bg: --value(--color-*, [color]);
+  --glass-performance-bg: --alpha(--value(--color-*, [color]) / calc(--modifier(integer) * 1%));
+  --glass-performance-bg: --alpha(--value(--color-*, [color]) / --modifier([percentage]));
+}
+
+@utility glass-standard-bg-* {
+  --glass-bg: --value(--color-*, [color]);
+  --glass-bg: --alpha(--value(--color-*, [color]) / calc(--modifier(integer) * 1%));
+  --glass-bg: --alpha(--value(--color-*, [color]) / --modifier([percentage]));
+}
+
+@utility glass-brightness-* {
+  --glass-brightness: calc(--value(integer) * 1%);
+  --glass-brightness: --value([percentage]);
+}
+
+@utility glass-contrast-* {
+  --glass-contrast: calc(--value(integer) * 1%);
+  --glass-contrast: --value([percentage]);
 }
 
 @utility enchanted {

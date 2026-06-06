@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { getHoverContext, getPreferences, getProfileContext } from "$ctx";
+  import { getHoverContext, getProfileContext } from "$ctx";
   import { AdditionStat, NetworthCard } from "$lib/components/stats";
   import { getNetworth } from "$lib/shared/api/skycrypt-api.remote";
   import { calculatePercentage, formatNumber } from "$lib/shared/helper";
-  import { cn, flyAndScale } from "$lib/shared/utils";
+  import { flyAndScale } from "$lib/shared/utils";
   import { tz } from "@date-fns/tz";
   import CircleX from "@lucide/svelte/icons/circle-x";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
@@ -21,7 +21,6 @@
   const defaultPattern: string = "0,0";
 
   const isHover = getHoverContext();
-  const preferences = getPreferences();
 
   let networthOpen = $state<boolean>(false);
 </script>
@@ -118,7 +117,7 @@
               <CircleX class="size-4 h-lh text-minecraft-c" /> Networth:
             </Popover.Trigger>
             {#if isHttpError(err)}
-              <Popover.Content forceMount class={cn("z-50 overflow-hidden rounded-lg p-4 font-semibold", preferences.performanceMode ? "bg-background" : "backdrop-blur-lg backdrop-brightness-50")} sideOffset={8} side="bottom" align="start" collisionPadding={6} strategy="absolute">
+              <Popover.Content forceMount class="z-50 overflow-hidden rounded-lg p-4 font-semibold glass glass-bg-background" sideOffset={8} side="bottom" align="start" collisionPadding={6} strategy="absolute">
                 {#snippet child({ wrapperProps, props, open })}
                   {#if open}
                     <div {...wrapperProps}>

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { getPreferences } from "$ctx";
   import { env } from "$env/dynamic/public";
   import { cn } from "$lib/shared/utils";
   import CircleAlert from "@lucide/svelte/icons/circle-alert";
@@ -12,7 +11,6 @@
   import type { Snippet } from "svelte";
 
   const { PUBLIC_DISCORD_INVITE } = env;
-  const preferences = getPreferences();
 
   type Props = {
     title: string;
@@ -34,7 +32,7 @@
   });
 </script>
 
-<div class={cn("space-y-5 rounded-lg p-6 data-[type=error]:text-red-200 data-[type=info]:text-blue-200 data-[type=warning]:text-yellow-200 @[75rem]/parent:p-8", preferences.performanceMode ? "data-[type=error]:bg-red-800 data-[type=info]:bg-blue-800 data-[type=warning]:bg-yellow-800" : "backdrop-blur-sm data-[type=error]:bg-red-700/5 data-[type=info]:bg-blue-700/5 data-[type=warning]:bg-yellow-700/5", className)} data-type={type}>
+<div class={cn("space-y-5 rounded-lg p-6 data-[type=error]:text-red-200 data-[type=info]:text-blue-200 data-[type=warning]:text-yellow-200 @[75rem]/parent:p-8", "standard:backdrop-blur-lg standard:data-[type=error]:bg-red-700/5 standard:data-[type=info]:bg-blue-700/5 standard:data-[type=warning]:bg-yellow-700/5 performance:data-[type=error]:bg-red-800 performance:data-[type=info]:bg-blue-800 performance:data-[type=warning]:bg-yellow-800", className)} data-type={type}>
   <div class="justify-starts flex items-center gap-2">
     {#if type === "error"}
       <CircleX class="size-8" />

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { afterNavigate } from "$app/navigation";
-  import { getNewsroomNotifications, getPreferences } from "$ctx";
+  import { getNewsroomNotifications } from "$ctx";
   import { clientLocale } from "$lib/hooks/client-locale.svelte";
   import { cn } from "$lib/shared/utils";
   import PostRenderer from "$src/lib/components/newsroom/PostRenderer.svelte";
@@ -13,8 +13,6 @@
   import type { PageData } from "./$types";
 
   const { data }: { data: PageData } = $props();
-
-  const preferences = getPreferences();
   const notifications = getNewsroomNotifications();
 
   const dateFormatter = $derived(
@@ -50,7 +48,7 @@
 
   const ogImages = $derived(heroSrc ? [{ url: heroSrc, width: heroWidth, height: heroHeight, alt: heroAlt }] : []);
 
-  const containerClass = $derived(cn("rounded-lg", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100"));
+  const containerClass = "rounded-lg glass glass-brightness-150 glass-contrast-60 dark:glass-brightness-50 dark:glass-contrast-100";
 
   const markCurrentPostSeen = () => {
     if (!data.preview) notifications.markPostSeen(data.post);
@@ -83,7 +81,7 @@
   }} />
 
 <article class="mx-auto flex max-w-3xl flex-col gap-6 px-[max(1.25rem,env(safe-area-inset-right))] py-8">
-  <Button.Root href="/newsroom" data-sveltekit-preload-data="hover" class={cn("flex w-fit items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold text-text transition-all duration-150 ease-out hover:text-link", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
+  <Button.Root href="/newsroom" data-sveltekit-preload-data="hover" class="flex w-fit items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold text-text transition-all duration-150 ease-out hover:text-link glass glass-brightness-150 dark:glass-brightness-50 glass-contrast-60 dark:glass-contrast-100">
     <ArrowLeft class="size-4" />
     Newsroom
   </Button.Root>

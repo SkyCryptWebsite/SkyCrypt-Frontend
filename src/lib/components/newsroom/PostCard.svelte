@@ -1,8 +1,6 @@
 <script lang="ts">
-  import { getPreferences } from "$ctx";
   import TypeBadge from "$lib/components/newsroom/TypeBadge.svelte";
   import { clientLocale } from "$lib/hooks/client-locale.svelte";
-  import { cn } from "$lib/shared/utils";
   import type { Author, AuthorView, Post } from "$types";
   import ImageIcon from "@lucide/svelte/icons/image";
   import Star from "@lucide/svelte/icons/star";
@@ -10,8 +8,6 @@
 
   /** `as` sets the title's heading level so the card fits its surrounding document outline. */
   const { post, as = "h3" }: { post: Post; as?: "h2" | "h3" } = $props();
-
-  const preferences = getPreferences();
 
   const dateFormatter = $derived(new Intl.DateTimeFormat(clientLocale.current, { year: "numeric", month: "long", day: "numeric" }));
   const formatDate = (iso: string | null | undefined): string => {
@@ -33,7 +29,7 @@
   const overflowTags = $derived((post.tags?.length ?? 0) - visibleTags.length);
 </script>
 
-<Button.Root href="/newsroom/{post.slug}" data-sveltekit-preload-data="hover" class={cn("group relative flex h-full w-full min-w-0 flex-col overflow-hidden rounded-lg text-left", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
+<Button.Root href="/newsroom/{post.slug}" data-sveltekit-preload-data="hover" class="group relative flex h-full w-full min-w-0 flex-col overflow-hidden rounded-lg text-left glass glass-brightness-150 dark:glass-brightness-50 glass-contrast-60 dark:glass-contrast-100">
   <div class="relative aspect-video w-full overflow-hidden bg-background-lore">
     {#if thumb && post.heroImage}
       <Avatar.Root class="size-full transition-transform duration-300 ease-out group-hover:scale-105">

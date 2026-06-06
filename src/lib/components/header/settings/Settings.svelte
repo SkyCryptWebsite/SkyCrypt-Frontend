@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { getHoverContext, getInternalState, getPreferences } from "$ctx";
+  import { getHoverContext, getInternalState } from "$ctx";
   import Misc from "$lib/components/header/settings/Misc.svelte";
   import Order from "$lib/components/header/settings/Order.svelte";
   import Packs from "$lib/components/header/settings/Packs.svelte";
   import Themes from "$lib/components/header/settings/Themes.svelte";
   import { SettingsTab } from "$lib/components/header/types";
-  import { cn, flyAndScale } from "$lib/shared/utils";
+  import { flyAndScale } from "$lib/shared/utils";
   import Cog from "@lucide/svelte/icons/cog";
   import ListOrdered from "@lucide/svelte/icons/list-ordered";
   import PackageOpen from "@lucide/svelte/icons/package-open";
@@ -18,13 +18,12 @@
 
   type SettingsProps = Record<string, unknown>;
   const isHover = getHoverContext();
-  const preferences = getPreferences();
   const internalState = getInternalState();
 </script>
 
 {#snippet settings()}
   <Tabs.Root bind:value={internalState.settingsTab}>
-    <Tabs.List class={cn("mb-4 flex justify-between rounded-lg p-2 font-semibold text-text", preferences.performanceMode ? "bg-text/30" : "backdrop-blur-lg backdrop-brightness-10")}>
+    <Tabs.List class="mb-4 flex justify-between rounded-lg p-2 font-semibold text-text glass glass-bg-text/30 glass-brightness-10">
       <Tabs.Trigger value={SettingsTab.Packs} class="flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold data-[state=active]:bg-icon/80">
         <PackageOpen class="size-5" />
         Packs
@@ -64,7 +63,7 @@
       {/snippet}
     </Dialog.Trigger>
     <Dialog.Portal>
-      <Dialog.Overlay forceMount class={cn("fixed inset-0 z-40", preferences.performanceMode ? "bg-background-lore" : "backdrop-blur-lg backdrop-brightness-50")}>
+      <Dialog.Overlay forceMount class="fixed inset-0 z-40 glass glass-bg-background-lore">
         {#snippet child({ props, open })}
           {#if open}
             <div {...props} transition:fade={{ duration: 150, easing: cubicOut }}></div>
@@ -72,7 +71,7 @@
         {/snippet}
       </Dialog.Overlay>
 
-      <Dialog.Content forceMount class={cn("fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg px-8 py-4 font-icomoon select-text", preferences.performanceMode ? "bg-background-grey/95" : "bg-background-grey/30 backdrop-blur-lg backdrop-brightness-50")}>
+      <Dialog.Content forceMount class="fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg px-8 py-4 font-icomoon select-text glass glass-standard-bg-background-grey/30 glass-bg-background-grey/95">
         {#snippet child({ props, open })}
           {#if open}
             <div {...props} transition:flyAndScale>

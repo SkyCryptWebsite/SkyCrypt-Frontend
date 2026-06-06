@@ -51,7 +51,7 @@
           {@const hasMaxed = data.milestone === data.maxMilestone}
           {@const hasUnlocked = data.milestone}
           <Chip class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked })} image={{ src: data.texture ?? "" }}>
-            <div class={cn("flex flex-col")}>
+            <div class="flex flex-col">
               <div class="font-bold whitespace-nowrap">
                 <span class={cn("capitalize", { "text-gold": hasMaxed })}>{name.replaceAll("_", " ").toLowerCase()}</span>
                 <div class="text-sm">

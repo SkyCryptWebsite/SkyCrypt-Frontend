@@ -105,7 +105,7 @@
           {#each rift.porhtal.porhtals as porhtal, index (index)}
             {@const hasUnlocked = porhtal.unlocked}
             <Chip image={{ src: porhtal.texture ?? "" }} class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked })}>
-              <div class={cn("flex flex-col")}>
+              <div class="flex flex-col">
                 <div class="font-bold whitespace-nowrap">
                   <span class="opacity-60">{porhtal.name}</span>
                 </div>
@@ -126,7 +126,7 @@
             {@const hasUnlocked = timecharm.unlocked}
 
             <Chip image={{ src: timecharm.texture ?? "" }} class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked }, "whitespace-nowrap")} tooltip={hasUnlocked ? tooltip : undefined}>
-              <div class={cn("flex flex-col")}>
+              <div class="flex flex-col">
                 <div class="font-bold whitespace-nowrap">
                   <span class="opacity-60">{timecharm.name}</span>
                   <div class="text-sm">

@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { getNewsroomNotifications, getPreferences } from "$ctx";
+  import { getNewsroomNotifications } from "$ctx";
   import { clientLocale } from "$lib/hooks/client-locale.svelte";
-  import { cn } from "$lib/shared/utils";
   import TypeBadge from "$src/lib/components/newsroom/TypeBadge.svelte";
   import type { Post } from "$types";
   import ImageIcon from "@lucide/svelte/icons/image";
@@ -15,8 +14,6 @@
   }
 
   const { posts, newestUnseen, closeToast = () => {} }: Props = $props();
-
-  const preferences = getPreferences();
   const notifications = getNewsroomNotifications();
 
   const dateFormatter = $derived(new Intl.DateTimeFormat(clientLocale.current, { year: "numeric", month: "long", day: "numeric" }));
@@ -40,7 +37,7 @@
   }
 </script>
 
-<section role="status" aria-live="polite" class={cn("flex w-full max-w-sm flex-col gap-3 rounded-lg px-4 py-3 text-text shadow-lg shadow-black/10 @container-normal @sm:max-w-md", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
+<section role="status" aria-live="polite" class="flex w-full max-w-sm flex-col gap-3 rounded-lg px-4 py-3 text-text shadow-lg shadow-black/10 glass glass-brightness-150 dark:glass-brightness-50 glass-contrast-60 dark:glass-contrast-100 @container-normal @sm:max-w-md">
   <div class="flex flex-col min-w-0 items-start gap-3">
     {#if thumb && newestUnseen.heroImage}
       <Avatar.Root class="relative aspect-video w-full max-w-sm mx-auto shrink-0 overflow-hidden rounded-lg bg-background-lore">

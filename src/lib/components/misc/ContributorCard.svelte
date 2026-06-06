@@ -1,6 +1,6 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
-  import { getFavorites, getInternalState, getPreferences } from "$ctx";
+  import { getFavorites, getInternalState } from "$ctx";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import type { Contributor } from "$routes/contributors.remote";
   import { Role } from "$routes/enums";
@@ -20,7 +20,6 @@
 
   const favorites = getFavorites();
   const internalState = getInternalState();
-  const preferences = getPreferences();
 </script>
 
 {#snippet tooltipContent()}
@@ -36,7 +35,7 @@
 {/snippet}
 
 <div class={cn("relative rounded-lg", { "transition-all duration-300 ease-out hover:scale-105": !options?.tip })}>
-  <Button.Root href={options?.tip ? undefined : resolve("/stats/[ign]", { ign: user.id })} class={cn("relative flex h-full w-full min-w-0 items-center gap-4 rounded-lg p-5 text-left", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
+  <Button.Root href={options?.tip ? undefined : resolve("/stats/[ign]", { ign: user.id })} class="relative flex h-full w-full min-w-0 items-center gap-4 rounded-lg p-5 text-left glass glass-brightness-150 dark:glass-brightness-50 glass-contrast-60 dark:glass-contrast-100">
     <Avatar.Root class="size-16 shrink-0">
       <Avatar.Image loading="lazy" src={options?.tip ? "https://nmsr.nickac.dev/face/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40" : `https://nmsr.nickac.dev/face/${user.id}`} alt={user.username} class={cn("aspect-square size-16 [image-rendering:pixelated]", options?.tip ? "rounded-lg bg-text/10" : "")} />
       <Avatar.Fallback class="flex h-full items-center justify-center rounded-lg bg-text/10 text-lg font-semibold text-text/60 uppercase">

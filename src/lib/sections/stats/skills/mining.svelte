@@ -197,7 +197,7 @@
             {#each mining.glaciteTunnels.fossils.fossils as fossil, index (index)}
               {@const hasFound = fossil.found}
               <Chip image={{ src: fossil.texture_path ?? "" }} class={cn("h-fit w-fit", { "opacity-50": !hasFound })}>
-                <div class={cn("flex flex-col")}>
+                <div class="flex flex-col">
                   <div class="font-bold whitespace-nowrap">
                     {fossil.name}
                   </div>

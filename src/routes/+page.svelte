@@ -1,14 +1,13 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { resolve } from "$app/paths";
-  import { getFavorites, getPreferences } from "$ctx";
+  import { getFavorites } from "$ctx";
   import { env } from "$env/dynamic/public";
   import { ContributorCard, ContributorCardSkeleton, CtaCard } from "$lib/components/misc";
   import PostCard from "$lib/components/newsroom/PostCard.svelte";
   import { Notice } from "$lib/components/notices";
   import { listPosts } from "$lib/shared/api/cms-api.remote";
   import { searchUser } from "$lib/shared/api/skycrypt-api.remote";
-  import { cn } from "$lib/shared/utils";
   import { getContributors } from "$routes/contributors.remote";
   import ArrowRight from "@lucide/svelte/icons/arrow-right";
   import CodeXml from "@lucide/svelte/icons/code-xml";
@@ -23,8 +22,6 @@
   import { schema } from "./schema";
 
   const { PUBLIC_DISCORD_INVITE, PUBLIC_PATREON } = env;
-
-  const preferences = getPreferences();
   const favorites = getFavorites();
 
   let searchQuery = $state<string>(null!);
@@ -109,7 +106,7 @@
 </script>
 
 <main class="@container mx-auto flex max-w-272 flex-col justify-center gap-6 pt-5 pr-[max(1.25rem+env(safe-area-inset-right))] pb-[max(1.25rem+env(safe-area-inset-bottom))] pl-[max(1.25rem+env(safe-area-inset-left))]">
-  <div class={cn("flex w-full flex-col justify-center gap-6 rounded-lg py-6 text-3xl", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
+  <div class="flex w-full flex-col justify-center gap-6 rounded-lg py-6 text-3xl glass glass-brightness-150 dark:glass-brightness-50 glass-contrast-60 dark:glass-contrast-100">
     <div class="flex flex-col justify-center gap-2">
       <div class="flex flex-col gap-6">
         <label for="search" class="m-1 w-full text-center font-semibold">Show SkyBlock stats for</label>
@@ -156,10 +153,10 @@
   <svelte:boundary>
     {#snippet pending()}
       <section class="flex flex-col gap-4">
-        <div class={cn("h-16 animate-pulse rounded-lg", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}></div>
+        <div class="h-16 animate-pulse rounded-lg glass glass-brightness-150 dark:glass-brightness-50 glass-contrast-60 dark:glass-contrast-100"></div>
         <div class="grid grid-cols-1 gap-5 @md:grid-cols-2 @xl:grid-cols-3">
           {#each new Array(3) as _, i (i)}
-            <div class={cn("flex flex-col overflow-hidden rounded-lg", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
+            <div class="flex flex-col overflow-hidden rounded-lg glass glass-brightness-150 dark:glass-brightness-50 glass-contrast-60 dark:glass-contrast-100">
               <div class="aspect-video w-full animate-pulse bg-text/10"></div>
               <div class="flex flex-col gap-2.5 p-4">
                 <div class="h-4 w-2/5 animate-pulse rounded bg-text/10"></div>
@@ -176,7 +173,7 @@
     {@const newsroom = await listPosts({ page: 1, limit: 3 })}
     {#if newsroom.docs.length > 0}
       <section class="flex flex-col gap-4">
-        <div class={cn("flex items-center justify-between gap-4 rounded-lg px-5 py-4", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
+        <div class="flex items-center justify-between gap-4 rounded-lg px-5 py-4 glass glass-brightness-150 dark:glass-brightness-50 glass-contrast-60 dark:glass-contrast-100">
           <div class="flex flex-col gap-0.5">
             <h2 class="text-xl leading-tight font-bold text-text">Newsroom</h2>
             <p class="text-xs text-text/70">Latest announcements and updates</p>

@@ -31,7 +31,7 @@
         {@const hasUnlocked = item.amount}
         {@const hasMaxed = item.maxAmount != null && item.amount === item.maxAmount}
         <Chip image={{ src: item.texture ?? "" }} class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked })}>
-          <div class={cn("flex flex-col")}>
+          <div class="flex flex-col">
             <div class="font-bold whitespace-nowrap">
               <span class={cn(hasMaxed ? "text-maxed" : "opacity-60")}>{item.name}</span>
               <div class={cn("text-sm", hasMaxed ? "text-gold" : "text-text")}>

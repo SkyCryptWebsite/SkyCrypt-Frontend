@@ -39,7 +39,7 @@
 </script>
 
 <Tooltip.Trigger
-  class={cn("overflow-clip nice-colors-dark", isInventory ? "p-0" : `relative p-2 ${bgColor}`, { shine: shine && !isInventory }, { "rounded-lg": !isInventory }, preferences.performanceMode ? "" : "transition-all duration-150 ease-out hover:scale-110 active:scale-110")}
+  class={cn("overflow-clip nice-colors-dark", isInventory ? "p-0" : `relative p-2 ${bgColor}`, { shine: shine && !isInventory }, { "rounded-lg": !isInventory }, "standard:transition-all standard:duration-150 standard:ease-out standard:hover:scale-110 standard:active:scale-110")}
   bind:ref={targetNode}
   onclick={() => {
     if (skyblockItem.containsItems) {

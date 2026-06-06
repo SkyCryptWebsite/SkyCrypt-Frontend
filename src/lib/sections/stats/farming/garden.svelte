@@ -93,7 +93,7 @@
                   {#each garden.gardenUpgrades as gardenUpgrade, index (index)}
                     {@const hasUnlocked = gardenUpgrade.level}
                     <Chip class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked })} image={{ src: gardenUpgrade.texture ?? "" }}>
-                      <div class={cn("flex flex-col")}>
+                      <div class="flex flex-col">
                         <div class="font-bold whitespace-nowrap">
                           <span class="capitalize opacity-60">{gardenUpgrade.name}</span>
                           <div class="text-sm">
@@ -116,7 +116,7 @@
                     {@const hasUnlocked = gardenChip.amount}
                     {@const hasMaxed = (gardenChip.amount ?? 0) >= (gardenChip.maxLevel ?? 0)}
                     <Chip class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked })} image={{ src: gardenChip.texture ?? "" }}>
-                      <div class={cn("flex flex-col")}>
+                      <div class="flex flex-col">
                         <div class="font-bold whitespace-nowrap">
                           <span class={cn("capitalize", hasMaxed ? "text-maxed" : "opacity-60")}>{gardenChip.name}</span>
                           <div class={cn("text-sm", hasMaxed ? "text-gold" : "text-text")}>
@@ -139,7 +139,7 @@
                     {@const hasUnlocked = mutation.unlocked}
                     {@const hasMaxed = mutation.max}
                     <Chip class={cn("h-fit w-fit", { "opacity-50": !hasUnlocked })} image={{ src: mutation.texture ?? "" }}>
-                      <div class={cn("flex flex-col")}>
+                      <div class="flex flex-col">
                         <div class="font-bold whitespace-nowrap">
                           <span class={cn("capitalize", hasMaxed ? "text-maxed" : "opacity-60")}>{mutation.name}</span>
                         </div>
@@ -180,7 +180,7 @@
       {#each garden.cropUpgrades as upgrade, index (index)}
         {@const hasMaxed = upgrade.level?.maxed}
         <Chip image={{ src: upgrade.texture ?? "" }} class={cn("h-fit w-fit", { "opacity-50": !upgrade.level?.level })}>
-          <div class={cn("flex flex-col")}>
+          <div class="flex flex-col">
             <div class="font-bold whitespace-nowrap">
               <span class={cn(hasMaxed ? "text-maxed" : "opacity-60")}>{upgrade.name}</span>
               <span class={cn({ "text-gold": hasMaxed })}>{upgrade.level?.level}</span>
@@ -207,7 +207,7 @@
       {#each garden.cropMilestones as milestone, index (index)}
         {@const hasMaxed = milestone.level?.maxed}
         <Chip image={{ src: milestone.texture ?? "" }} class={cn("h-fit w-fit flex-col overflow-clip pb-0", { "opacity-50": !milestone.level?.xp })}>
-          <div class={cn("flex flex-col")}>
+          <div class="flex flex-col">
             <div class="font-bold whitespace-nowrap">
               <span class={cn(hasMaxed ? "text-maxed" : "opacity-60")}>{milestone.name}</span>
               <span class={cn({ "text-gold": hasMaxed })}>{milestone.level?.level}</span>
