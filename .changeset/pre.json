@@ -1,0 +1,10 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "skycrypt-frontend": "3.7.0"
+  },
+  "changesets": [
+    "agpl-license-transition"
+  ]
+}
