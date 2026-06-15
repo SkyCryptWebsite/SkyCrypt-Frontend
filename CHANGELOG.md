@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.8.0
+
+### Minor Changes
+
+- Transition SkyCrypt Frontend to GNU AGPLv3 with an MIT brand asset exception. _[`#332`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/332) [`aa63f95`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/aa63f9560dee835575456b364555486c0858f9fc) [@DarthGigi](https://github.com/DarthGigi)_
+
 ## 3.8.0-beta.0
 
 ### Minor Changes
