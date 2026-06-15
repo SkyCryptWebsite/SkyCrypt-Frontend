@@ -55,6 +55,8 @@
 - [ ] I have added necessary documentation (if appropriate)
 - [ ] I have added tests that prove my changes work as expected (if appropriate)
 - [ ] I have added changesets if my changes should be reflected in the changelog
+- [ ] I agree that my contributions are licensed under GNU AGPLv3, except changes to explicitly listed MIT brand assets.
+- [ ] I confirm that I have the right to submit all code, assets, generated files, and other materials included in this PR under the applicable project terms.
 
 ### Code Quality Checks
 

@@ -41,6 +41,29 @@ Refer to the <a href="/CONTRIBUTING.md">CONTRIBUTING.md</a> file for more inform
 > [!TIP]
 > Contributions are not limited to code. Making suggestions, reporting bugs, and sharing the project with others are all forms of contribution that are highly appreciated.
 
+<h2 align="center">Licensing</h2>
+
+SkyCrypt Frontend uses a split license model:
+
+| Material                                                                                                                                                          | License                   | Notes                                                                                                                          |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Source code, documentation, configuration, build scripts, and original non-excepted assets introduced or modified from the June 2026 license-change commit onward | [GNU AGPLv3](./LICENSE)   | Network use of modified versions must provide users access to the corresponding source code.                                   |
+| Earlier versions and pre-change contributions previously released under MIT                                                                                       | MIT                       | Existing MIT grants are preserved and are not revoked by this transition.                                                      |
+| SkyCrypt brand/logo asset exception                                                                                                                               | MIT                       | These assets are explicitly listed in [`NOTICE`](./NOTICE) and [`static/BRAND_ASSETS_LICENSE`](./static/BRAND_ASSETS_LICENSE). |
+| Third-party libraries, resources, APIs, fonts, and textures                                                                                                       | Their respective licenses | See upstream projects and package metadata for their terms.                                                                    |
+
+The MIT brand assets are:
+
+- `static/apple-touch-icon-precomposed.png`
+- `static/favicon.ico`
+- `static/favicon.png`
+- `static/img/logo.avif`
+- `static/img/logo_black.avif`
+- `static/img/newsroom.avif`
+- `static/img/app-icons/**`
+
+Unless a file has a more specific license notice, new contributions to this repository are accepted under GNU AGPLv3.
+
 <h2 align="center">Credits</h2>
 
 Original Site: [sky.lea.moe](https://sky.lea.moe/) by LeaPhant
