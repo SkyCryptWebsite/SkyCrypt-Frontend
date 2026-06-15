@@ -24,7 +24,7 @@
         {#if packageVersion}<Button.Root class="text-link" rel="noreferrer" href="https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/releases/tag/v{packageVersion}" target="_blank">{packageVersion}</Button.Root>{/if}
         {#if commitHash}
           <span class="opacity-50">
-            {#if packageVersion}{"("}{/if}<Button.Root class="text-link" rel="noreferrer" href="https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/{commitHash}" target="_blank">{commitHash}</Button.Root>{#if packageVersion}{")"}{/if}
+            {#if packageVersion}({/if}<Button.Root class="text-link" rel="noreferrer" href="https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/{commitHash}" target="_blank">{commitHash}</Button.Root>{#if packageVersion}){/if}
           </span>
         {/if}
       </span>
@@ -34,6 +34,9 @@
   {/if}
   <p class="my-4">
     You can report bugs, suggest features on <Button.Root class="font-semibold text-link" href={PUBLIC_DISCORD_INVITE} target="_blank" rel="noreferrer">Discord</Button.Root>, and/or contribute to the code on <Button.Root class="font-semibold text-link" href="https://github.com/SkyCryptWebsite" target="_blank" rel="noreferrer">GitHub</Button.Root>. It would be much appreciated!
+  </p>
+  <p class="my-4">
+    SkyCrypt Frontend is open source under GNU AGPLv3. View the source on <Button.Root class="font-semibold text-link" href="https://github.com/SkyCryptWebsite/SkyCrypt-Frontend" target="_blank" rel="noreferrer">GitHub</Button.Root>.
   </p>
   <p class="my-4">
     Join our community on <Button.Root class="font-semibold text-link" href={PUBLIC_DISCORD_INVITE} target="_blank" rel="noreferrer">Discord</Button.Root>!

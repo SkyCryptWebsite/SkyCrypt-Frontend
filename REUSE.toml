@@ -1,0 +1,21 @@
+version = 1
+
+[[annotations]]
+path = ["*", "**/*"]
+precedence = "closest"
+SPDX-FileCopyrightText = "2025-present SkyCrypt Team"
+SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+  "static/apple-touch-icon-precomposed.png",
+  "static/favicon.ico",
+  "static/favicon.png",
+  "static/img/logo.avif",
+  "static/img/logo_black.avif",
+  "static/img/newsroom.avif",
+  "static/img/app-icons/**"
+]
+precedence = "override"
+SPDX-FileCopyrightText = "2025-present SkyCrypt's team and Lea Seibert"
+SPDX-License-Identifier = "MIT"
