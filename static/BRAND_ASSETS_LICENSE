@@ -1,0 +1,16 @@
+Brand Assets - MIT License
+
+This notice applies only to the following SkyCrypt brand/logo assets:
+
+- static/apple-touch-icon-precomposed.png
+- static/favicon.ico
+- static/favicon.png
+- static/img/logo.avif
+- static/img/logo_black.avif
+- static/img/newsroom.avif
+- static/img/app-icons/**
+
+These files remain under the MIT License and are not offered under the
+repository's GNU AGPLv3 default.
+
+See ../LICENSES/MIT.txt for the MIT License text.

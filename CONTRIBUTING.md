@@ -118,4 +118,12 @@ If you find a bug or have a feature request, please open an issue on GitHub or o
 
 ## License
 
-By contributing to SkyCrypt, you agree that your contributions will be licensed under the [MIT License](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/blob/prod/LICENSE). This means that your contributions will be open source and available for anyone to use, modify, and distribute.
+By contributing to SkyCrypt Frontend, you agree that your contribution is licensed under the repository's current default license, [GNU AGPLv3](https://www.gnu.org/licenses/agpl-3.0.en.html), unless a more specific license notice applies.
+
+SkyCrypt brand/logo assets listed in [`static/BRAND_ASSETS_LICENSE`](./static/BRAND_ASSETS_LICENSE) remain under the MIT License and are not relicensed under AGPLv3.
+
+Changes to those MIT brand assets must preserve the MIT notice. Non-mechanical changes to those assets require maintainer review before merge.
+
+Do not submit code, assets, textures, fonts, generated files, or other materials unless you have the right to license them under the applicable SkyCrypt Frontend license terms.
+
+Pre-change contributions and versions that were previously released under MIT remain available under their original MIT terms. New contributions from the June 2026 license-change commit onward are accepted under GNU AGPLv3.
