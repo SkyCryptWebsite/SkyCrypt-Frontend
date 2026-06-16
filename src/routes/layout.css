@@ -1,8 +1,12 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn-svelte/tailwind.css";
+@import "@fontsource-variable/montserrat";
+@import "@fontsource/unifontex";
 @source "app.html";
-@source inline("{group-data-[rainbow=false]/html:,}{text-,bg-}minecraft-{0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f}");
-@custom-variant dark (&:where(.dark, .dark *));
-@custom-variant light (&:where(.light, .light *));
+@source inline("{group-data-[rainbow=false]/html:,}{text-,bg-}minecraft-{0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f}{,!}");
+@custom-variant dark (&:is(.dark *));
+@custom-variant light (&:is(.light *));
 @custom-variant performance (&:where([data-performance="true"], [data-performance="true"] *));
 @custom-variant standard (&:where([data-performance="false"], [data-performance="false"] *));
 
@@ -13,7 +17,7 @@
   --color-icon: var(--icon);
   --color-link: var(--link);
   --color-hover: var(--hover);
-  --color-skillbar: var(--skillbar);
+  --color-skillbar: var(--primary);
   --color-maxedbar: var(--maxedbar);
   --color-maxed: var(--maxed);
   --color-gold: var(--gold);
@@ -58,10 +62,51 @@
   }
 
   /* Fonts */
-  --font-icomoon: "icomoon", Montserrat;
-  --font-sans: Montserrat, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-minecraft: "Minecraft", var(--font-icomoon), var(--font-sans);
-  --font-minecraft-upper: "Minecraft-Upper", var(--font-sans);
+  --font-sans: "Montserrat Variable", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-skyblock-icons: "SkyBlockIcons", var(--font-sans);
+  --font-unifontex: "UnifontEX", var(--font-sans);
+  --font-minecraft: "Minecraft", var(--font-unifontex), var(--font-sans);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-accent-3: var(--accent-3);
+  --color-accent-4: var(--accent-4);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
 @theme inline {
@@ -85,63 +130,23 @@
 
 @layer base {
   @font-face {
-    font-family: "Montserrat";
-    font-style: italic;
-    font-weight: 100 900;
-    font-display: swap;
-    src: url("/fonts/montserrat/montserrat-italic.woff2") format("woff2");
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-  }
-
-  @font-face {
-    font-family: "Montserrat";
-    font-style: normal;
-    font-weight: 100 900;
-    font-display: swap;
-    src: url("/fonts/montserrat/montserrat-normal.woff2") format("woff2");
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-  }
-
-  @font-face {
-    font-family: "icomoon";
-    src:
-      url("/fonts/icomoon/icomoon.woff2") format("woff2"),
-      url("/fonts/icomoon/icomoon.woff") format("woff"),
-      url("/fonts/icomoon/icomoon.ttf") format("truetype"),
-      url("/fonts/icomoon/icomoon.svg#icomoon") format("svg");
-    font-weight: normal;
+    font-family: "SkyBlockIcons";
     font-style: normal;
     font-display: block;
+    font-weight: 400;
+    src:
+      url("@fontsource/unifontex/files/unifontex-latin-400-normal.woff2") format("woff2"),
+      url("@fontsource/unifontex/files/unifontex-latin-400-normal.woff") format("woff");
     unicode-range:
-      /* ✪ dungeon-star */
-      U+272A,
-      /* ⍟ dungeon-master-star (no longer used) */ U+235F,
-      /* ⚔ attack-speed */ U+2694,
-      /* ☣ critical-chance */ U+2623,
-      /* ☠ critical-damage */ U+2620,
-      /* ❈ defense */ U+2748,
-      /* ☘ fortune */ U+2618,
-      /* ⫽ ferocity */ U+2AFD,
-      /* ❤ health */ U+2764,
-      /* ✎ intelligence */ U+270E,
-      /* ✯ magic-find */ U+272F,
-      /* ⸕ mining-speed */ U+2E15,
-      /* ♣ pet-luck */ U+2663,
-      /* ✧ pristine */ U+2727,
-      /* α sea-creature-chance */ U+03B1,
-      /* ✦ speed */ U+2726,
-      /* ❁ strength */ U+2741,
-      /* ๑ ability-damage */ U+0E51,
-      /* ➊ 1-dungeon-star */ U+278A,
-      /* ➋ 2-dungeon-star */ U+278B,
-      /* ➌ 3-dungeon-star */ U+278C,
-      /* ➍ 4-dungeon-star */ U+278D,
-      /* ➎ 5-dungeon-star */ U+278E,
-      /* ❂ true-defense, */ U+2742,
-      /* ⸎ soulflow */ U+2E0E,
-      /* ᠅ powder, */ U+1805,
-      /* ✿ dye, */ U+273F,
-      /* ⚚ dungeon-upgrade, */ U+269A;
+      /* Greek and Coptic, e.g. α */
+      U+0370-03FF,
+      /* Malayalam, e.g. ൠ */ U+0D00-0D7F,
+      /* Thai, e.g. ๑ */ U+0E00-0E7F,
+      /* Mongolian, e.g. ᠅ */ U+1800-18AF,
+      /* Letterlike and enclosed symbols, e.g. Ⓟ and Ⓢ */ U+2100-24FF,
+      /* Box drawing, symbols, dingbats, arrows, operators, e.g. ❤, ☘, ⚔, ➊ */ U+2500-2BFF,
+      /* Supplemental punctuation, e.g. ⸕ and ⸎ */ U+2E00-2E7F,
+      /* Text presentation selector for emoji-capable symbols */ U+FE0E;
   }
 
   @font-face {
@@ -152,19 +157,11 @@
     font-display: swap;
   }
 
-  @font-face {
-    font-family: "Minecraft-Upper";
-    src: url("/fonts/minecraft/MinecraftTenv2-Regular.woff2") format("woff2");
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-    text-transform: uppercase;
-  }
-
   /* For color preview to work you need to have the 'naumovs.color-highlight' extension installed */
   :root {
     /* Icon Green (used for Skill Icons, Underlines etc.) */
-    --icon: oklch(73.62% 0.2129 147.69);
+    /* --icon: oklch(73.62% 0.2129 147.69); */
+    --icon: var(--chart-2);
 
     /* Link Green (used for Links, Unclaimed Slayers, Crafted Minions etc.) */
     --link: oklch(81.56% 0.2459 146.24);
@@ -173,7 +170,8 @@
     --hover: oklch(83.81% 0.2303 149.89);
 
     /* Skill Bar Green (used for Skill Progress Bars) */
-    --skillbar: oklch(63.98% 0.1731 150.18);
+    /* --skillbar: oklch(63.98% 0.1731 150.18); */
+    --skillbar: var(--primary);
 
     /* Maxed Bar Gold (used for Maxed Progress Bars) */
     --maxedbar: oklch(69.69% 0.1423 76.74);
@@ -189,8 +187,6 @@
 
     /* Most of the text */
     --text: oklch(1 0 0);
-    /* background to make text more visible */
-    --background: oklch(0 0 0);
     /* background of the header */
     --header: oklch(0.28 0 0);
     /* used for info box and theme/pack selector */
@@ -226,6 +222,79 @@
     --§f: oklch(0.66 0 0);
 
     color-scheme: dark;
+
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: var(--chart-3);
+    --primary-foreground: oklch(0.982 0.018 155.826);
+    --secondary: oklch(0.967 0.001 286.375);
+    --secondary-foreground: oklch(0.21 0.006 285.885);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --accent: oklch(0.527 0.154 150.069);
+    --accent-foreground: oklch(0.982 0.018 155.826);
+    --accent-2: oklch(72.84% 0.1506 75.86);
+    --accent-3: oklch(69.69% 0.1423 76.74);
+    --accent-4: oklch(82.84% 0.1548 78.27);
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.922 0 0);
+    --input: oklch(0.922 0 0);
+    --ring: oklch(0.708 0 0);
+    --chart-1: oklch(0.871 0.15 154.449);
+    --chart-2: oklch(0.723 0.219 149.579);
+    --chart-3: oklch(0.627 0.194 149.214);
+    --chart-4: oklch(0.527 0.154 150.069);
+    --chart-5: oklch(0.448 0.119 151.328);
+    --radius: 0.625rem;
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.627 0.194 149.214);
+    --sidebar-primary-foreground: oklch(0.982 0.018 155.826);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.708 0 0);
+  }
+
+  .dark {
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.205 0 0);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.205 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: var(--chart-3);
+    --primary-foreground: oklch(0.982 0.018 155.826);
+    --secondary: oklch(0.274 0.006 286.033);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --accent: oklch(0.448 0.119 151.328);
+    --accent-foreground: oklch(0.982 0.018 155.826);
+    --accent-2: oklch(72.84% 0.1506 75.86);
+    --accent-3: oklch(69.69% 0.1423 76.74);
+    --accent-4: oklch(82.84% 0.1548 78.27);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.556 0 0);
+    --chart-1: oklch(0.871 0.15 154.449);
+    --chart-2: oklch(0.723 0.219 149.579);
+    --chart-3: oklch(0.627 0.194 149.214);
+    --chart-4: oklch(0.527 0.154 150.069);
+    --chart-5: oklch(0.448 0.119 151.328);
+    --sidebar: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.723 0.219 149.579);
+    --sidebar-primary-foreground: oklch(0.982 0.018 155.826);
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.556 0 0);
   }
 
   ::-webkit-scrollbar {
@@ -280,6 +349,39 @@
     to {
       clip-path: polygon(50% -71%, -50% 71%, 50% 171%, 171% 50%);
     }
+  }
+
+  @keyframes scroll-fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  html {
+    @apply scrollbar-gutter-stable font-sans;
+  }
+
+  [data-slot="scroll-area-thumb"] {
+    @apply bg-primary! group-data-[orientation=horizontal]/scroll:px-2 group-data-[orientation=vertical]/scroll:py-2;
+  }
+
+  [data-slot="collapsible-content"] {
+    @apply overflow-clip duration-150 ease-out data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down;
+  }
+
+  .\@container-scroll {
+    container-type: scroll-state;
   }
 }
 
@@ -340,7 +442,8 @@
   --grey_background: oklch(0.92 0 0);
   --lore_background: oklch(1 0 0 / 0.93);
 
-  --bg: oklch(1 0 0) color-scheme: light;
+  --bg: oklch(1 0 0);
+  color-scheme: light;
 }
 
 @utility shine {
@@ -460,4 +563,189 @@
 
 @utility minecraft-tooltip {
   @apply relative rounded-sm border-2 border-solid border-transparent bg-mctooltip-bg px-1 pt-1 pb-0.75 indent-[initial] font-minecraft text-[0.9375rem] leading-4.5 font-normal text-pretty [border-image:linear-gradient(to_bottom,oklch(48.503%_0.297_278.42/0.31),oklch(29.365%_0.17619_281.21/0.31))_1] text-shadow-[0.09375rem_0.09375rem_oklch(36.768%,0.00004,271.152)];
+}
+
+@utility hit-area-debug {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--hit-area-t, 0px);
+    right: var(--hit-area-r, 0px);
+    bottom: var(--hit-area-b, 0px);
+    left: var(--hit-area-l, 0px);
+    pointer-events: inherit;
+    @apply border border-dashed border-blue-500 bg-blue-500/10;
+  }
+  &:hover::before {
+    @apply border border-dashed border-green-500 bg-green-500/10;
+  }
+}
+
+@utility hit-area {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--hit-area-t, 0px);
+    right: var(--hit-area-r, 0px);
+    bottom: var(--hit-area-b, 0px);
+    left: var(--hit-area-l, 0px);
+    pointer-events: inherit;
+  }
+}
+
+@utility hit-area-* {
+  position: relative;
+  --hit-area-t: --spacing(--value(number) * -1);
+  --hit-area-t: calc(--value([*]) * -1);
+  --hit-area-b: --spacing(--value(number) * -1);
+  --hit-area-b: calc(--value([*]) * -1);
+  --hit-area-l: --spacing(--value(number) * -1);
+  --hit-area-l: calc(--value([*]) * -1);
+  --hit-area-r: --spacing(--value(number) * -1);
+  --hit-area-r: calc(--value([*]) * -1);
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--hit-area-t, 0px);
+    right: var(--hit-area-r, 0px);
+    bottom: var(--hit-area-b, 0px);
+    left: var(--hit-area-l, 0px);
+    pointer-events: inherit;
+  }
+}
+
+@utility hit-area-l-* {
+  position: relative;
+  --hit-area-l: --spacing(--value(number) * -1);
+  --hit-area-l: calc(--value([*]) * -1);
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--hit-area-t, 0px);
+    right: var(--hit-area-r, 0px);
+    bottom: var(--hit-area-b, 0px);
+    left: var(--hit-area-l, 0px);
+    pointer-events: inherit;
+  }
+}
+
+@utility hit-area-r-* {
+  position: relative;
+  --hit-area-r: --spacing(--value(number) * -1);
+  --hit-area-r: calc(--value([*]) * -1);
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--hit-area-t, 0px);
+    right: var(--hit-area-r, 0px);
+    bottom: var(--hit-area-b, 0px);
+    left: var(--hit-area-l, 0px);
+    pointer-events: inherit;
+  }
+}
+
+@utility hit-area-t-* {
+  position: relative;
+  --hit-area-t: --spacing(--value(number) * -1);
+  --hit-area-t: calc(--value([*]) * -1);
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--hit-area-t, 0px);
+    right: var(--hit-area-r, 0px);
+    bottom: var(--hit-area-b, 0px);
+    left: var(--hit-area-l, 0px);
+    pointer-events: inherit;
+  }
+}
+
+@utility hit-area-b-* {
+  position: relative;
+  --hit-area-b: --spacing(--value(number) * -1);
+  --hit-area-b: calc(--value([*]) * -1);
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--hit-area-t, 0px);
+    right: var(--hit-area-r, 0px);
+    bottom: var(--hit-area-b, 0px);
+    left: var(--hit-area-l, 0px);
+    pointer-events: inherit;
+  }
+}
+
+@utility hit-area-x-* {
+  position: relative;
+  --hit-area-l: --spacing(--value(number) * -1);
+  --hit-area-l: calc(--value([*]) * -1);
+  --hit-area-r: --spacing(--value(number) * -1);
+  --hit-area-r: calc(--value([*]) * -1);
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--hit-area-t, 0px);
+    right: var(--hit-area-r, 0px);
+    bottom: var(--hit-area-b, 0px);
+    left: var(--hit-area-l, 0px);
+    pointer-events: inherit;
+  }
+}
+
+@utility hit-area-y-* {
+  position: relative;
+  --hit-area-t: --spacing(--value(number) * -1);
+  --hit-area-t: calc(--value([*]) * -1);
+  --hit-area-b: --spacing(--value(number) * -1);
+  --hit-area-b: calc(--value([*]) * -1);
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--hit-area-t, 0px);
+    right: var(--hit-area-r, 0px);
+    bottom: var(--hit-area-b, 0px);
+    left: var(--hit-area-l, 0px);
+    pointer-events: inherit;
+  }
+}
+
+/* On the scroll container: expose a named scroll-progress timeline per axis. */
+@utility scroll-fade-track-y {
+  scroll-timeline-name: --scroll-fade-y;
+  scroll-timeline-axis: block;
+}
+
+@utility scroll-fade-track-x {
+  scroll-timeline-name: --scroll-fade-x;
+  scroll-timeline-axis: inline;
+}
+
+@utility scroll-fade-track-both {
+  scroll-timeline-name: --scroll-fade-y, --scroll-fade-x;
+  scroll-timeline-axis: block, inline;
+}
+
+@utility scroll-fade-y {
+  opacity: 0;
+  animation-name: scroll-fade-out;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+  animation-timeline: --scroll-fade-y;
+}
+
+@utility scroll-fade-x {
+  opacity: 0;
+  animation-name: scroll-fade-out;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+  animation-timeline: --scroll-fade-x;
+}
+
+@custom-variant @stuck-top {
+  @supports (container-type: scroll-state) {
+    @container scroll-state(stuck: top) {
+      @slot;
+    }
+  }
 }
