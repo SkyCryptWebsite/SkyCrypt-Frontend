@@ -65,6 +65,8 @@ export class ThemeEngine {
       root.classList.remove("light");
       root.classList.add("dark");
     }
+    // TODO: Enable themes
+    return;
 
     for (const [key, cssVar] of Object.entries(COLOR_CSS_MAP)) {
       const value = theme.colors?.[key as ThemeColorKey];
