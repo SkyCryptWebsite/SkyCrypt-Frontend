@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.8.1-beta.0
+
+### Patch Changes
+
+- Move app.css to routes/layout.css _[`#335`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/335) [`2ba7841`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/2ba78417b17abb4815b78655d529835bd6e34568) [@DarthGigi](https://github.com/DarthGigi)_
+- Convert performance-mode glass styling to dynamic Tailwind utilities. _[`#335`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/335) [`b7a062f`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/b7a062fc0c3034998221199af3202d76ca60c214) [@DarthGigi](https://github.com/DarthGigi)_
+
 ## 3.8.0
 
 ### Minor Changes

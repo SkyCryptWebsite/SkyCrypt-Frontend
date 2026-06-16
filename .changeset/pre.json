@@ -1,0 +1,11 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "skycrypt-frontend": "3.8.0"
+  },
+  "changesets": [
+    "brown-clowns-dress",
+    "clean-glass-utilities"
+  ]
+}
