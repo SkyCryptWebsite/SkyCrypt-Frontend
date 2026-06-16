@@ -14,14 +14,14 @@
   import Sections from "$lib/sections/Sections.svelte";
   import type { ModelsStatsOutput } from "$lib/shared/api/orval-generated";
   import { getCombined } from "$lib/shared/api/skycrypt-api.remote";
-  import { flyAndScale } from "$lib/shared/utils";
+  import * as Dialog from "$ui/dialog";
+  import * as Drawer from "$ui/drawer";
   import Image from "@lucide/svelte/icons/image";
-  import { Avatar, Dialog } from "bits-ui";
+  import { Avatar } from "bits-ui";
   import { Pane } from "paneforge";
   import { onDestroy, tick, untrack } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
-  import { Drawer } from "vaul-svelte";
 
   const { data: ctx }: { data: ModelsStatsOutput } = $props();
 
@@ -218,7 +218,7 @@
     {/if}
   </div>
 
-  <div class="fixed top-0 right-0 min-h-dvh w-full glass dark:glass-brightness-50 light:glass-brightness-100 @[75rem]/parent:w-[calc(100%-30vw)]"></div>
+  <div class="fixed top-12 right-0 min-h-dvh w-full glass dark:glass-brightness-50 light:glass-brightness-100 @[75rem]/parent:w-[calc(100%-30vw)]"></div>
 
   <main data-vaul-drawer-wrapper class="@container relative mx-auto @[75rem]/parent:ml-[30vw]">
     {#if getProfileContext().current}
@@ -238,24 +238,9 @@
 
 {#if isHover.current}
   <Dialog.Root bind:open={internalState.showItem}>
-    <Dialog.Portal>
-      <Dialog.Overlay forceMount class="fixed inset-0 z-40 bg-black/80">
-        {#snippet child({ props, open })}
-          {#if open}
-            <div {...props} transition:fade={{ duration: 150, easing: cubicOut }}></div>
-          {/if}
-        {/snippet}
-      </Dialog.Overlay>
-      <Dialog.Content forceMount class="fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] max-w-[calc(100vw-2.5rem)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg bg-background-lore font-skyblock-icons select-text">
-        {#snippet child({ props, open })}
-          {#if open}
-            <div {...props} transition:flyAndScale>
-              <ItemContent piece={internalState.itemContent!} />
-            </div>
-          {/if}
-        {/snippet}
-      </Dialog.Content>
-    </Dialog.Portal>
+    <Dialog.Content class="standard:bg-transparent w-auto glass glass-bg-popover gap-0 p-0 max-h-[calc(96%-3rem)]! max-w-[calc(100vw-2.5rem)]! data-[mctooltip=true]:ring-0 overflow-hidden font-skyblock-icons select-text data-[mctooltip=true]:rounded-sm *:data-[slot='dialog-close']:hidden" data-mctooltip={preferences.mctooltip}>
+      <ItemContent piece={internalState.itemContent!} />
+    </Dialog.Content>
   </Dialog.Root>
   <Dialog.Root
     bind:open={() => internalState.itemContentSpecial !== undefined, (open) => open}
@@ -264,35 +249,17 @@
         internalState.itemContentSpecial = undefined;
       }
     }}>
-    <Dialog.Portal>
-      <Dialog.Overlay forceMount class="fixed inset-0 z-40 bg-black/80">
-        {#snippet child({ props, open })}
-          {#if open}
-            <div {...props} transition:fade={{ duration: 150, easing: cubicOut }}></div>
-          {/if}
-        {/snippet}
-      </Dialog.Overlay>
-      <Dialog.Content forceMount class="fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] max-w-[calc(100vw-2.5rem)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg bg-background-lore font-skyblock-icons select-text">
-        {#snippet child({ props, open })}
-          {#if open}
-            <div {...props} transition:flyAndScale>
-              {#if internalState.itemContentSpecial?.containsItems}
-                <ContainedItemsGrid items={internalState.itemContentSpecial.containsItems} onclose={() => (internalState.itemContentSpecial = undefined)} />
-              {/if}
-            </div>
-          {/if}
-        {/snippet}
-      </Dialog.Content>
-    </Dialog.Portal>
+    <Dialog.Content class="max-h-[calc(96%-3rem)]! p-0 max-w-[calc(100vw-2.5rem)]! w-auto data-[performance=false]:bg-transparent overflow-hidden *:data-[slot='dialog-close']:hidden glass glass-bg-popover font-skyblock-icons select-text">
+      {#if internalState.itemContentSpecial?.containsItems}
+        <ContainedItemsGrid items={internalState.itemContentSpecial.containsItems} onclose={() => (internalState.itemContentSpecial = undefined)} />
+      {/if}
+    </Dialog.Content>
   </Dialog.Root>
 {:else}
   <Drawer.Root bind:open={internalState.showItem} shouldScaleBackground={true} setBackgroundColorOnScale={false}>
-    <Drawer.Portal>
-      <Drawer.Overlay class="fixed inset-0 z-40 bg-black/80" />
-      <Drawer.Content class="fixed right-0 bottom-0 left-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px] bg-background-lore">
-        <ItemContent piece={internalState.itemContent!} isDrawer={true} />
-      </Drawer.Content>
-    </Drawer.Portal>
+    <Drawer.Content class="before:glass before:glass-bg-popover p-2 [&>div:first-child]:hidden! before:p-0 before:bg-transparent">
+      <ItemContent piece={internalState.itemContent!} isDrawer={true} />
+    </Drawer.Content>
   </Drawer.Root>
   <Drawer.Root
     bind:open={() => internalState.itemContentSpecial !== undefined, (open) => open}
@@ -303,14 +270,11 @@
         internalState.itemContentSpecial = undefined;
       }
     }}>
-    <Drawer.Portal>
-      <Drawer.Overlay class="fixed inset-0 z-40 bg-black/80" />
-      <Drawer.Content class="fixed right-0 bottom-0 left-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px] bg-background-lore">
-        {#if internalState.itemContentSpecial?.containsItems}
-          <ContainedItemsGrid items={internalState.itemContentSpecial.containsItems} onclose={() => (internalState.itemContentSpecial = undefined)} />
-        {/if}
-      </Drawer.Content>
-    </Drawer.Portal>
+    <Drawer.Content class="before:glass before:glass-bg-popover [&>div:first-child]:my-4 before:bg-transparent">
+      {#if internalState.itemContentSpecial?.containsItems}
+        <ContainedItemsGrid items={internalState.itemContentSpecial.containsItems} onclose={() => (internalState.itemContentSpecial = undefined)} />
+      {/if}
+    </Drawer.Content>
   </Drawer.Root>
 {/if}
 
