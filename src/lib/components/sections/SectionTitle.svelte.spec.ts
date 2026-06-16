@@ -16,9 +16,9 @@ describe.concurrent("SectionTitle Tests", () => {
 
     const heading = container.querySelector("h3");
     expect(heading?.classList.contains("text-2xl")).toBe(true);
+    expect(heading?.classList.contains("mt-4")).toBe(true);
     expect(heading?.classList.contains("font-semibold")).toBe(true);
     expect(heading?.classList.contains("uppercase")).toBe(true);
-    expect(heading?.classList.contains("underline")).toBe(true);
   });
 
   it("applies custom class via class prop", async ({ expect }) => {

@@ -14,8 +14,8 @@ describe.concurrent("AdditionStat Tests", () => {
       withTooltipProvider: true
     });
 
-    const button = container.querySelector("button");
-    expect(button).toBeTruthy();
+    const item = container.querySelector('[data-slot="item"]');
+    expect(item).toBeTruthy();
     expect(container.textContent).toContain("strength:");
     expect(container.textContent).toContain("100");
   });
@@ -47,12 +47,11 @@ describe.concurrent("AdditionStat Tests", () => {
       withTooltipProvider: true
     });
 
-    const button = container.querySelector("button");
-    const div = button?.querySelector("div");
-    expect(div?.classList.contains("text-maxed")).toBe(true);
+    const item = container.querySelector('[data-slot="item"]');
+    expect(item?.classList.contains("text-accent-2")).toBe(true);
   });
 
-  it("applies gold color when dataMaxed is true", async ({ expect }) => {
+  it("applies accent color when dataMaxed is true", async ({ expect }) => {
     const { container } = render(WithContext, {
       component: AdditionStat,
       componentProps: {
@@ -63,11 +62,12 @@ describe.concurrent("AdditionStat Tests", () => {
       withTooltipProvider: true
     });
 
-    const span = container.querySelector("span.text-gold");
+    const span = container.querySelector('[data-slot="item-content"] span.text-accent-2');
     expect(span).toBeTruthy();
+    expect(span?.textContent).toContain("500");
   });
 
-  it("renders asterisk when asterisk prop is true", async ({ expect }) => {
+  it("renders info tooltip indicator when asterisk prop is true", async ({ expect }) => {
     const { container } = render(WithContext, {
       component: AdditionStat,
       componentProps: {
@@ -79,7 +79,10 @@ describe.concurrent("AdditionStat Tests", () => {
       withTooltipProvider: true
     });
 
-    expect(container.textContent).toContain("*");
+    const item = container.querySelector('[data-is-tooltip="true"]');
+    const icon = container.querySelector('[data-slot="item-media"][data-variant="icon"] svg');
+    expect(item).toBeTruthy();
+    expect(icon).toBeTruthy();
   });
 
   it("applies custom class", async ({ expect }) => {
@@ -93,8 +96,8 @@ describe.concurrent("AdditionStat Tests", () => {
       withTooltipProvider: true
     });
 
-    const button = container.querySelector("button");
-    expect(button?.classList.contains("custom-test-class")).toBe(true);
+    const item = container.querySelector('[data-slot="item"]');
+    expect(item?.classList.contains("custom-test-class")).toBe(true);
   });
 
   it("capitalizes text label", async ({ expect }) => {
