@@ -1,15 +1,18 @@
 <script lang="ts">
-  import { replaceState } from "$app/navigation";
+  import { pushState, replaceState } from "$app/navigation";
   import { page } from "$app/state";
   import { getInternalState, getPreferences, getProfileContext } from "$ctx";
   import ScrollAreaPrimitive from "$lib/components/ScrollAreaPrimitive.svelte";
   import type { SectionName } from "$lib/sections/types";
   import { Button } from "$ui/button";
-  import { cn } from "$utils";
+  import { Separator } from "$ui/separator";
   import ArrowBigLeft from "@lucide/svelte/icons/arrow-big-left";
   import ArrowBigRight from "@lucide/svelte/icons/arrow-big-right";
   import { ScrollArea } from "bits-ui";
   import { onDestroy, tick, type Snippet } from "svelte";
+  import { cubicOut } from "svelte/easing";
+  import { crossfade } from "svelte/transition";
+
   const { children }: { children?: Snippet } = $props();
 
   const profile = $derived(getProfileContext().current);
@@ -40,13 +43,19 @@
     })
   );
 
-  let pinned = $state(false);
   let navbarElement = $state<HTMLDivElement | null>(null);
   let observer: IntersectionObserver;
+
+  const [send, receive] = crossfade({
+    duration: 300,
+    easing: cubicOut
+  });
 
   function handleSectionClick(sectionName: SectionName) {
     internalState.tabValue = sectionName;
     scrollToTab({ smooth: true });
+    page.url.hash = sectionName;
+    pushState("", page.state);
   }
 
   function scrollToTab({
@@ -94,7 +103,7 @@
         // Check if the element has reached its sticky position by comparing
         // its actual top position to the CSS top value
         const hasReachedStickyPosition = e.boundingClientRect.top <= topValue;
-        pinned = hasReachedStickyPosition && e.intersectionRatio < 1;
+        internalState.navbarPinned = hasReachedStickyPosition && e.intersectionRatio < 1;
       },
       {
         threshold: [1],
@@ -136,17 +145,22 @@
   });
 </script>
 
-<ScrollAreaPrimitive type="scroll" class="navbar group sticky! top-[calc(3rem+env(safe-area-inset-top,0))] z-20 overflow-clip" data-pinned={pinned} bind:ref={navbarElement} orientation="horizontal">
+<ScrollAreaPrimitive type="scroll" class="navbar group sticky! top-[calc(3rem+env(safe-area-inset-top,0))] z-30 overflow-clip" data-pinned={internalState.navbarPinned} bind:ref={navbarElement} orientation="horizontal">
   {#snippet viewportChildren()}
-    <div class="mx-6 flex! flex-nowrap items-center gap-2 pb-2 font-semibold whitespace-nowrap text-foreground/80">
-      <div class="absolute bottom-1.75 -left-6 z-1 h-0.5 w-[calc(100%+1.5rem)] bg-primary"></div>
-      <div class={cn("absolute inset-0 bottom-2 glass-bg-popover standard:transition standard:duration-50 standard:ease-out", { glass: pinned })}></div>
+    <div class="mx-6 my-2 flex! flex-nowrap items-center gap-2 font-semibold whitespace-nowrap text-foreground/80">
       {#each filteredSectionOrderPreferences as section, index (index)}
-        <Button class="relative rounded-lg text-inherit font-semibold motion-preset-focus motion-preset-slide-right px-2 py-3 motion-delay-[calc(sibling-index()*0.05s)] after:absolute after:top-full after:left-0 after:h-0 after:w-full after:origin-top after:rounded-full after:bg-primary after:transition-all after:duration-100 after:ease-out bg-transparent hover:bg-transparent text-base hover:after:top-[calc(100%-4px)] hover:after:h-2 data-[active=true]:text-foreground data-[active=true]:after:top-[calc(100%-4px)] data-[active=true]:after:h-2" data-id={section.name} data-active={internalState.tabValue === section.name} onclick={() => handleSectionClick(section.name)}>
-          {section.name?.replaceAll("_", " ")}
+        {const isActive = $derived(internalState.tabValue === section.name)}
+        <Button class="relative rounded-lg isolate text-inherit font-semibold motion-preset-focus motion-preset-slide-right px-2 py-3 motion-delay-[calc(sibling-index()*0.05s)] bg-transparent hover:bg-transparent text-base data-[active=true]:text-foreground " data-id={section.name} data-active={isActive} onclick={() => handleSectionClick(section.name)}>
+          {#if isActive}
+            <div class="absolute inset-0 rounded-full bg-primary" in:send={{ key: "active-tab" }} out:receive={{ key: "active-tab" }}></div>
+          {/if}
+          <span class="relative">
+            {section.name?.replaceAll("_", " ")}
+          </span>
         </Button>
       {/each}
     </div>
+    <Separator class="bg-primary" orientation="horizontal" />
   {/snippet}
 
   <ScrollArea.Scrollbar orientation="horizontal" class="z-10 flex h-0.5 w-full origin-center translate-y-[-0.44rem] touch-none transition-all duration-300 ease-out select-none group-hover:h-2 group-hover:-translate-y-1">

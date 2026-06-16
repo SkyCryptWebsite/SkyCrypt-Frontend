@@ -14,10 +14,24 @@
   const themeIconQuery = $derived(getThemeIcons({ color: theme.activeTheme?.colors?.logo, invert: theme.activeTheme?.light }));
 
   const packageVersion = __NPM_PACKAGE_VERSION__;
+
+  const pinnedClipPath = "polygon(0% 0%, 100% 0%, 100% 100%, 30.17% 100%, 30.17% 47.5%, 0% 47.5%);";
+  const normalClipPath = "polygon(0% 0%, 100% 0%, 100% 47.5%, 30.17% 47.5%, 30.17% 47.5%, 0% 47.5%);";
+  const skinHiddenClipPath = $derived(internalState.navbarPinned ? "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);" : "polygon(0% 0%, 100% 0%, 100% 47.5%, 0% 47.5%);");
+
+  let innerWidth = $state(0);
+
+  const clipPath = $derived.by(() => {
+    if (innerWidth < 1210) return skinHiddenClipPath;
+    return internalState.navbarPinned ? pinnedClipPath : normalClipPath;
+  });
 </script>
 
+<svelte:window bind:innerWidth />
+
 <div class="invisible h-12 w-full"></div>
-<header class="@container fixed top-0 left-0 z-30 h-12 w-full overflow-clip bg-header px-2.5 pt-[env(safe-area-inset-top,0)] pr-[max(0.625rem,env(safe-area-inset-right))] pb-[env(safe-area-inset-bottom,0)] pl-[max(0.625rem,env(safe-area-inset-left))] leading-12">
+<div class="fixed top-0 left-0 z-30 w-full transition-[clip-path] duration-150 ease-out pointer-events-auto h-25.25 glass glass-bg-popover" style="clip-path: {clipPath}"></div>
+<header class="@container fixed top-0 border-b left-0 z-30 h-12 w-full overflow-clip px-2.5 pt-[env(safe-area-inset-top,0)] pr-[max(0.625rem,env(safe-area-inset-right))] pb-[env(safe-area-inset-bottom,0)] pl-[max(0.625rem,env(safe-area-inset-left))] leading-12">
   <div class="flex h-full w-full justify-center @md:justify-between">
     <div class="flex gap-2">
       <Button.Root href="/" class="flex items-center justify-center gap-2 font-bold" data-sveltekit-preload-data="hover">

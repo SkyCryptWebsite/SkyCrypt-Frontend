@@ -40,16 +40,14 @@
   {#snippet children({ payload })}
     {#if payload?.inViewport?.current}
       <Tooltip.Portal>
-        <Tooltip.Content forceMount={payload.inViewport.current} class="group/itemtooltip z-50 flex max-h-[calc(96vh-3rem)] flex-col overflow-clip font-skyblock-icons select-text data-[mctooltip=false]:rounded-lg data-[mctooltip=false]:bg-background-lore" side="right" align="center" collisionPadding={8} data-mctooltip={preferences.mctooltip} alignOffset={8}>
+        <Tooltip.Content forceMount={payload.inViewport.current} class="group/itemtooltip data-[mctooltip=false]:glass data-[mctooltip=true]:bg-transparent z-50 data-[mctooltip=false]:border flex max-h-[calc(96vh-3rem)] flex-col overflow-clip font-skyblock-icons select-text data-[mctooltip=false]:rounded-xl data-[mctooltip=true]:rounded-xs data-[mctooltip=false]:glass-bg-popover" side="right" align="center" collisionPadding={8} data-mctooltip={preferences.mctooltip} alignOffset={8}>
           {#snippet child({ wrapperProps, props, open })}
             {#if open}
               <div {...wrapperProps}>
                 <div {...props} transition:flyAndScale>
-                  {#key payload}
-                    {#if payload?.skyblockItem}
-                      <ItemContent piece={payload.skyblockItem} />
-                    {/if}
-                  {/key}
+                  {#if payload?.skyblockItem}
+                    <ItemContent piece={payload.skyblockItem} />
+                  {/if}
                 </div>
               </div>
             {/if}
