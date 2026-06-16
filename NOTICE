@@ -1,0 +1,36 @@
+SkyCrypt Frontend Licensing Notice
+
+SkyCrypt Frontend is primarily licensed under the GNU Affero General Public
+License version 3 (GNU AGPLv3).
+
+Unless a more specific license notice applies, source code, documentation,
+configuration, build scripts, and original non-excepted assets introduced or
+modified by SkyCrypt contributors from the June 2026 license-change commit
+onward are licensed under GNU AGPLv3.
+
+This license transition does not revoke, replace, or limit any rights that were
+previously granted under the MIT License for earlier versions, files, or
+contributions. Pre-change contributions remain available under the MIT License
+to the extent they were originally licensed that way.
+
+The following SkyCrypt brand/logo assets remain under the MIT License
+and are not offered under the repository's AGPL default:
+
+- static/apple-touch-icon-precomposed.png
+- static/favicon.ico
+- static/favicon.png
+- static/img/logo.avif
+- static/img/logo_black.avif
+- static/img/newsroom.avif
+- static/img/app-icons/**
+
+The MIT brand asset exception does not grant trademark rights, service
+mark rights, impersonation rights, or permission to use SkyCrypt branding in a
+way that is confusing, misleading, or suggests endorsement by the SkyCrypt
+project.
+
+Third-party libraries, resources, fonts, textures, APIs, and other dependencies
+remain under their own licenses. Built output generated from SkyCrypt-owned
+AGPL-covered source is covered by GNU AGPLv3, except for third-party
+components and explicitly listed MIT brand assets, which retain their own
+license notices.

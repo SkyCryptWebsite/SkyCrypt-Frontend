@@ -1,7 +1,8 @@
 {
   "name": "skycrypt-frontend",
-  "version": "3.7.0",
+  "version": "3.8.0",
   "private": true,
+  "license": "AGPL-3.0-only",
   "type": "module",
   "repository": {
     "type": "git",
