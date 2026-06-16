@@ -84,6 +84,14 @@
       e.preventDefault();
       internalState.openCommand = true;
     }
+    if (e.key.toLowerCase() === "p" && dev) {
+      // toggle performance mode for testing
+      preferences.performanceMode = !preferences.performanceMode;
+    }
+    if (e.key.toLowerCase() === "m" && dev) {
+      // toggle minecraft styled tooltips for testing
+      preferences.mctooltip = !preferences.mctooltip;
+    }
   }
 
   initDisabledPacks();
@@ -233,7 +241,7 @@
 {#if showNewsroomToast}
   <svelte:boundary>
     {#snippet failed()}{/snippet}
-    {@const latestNewsroom = await listLatestPostsForNotifications({ limit: 5 })}
+    {const latestNewsroom = await listLatestPostsForNotifications({ limit: 5 })}
     <NewPostsNotifier posts={latestNewsroom.docs} />
   </svelte:boundary>
 {/if}
