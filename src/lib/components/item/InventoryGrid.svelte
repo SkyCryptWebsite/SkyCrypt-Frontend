@@ -1,7 +1,9 @@
 <script lang="ts">
   import { getPreferences } from "$ctx";
+  import EmptyStat from "$lib/components/EmptyStat.svelte";
   import { type ModelsStrippedItem } from "$lib/shared/api/orval-generated";
   import { shouldShine } from "$lib/shared/helper";
+  import PackageSearchIcon from "@lucide/svelte/icons/package-search";
   import type { Snippet } from "svelte";
 
   const preferences = getPreferences();
@@ -11,7 +13,7 @@
 
 {#snippet content(items: ModelsStrippedItem[] | undefined)}
   {#if items?.length ?? 0 > 0}
-    <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 pt-5 @md:gap-1.5 @xl:gap-2">
+    <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 @md:gap-1.5 @xl:gap-2">
       {#each items as item, index (index)}
         {#if index > 0}
           {#if index % gap === 0}
@@ -28,9 +30,7 @@
       {/each}
     </div>
   {:else}
-    <p class="mt-2 space-x-0.5 text-center leading-6">
-      No items found in the {inventoryId.replaceAll("_", " ")}.
-    </p>
+    <EmptyStat title="No items found" description="No items found in {inventoryId.replaceAll('_', ' ')}" icon={PackageSearchIcon} class="mt-2" />
   {/if}
 {/snippet}
 

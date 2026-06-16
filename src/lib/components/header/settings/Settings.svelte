@@ -71,7 +71,7 @@
         {/snippet}
       </Dialog.Overlay>
 
-      <Dialog.Content forceMount class="fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg px-8 py-4 font-icomoon select-text glass glass-standard-bg-background-grey/30 glass-bg-background-grey/95">
+      <Dialog.Content forceMount class="fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg px-8 py-4 font-skyblock-icons select-text glass glass-standard-bg-background-grey/30 glass-bg-background-grey/95">
         {#snippet child({ props, open })}
           {#if open}
             <div {...props} transition:flyAndScale>

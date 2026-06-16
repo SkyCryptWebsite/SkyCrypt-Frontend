@@ -219,6 +219,7 @@
   </div>
 
   <div class="fixed top-0 right-0 min-h-dvh w-full glass dark:glass-brightness-50 light:glass-brightness-100 @[75rem]/parent:w-[calc(100%-30vw)]"></div>
+
   <main data-vaul-drawer-wrapper class="@container relative mx-auto @[75rem]/parent:ml-[30vw]">
     {#if getProfileContext().current}
       <div class="space-y-5 p-4 @[75rem]/parent:p-8">
@@ -245,7 +246,7 @@
           {/if}
         {/snippet}
       </Dialog.Overlay>
-      <Dialog.Content forceMount class="fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] max-w-[calc(100vw-2.5rem)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg bg-background-lore font-icomoon select-text">
+      <Dialog.Content forceMount class="fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] max-w-[calc(100vw-2.5rem)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg bg-background-lore font-skyblock-icons select-text">
         {#snippet child({ props, open })}
           {#if open}
             <div {...props} transition:flyAndScale>
@@ -271,7 +272,7 @@
           {/if}
         {/snippet}
       </Dialog.Overlay>
-      <Dialog.Content forceMount class="fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] max-w-[calc(100vw-2.5rem)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg bg-background-lore font-icomoon select-text">
+      <Dialog.Content forceMount class="fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] max-w-[calc(100vw-2.5rem)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg bg-background-lore font-skyblock-icons select-text">
         {#snippet child({ props, open })}
           {#if open}
             <div {...props} transition:flyAndScale>

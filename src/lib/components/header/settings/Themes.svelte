@@ -69,7 +69,7 @@
     <h5 class="text-sm font-semibold text-text/60">Official Themes</h5>
     {#each FIRST_PARTY_THEMES as theme (theme.metadata.id)}
       {#await getThemeIcons({ color: theme.colors.logo, invert: theme.light }) then iconSvg}
-        {@const iconDataUrl = `data:image/svg+xml;base64,${btoa(iconSvg)}`}
+        {const iconDataUrl = `data:image/svg+xml;base64,${btoa(iconSvg)}`}
         <Label.Root for={theme.metadata.id} class="flex items-center justify-between gap-4 rounded-lg bg-text/5 p-2">
           <div class="flex items-center gap-2">
             <Avatar.Root class="shrink-0 select-none">
@@ -101,7 +101,7 @@
     {:else}
       {#each themeContext.userThemes as theme (theme.metadata.id)}
         {#await getThemeIcons({ color: theme.colors?.logo, invert: theme.light }) then iconSvg}
-          {@const iconDataUrl = `data:image/svg+xml;base64,${btoa(iconSvg)}`}
+          {const iconDataUrl = `data:image/svg+xml;base64,${btoa(iconSvg)}`}
           <Label.Root for={theme.metadata.id} class="flex items-center justify-between gap-2 rounded-lg bg-text/5 p-2">
             <div class="flex items-center gap-2">
               <Avatar.Root class="shrink-0 select-none">

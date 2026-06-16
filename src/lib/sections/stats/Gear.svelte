@@ -1,19 +1,21 @@
 <script lang="ts">
-  import { getCombinedContext, getProfileContext } from "$ctx";
+  import { getCombinedContext } from "$ctx";
+  import EmptyStat from "$lib/components/EmptyStat.svelte";
   import { EmptyEquipment, Item } from "$lib/components/item";
   import { Wardrobe } from "$lib/components/misc";
-  import ScrollAreaPrimitive from "$lib/components/ScrollAreaPrimitive.svelte";
   import { Section } from "$lib/components/sections";
   import { Bonus } from "$lib/components/stats";
-  import Items from "$lib/layouts/stats/Items.svelte";
   import { getRarityClass, renderLore } from "$lib/shared/helper";
   import { animateObfuscatedText } from "$lib/shared/mc-text/obfuscated";
   import { cn } from "$lib/shared/utils";
-  import { ScrollArea } from "bits-ui";
+  import ScrollAreaItems from "$src/lib/components/ScrollAreaItems.svelte";
+  import SectionSubtitle from "$src/lib/components/sections/SectionSubtitle.svelte";
+  import ShieldIcon from "@lucide/svelte/icons/shield";
+  import ShirtIcon from "@lucide/svelte/icons/shirt";
+  import SwordIcon from "@lucide/svelte/icons/sword";
 
   let { order }: { order: number } = $props();
 
-  const profile = $derived(getProfileContext().current);
   const gear = $derived(getCombinedContext().current?.gear);
   const armor = $derived(gear?.armor);
   const equipment = $derived(gear?.equipment);
@@ -25,104 +27,101 @@
   });
 </script>
 
-<Section id="Gear" {order}>
+<Section id="Gear" {order} class="space-y-4 contents">
   {#if armor && armor.armor}
-    <Items subtitle="Armor">
-      {#snippet text()}
-        {#if armor && armor.armor}
-          {#if armor.armor.length > 0 && !armor.armor.every((piece) => !piece.display_name)}
-            {#if armor.set_name}
-              <p class="space-x-0.5 leading-6 font-bold text-text/60 capitalize">
-                <span>Set:</span>
-                <span class={cn(getRarityClass(armor.set_rarity ?? "", "text"))}>{armor.set_name}</span>
-              </p>
-            {/if}
+    <div class="border rounded-xl p-4">
+      <SectionSubtitle>Armor</SectionSubtitle>
+      {#if armor && armor.armor}
+        {#if armor.armor.length > 0 && !armor.armor.every((piece) => !piece.display_name)}
+          {#if armor.set_name}
+            <p class="space-x-0.5 leading-6 font-bold text-text/60 capitalize">
+              <span>Set:</span>
+              <span class={cn(getRarityClass(armor.set_rarity ?? "", "text"))}>{armor.set_name}</span>
+            </p>
           {/if}
         {/if}
-      {/snippet}
+      {/if}
+
+      {#if armor.stats}
+        <Bonus stats={armor.stats} />
+      {/if}
 
       {#if armor.armor.length > 0 && !armor.armor.every((piece) => !piece.display_name)}
-        {#each armor.armor as piece, index (index)}
-          {#if piece && piece.display_name}
-            <Item {piece} />
-          {:else}
-            <EmptyEquipment {index} />
-          {/if}
-        {/each}
+        <ScrollAreaItems>
+          {#each armor.armor as piece, index (index)}
+            {#if piece && piece.display_name}
+              <Item {piece} />
+            {:else}
+              <EmptyEquipment {index} />
+            {/if}
+          {/each}
+        </ScrollAreaItems>
       {:else}
-        <p class="space-x-0.5 leading-6">{profile?.username} has no armor equipped</p>
+        <EmptyStat title="No Armor" description="This player has no armor equipped" icon={ShirtIcon} class="mt-2" />
       {/if}
-      {#snippet info()}
-        {#if armor.stats}
-          <Bonus stats={armor.stats} />
-        {/if}
-      {/snippet}
-    </Items>
+    </div>
   {/if}
 
   {#if equipment}
-    <Items subtitle="Equipment">
-      {#if equipment.equipment && equipment.equipment.length > 0}
-        {#each equipment.equipment as piece, index (index)}
-          <Item {piece} />
-        {/each}
-      {:else}
-        <p class="space-x-0.5 leading-6">{profile?.username} has no equipment equipped</p>
+    <div class="border rounded-xl p-4">
+      <SectionSubtitle>Equipment</SectionSubtitle>
+      {#if equipment.stats}
+        <Bonus stats={equipment.stats} />
       {/if}
-      {#snippet info()}
-        {#if equipment.stats}
-          <Bonus stats={equipment.stats} />
-        {/if}
-      {/snippet}
-    </Items>
+      {#if equipment.equipment && equipment.equipment.length > 0}
+        <ScrollAreaItems>
+          {#each equipment.equipment as piece, index (index)}
+            <Item {piece} />
+          {/each}
+        </ScrollAreaItems>
+      {:else}
+        <EmptyStat title="No Equipment" description="This player has no equipment equipped" icon={ShieldIcon} class="mt-2" />
+      {/if}
+    </div>
   {/if}
 
   {#if wardrobe && wardrobe.length > 0}
-    <Items subtitle="Wardrobe">
+    <div class="border rounded-xl p-4">
+      <SectionSubtitle>Wardrobe</SectionSubtitle>
       <div class="max-w-full">
-        <!-- min height was calc by: each piece of armor was 72px with a 8px gap and scrollbar was 2.5px and some more for gap for scrollbar -->
-        <ScrollAreaPrimitive class="relative min-h-83.75" type="auto" orientation="horizontal">
-          {#snippet viewportChildren()}
-            <div class="flex flex-row gap-6 md:gap-3">
-              {#each firstWardrobeItems as _, i (i)}
-                <div class="min-h-18 min-w-18">
-                  <Wardrobe wardrobeItems={wardrobe[i]} />
-                </div>
-              {/each}
-            </div>
-          {/snippet}
-
-          <ScrollArea.Scrollbar orientation="horizontal" class="mt-2 flex h-2.5 w-full touch-none rounded-full transition-all ease-out select-none">
-            <ScrollArea.Thumb class="flex rounded-full bg-icon" />
-          </ScrollArea.Scrollbar>
-          <ScrollArea.Corner />
-        </ScrollAreaPrimitive>
+        <ScrollAreaItems class="relative w-full" viewportClasses="scroll-fade-track-x min-h-86" orientation="horizontal">
+          <div class="relative flex flex-row gap-6 md:gap-3">
+            {#each firstWardrobeItems as _, i (i)}
+              <div class="min-h-18 min-w-18">
+                <Wardrobe wardrobeItems={wardrobe[i]} />
+              </div>
+            {/each}
+            <div class="pointer-events-none sticky h-82 -right-2 z-10 -ml-42 w-36 self-stretch bg-linear-to-l from-background/80 to-transparent blur-xs scroll-fade-x md:-ml-39"></div>
+          </div>
+        </ScrollAreaItems>
       </div>
-    </Items>
+    </div>
   {/if}
 
   {#if weapons}
-    <Items subtitle="Weapons">
-      {#snippet text()}
-        {#if weapons.weapons && weapons.weapons.length}
-          <div>
-            {#if weapons.highest_priority_weapon?.display_name}
-              <p class="font-bold" {@attach animateObfuscatedText}>
-                <span class="text-text/60">Active Weapon: </span>
-                {@html renderLore(weapons.highest_priority_weapon.display_name)}
-              </p>
-            {/if}
-          </div>
-        {:else}
-          <p class="space-x-0.5 leading-6">{profile?.username} has no weapons</p>
-        {/if}
-      {/snippet}
+    <div class="border rounded-xl p-4">
+      <SectionSubtitle>Weapons</SectionSubtitle>
 
       {#if weapons.weapons && weapons.weapons.length}
-        {#each weapons.weapons as weapon, index (index)}
-          <Item piece={weapon} />
-        {/each}
+        <div>
+          {#if weapons.highest_priority_weapon?.display_name}
+            <p class="font-bold" {@attach animateObfuscatedText}>
+              <span class="text-text/60">Active Weapon: </span>
+              {@html renderLore(weapons.highest_priority_weapon.display_name)}
+            </p>
+          {/if}
+        </div>
+      {:else}
+        <EmptyStat title="No Weapons" description="This player has no weapons" icon={SwordIcon} class="mt-2" />
       {/if}
-    </Items>
+
+      {#if weapons.weapons && weapons.weapons.length}
+        <ScrollAreaItems>
+          {#each weapons.weapons as weapon, index (index)}
+            <Item piece={weapon} />
+          {/each}
+        </ScrollAreaItems>
+      {/if}
+    </div>
   {/if}
 </Section>

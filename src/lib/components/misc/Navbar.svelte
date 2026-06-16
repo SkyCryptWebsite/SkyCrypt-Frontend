@@ -4,9 +4,11 @@
   import { getInternalState, getPreferences, getProfileContext } from "$ctx";
   import ScrollAreaPrimitive from "$lib/components/ScrollAreaPrimitive.svelte";
   import type { SectionName } from "$lib/sections/types";
-  import ChevronLeft from "@lucide/svelte/icons/chevron-left";
-  import ChevronRight from "@lucide/svelte/icons/chevron-right";
-  import { Button, ScrollArea } from "bits-ui";
+  import { Button } from "$ui/button";
+  import { cn } from "$utils";
+  import ArrowBigLeft from "@lucide/svelte/icons/arrow-big-left";
+  import ArrowBigRight from "@lucide/svelte/icons/arrow-big-right";
+  import { ScrollArea } from "bits-ui";
   import { onDestroy, tick, type Snippet } from "svelte";
   const { children }: { children?: Snippet } = $props();
 
@@ -136,19 +138,19 @@
 
 <ScrollAreaPrimitive type="scroll" class="navbar group sticky! top-[calc(3rem+env(safe-area-inset-top,0))] z-20 overflow-clip" data-pinned={pinned} bind:ref={navbarElement} orientation="horizontal">
   {#snippet viewportChildren()}
-    <div class="mx-6 flex! flex-nowrap items-center gap-2 pb-2 font-semibold whitespace-nowrap text-text/80">
-      <div class="absolute bottom-1.75 -left-6 z-1 h-0.5 w-[calc(100%+1.5rem)] bg-icon"></div>
-      <div class="absolute inset-0 bottom-2 performance:group-data-[pinned=true]:bg-header standard:transition standard:duration-50 standard:ease-out standard:group-data-[pinned=true]:group-data-[mode=dark]/html:bg-[oklch(19.13%_0_0)]/90 standard:group-data-[pinned=true]:group-data-[mode=light]/html:bg-[oklch(95.51%_0_0)]/92"></div>
+    <div class="mx-6 flex! flex-nowrap items-center gap-2 pb-2 font-semibold whitespace-nowrap text-foreground/80">
+      <div class="absolute bottom-1.75 -left-6 z-1 h-0.5 w-[calc(100%+1.5rem)] bg-primary"></div>
+      <div class={cn("absolute inset-0 bottom-2 glass-bg-popover standard:transition standard:duration-50 standard:ease-out", { glass: pinned })}></div>
       {#each filteredSectionOrderPreferences as section, index (index)}
-        <Button.Root class="relative motion-preset-focus motion-preset-slide-right px-2 py-3 motion-delay-[calc(sibling-index()*0.05s)] after:absolute after:top-full after:left-0 after:h-0 after:w-full after:origin-top after:rounded-full after:bg-icon after:transition-all after:duration-100 after:ease-out hover:after:top-[calc(100%-4px)] hover:after:h-2 data-[active=true]:text-text data-[active=true]:after:top-[calc(100%-4px)] data-[active=true]:after:h-2" data-id={section.name} data-active={internalState.tabValue === section.name} onclick={() => handleSectionClick(section.name)}>
+        <Button class="relative rounded-lg text-inherit font-semibold motion-preset-focus motion-preset-slide-right px-2 py-3 motion-delay-[calc(sibling-index()*0.05s)] after:absolute after:top-full after:left-0 after:h-0 after:w-full after:origin-top after:rounded-full after:bg-primary after:transition-all after:duration-100 after:ease-out bg-transparent hover:bg-transparent text-base hover:after:top-[calc(100%-4px)] hover:after:h-2 data-[active=true]:text-foreground data-[active=true]:after:top-[calc(100%-4px)] data-[active=true]:after:h-2" data-id={section.name} data-active={internalState.tabValue === section.name} onclick={() => handleSectionClick(section.name)}>
           {section.name?.replaceAll("_", " ")}
-        </Button.Root>
+        </Button>
       {/each}
     </div>
   {/snippet}
 
   <ScrollArea.Scrollbar orientation="horizontal" class="z-10 flex h-0.5 w-full origin-center translate-y-[-0.44rem] touch-none transition-all duration-300 ease-out select-none group-hover:h-2 group-hover:-translate-y-1">
-    <ScrollArea.Thumb class="rounded-full bg-icon" />
+    <ScrollArea.Thumb class="rounded-full bg-primary" />
   </ScrollArea.Scrollbar>
 </ScrollAreaPrimitive>
 
@@ -157,18 +159,18 @@
 
   <div class="flex items-center justify-between">
     {#if previousSection}
-      <Button.Root class="flex items-center justify-between rounded-lg bg-icon px-4 py-2 text-lg" onclick={() => handleSectionClick(previousSection.name ?? filteredSectionOrderPreferences[0].name)}>
-        <ChevronLeft />
+      <Button class="flex items-center justify-between text-lg" onclick={() => handleSectionClick(previousSection.name ?? filteredSectionOrderPreferences[0].name)}>
+        <ArrowBigLeft class="fill-foreground" />
         {previousSection.name.replaceAll("_", " ")}
-      </Button.Root>
+      </Button>
     {:else}
       <div></div>
     {/if}
     {#if nextSection}
-      <Button.Root class="flex items-center justify-between rounded-lg bg-icon px-4 py-2 text-lg" onclick={() => handleSectionClick(nextSection.name ?? filteredSectionOrderPreferences[filteredSectionOrderPreferences.length - 1].name)}>
+      <Button class="flex items-center justify-between text-lg" onclick={() => handleSectionClick(nextSection.name ?? filteredSectionOrderPreferences[filteredSectionOrderPreferences.length - 1].name)}>
         {nextSection.name.replaceAll("_", " ")}
-        <ChevronRight />
-      </Button.Root>
+        <ArrowBigRight class="fill-foreground" />
+      </Button>
     {/if}
   </div>
 </div>

@@ -37,7 +37,7 @@
           {/if}
         {/snippet}
       </Dialog.Overlay>
-      <Dialog.Content forceMount class="fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg p-4 font-icomoon select-text glass">
+      <Dialog.Content forceMount class="fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg p-4 font-skyblock-icons select-text glass">
         {#snippet child({ props, open })}
           {#if open}
             <div {...props} transition:flyAndScale>

@@ -6,6 +6,7 @@
   import { cn } from "$lib/shared/utils";
   import ImageOff from "@lucide/svelte/icons/image-off";
   import { Avatar, Tooltip, type AvatarImageLoadingStatus } from "bits-ui";
+
   import { IsInViewport } from "runed";
 
   type Props = {
@@ -42,19 +43,19 @@
   class={cn("overflow-clip nice-colors-dark", isInventory ? "p-0" : `relative p-2 ${bgColor}`, { shine: shine && !isInventory }, { "rounded-lg": !isInventory }, "standard:transition-all standard:duration-150 standard:ease-out standard:hover:scale-110 standard:active:scale-110")}
   bind:ref={targetNode}
   onclick={() => {
-    if (skyblockItem.containsItems) {
+    if (skyblockItem.containsItems && !skyblockItem.displayInline) {
       internalState.itemContentSpecial = skyblockItem;
       return;
     }
     internalState.itemContent = skyblockItem;
-    internalState.showItem = true;
+    internalState.showItem = !skyblockItem.displayInline;
   }}
   tether={itemTooltipTether}
   payload={{ skyblockItem, inViewport }}>
   {#snippet child({ props })}
     <div {...props}>
       {#if hasBeenInViewport}
-        <Avatar.Root bind:loadingStatus>
+        <Avatar.Root bind:loadingStatus class={cn("after:border-none", isInventory ? "size-6 sm:size-14" : "size-14")}>
           <Avatar.Image loading="lazy" src={piece.texture_path} alt={piece.display_name} class={cn("pointer-events-none aspect-square select-none [image-rendering:pixelated] data-[enchanted=true]:enchanted", isInventory ? "size-6 sm:size-14" : "size-14")} data-enchanted={enchanted} />
           {#if loadingStatus === "loading"}
             {@render loadingState()}
@@ -76,11 +77,11 @@
 </Tooltip.Trigger>
 
 {#if showNumbers}
-  <div class="absolute right-0.5 bottom-0.5 text-xs font-semibold text-white text-shadow-[.1em_.1em_.1em_#000] sm:text-base">
+  <div class="absolute right-0.5 bottom-0.5 text-xs font-semibold text-foreground text-shadow-[.1em_.1em_.1em_#000] sm:text-base">
     {formatNumber(skyblockItem.Count ?? 0)}
   </div>
 {/if}
 
 {#snippet loadingState()}
-  <div class={cn("animate-pulse rounded-lg bg-white/30", isInventory ? "size-8 sm:size-14" : "size-14")}></div>
+  <div class={cn("animate-pulse rounded-lg bg-foreground/30", isInventory ? "size-8 sm:size-14" : "size-14")}></div>
 {/snippet}

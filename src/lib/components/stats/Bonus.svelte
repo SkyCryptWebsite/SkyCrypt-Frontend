@@ -16,10 +16,10 @@
 </script>
 
 {#if statsData.length > 0}
-  <p class={cn("my-4 space-x-0.5 leading-6 font-bold text-text/60 capitalize", classNames)}>
+  <p class={cn("space-x-0.5 leading-6 font-bold text-text/60 capitalize", classNames)}>
     <span>{title}</span>
     {#each statsData as [key, value], index (index)}
-      {@const displayKey = (STAT_ALIASES[key] !== undefined ? STAT_ALIASES[key] : key).toLowerCase()}
+      {const displayKey = (STAT_ALIASES[key] !== undefined ? STAT_ALIASES[key] : key).toLowerCase()}
       {#if STATS_DATA[displayKey]}
         <span class={STATS_DATA[displayKey].color}>
           {format(value)}{STATS_DATA[displayKey].suffix}

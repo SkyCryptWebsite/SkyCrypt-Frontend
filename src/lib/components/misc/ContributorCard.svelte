@@ -52,7 +52,7 @@
     </div>
   </Button.Root>
   {#if user.role}
-    {@const Icon = iconMapper[user.role]}
+    {const Icon = iconMapper[user.role]}
     <Tooltip.Root>
       <Tooltip.Trigger
         class="absolute right-3 bottom-3"

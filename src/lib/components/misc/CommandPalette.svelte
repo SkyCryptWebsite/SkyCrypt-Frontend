@@ -103,7 +103,7 @@
     </Dialog.Overlay>
     <Dialog.Content
       forceMount
-      class="fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg font-icomoon select-text glass"
+      class="fixed top-[50%] left-[50%] z-50 flex max-h-[calc(96%-3rem)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-lg font-skyblock-icons select-text glass"
       onOpenAutoFocus={(e) => {
         e.preventDefault();
         commandInput?.focus();

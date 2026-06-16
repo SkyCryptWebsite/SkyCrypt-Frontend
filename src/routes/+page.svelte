@@ -170,7 +170,7 @@
     {/snippet}
     {#snippet failed()}{/snippet}
 
-    {@const newsroom = await listPosts({ page: 1, limit: 3 })}
+    {const newsroom = await listPosts({ page: 1, limit: 3 })}
     {#if newsroom.docs.length > 0}
       <section class="flex flex-col gap-4">
         <div class="flex items-center justify-between gap-4 rounded-lg px-5 py-4 glass glass-brightness-150 dark:glass-brightness-50 glass-contrast-60 dark:glass-contrast-100">
