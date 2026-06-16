@@ -118,14 +118,12 @@ async function initializeAssets() {
     // prettier-ignore
     montserratNormalBuffer,
     minecraftFontBuffer,
-    minecraftUpperFontBuffer,
     skycryptLogo,
     skycryptBackground
   ] = await Promise.all([
     // prettier-ignore
     fetch(`${baseUrl}/fonts/montserrat/montserrat-normal.woff2`).then((res) => res.arrayBuffer()),
     fetch(`${baseUrl}/fonts/minecraft/MinecraftSevenv2-Regular.woff2`).then((res) => res.arrayBuffer()),
-    fetch(`${baseUrl}/fonts/minecraft/MinecraftTenv2-Regular.woff2`).then((res) => res.arrayBuffer()),
     fetch(`${baseUrl}/favicon.png`).then((res) => res.arrayBuffer()),
     fetch(`${baseUrl}/img/bg.png`).then((res) => res.arrayBuffer())
   ]);
@@ -138,10 +136,6 @@ async function initializeAssets() {
     {
       name: "Minecraft",
       data: minecraftFontBuffer
-    },
-    {
-      name: "Minecraft-Upper",
-      data: minecraftUpperFontBuffer
     }
   ];
 
