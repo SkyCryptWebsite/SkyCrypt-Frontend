@@ -1,22 +1,21 @@
 import { DEFAULT_THEME } from "./defaults";
-import { getPaletteColors } from "./presets";
-import type { PartialThemeV3, ThemeBackground, ThemeColorKey, ThemeV3 } from "./schema";
+import type { PartialThemeV3, ThemeV3 } from "./schema";
 
-const COLOR_CSS_MAP: Record<ThemeColorKey, string> = {
-  icon: "--icon",
-  link: "--link",
-  hover: "--hover",
-  maxed: "--maxed",
-  gold: "--gold",
-  logo: "--logo",
-  text: "--text",
-  background: "--background",
-  header: "--header",
-  greyBackground: "--grey_background",
-  loreBackground: "--lore_background",
-  bg: "--bg",
-  mctooltipBg: "--mctooltip-bg"
-};
+// const COLOR_CSS_MAP: Record<ThemeColorKey, string> = {
+//   icon: "--icon",
+//   link: "--link",
+//   hover: "--hover",
+//   maxed: "--maxed",
+//   gold: "--gold",
+//   logo: "--logo",
+//   text: "--text",
+//   background: "--background",
+//   header: "--header",
+//   greyBackground: "--grey_background",
+//   loreBackground: "--lore_background",
+//   bg: "--bg",
+//   mctooltipBg: "--mctooltip-bg"
+// };
 
 export function mergeThemeWithDefaults(partial: PartialThemeV3): ThemeV3 {
   return {
@@ -36,19 +35,19 @@ export function mergeThemeWithDefaults(partial: PartialThemeV3): ThemeV3 {
   };
 }
 
-function applyBackgroundVar(root: HTMLElement, cssVar: string, bg: ThemeBackground | undefined): void {
-  if (!bg) {
-    root.style.removeProperty(cssVar);
-    return;
-  }
+// function applyBackgroundVar(root: HTMLElement, cssVar: string, bg: ThemeBackground | undefined): void {
+//   if (!bg) {
+//     root.style.removeProperty(cssVar);
+//     return;
+//   }
 
-  if (bg.type === "color") {
-    root.style.setProperty(cssVar, bg.color);
-  } else {
-    const { angle, colors, width } = bg;
-    root.style.setProperty(cssVar, `repeating-linear-gradient(${angle}, ${colors[0]} 0px, ${colors[0]} ${width}px, ${colors[1]} ${width}px, ${colors[1]} ${width * 2}px)`);
-  }
-}
+//   if (bg.type === "color") {
+//     root.style.setProperty(cssVar, bg.color);
+//   } else {
+//     const { angle, colors, width } = bg;
+//     root.style.setProperty(cssVar, `repeating-linear-gradient(${angle}, ${colors[0]} 0px, ${colors[0]} ${width}px, ${colors[1]} ${width}px, ${colors[1]} ${width * 2}px)`);
+//   }
+// }
 
 export class ThemeEngine {
   static applyTheme(theme: ThemeV3): void {
@@ -68,33 +67,33 @@ export class ThemeEngine {
     // TODO: Enable themes
     return;
 
-    for (const [key, cssVar] of Object.entries(COLOR_CSS_MAP)) {
-      const value = theme.colors?.[key as ThemeColorKey];
-      if (value) {
-        root.style.setProperty(cssVar, value);
-      } else {
-        root.style.removeProperty(cssVar);
-      }
-    }
+    // for (const [key, cssVar] of Object.entries(COLOR_CSS_MAP)) {
+    //   const value = theme.colors?.[key as ThemeColorKey];
+    //   if (value) {
+    //     root.style.setProperty(cssVar, value);
+    //   } else {
+    //     root.style.removeProperty(cssVar);
+    //   }
+    // }
 
-    const mcColors = getPaletteColors(theme.minecraft.palette, theme.minecraft.overrides);
-    for (const [code, color] of Object.entries(mcColors)) {
-      root.style.setProperty(`--${code}`, color);
-    }
+    // const mcColors = getPaletteColors(theme.minecraft.palette, theme.minecraft.overrides);
+    // for (const [code, color] of Object.entries(mcColors)) {
+    //   root.style.setProperty(`--${code}`, color);
+    // }
 
-    applyBackgroundVar(root, "--skillbar", theme.backgrounds?.skillbar);
-    applyBackgroundVar(root, "--maxedbar", theme.backgrounds?.maxedbar);
+    // applyBackgroundVar(root, "--skillbar", theme.backgrounds?.skillbar);
+    // applyBackgroundVar(root, "--maxedbar", theme.backgrounds?.maxedbar);
 
-    if (theme.backgrounds?.page?.url) {
-      root.style.setProperty("--bg-url", `url(/api/image-proxy?url=${encodeURIComponent(theme.backgrounds.page.url)})`);
-    } else {
-      root.style.setProperty("--bg-url", "none");
-    }
+    // if (theme.backgrounds?.page?.url) {
+    //   root.style.setProperty("--bg-url", `url(/api/image-proxy?url=${encodeURIComponent(theme.backgrounds.page.url)})`);
+    // } else {
+    //   root.style.setProperty("--bg-url", "none");
+    // }
 
-    if (theme.enchantedGlint) {
-      root.style.setProperty("--enchanted-glint", `url(/api/image-proxy?url=${encodeURIComponent(theme.enchantedGlint)})`);
-    } else {
-      root.style.removeProperty("--enchanted-glint");
-    }
+    // if (theme.enchantedGlint) {
+    //   root.style.setProperty("--enchanted-glint", `url(/api/image-proxy?url=${encodeURIComponent(theme.enchantedGlint)})`);
+    // } else {
+    //   root.style.removeProperty("--enchanted-glint");
+    // }
   }
 }

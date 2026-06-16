@@ -63,5 +63,5 @@ export default defineConfig(
       "no-console": ["error", { allow: ["info", "warn", "dir", "timeLog", "assert", "clear", "count", "countReset", "group", "groupEnd", "table", "dirxml", "error", "groupCollapsed", "Console", "profile", "profileEnd", "timeStamp", "context"] }]
     }
   },
-  { ignores: ["**/.DS_Store", "**/node_modules/", "**/build/", "**/.svelte-kit/", "**/package/", "**/.env", "**/.env.*", "**/pnpm-lock.yaml", "**/package-lock.json", "**/yarn.lock", "**/static/", "**/cache/", "**/api/*-generated-zod.ts", "**/api/cms-generated.ts"] }
+  { ignores: ["**/.DS_Store", "**/node_modules/", "**/build/", "**/.svelte-kit/", "**/package/", "**/.env", "**/.env.*", "**/pnpm-lock.yaml", "**/package-lock.json", "**/yarn.lock", "**/static/", "**/cache/", "**/api/*-generated-zod.ts", "**/api/cms-generated.ts", "**/components/ui/**"] }
 );
