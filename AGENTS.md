@@ -134,7 +134,7 @@ All content injection uses Svelte 5 snippets. No `<slot>` usage.
 ### Styling
 
 - Tailwind v4 primary, `cn()` helper (clsx + twMerge) from `$lib/shared/utils.ts`
-- MC color CSS vars: `--§a` (green), `--§b` (aqua), `--§c` (red), etc. in `app.css`
+- MC color CSS vars: `--§a` (green), `--§b` (aqua), `--§c` (red), etc. in `layout.css`
 - Theme plugin: `src/plugins/themes.ts` → `:root[data-theme="..."]` CSS vars
 
 ### Formatting

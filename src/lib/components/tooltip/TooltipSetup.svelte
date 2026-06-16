@@ -24,9 +24,6 @@
                     {:else if payload?.tooltipContent}
                       {payload.tooltipContent}
                     {/if}
-                    {#if payload?.showArrow !== false}
-                      <Tooltip.Arrow />
-                    {/if}
                   {/key}
                 </div>
               </div>
@@ -43,7 +40,7 @@
   {#snippet children({ payload })}
     {#if payload?.inViewport?.current}
       <Tooltip.Portal>
-        <Tooltip.Content forceMount={payload.inViewport.current} class="group/itemtooltip z-50 flex max-h-[calc(96vh-3rem)] flex-col overflow-clip font-icomoon select-text data-[mctooltip=false]:rounded-lg data-[mctooltip=false]:bg-background-lore" side="right" align="center" collisionPadding={8} data-mctooltip={preferences.mctooltip} alignOffset={8}>
+        <Tooltip.Content forceMount={payload.inViewport.current} class="group/itemtooltip z-50 flex max-h-[calc(96vh-3rem)] flex-col overflow-clip font-skyblock-icons select-text data-[mctooltip=false]:rounded-lg data-[mctooltip=false]:bg-background-lore" side="right" align="center" collisionPadding={8} data-mctooltip={preferences.mctooltip} alignOffset={8}>
           {#snippet child({ wrapperProps, props, open })}
             {#if open}
               <div {...wrapperProps}>

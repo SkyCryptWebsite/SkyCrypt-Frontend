@@ -41,7 +41,7 @@
     {#key providerKey}
       <DragDropProvider {onDragEnd}>
         {#each sectionOrder as section, index (section.id)}
-          {@const sortable = createSortable({
+          {const sortable = createSortable({
             id: section.id,
             get index() {
               return index;

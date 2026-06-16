@@ -12,7 +12,6 @@
   import { listLatestPostsForNotifications } from "$lib/shared/api/cms-api.remote";
   import { getPacks } from "$lib/shared/api/skycrypt-api.remote";
   import { parseThemeFromURL } from "$lib/shared/themes/sharing";
-  import { cn } from "$lib/shared/utils";
   import Wifi from "@lucide/svelte/icons/wifi";
   import WifiOff from "@lucide/svelte/icons/wifi-off";
   import { Tooltip } from "bits-ui";
@@ -23,7 +22,7 @@
   import { writable } from "svelte/store";
   import { fly } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
-  import "../app.css";
+  import "./layout.css";
 
   let { children }: { children: Snippet } = $props();
   let isMobile = $state(new IsMobile());
@@ -84,6 +83,14 @@
     if (e.key === preferences.keybind) {
       e.preventDefault();
       internalState.openCommand = true;
+    }
+    if (e.key.toLowerCase() === "p" && dev) {
+      // toggle performance mode for testing
+      preferences.performanceMode = !preferences.performanceMode;
+    }
+    if (e.key.toLowerCase() === "m" && dev) {
+      // toggle minecraft styled tooltips for testing
+      preferences.mctooltip = !preferences.mctooltip;
     }
   }
 
@@ -209,7 +216,7 @@
   class="sm:mr-8"
   pauseWhenPageIsHidden={true}
   toastOptions={{
-    class: cn("gap-2! font-semibold! group rounded-lg! text-text/80! border-none!", preferences.performanceMode ? "bg-background-grey!" : "backdrop-blur-lg! backdrop-brightness-50! bg-transparent!"),
+    class: "glass! gap-2! rounded-lg! border-none! font-semibold! text-text/80! glass-brightness-50",
 
     classes: {
       closeButton: "text-text/80! border-none! hover:opacity-60! bg-background-grey! hover:bg-background-grey!",
@@ -234,7 +241,7 @@
 {#if showNewsroomToast}
   <svelte:boundary>
     {#snippet failed()}{/snippet}
-    {@const latestNewsroom = await listLatestPostsForNotifications({ limit: 5 })}
+    {const latestNewsroom = await listLatestPostsForNotifications({ limit: 5 })}
     <NewPostsNotifier posts={latestNewsroom.docs} />
   </svelte:boundary>
 {/if}
@@ -244,7 +251,7 @@
 <CommandPalette {ign} bind:loading={commandLoading} />
 
 {#if internalState.themeEditorOpen && !isMobile.current}
-  <div class={cn("fixed left-0 isolate z-40 h-[calc(100dvh-3rem)] w-[30vw]", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")} transition:fly={{ x: -300, duration: 300 }}>
+  <div class="fixed left-0 isolate z-40 h-[calc(100dvh-3rem)] w-[30vw] glass dark:glass-brightness-50 light:glass-brightness-100" transition:fly={{ x: -300, duration: 300 }}>
     <ThemeEditor />
   </div>
 {/if}

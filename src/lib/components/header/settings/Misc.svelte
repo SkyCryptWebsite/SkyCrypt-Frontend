@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getPreferences } from "$ctx";
   import { SettingsTab } from "$lib/components/header/types";
-  import { cn, flyAndScale } from "$lib/shared/utils";
+  import { flyAndScale } from "$lib/shared/utils";
   import CircleQuestionMark from "@lucide/svelte/icons/circle-question-mark";
   import Fan from "@lucide/svelte/icons/fan";
   import Keyboard from "@lucide/svelte/icons/keyboard";
@@ -64,7 +64,7 @@
               <CircleQuestionMark class="size-4 h-lh text-text/60" />
             </Tooltip.Trigger>
             <Tooltip.Portal>
-              <Tooltip.Content forceMount class={cn("z-50 flex w-full max-w-lg flex-col space-y-2 overflow-hidden rounded-lg p-4 select-text", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-50")}>
+              <Tooltip.Content forceMount class="z-50 flex w-full max-w-lg flex-col space-y-2 overflow-hidden rounded-lg p-4 select-text glass">
                 {#snippet child({ wrapperProps, props, open })}
                   {#if open}
                     <div {...wrapperProps}>

@@ -1,5 +1,5 @@
 /**
- * Minecraft color palettes extracted from app.css utilities
+ * Minecraft color palettes extracted from layout.css utilities
  * Each palette maps §0–§f color codes to OKLCH color values
  */
 

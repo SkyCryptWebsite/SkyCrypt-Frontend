@@ -83,7 +83,7 @@
 
   <div class="grid grid-cols-4 gap-3 sm:grid-cols-8">
     {#each mcCodes as code, index (index)}
-      {@const effectiveColor = getEffectiveColor(code)}
+      {const effectiveColor = getEffectiveColor(code)}
       <div class="flex flex-col gap-1.5">
         <Label.Root for="mc-${code}" class="text-xs font-bold text-text/80">§{code}</Label.Root>
 

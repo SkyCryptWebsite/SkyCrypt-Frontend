@@ -3,8 +3,7 @@
   import { Notice } from "$lib/components/notices";
   import type { SectionName } from "$lib/sections/types";
   import { titleCase } from "$lib/shared/helper";
-  import { cn } from "$lib/shared/utils";
-  import LoaderCircle from "@lucide/svelte/icons/loader-circle";
+  import { Spinner } from "$ui/spinner";
   import { Tabs } from "bits-ui";
 
   const preferences = getPreferences();
@@ -36,43 +35,39 @@
 {#key internalState.tabValue}
   {#if internalState.tabValue in COMPONENTS}
     <Tabs.Root value={internalState.tabValue} class="contents" data-section={internalState.tabValue}>
-      <Tabs.Content value={internalState.tabValue} class="section">
+      <Tabs.Content value={internalState.tabValue} class="section mt-4">
         {#if shouldWaitForCombined && !combinedCtx.current}
-          <div class={cn("rounded-lg bg-text/5 p-6", preferences.performanceMode ? "bg-background-lore" : "backdrop-blur-sm")}>
-            <div class="flex items-center gap-2">
-              <LoaderCircle class="size-5 animate-spin text-text/60" />
-              <span class="font-semibold text-text/80">Loading {titleCase(internalState.tabValue)}...</span>
-            </div>
-          </div>
+          {@render loadingState()}
+          Not boundary
         {:else}
-          {#await COMPONENTS[internalState.tabValue]()}
-            <div class={cn("rounded-lg bg-text/5 p-6", preferences.performanceMode ? "bg-background-lore" : "backdrop-blur-sm")}>
-              <div class="flex items-center gap-2">
-                <LoaderCircle class="size-5 animate-spin text-text/60" />
-                <span class="font-semibold text-text/80">Loading {titleCase(internalState.tabValue)}...</span>
-              </div>
-            </div>
-          {:then { default: Component }}
-            <svelte:boundary>
-              {#snippet pending()}
-                <LoaderCircle class="animate-spin text-icon" />
-              {/snippet}
-              {#snippet failed(err, reset)}
-                <Notice title="An unexpected error has occurred" type="error" error={err instanceof Error ? err.message : String(err)} retry={reset} />
-              {/snippet}
-              <Component order={findIndex(internalState.tabValue)} />
-            </svelte:boundary>
-          {:catch}
-            <Notice type="error" title={`Failed to load section ${internalState.tabValue}`}>
-              <p class="text-text/80">This section may not be available or there was an error loading it.</p>
-            </Notice>
-          {/await}
+          <svelte:boundary>
+            {const { default: Component } = await COMPONENTS[internalState.tabValue]()}
+            {#snippet pending()}
+              {@render loadingState()}
+            {/snippet}
+            {#snippet failed(err, reset)}
+              <Notice type="error" title={`Failed to load section ${internalState.tabValue}`} error={err instanceof Error ? err.message : String(err)} retry={reset}>
+                <p class="text-foreground/80">This section may not be available or there was an error loading it.</p>
+              </Notice>
+            {/snippet}
+
+            <Component order={findIndex(internalState.tabValue)} />
+          </svelte:boundary>
         {/if}
       </Tabs.Content>
     </Tabs.Root>
   {:else}
     <Notice type="error" title={`Invalid Section: ${internalState.tabValue}`}>
-      <p class="text-text/80">This section does not exist or is not implemented.</p>
+      <p class="text-foreground/80">This section does not exist or is not implemented.</p>
     </Notice>
   {/if}
 {/key}
+
+{#snippet loadingState()}
+  <div class="rounded-lg p-6 border">
+    <div class="flex items-center gap-2">
+      <Spinner />
+      <span class="font-semibold">Loading {titleCase(internalState.tabValue)}</span>
+    </div>
+  </div>
+{/snippet}

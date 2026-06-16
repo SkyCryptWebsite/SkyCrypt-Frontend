@@ -9,7 +9,7 @@
   let { children }: Props = $props();
 </script>
 
-<ScrollAreaPrimitive class="relative max-w-full" viewClass="max-md:pb-4" type="scroll" orientation="horizontal">
+<ScrollAreaPrimitive class="relative max-w-full" viewClass="max-md:pb-4" type="auto" orientation="horizontal">
   {#snippet viewportChildren()}
     <div class="flex! flex-nowrap gap-4 md:flex-wrap">
       {@render children?.()}

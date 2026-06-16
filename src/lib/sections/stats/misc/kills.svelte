@@ -1,8 +1,9 @@
 <script lang="ts">
   import { getMiscContext } from "$ctx";
-  import { ScrollItems } from "$lib/components/misc";
+  import ScrollAreaItems from "$lib/components/ScrollAreaItems.svelte";
   import { SectionSubtitle } from "$lib/components/sections";
   import { AdditionStat } from "$lib/components/stats";
+  import { Separator } from "$ui/separator";
   import { format } from "numerable";
   import VirtualList from "svelte-tiny-virtual-list";
 
@@ -13,17 +14,18 @@
 </script>
 
 {#if misc && misc.kills != null}
-  <div class="space-y-4">
-    <SectionSubtitle class="uppercase!">Kills</SectionSubtitle>
-    <div>
+  <div class="border p-4 rounded-xl space-y-2">
+    <SectionSubtitle>Kills</SectionSubtitle>
+    <div class="space-y-0.5">
       <AdditionStat text="Total Kills" data={format(misc.kills.total_kills)} />
       <AdditionStat text="Total Deaths" data={format(misc.kills.total_deaths)} />
     </div>
     {#if (misc.kills.kills && misc.kills.kills.length > 0) || (misc.kills.deaths && misc.kills.deaths.length > 0)}
-      <ScrollItems>
+      <ScrollAreaItems>
         {#if misc.kills.kills}
-          <div class="flex min-w-88 flex-col gap-1 rounded-lg bg-background/30 @md:min-w-96">
-            <div class="flex w-full items-center justify-center gap-1.5 border-b-2 border-icon py-2 text-center font-semibold uppercase">Kills</div>
+          <div class="flex min-w-88 flex-col gap-1 rounded-xl bg-background/50 py-4 border @md:min-w-96">
+            <div class="flex w-full items-center justify-center gap-1.5 text-center font-semibold">Kills</div>
+            <Separator class="bg-primary" />
             <VirtualList height={320} width="100%" itemCount={misc.kills.kills.length} itemSize={misc.kills.kills.length > 0 ? 20 : 0} scrollDirection="vertical">
               {#snippet item({ index, style })}
                 <div {style} class="px-4 font-semibold whitespace-nowrap">
@@ -36,8 +38,9 @@
           </div>
         {/if}
         {#if misc.kills.deaths}
-          <div class="flex min-w-88 flex-col gap-1 rounded-lg bg-background/30 @md:min-w-96">
-            <div class="flex w-full items-center justify-center gap-1.5 border-b-2 border-icon py-2 text-center font-semibold uppercase">Deaths</div>
+          <div class="flex min-w-88 flex-col gap-1 rounded-xl bg-background/50 py-4 border @md:min-w-96">
+            <div class="flex w-full items-center justify-center gap-1.5 text-center font-semibold">Deaths</div>
+            <Separator class="bg-primary" />
             <VirtualList height={320} width="100%" itemCount={misc.kills.deaths.length} itemSize={misc.kills.deaths.length > 0 ? 20 : 0} scrollDirection="vertical">
               {#snippet item({ index, style })}
                 <div {style} class="px-4 font-semibold whitespace-nowrap">
@@ -49,7 +52,7 @@
             </VirtualList>
           </div>
         {/if}
-      </ScrollItems>
+      </ScrollAreaItems>
     {/if}
   </div>
 {/if}

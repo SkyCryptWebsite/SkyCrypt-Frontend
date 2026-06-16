@@ -44,10 +44,10 @@ export function titleCase(string: string): string {
  * @param {"bg" | "text"} type the type of color to get
  * @returns {string} the tailwind css color class
  */
-export function getRarityClass(rarity: string, type: "bg" | "text"): string {
+export function getRarityClass(rarity: string, type: "bg" | "text", important?: true): string {
   const rarityColor = RARITY_COLORS[rarity.toLowerCase() as keyof typeof RARITY_COLORS];
   // minecraft colors are safelisted in the tailwind config, so they are always generated
-  return rarityColor ? `${type}-minecraft-${rarityColor}` : "";
+  return rarityColor ? `${type}-minecraft-${rarityColor}${important ? "!" : ""}` : "";
 }
 
 /**

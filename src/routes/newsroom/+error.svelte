@@ -1,14 +1,10 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { getPreferences } from "$ctx";
-  import { cn } from "$lib/shared/utils";
   import { Button } from "bits-ui";
-
-  const preferences = getPreferences();
 </script>
 
 <main class="flex h-[60dvh] w-full flex-col items-center justify-center px-5">
-  <div class={cn("flex w-full max-w-md flex-col items-center justify-center gap-3 rounded-lg p-6 text-center", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
+  <div class="flex w-full max-w-md flex-col items-center justify-center gap-3 rounded-lg p-6 text-center glass glass-brightness-150 dark:glass-brightness-50 glass-contrast-60 dark:glass-contrast-100">
     <p class="text-3xl font-bold text-link">{page.status}</p>
     <h1 class="text-xl font-semibold text-text">
       {page.status === 404 ? "Post not found" : "Something went wrong"}

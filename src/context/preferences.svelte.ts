@@ -29,7 +29,8 @@ export class PreferencesContext {
       untrack(() => {
         this.loadOldSettings();
         this.sectionOrder = this.#data.current.sectionOrder;
-        // Apply rainbow setting on load
+        // Apply document-level styling flags on load.
+        this.performanceMode = !!this.performanceMode;
         this.rainbowEnchantments = !!this.rainbowEnchantments;
       });
     });
@@ -74,6 +75,9 @@ export class PreferencesContext {
 
   set performanceMode(value: boolean) {
     this.#data.current = { ...this.#data.current, performanceMode: value };
+    if (browser) {
+      document.documentElement.dataset.performance = value ? "true" : "false";
+    }
   }
 
   get keybind() {

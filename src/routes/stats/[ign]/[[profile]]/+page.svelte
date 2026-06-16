@@ -8,7 +8,6 @@
   import Main from "$lib/layouts/stats/Main.svelte";
   import type { SectionName } from "$lib/sections/types";
   import { getProfileStats } from "$lib/shared/api/skycrypt-api.remote";
-  import { cn } from "$lib/shared/utils";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import { type PageServerData } from "./$types";
 
@@ -47,7 +46,7 @@
   <svelte:boundary>
     {#snippet pending()}
       <div class="flex h-screen items-center justify-center">
-        <div class={cn("rounded-lg bg-text/5 p-6", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-sm")}>
+        <div class="rounded-lg bg-text/5 p-6 glass">
           <div class="flex items-center gap-2">
             <LoaderCircle class="size-5 animate-spin text-text/60" />
             <span class="font-semibold text-text/80">Loading profile...</span>

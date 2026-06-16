@@ -7,7 +7,7 @@ import { z } from "zod";
  * Organized into logical groups: colors, backgrounds, minecraft, enchantedGlint, meta.
  *
  * Color and background properties are OPTIONAL — when omitted, the CSS cascade
- * provides the correct values (e.g., the `light` utility class in app.css).
+ * provides the correct values (e.g., the `light` utility class in layout.css).
  * Only DEFAULT_THEME is expected to have all properties fully specified.
  */
 
@@ -91,7 +91,7 @@ const backgroundsSchema = z.object({
  *
  * Color and background properties are individually optional.
  * When a CSS property is omitted, it won't be applied to the DOM,
- * allowing the CSS cascade (e.g., app.css light/dark defaults) to take effect.
+ * allowing the CSS cascade (e.g., layout.css light/dark defaults) to take effect.
  */
 export const themeV3Schema = z.object({
   schema: z.literal(3),

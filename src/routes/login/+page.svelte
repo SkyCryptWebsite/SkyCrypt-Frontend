@@ -1,15 +1,11 @@
 <script lang="ts">
-  import { getPreferences } from "$ctx";
-  import { cn } from "$lib/shared/utils";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import { Avatar, Button } from "bits-ui";
   import { signInSocial } from "./login.remote";
-
-  const preferences = getPreferences();
 </script>
 
 <main class="@container mx-auto flex min-h-[calc(100dvh-3rem)] w-full max-w-md flex-col items-center justify-center gap-6 py-10 pr-[max(1.25rem,env(safe-area-inset-right))] pb-[max(2.5rem,env(safe-area-inset-bottom))] pl-[max(1.25rem,env(safe-area-inset-left))]">
-  <article class={cn("flex w-full flex-col gap-7 rounded-lg p-8", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg backdrop-brightness-150 backdrop-contrast-60 dark:backdrop-brightness-50 dark:backdrop-contrast-100")}>
+  <article class="flex w-full flex-col gap-7 rounded-lg p-8 glass glass-brightness-150 dark:glass-brightness-50 glass-contrast-60 dark:glass-contrast-100">
     <header class="flex flex-col items-center gap-4 text-center">
       <Avatar.Root class="size-16 select-none">
         <Avatar.Image loading="eager" src="/img/app-icons/svg.svg" alt="SkyCrypt" class="pointer-events-none size-16 rounded-2xl" />

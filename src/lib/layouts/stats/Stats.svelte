@@ -3,8 +3,9 @@
   import { Notice } from "$lib/components/notices";
   import { Stat } from "$lib/components/stats";
   import { getAdditionalStats } from "$lib/shared/api/skycrypt-api.remote";
-  import LoaderCircle from "@lucide/svelte/icons/loader-circle";
-  import { Collapsible } from "bits-ui";
+  import { buttonVariants } from "$ui/button";
+  import * as Collapsible from "$ui/collapsible";
+  import { Spinner } from "$ui/spinner";
   import { cubicOut } from "svelte/easing";
   import { slide } from "svelte/transition";
 
@@ -37,9 +38,9 @@
         {/snippet}
       </Collapsible.Content>
     {/key}
-    <Collapsible.Trigger class="mx-auto mt-3.5 w-full rounded-full bg-text/10 p-2.5 text-xs font-semibold uppercase">
+    <Collapsible.Trigger class={buttonVariants({ variant: "outline", class: "data-[state=open]:mt-3.5 w-full dark:bg-foreground/5 font-semibold" })}>
       {#if statsQuery?.loading}
-        <LoaderCircle class="mx-auto animate-spin text-icon" />
+        <Spinner />
       {:else}
         {openState ? "Hide Stats" : "Show Stats"}
       {/if}

@@ -7,10 +7,14 @@ import { PreferencesContext } from "./preferences.svelte";
 describe("PreferencesContext Tests", () => {
   beforeEach(() => {
     localStorage.clear();
+    delete document.documentElement.dataset.performance;
+    delete document.documentElement.dataset.rainbow;
   });
 
   afterEach(() => {
     localStorage.clear();
+    delete document.documentElement.dataset.performance;
+    delete document.documentElement.dataset.rainbow;
   });
 
   describe("Initialization", () => {
@@ -461,6 +465,90 @@ describe("PreferencesContext Tests", () => {
     });
   });
 
+  describe("performanceMode document.dataset", () => {
+    it("sets document.documentElement.dataset.performance to 'false' by default", ({ expect }) => {
+      const cleanup = $effect.root(() => {
+        const prefs = new PreferencesContext();
+
+        untrack(() => {
+          flushSync();
+
+          expect(prefs.performanceMode).toBe(false);
+          expect(document.documentElement.dataset.performance).toBe("false");
+        });
+      });
+
+      cleanup();
+    });
+
+    it("sets document.documentElement.dataset.performance to 'true' when enabled", ({ expect }) => {
+      const cleanup = $effect.root(() => {
+        const prefs = new PreferencesContext();
+
+        untrack(() => {
+          prefs.performanceMode = true;
+          flushSync();
+
+          expect(document.documentElement.dataset.performance).toBe("true");
+        });
+      });
+
+      cleanup();
+    });
+
+    it("updates document.dataset on toggle", ({ expect }) => {
+      const cleanup = $effect.root(() => {
+        const prefs = new PreferencesContext();
+
+        untrack(() => {
+          prefs.performanceMode = true;
+          flushSync();
+          const first = document.documentElement.dataset.performance;
+
+          prefs.performanceMode = false;
+          flushSync();
+          const second = document.documentElement.dataset.performance;
+
+          prefs.performanceMode = true;
+          flushSync();
+          const third = document.documentElement.dataset.performance;
+
+          expect(first).toBe("true");
+          expect(second).toBe("false");
+          expect(third).toBe("true");
+        });
+      });
+
+      cleanup();
+    });
+
+    it("applies performance setting on construction via $effect.pre", ({ expect }) => {
+      localStorage.setItem(
+        "skycryptPreferences",
+        JSON.stringify({
+          sectionOrder: sections,
+          performanceMode: true,
+          keybind: "/",
+          showGlint: true,
+          rainbowEnchantments: false,
+          mctooltip: false
+        })
+      );
+
+      const cleanup = $effect.root(() => {
+        const prefs = new PreferencesContext();
+
+        untrack(() => {
+          flushSync();
+          expect(document.documentElement.dataset.performance).toBe("true");
+          expect(prefs.performanceMode).toBe(true);
+        });
+      });
+
+      cleanup();
+    });
+  });
+
   describe("Migration via loadOldSettings", () => {
     it("migrates sectionOrderPreferences from old storage key", ({ expect }) => {
       const oldOrder: SectionID[] = [sections[2], sections[1], sections[0]];
@@ -488,6 +576,7 @@ describe("PreferencesContext Tests", () => {
         untrack(() => {
           flushSync();
           expect(prefs.performanceMode).toBe(true);
+          expect(document.documentElement.dataset.performance).toBe("true");
           expect(localStorage.getItem("performanceMode")).toBeNull();
         });
       });
@@ -504,6 +593,7 @@ describe("PreferencesContext Tests", () => {
         untrack(() => {
           flushSync();
           expect(prefs.performanceMode).toBe(true);
+          expect(document.documentElement.dataset.performance).toBe("true");
           expect(localStorage.getItem("performanceMode")).toBeNull();
         });
       });
