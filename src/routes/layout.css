@@ -380,6 +380,10 @@
     @apply overflow-clip duration-150 ease-out data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down;
   }
 
+  [data-slot="dialog-overlay"] {
+    @apply bg-black/80! supports-backdrop-filter:backdrop-blur-none!;
+  }
+
   .\@container-scroll {
     container-type: scroll-state;
   }
@@ -455,16 +459,12 @@
   --glass-performance-bg: var(--color-background-grey);
   --glass-brightness: 50%;
   --glass-contrast: 100%;
+  --glass-mode-bg: var(--glass-bg);
+  --glass-mode-backdrop-filter: blur(var(--blur-lg)) brightness(var(--glass-brightness)) contrast(var(--glass-contrast));
 
-  background-color: var(--glass-bg);
-
-  @variant standard {
-    backdrop-filter: blur(var(--blur-lg)) brightness(var(--glass-brightness)) contrast(var(--glass-contrast));
-  }
-
-  @variant performance {
-    background-color: var(--glass-performance-bg);
-  }
+  background-color: var(--glass-mode-bg);
+  -webkit-backdrop-filter: var(--glass-mode-backdrop-filter);
+  backdrop-filter: var(--glass-mode-backdrop-filter);
 }
 
 @utility glass-bg-* {
@@ -487,6 +487,13 @@
 @utility glass-contrast-* {
   --glass-contrast: calc(--value(integer) * 1%);
   --glass-contrast: --value([percentage]);
+}
+
+:root[data-performance="true"] *,
+:root[data-performance="true"] *::before,
+:root[data-performance="true"] *::after {
+  --glass-mode-bg: var(--glass-performance-bg);
+  --glass-mode-backdrop-filter: none;
 }
 
 @utility enchanted {
