@@ -82,11 +82,7 @@ export const getEmbedData = query(z.object({ ...GetApiEmbedUuidParams.shape, ...
 
 /** Search user */
 export const searchUser = query(GetApiUuidUsernameParams, async ({ username }) => {
-  const response = await fetchSection(APIEndpointName.SEARCH, () => getApiUuidUsername(username));
-  if (response.uuid && response.username) {
-    return response;
-  }
-  error(404, `No user with the name '${username}' was found`);
+  return await fetchSection(APIEndpointName.SEARCH, () => getApiUuidUsername(username));
 });
 
 export const getUsernamePrerendered = prerender(GetApiUsernameUuidParams, async ({ uuid }) => {
