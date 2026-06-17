@@ -218,9 +218,9 @@
     {/if}
   </div>
 
-  <div class="fixed top-12 right-0 min-h-dvh w-full glass dark:glass-brightness-50 light:glass-brightness-100 @[75rem]/parent:w-[calc(100%-30vw)]"></div>
+  <div class="fixed top-12 right-0 min-h-dvh w-full light:bg-foreground/50 dark:bg-background/50 @[75rem]/parent:w-[70%]"></div>
 
-  <main data-vaul-drawer-wrapper class="@container relative mx-auto @[75rem]/parent:ml-[30vw]">
+  <main data-vaul-drawer-wrapper class="@container relative mx-auto @[75rem]/parent:ml-[30%]">
     {#if getProfileContext().current}
       <div class="space-y-5 p-4 @[75rem]/parent:p-8">
         <PlayerProfile />
@@ -249,7 +249,7 @@
         internalState.itemContentSpecial = undefined;
       }
     }}>
-    <Dialog.Content class="max-h-[calc(96%-3rem)]! p-0 max-w-[calc(100vw-2.5rem)]! w-auto data-[performance=false]:bg-transparent overflow-hidden *:data-[slot='dialog-close']:hidden glass glass-bg-popover font-skyblock-icons select-text">
+    <Dialog.Content class="max-h-[calc(96%-3rem)]! p-0 max-w-[calc(100vw-2.5rem)]! w-auto standard:bg-transparent overflow-hidden *:data-[slot='dialog-close']:hidden glass glass-bg-popover font-skyblock-icons select-text">
       {#if internalState.itemContentSpecial?.containsItems}
         <ContainedItemsGrid items={internalState.itemContentSpecial.containsItems} onclose={() => (internalState.itemContentSpecial = undefined)} />
       {/if}
