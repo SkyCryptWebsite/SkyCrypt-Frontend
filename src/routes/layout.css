@@ -381,7 +381,7 @@
   }
 
   [data-slot="dialog-overlay"] {
-    @apply bg-black/80! supports-backdrop-filter:backdrop-blur-none!;
+    @apply bg-black/50! supports-backdrop-filter:backdrop-blur-none!;
   }
 
   .\@container-scroll {
