@@ -1,6 +1,7 @@
 <script lang="ts">
   import { getInternalState, getPreferences } from "$ctx";
   import { SettingsTab } from "$lib/components/header/types";
+  import * as Command from "$ui/command";
   import Fan from "@lucide/svelte/icons/fan";
   import Keyboard from "@lucide/svelte/icons/keyboard";
   import ListOrdered from "@lucide/svelte/icons/list-ordered";
@@ -8,7 +9,6 @@
   import PaintBucket from "@lucide/svelte/icons/paint-bucket";
   import Pickaxe from "@lucide/svelte/icons/pickaxe";
   import Sparkle from "@lucide/svelte/icons/sparkle";
-  import { Command } from "bits-ui";
   import type { SettingsConfigItem } from "./command-utils";
 
   const { closeCommand }: { closeCommand: () => void } = $props();
@@ -86,33 +86,29 @@
   ];
 </script>
 
-<Command.Group>
-  <Command.GroupHeading class="text-muted-foreground px-3 pt-4 pb-2 text-xs">Settings</Command.GroupHeading>
-  <Command.GroupItems>
-    {#each SETTINGS_ITEMS as item (item.value)}
-      <Command.Item
-        value={item.value}
-        class="flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none standard:data-selected:bg-background-grey performance:data-selected:bg-background-lore"
-        keywords={item.keywords}
-        onSelect={() => {
-          if (item.type === "tab") {
-            handleSettingTab(item.tab);
-          } else {
-            preferences[item.preferenceKey] = !preferences[item.preferenceKey];
-            closeCommand();
-          }
-        }}>
-        <div class="rounded-lg bg-icon/80 p-1">
-          {#if item.type === "toggle" && item.iconProps}
-            {const Icon = item.icon}
-            {const props = Object.fromEntries(Object.entries(item.iconProps).map(([key, value]) => [key, typeof value === "function" ? (value as () => unknown)() : value]))}
-            <Icon {...props} />
-          {:else}
-            <item.icon class="size-4" />
-          {/if}
-        </div>
-        {item.label}
-      </Command.Item>
-    {/each}
-  </Command.GroupItems>
+<Command.Group heading="Settings">
+  {#each SETTINGS_ITEMS as item (item.value)}
+    <Command.Item
+      value={item.value}
+      keywords={item.keywords}
+      onSelect={() => {
+        if (item.type === "tab") {
+          handleSettingTab(item.tab);
+        } else {
+          preferences[item.preferenceKey] = !preferences[item.preferenceKey];
+          closeCommand();
+        }
+      }}>
+      <div class="rounded-lg bg-icon/80 p-1">
+        {#if item.type === "toggle" && item.iconProps}
+          {const Icon = item.icon}
+          {const props = Object.fromEntries(Object.entries(item.iconProps).map(([key, value]) => [key, typeof value === "function" ? (value as () => unknown)() : value]))}
+          <Icon {...props} />
+        {:else}
+          <item.icon class="size-4" />
+        {/if}
+      </div>
+      {item.label}
+    </Command.Item>
+  {/each}
 </Command.Group>
