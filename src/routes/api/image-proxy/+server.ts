@@ -42,7 +42,7 @@ export const GET: RequestHandler = async ({ request }) => {
         signal: controller.signal,
         headers: {
           // 4. Custom User-Agent
-          "User-Agent": "MC-ID-Proxy/1.0"
+          "User-Agent": "SkyCrypt-Image-Proxy/1.0"
         }
       });
       clearTimeout(timeoutId);
