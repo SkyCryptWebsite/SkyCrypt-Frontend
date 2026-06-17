@@ -12,6 +12,7 @@
   import { listLatestPostsForNotifications } from "$lib/shared/api/cms-api.remote";
   import { getPacks } from "$lib/shared/api/skycrypt-api.remote";
   import { parseThemeFromURL } from "$lib/shared/themes/sharing";
+  import * as Drawer from "$ui/drawer";
   import Wifi from "@lucide/svelte/icons/wifi";
   import WifiOff from "@lucide/svelte/icons/wifi-off";
   import { Tooltip } from "bits-ui";
@@ -21,7 +22,6 @@
   import { SvelteURLSearchParams } from "svelte/reactivity";
   import { writable } from "svelte/store";
   import { fly } from "svelte/transition";
-  import { Drawer } from "vaul-svelte";
   import "./layout.css";
 
   let { children }: { children: Snippet } = $props();
@@ -171,18 +171,21 @@
     const query = getPacks();
     if (query.current) packs.packs = query.current;
   });
+
+  let innerWidth = $state(0);
 </script>
 
 <svelte:document onkeydown={handleKeydown} />
 
 <svelte:window
   onresize={() => {
-    if (window.innerWidth <= 600) {
+    if (innerWidth <= 600) {
       position.set("bottom-center");
     } else {
       position.set("bottom-right");
     }
   }}
+  bind:innerWidth
   ononline={updateOnlineStatus}
   onoffline={updateOnlineStatus} />
 
@@ -235,7 +238,11 @@
   <PerformanceMode />
 {/if}
 
-<div class="pointer-events-none fixed inset-0 z-[-1] h-dvh w-screen [background-image:var(--bg-url)] bg-cover bg-scroll bg-center bg-no-repeat"></div>
+<div class="pointer-events-none fixed inset-0 group z-[-1] isolate h-dvh w-screen" data-isSkinHidden={innerWidth < 1210} data-isStatsPage={page.url.pathname.startsWith("/stats")}>
+  <div class="size-full relative z-10 group-data-[isSkinHidden=true]:group-data-[isStatsPage=true]:blur-lg [background-image:var(--bg-url)] bg-cover bg-scroll bg-center bg-no-repeat bg-background"></div>
+
+  <div class="absolute inset-0 size-full z-20 group-data-[skinHidden=true]:hidden group-data-[isStatsPage=false]:hidden [background-image:var(--bg-url)] blur-lg bg-cover bg-scroll bg-center bg-no-repeat" style="--percent: 29.75%; clip-path: polygon(var(--percent) 0%, 100% 0%, 100% 100%, var(--percent) 100%);"></div>
+</div>
 
 <Header />
 {#if showNewsroomToast}
@@ -248,6 +255,7 @@
 <Tooltip.Provider delayDuration={0}>
   {@render children()}
 </Tooltip.Provider>
+
 <CommandPalette {ign} bind:loading={commandLoading} />
 
 {#if internalState.themeEditorOpen && !isMobile.current}
@@ -258,15 +266,11 @@
 
 {#if isMobile.current}
   <Drawer.Root bind:open={internalState.themeEditorOpen} shouldScaleBackground={true}>
-    <Drawer.Portal>
-      <Drawer.Overlay class="fixed inset-0 z-40 bg-black/80" />
-      <Drawer.Content class="fixed right-0 bottom-0 left-0 z-50 flex h-[90dvh] flex-col rounded-t-[10px] bg-background-lore outline-none">
-        <div class="mx-auto mt-4 mb-4 h-1.5 w-12 shrink-0 rounded-full bg-text/10"></div>
-        <div class="flex-1 overflow-hidden">
-          <ThemeEditor />
-        </div>
-      </Drawer.Content>
-    </Drawer.Portal>
+    <Drawer.Content class="before:glass before:glass-bg-popover [&>div:first-child]:hidden! before:bg-transparent">
+      <div class="flex-1 overflow-auto">
+        <ThemeEditor />
+      </div>
+    </Drawer.Content>
   </Drawer.Root>
 {/if}
 
@@ -278,14 +282,10 @@
     onOpenChange={(open) => {
       if (!open) internalState.content = undefined;
     }}>
-    <Drawer.Portal>
-      <Drawer.Overlay class="fixed inset-0 z-40 bg-black/80" />
-
-      <Drawer.Content class="fixed right-0 bottom-0 left-0 z-50 flex max-h-[96%] flex-col rounded-t-[10px] bg-background-lore">
-        <div class="mx-auto w-full max-w-md overflow-auto p-6">
-          {@render internalState.content?.()}
-        </div>
-      </Drawer.Content>
-    </Drawer.Portal>
+    <Drawer.Content class="before:glass before:glass-bg-popover before:bg-transparent">
+      <div class="mx-auto w-full overflow-auto p-6">
+        {@render internalState.content?.()}
+      </div>
+    </Drawer.Content>
   </Drawer.Root>
 {/if}
