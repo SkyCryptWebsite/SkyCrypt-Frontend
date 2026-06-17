@@ -70,8 +70,8 @@ importers:
         specifier: ^3.12.1
         version: 3.12.1
       '@lucide/svelte':
-        specifier: ^1.17.0
-        version: 1.17.0(svelte@5.56.1(@typescript-eslint/types@8.60.1))
+        specifier: ^1.20.0
+        version: 1.20.0(svelte@5.56.1(@typescript-eslint/types@8.60.1))
       '@oslojs/crypto':
         specifier: ^1.0.1
         version: 1.0.1
@@ -81,6 +81,9 @@ importers:
       '@playwright/test':
         specifier: ^1.60.0
         version: 1.60.0
+      '@selemondev/svgl-svelte':
+        specifier: ^2.15.0
+        version: 2.15.0(svelte@5.56.1(@typescript-eslint/types@8.60.1))
       '@sveltejs/adapter-node':
         specifier: ^5.5.4
         version: 5.5.4(@sveltejs/kit@2.63.0(@opentelemetry/api@1.9.1)(@sveltejs/vite-plugin-svelte@7.1.2(svelte@5.56.1(@typescript-eslint/types@8.60.1))(vite@8.0.16(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.77.4)(tsx@4.22.4)(yaml@2.9.0)))(svelte@5.56.1(@typescript-eslint/types@8.60.1))(typescript@6.0.3)(vite@8.0.16(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(sass@1.77.4)(tsx@4.22.4)(yaml@2.9.0)))
@@ -1803,8 +1806,8 @@ packages:
     peerDependencies:
       yjs: '>=13.5.22'
 
-  '@lucide/svelte@1.17.0':
-    resolution: {integrity: sha512-q06YCFBN5CO8cd1ADmLCxWRVMVb7xxvHzqC0lvNoxGa+FLW6Cd1Y1AOxgbQk4Iwe68vkAMCRveNHint4WoaVKg==}
+  '@lucide/svelte@1.20.0':
+    resolution: {integrity: sha512-s7TKCHEtFEfflOUDPRC0WBZEjoNJHtj/aUmuWxopFe3AKecEoKvMmCaO0sBDkflok8nR0BCFsm44QF+S6/gc+w==}
     peerDependencies:
       svelte: ^5
 
@@ -2362,6 +2365,11 @@ packages:
 
   '@sec-ant/readable-stream@0.4.1':
     resolution: {integrity: sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg==}
+
+  '@selemondev/svgl-svelte@2.15.0':
+    resolution: {integrity: sha512-dooxsxL2ztjZ7n4fQGGZRqhxFgpbsa34CQl0/sTWqT6NoBOVaV0tGYTxFmJfkx6gMmBIjFtMcpGHKIhjWednUQ==}
+    peerDependencies:
+      svelte: ^5.0.0
 
   '@sentry-internal/browser-utils@10.56.0':
     resolution: {integrity: sha512-I8tZWAFg8SZpD8BFUpglEtSTzhZjacmcThB5/Mlq/iFiiT8mBPG4ZWDWssSfmIBKvZywJZJ83uDA0+uiJU73Tw==}
@@ -7536,7 +7544,7 @@ snapshots:
       lexical: 0.41.0
       yjs: 13.6.31
 
-  '@lucide/svelte@1.17.0(svelte@5.56.1(@typescript-eslint/types@8.60.1))':
+  '@lucide/svelte@1.20.0(svelte@5.56.1(@typescript-eslint/types@8.60.1))':
     dependencies:
       svelte: 5.56.1(@typescript-eslint/types@8.60.1)
 
@@ -8121,6 +8129,10 @@ snapshots:
       '@scalar/openapi-types': 0.9.1
 
   '@sec-ant/readable-stream@0.4.1': {}
+
+  '@selemondev/svgl-svelte@2.15.0(svelte@5.56.1(@typescript-eslint/types@8.60.1))':
+    dependencies:
+      svelte: 5.56.1(@typescript-eslint/types@8.60.1)
 
   '@sentry-internal/browser-utils@10.56.0':
     dependencies:
