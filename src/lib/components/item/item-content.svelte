@@ -32,7 +32,7 @@
 
 <div class="group/itemtooltip data-[mctooltip=false]:contents data-[mctooltip=true]:relative data-[mctooltip=true]:rounded-sm data-[mctooltip=true]:bg-mctooltip-bg data-[mctooltip=true]:p-0.5" {@attach animateObfuscatedText} data-mctooltip={preferences.mctooltip}>
   <div class="group-data-[mctooltip=false]/itemtooltip:contents group-data-[mctooltip=true]/itemtooltip:minecraft-tooltip group-data-[mctooltip=true]/itemtooltip:max-h-[calc(100dvh-8rem)] group-data-[mctooltip=true]/itemtooltip:overflow-auto">
-    <div class={cn(`flex-nowrap items-center justify-center gap-4 nice-colors-dark group-data-[mctooltip=false]/itemtooltip:flex group-data-[mctooltip=false]/itemtooltip:p-5`, { "group-data-[mctooltip=false]/itemtooltip:rounded-t-[10px]": isDrawer }, preferences.mctooltip ? undefined : bgColor)}>
+    <div class={cn("flex-nowrap items-center justify-center gap-4 nice-colors-dark group-data-[mctooltip=false]/itemtooltip:flex group-data-[mctooltip=false]/itemtooltip:p-5", { "group-data-[mctooltip=false]/itemtooltip:rounded-t-[10px]": isDrawer }, preferences.mctooltip ? undefined : bgColor)}>
       <Avatar.Root class="shrink-0 px-2 group-data-[mctooltip=true]/itemtooltip:hidden">
         <Avatar.Image loading="lazy" src={piece?.texture_path} alt={piece?.display_name} class="h-auto w-8 flex-none shrink-0 overflow-hidden [image-rendering:pixelated] data-[enchanted=true]:enchanted" data-enchanted={enchanted} />
         <Avatar.Fallback>
