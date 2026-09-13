@@ -25,6 +25,7 @@
   import { IsMobile } from "$lib/hooks/is-mobile.svelte";
   import { listLatestPostsForNotifications } from "$lib/shared/api/cms-api.remote";
   import { listResourcePacks } from "$lib/shared/api/skycrypt-api.remote";
+  import { setMaxEnchantments } from "$lib/shared/constants/enchantments";
   import { parseThemeFromURL } from "$lib/shared/themes/sharing";
   import * as Drawer from "$ui/drawer";
   import { Separator } from "$ui/separator";
@@ -39,8 +40,12 @@
   import "./layout.css";
   import { SvelteURLSearchParams } from "svelte/reactivity";
   import { writable } from "svelte/store";
+  import type { LayoutData } from "./$types";
 
-  let { children }: { children: Snippet } = $props();
+  let { children, data }: { children: Snippet; data: LayoutData } = $props();
+  $effect.pre(() => {
+    setMaxEnchantments(data.maxEnchantments);
+  });
   let isMobile = $state(new IsMobile());
   let isHover = $state(new IsHover());
   let toastId: string | number = $state(0);
