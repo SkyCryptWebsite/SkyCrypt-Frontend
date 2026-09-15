@@ -143,7 +143,7 @@ export const getAllStats = prerender(async () => {
 });
 
 /** Fetch max-level enchantment lore strings */
-export const getEnchantments = prerender(async () => {
+export const listEnchantments = prerender(async () => {
   return fetchSection(APIEndpointName.ENCHANTMENTS, () => listEnchantmentsRequest());
 });
 

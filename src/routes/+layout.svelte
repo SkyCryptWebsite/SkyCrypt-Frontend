@@ -11,8 +11,10 @@
     initPreferences,
     initRecentSearches,
     initTheme,
+    EnchantmentsContext,
     PacksContext,
     setHoverContext,
+    setEnchantmentsContext,
     setMobileContext,
     setPacksContext
   } from "$ctx";
@@ -24,8 +26,7 @@
   import { IsHover } from "$lib/hooks/is-hover.svelte";
   import { IsMobile } from "$lib/hooks/is-mobile.svelte";
   import { listLatestPostsForNotifications } from "$lib/shared/api/cms-api.remote";
-  import { listResourcePacks } from "$lib/shared/api/skycrypt-api.remote";
-  import { setMaxEnchantments } from "$lib/shared/constants/enchantments";
+  import { listEnchantments, listResourcePacks } from "$lib/shared/api/skycrypt-api.remote";
   import { parseThemeFromURL } from "$lib/shared/themes/sharing";
   import * as Drawer from "$ui/drawer";
   import { Separator } from "$ui/separator";
@@ -40,12 +41,8 @@
   import "./layout.css";
   import { SvelteURLSearchParams } from "svelte/reactivity";
   import { writable } from "svelte/store";
-  import type { LayoutData } from "./$types";
 
-  let { children, data }: { children: Snippet; data: LayoutData } = $props();
-  $effect.pre(() => {
-    setMaxEnchantments(data.maxEnchantments);
-  });
+  let { children }: { children: Snippet } = $props();
   let isMobile = $state(new IsMobile());
   let isHover = $state(new IsHover());
   let toastId: string | number = $state(0);
@@ -68,6 +65,7 @@
   const theme = writable<ToasterProps["theme"]>("dark");
   const noEmbedUrls = ["/stats/", "/newsroom"];
   const packs = new PacksContext();
+  const enchantments = new EnchantmentsContext();
   const websiteJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -149,6 +147,7 @@
   setMobileContext(isMobile);
   setHoverContext(isHover);
   setPacksContext(packs);
+  setEnchantmentsContext(enchantments);
 
   onMount(() => {
     if (window.innerWidth <= 600) {
@@ -230,6 +229,13 @@
     if (query.current) {
       packs.packs = query.current;
       enabledPacks.configure(query.current);
+    }
+  });
+
+  $effect(() => {
+    const query = listEnchantments();
+    if (query.current) {
+      enchantments.current = query.current;
     }
   });
 

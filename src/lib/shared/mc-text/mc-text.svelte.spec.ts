@@ -1,9 +1,10 @@
-import { setMaxEnchantments } from "$lib/shared/constants/enchantments";
 import { mcTextToHTML } from "$lib/shared/mc-text";
 import { colorCodes, extras } from "$lib/shared/mc-text/parser/styleLibrary";
-import { describe, it } from "vitest";
+import { describe, it, vi } from "vitest";
 
-setMaxEnchantments(["Aqua Affinity I"]);
+vi.mock("$ctx", () => ({
+  getEnchantmentsContext: () => ({ current: ["Aqua Affinity I"] })
+}));
 
 function sortedClasses(element: Element): string[] {
   return Array.from(element.classList).sort();

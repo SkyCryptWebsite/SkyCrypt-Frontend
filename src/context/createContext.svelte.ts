@@ -34,6 +34,18 @@ export class AllStatsContext {
   }
 }
 
+export class EnchantmentsContext {
+  #current: string[] = $state([]);
+
+  get current() {
+    return this.#current;
+  }
+
+  set current(value: string[]) {
+    this.#current = value;
+  }
+}
+
 export class CombinedContext {
   #current: ModelsCombinedOutput | null = $state(null);
 
@@ -84,6 +96,7 @@ export class SkillsContext {
 
 export const [getProfileContext, setProfileContext] = createContext<ProfileContext>();
 export const [getAllStatsContext, setAllStatsContext] = createContext<AllStatsContext>();
+export const [getEnchantmentsContext, setEnchantmentsContext] = createContext<EnchantmentsContext>();
 export const [getCombinedContext, setCombinedContext] = createContext<CombinedContext>();
 export const [getSkillsContext, setSkillsContext] = createContext<SkillsContext>();
 export const [getMiscContext, setMiscContext] = createContext<MiscContext>();

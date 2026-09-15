@@ -1,10 +1,6 @@
-/** Max-level enchantment lore strings returned by the backend constants endpoint. */
-export const MAX_ENCHANTS = new Set<string>();
+import { getEnchantmentsContext } from "$ctx";
 
-/** Replace the runtime enchantment set with the backend-owned list. */
-export function setMaxEnchantments(enchantments: readonly string[]): void {
-  MAX_ENCHANTS.clear();
-  for (const enchantment of enchantments) {
-    MAX_ENCHANTS.add(enchantment);
-  }
+/** Check whether an enchantment is at its maximum level according to the backend constants. */
+export function isMaxEnchantment(enchantment: string): boolean {
+  return getEnchantmentsContext().current.includes(enchantment);
 }
