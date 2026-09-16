@@ -11,10 +11,8 @@
     initPreferences,
     initRecentSearches,
     initTheme,
-    EnchantmentsContext,
     PacksContext,
     setHoverContext,
-    setEnchantmentsContext,
     setMobileContext,
     setPacksContext
   } from "$ctx";
@@ -26,7 +24,7 @@
   import { IsHover } from "$lib/hooks/is-hover.svelte";
   import { IsMobile } from "$lib/hooks/is-mobile.svelte";
   import { listLatestPostsForNotifications } from "$lib/shared/api/cms-api.remote";
-  import { listEnchantments, listResourcePacks } from "$lib/shared/api/skycrypt-api.remote";
+  import { listResourcePacks } from "$lib/shared/api/skycrypt-api.remote";
   import { parseThemeFromURL } from "$lib/shared/themes/sharing";
   import * as Drawer from "$ui/drawer";
   import { Separator } from "$ui/separator";
@@ -65,7 +63,6 @@
   const theme = writable<ToasterProps["theme"]>("dark");
   const noEmbedUrls = ["/stats/", "/newsroom"];
   const packs = new PacksContext();
-  const enchantments = new EnchantmentsContext();
   const websiteJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -147,7 +144,6 @@
   setMobileContext(isMobile);
   setHoverContext(isHover);
   setPacksContext(packs);
-  setEnchantmentsContext(enchantments);
 
   onMount(() => {
     if (window.innerWidth <= 600) {
@@ -229,13 +225,6 @@
     if (query.current) {
       packs.packs = query.current;
       enabledPacks.configure(query.current);
-    }
-  });
-
-  $effect(() => {
-    const query = listEnchantments();
-    if (query.current) {
-      enchantments.current = query.current;
     }
   });
 

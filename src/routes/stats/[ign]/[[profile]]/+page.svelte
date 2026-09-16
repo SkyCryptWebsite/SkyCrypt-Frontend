@@ -13,7 +13,8 @@
     getAllStats,
     getCombinedProfileStats,
     getProfileStats,
-    getSelectedProfileStats
+    getSelectedProfileStats,
+    listEnchantments
   } from "$lib/shared/api/skycrypt-api.remote";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import { type PageServerData } from "./$types";
@@ -29,6 +30,7 @@
 
   async function loadProfileView(uuid: string, requestedProfileId: string | undefined) {
     const allStatsPromise = getAllStats();
+    const enchantmentsPromise = listEnchantments();
     const profile = requestedProfileId
       ? await getProfileStats({ uuid, profileId: requestedProfileId })
       : await getSelectedProfileStats({ uuid });
@@ -36,9 +38,13 @@
       profile.uuid && profile.profile_id
         ? getCombinedProfileStats({ uuid: profile.uuid, profileId: profile.profile_id })
         : Promise.resolve(null);
-    const [allStats, combined] = await Promise.all([allStatsPromise, combinedPromise]);
+    const [allStats, combined, enchantments] = await Promise.all([
+      allStatsPromise,
+      combinedPromise,
+      enchantmentsPromise
+    ]);
 
-    return { profile, allStats, combined };
+    return { profile, allStats, combined, enchantments };
   }
 
   function rewriteURL(profile: ModelsStatsOutput) {
@@ -105,7 +111,11 @@
 {#key routeKey}
   <svelte:boundary>
     {const profileView = await profileViewPromise}
-    <Main data={profileView.profile} allStats={profileView.allStats} combined={profileView.combined} />
+    <Main
+      data={profileView.profile}
+      allStats={profileView.allStats}
+      combined={profileView.combined}
+      enchantments={profileView.enchantments} />
 
     {#snippet pending()}
       {@render loading()}
