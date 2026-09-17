@@ -6,7 +6,8 @@ import type {
   ModelsResourcePackConfig,
   ModelsStatData,
   ModelsSkillsOutput,
-  ModelsStatsOutput
+  ModelsStatsOutput,
+  listEnchantmentsResponse
 } from "$lib/shared/api/orval-generated";
 import { createContext } from "svelte";
 
@@ -35,13 +36,13 @@ export class AllStatsContext {
 }
 
 export class EnchantmentsContext {
-  #current: string[] = $state([]);
+  #current: listEnchantmentsResponse["data"] = $state([]);
 
   get current() {
     return this.#current;
   }
 
-  set current(value: string[]) {
+  set current(value: listEnchantmentsResponse["data"]) {
     this.#current = value;
   }
 }

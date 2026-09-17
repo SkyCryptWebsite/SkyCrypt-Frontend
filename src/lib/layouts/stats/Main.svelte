@@ -23,7 +23,7 @@
   import Skills from "$lib/layouts/stats/Skills.svelte";
   import Stats from "$lib/layouts/stats/Stats.svelte";
   import Sections from "$lib/sections/Sections.svelte";
-  import type { ModelsCombinedOutput, ModelsStatData, ModelsStatsOutput } from "$lib/shared/api/orval-generated";
+  import type { ModelsCombinedOutput, ModelsStatData, ModelsStatsOutput, listEnchantmentsResponse } from "$lib/shared/api/orval-generated";
   import * as Dialog from "$ui/dialog";
   import * as Drawer from "$ui/drawer";
   import Image from "@lucide/svelte/icons/image";
@@ -42,7 +42,7 @@
     data: ModelsStatsOutput;
     allStats: ModelsStatData[];
     combined: ModelsCombinedOutput | null;
-    enchantments: string[];
+    enchantments: listEnchantmentsResponse["data"];
   } = $props();
 
   const isHover = getHoverContext();
