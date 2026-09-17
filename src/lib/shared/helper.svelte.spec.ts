@@ -1,6 +1,10 @@
 import { renderLore } from "$lib/shared/helper";
 import { afterEach, beforeEach, describe, it, vi } from "vitest";
 
+vi.mock("$ctx", () => ({
+  getEnchantmentsContext: () => ({ current: [] })
+}));
+
 describe.concurrent("renderLore Tests", () => {
   beforeEach(() => {
     vi.useFakeTimers();

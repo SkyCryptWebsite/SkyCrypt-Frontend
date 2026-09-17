@@ -10,6 +10,7 @@ import {
   getSelectedProfileEmbed as getSelectedProfileEmbedRequest,
   getSelectedProfileStats as getSelectedProfileStatsRequest,
   getSourceInfo as getSourceInfoRequest,
+  listEnchantments as listEnchantmentsRequest,
   listResourcePacks as listResourcePacksRequest,
   resolveUsernameByUuid as resolveUsernameByUuidRequest,
   resolveUuidByUsername as resolveUuidByUsernameRequest,
@@ -139,6 +140,11 @@ export const listResourcePacks = prerender(async () => {
 /** Fetch stats list */
 export const getAllStats = prerender(async () => {
   return fetchSection(APIEndpointName.STATS, () => getStatsConstantsRequest());
+});
+
+/** Fetch max-level enchantment lore strings */
+export const listEnchantments = prerender(async () => {
+  return fetchSection(APIEndpointName.ENCHANTMENTS, () => listEnchantmentsRequest());
 });
 
 /** Fetch the source information for the currently running backend service. */

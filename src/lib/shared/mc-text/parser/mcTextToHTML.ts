@@ -1,4 +1,4 @@
-import { MAX_ENCHANTS } from "$lib/shared/constants/enchantments";
+import { isMaxEnchantment } from "$lib/shared/helper";
 import { colorCodes, extras, type ColorCodes, type FormattingCodes } from "$lib/shared/mc-text/parser/styleLibrary";
 import { BASE_FORMATTING_CODE_REGEX, htmlStringFormatting } from "$lib/shared/mc-text/parser/utils";
 
@@ -101,7 +101,7 @@ export default function mcTextToHTML(...args: [{ mcString: string; breakLine?: b
       classList = classList.filter((className) => className !== "lore-enchantment");
 
       // Check if the text contains max-level enchantments (for special rainbow effect)
-      shouldRainbowEnchantedCheck = MAX_ENCHANTS.has(normalizeEnchantText(item));
+      shouldRainbowEnchantedCheck = isMaxEnchantment(normalizeEnchantText(item));
 
       // Only create HTML elements for non-empty text content
       if (textContent !== "") {

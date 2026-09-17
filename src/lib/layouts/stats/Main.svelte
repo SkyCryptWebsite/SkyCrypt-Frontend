@@ -3,6 +3,7 @@
   import {
     CombinedContext,
     AllStatsContext,
+    EnchantmentsContext,
     getHoverContext,
     getInternalState,
     getPreferences,
@@ -11,6 +12,7 @@
     ProfileContext,
     setAllStatsContext,
     setCombinedContext,
+    setEnchantmentsContext,
     setProfileContext
   } from "$ctx";
   import { ContainedItemsGrid, ItemContent } from "$lib/components/item";
@@ -21,7 +23,7 @@
   import Skills from "$lib/layouts/stats/Skills.svelte";
   import Stats from "$lib/layouts/stats/Stats.svelte";
   import Sections from "$lib/sections/Sections.svelte";
-  import type { ModelsCombinedOutput, ModelsStatData, ModelsStatsOutput } from "$lib/shared/api/orval-generated";
+  import type { ModelsCombinedOutput, ModelsStatData, ModelsStatsOutput, listEnchantmentsResponse } from "$lib/shared/api/orval-generated";
   import * as Dialog from "$ui/dialog";
   import * as Drawer from "$ui/drawer";
   import Image from "@lucide/svelte/icons/image";
@@ -34,11 +36,13 @@
   const {
     data: ctx,
     allStats,
-    combined
+    combined,
+    enchantments
   }: {
     data: ModelsStatsOutput;
     allStats: ModelsStatData[];
     combined: ModelsCombinedOutput | null;
+    enchantments: listEnchantmentsResponse["data"];
   } = $props();
 
   const isHover = getHoverContext();
@@ -60,9 +64,11 @@
   // Initialize the profile context
   const profileClass = new ProfileContext();
   const allStatsClass = new AllStatsContext();
+  const enchantmentsClass = new EnchantmentsContext();
   const combinedClass = new CombinedContext();
   setProfileContext(profileClass);
   setAllStatsContext(allStatsClass);
+  setEnchantmentsContext(enchantmentsClass);
   setCombinedContext(combinedClass);
   $effect.pre(() => {
     if (!ctx) return;
@@ -98,6 +104,10 @@
 
   $effect.pre(() => {
     allStatsClass.current = allStats ?? [];
+  });
+
+  $effect.pre(() => {
+    enchantmentsClass.current = enchantments ?? [];
   });
 </script>
 
