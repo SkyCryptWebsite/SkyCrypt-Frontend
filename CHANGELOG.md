@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.1.1-beta.0
+
+### Patch Changes
+
+- Use the player's rank color for Discord component embeds, preferring the plus color and falling back to the default preview color when no valid rank color is available. _[`c027c31`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/c027c31cc48c2f260004d4d0f7dc032063c3af25) [@DarthGigi](https://github.com/DarthGigi)_
+
 ## 4.1.0
 
 ### Minor Changes
