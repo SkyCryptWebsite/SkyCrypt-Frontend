@@ -1,5 +1,15 @@
 # Changelog
 
+## 4.1.0
+
+### Minor Changes
+
+- Use the new component embeds for discord embeds _[`#347`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/347) [`6ff47f5`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/6ff47f5bf899bfacf9e4a384ac1038c83022fd0d) [@DarthGigi](https://github.com/DarthGigi)_
+
+### Patch Changes
+
+- Version prerendered endpoint URLs per build so updated resource packs and other static data appear without clearing browser caches. Preserve saved pack preferences and the commit-based app version, and show the separate prerender version in About. _[`#347`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/347) [`93f5414`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/93f541482372b322ceb5246b29842068fc14ec3c) [@DarthGigi](https://github.com/DarthGigi)_
+
 ## 4.1.0-beta.1
 
 ### Patch Changes
