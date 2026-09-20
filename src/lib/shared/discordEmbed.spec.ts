@@ -1,6 +1,17 @@
 import { expect, it } from "vitest";
 import { createDiscordEmbed, serializeDiscordEmbed } from "./discordEmbed";
 
+it.each([
+  { rank: { plusColor: "#FF5555", rankColor: "#55FFFF" }, expected: 0xff5555 },
+  { rank: { rankColor: "#55ffff" }, expected: 0x55ffff },
+  { rank: { plusColor: "#000000", rankColor: "#55FFFF" }, expected: 0 },
+  { rank: { plusColor: "invalid", rankColor: "#55FFFF" }, expected: 0x55ffff },
+  { rank: { rankColor: "#12345678" }, expected: 0x282828 },
+  { rank: undefined, expected: 0x282828 }
+])("uses the preferred valid rank color: $rank", ({ rank, expected }) => {
+  expect(createDiscordEmbed({ username: "tiltedhoney", rank }).component.accent_color).toBe(expected);
+});
+
 it("keeps embedded JSON inside its script element", () => {
   const embed = createDiscordEmbed({ username: "</script><script>alert(1)</script>&" });
   const json = serializeDiscordEmbed(embed);
