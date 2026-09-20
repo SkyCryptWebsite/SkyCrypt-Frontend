@@ -30,7 +30,7 @@
   const profileViewPromise = $derived(loadProfileView(ign, profileId));
 
   async function loadProfileView(uuid: string, requestedProfileId: string | undefined) {
-    const allStatsPromise = getAllStats();
+    const allStatsPromise = getAllStats(__PRERENDER_VERSION__);
     const profile = requestedProfileId
       ? await getProfileStats({ uuid, profileId: requestedProfileId })
       : await getSelectedProfileStats({ uuid });

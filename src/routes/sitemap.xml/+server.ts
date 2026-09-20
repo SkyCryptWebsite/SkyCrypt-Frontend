@@ -9,7 +9,7 @@ const statsPaths = new Set<string>();
 
 export const GET: RequestHandler = async () => {
   try {
-    const contributors = await getContributors();
+    const contributors = await getContributors(__PRERENDER_VERSION__);
 
     for (const contributor of contributors) {
       const ign = contributor.name ?? contributor.id;

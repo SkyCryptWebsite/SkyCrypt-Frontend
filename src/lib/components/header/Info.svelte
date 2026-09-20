@@ -9,6 +9,7 @@
   const { PUBLIC_DISCORD_INVITE, PUBLIC_PATREON } = env;
   const packageVersion = __NPM_PACKAGE_VERSION__;
   const commitHash = PUBLIC_COMMIT_HASH;
+  const prerenderVersion = __PRERENDER_VERSION__;
 </script>
 
 <p>SkyCrypt is a free, open-source stats viewer for Hypixel SkyBlock.</p>
@@ -64,6 +65,9 @@
     </p>
   {/if}
 </svelte:boundary>
+<p>
+  Prerender version <span class="font-mono text-sm break-all select-text">{prerenderVersion}</span>
+</p>
 <p>
   You can report bugs, suggest features on <Button.Root
     class="font-semibold text-primary"
