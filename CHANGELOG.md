@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.1.0-beta.1
+
+### Patch Changes
+
+- Version prerendered endpoint URLs per build so updated resource packs and other static data appear without clearing browser caches. Preserve saved pack preferences and the commit-based app version, and show the separate prerender version in About. _[`93f5414`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/93f541482372b322ceb5246b29842068fc14ec3c) [@DarthGigi](https://github.com/DarthGigi)_
+
 ## 4.1.0-beta.0
 
 ### Minor Changes
