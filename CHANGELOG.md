@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.1.0-beta.0
+
+### Minor Changes
+
+- Use the new component embeds for discord embeds _[`6ff47f5`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/6ff47f5bf899bfacf9e4a384ac1038c83022fd0d) [@DarthGigi](https://github.com/DarthGigi)_
+
 ## 4.0.0
 
 ### Major Changes
