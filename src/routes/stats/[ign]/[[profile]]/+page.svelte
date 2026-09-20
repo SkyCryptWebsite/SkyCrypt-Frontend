@@ -15,10 +15,12 @@
     getProfileStats,
     getSelectedProfileStats
   } from "$lib/shared/api/skycrypt-api.remote";
+  import { createDiscordEmbed, serializeDiscordEmbed } from "$lib/shared/discordEmbed";
   import LoaderCircle from "@lucide/svelte/icons/loader-circle";
   import { type PageServerData } from "./$types";
 
   const { data }: { data: PageServerData } = $props();
+  const discordEmbed = $derived(createDiscordEmbed(data.embed));
 
   const preferences = getPreferences();
   const internalState = getInternalState();
@@ -28,7 +30,7 @@
   const profileViewPromise = $derived(loadProfileView(ign, profileId));
 
   async function loadProfileView(uuid: string, requestedProfileId: string | undefined) {
-    const allStatsPromise = getAllStats();
+    const allStatsPromise = getAllStats(__PRERENDER_VERSION__);
     const profile = requestedProfileId
       ? await getProfileStats({ uuid, profileId: requestedProfileId })
       : await getSelectedProfileStats({ uuid });
@@ -86,6 +88,13 @@
     }
   });
 </script>
+
+<svelte:head>
+  {#if data.embed.username}
+    <svelte:element this={"script"} id="discord:component-embed" type="application/json">
+      {serializeDiscordEmbed(discordEmbed)}</svelte:element>
+  {/if}
+</svelte:head>
 
 {#if data.embed}
   <SEO embedData={data.embed} />

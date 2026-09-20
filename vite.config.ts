@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { sentrySvelteKit } from "@sentry/sveltekit";
 import adapter from "@sveltejs/adapter-node";
 import { sveltekit } from "@sveltejs/kit/vite";
@@ -5,6 +6,9 @@ import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 import tailwindcss from "@tailwindcss/vite";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vitest/config";
+
+// SvelteKit reloads this config for the client build; both bundles need the same prerender ID.
+const prerenderVersion = (process.env.SKYCRYPT_PRERENDER_VERSION ??= randomUUID());
 
 export default defineConfig({
   plugins: [
@@ -137,6 +141,7 @@ export default defineConfig({
     ]
   },
   define: {
+    __PRERENDER_VERSION__: JSON.stringify(prerenderVersion),
     __NPM_PACKAGE_VERSION__: JSON.stringify(process.env.npm_package_version || "")
   }
 });

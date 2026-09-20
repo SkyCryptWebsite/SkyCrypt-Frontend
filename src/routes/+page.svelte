@@ -273,7 +273,7 @@
           <Notice title="Failed to load contributors." type="error" error={err} {retry} class="col-span-full" />
         {/snippet}
 
-        {#each await getContributors() as contributor (contributor.id)}
+        {#each await getContributors(__PRERENDER_VERSION__) as contributor (contributor.id)}
           <ContributorCard user={contributor} {iconMapper} />
         {/each}
       </svelte:boundary>

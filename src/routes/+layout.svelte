@@ -221,7 +221,7 @@
   });
 
   $effect(() => {
-    const query = listResourcePacks();
+    const query = listResourcePacks(__PRERENDER_VERSION__);
     if (query.current) {
       packs.packs = query.current;
       enabledPacks.configure(query.current);

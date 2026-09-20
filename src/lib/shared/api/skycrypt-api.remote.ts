@@ -34,6 +34,7 @@ import {
 } from "$lib/shared/api/orval-generated-zod";
 import { APIEndpointName } from "$types";
 import { error, isHttpError } from "@sveltejs/kit";
+import { z } from "zod";
 
 /** Type helper to extract the success data type from an API response Excludes ModelsProcessingError from the union type */
 type ExtractSuccessData<TResponse> = TResponse extends { data: infer TData }
@@ -127,19 +128,24 @@ export const resolveUuidByUsername = query(ResolveUuidByUsernameParams, async ({
 });
 
 /** Resolve a UUID to a username */
-export const resolveUsernameByUuid = prerender(ResolveUsernameByUuidParams, async ({ uuid }) => {
-  return fetchSection(APIEndpointName.USERNAME, () => resolveUsernameByUuidRequest(uuid));
-});
+export const resolveUsernameByUuid = prerender(
+  ResolveUsernameByUuidParams.extend({ version: z.string() }),
+  async ({ uuid }) => fetchSection(APIEndpointName.USERNAME, () => resolveUsernameByUuidRequest(uuid))
+);
 
-/** Fetch resource packs */
-export const listResourcePacks = prerender(async () => {
-  return fetchSection(APIEndpointName.RESOURCEPACK, () => listResourcePacksRequest());
-});
+/** Give each build its own static catalog URL without changing the app's commit version. */
+export const listResourcePacks = prerender(
+  z.string(),
+  async (_version) => fetchSection(APIEndpointName.RESOURCEPACK, () => listResourcePacksRequest()),
+  { inputs: () => [__PRERENDER_VERSION__] }
+);
 
 /** Fetch stats list */
-export const getAllStats = prerender(async () => {
-  return fetchSection(APIEndpointName.STATS, () => getStatsConstantsRequest());
-});
+export const getAllStats = prerender(
+  z.string(),
+  async (_version) => fetchSection(APIEndpointName.STATS, () => getStatsConstantsRequest()),
+  { inputs: () => [__PRERENDER_VERSION__] }
+);
 
 /** Fetch the source information for the currently running backend service. */
 export const getSourceInfo = query(async (): Promise<ModelsSourceInfo | null> => {
