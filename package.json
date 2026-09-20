@@ -88,6 +88,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.4.0",
     "devalue": "^5.9.1",
+    "discord-api-types": "^0.38.55",
     "dotenv-cli": "^11.0.0",
     "drizzle-kit": "^0.31.10",
     "drizzle-orm": "^0.45.2",

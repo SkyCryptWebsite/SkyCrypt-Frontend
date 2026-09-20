@@ -1,0 +1,38 @@
+import { expect, it } from "vitest";
+import { createDiscordEmbed, serializeDiscordEmbed } from "./discordEmbed";
+
+it("keeps embedded JSON inside its script element", () => {
+  const embed = createDiscordEmbed({ username: "</script><script>alert(1)</script>&" });
+  const json = serializeDiscordEmbed(embed);
+  expect(json).not.toContain("<");
+  expect(JSON.parse(json)).toEqual(embed);
+});
+
+it("uses the profile data and puts a separator directly above valid link buttons", () => {
+  const embed = createDiscordEmbed({
+    username: "tiltedhoney",
+    profile_cute_name: "Kiwi",
+    uuid: "debb9e1f6dcb4f5b83c291fd5388bb56",
+    rank: { rankText: "MVP", plusText: "+" },
+    skyblock_level: 620.16
+  });
+  const [section, separator, row, footer] = embed.component.components;
+  expect(section).toMatchObject({
+    type: 9,
+    components: [
+      { content: expect.stringContaining("### [tiltedhoney (Kiwi)](https://sky.shiiyu.moe/stats/tiltedhoney/Kiwi)") }
+    ],
+    accessory: { type: 11, media: { url: "https://nmsr.nickac.dev/bust/debb9e1f6dcb4f5b83c291fd5388bb56?y=-20" } }
+  });
+  expect(JSON.stringify(section)).toContain("🌟 Level: 620.16");
+  expect(separator).toEqual({ type: 14, divider: true, spacing: 1 });
+  expect(row).toEqual({
+    type: 1,
+    components: [
+      { type: 2, style: 5, label: "SkyCrypt", url: "https://sky.shiiyu.moe/stats/tiltedhoney/Kiwi" },
+      { type: 2, style: 5, label: "Plancke", url: "https://plancke.io/hypixel/player/stats/tiltedhoney" },
+      { type: 2, style: 5, label: "Elite", url: "https://eliteskyblock.com/@tiltedhoney/Kiwi" }
+    ]
+  });
+  expect(footer).toEqual({ type: 10, content: `-# SkyCrypt • v${__NPM_PACKAGE_VERSION__}` });
+});
