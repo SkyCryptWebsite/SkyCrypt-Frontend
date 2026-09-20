@@ -29,9 +29,24 @@ it("uses the profile data and puts a separator directly above valid link buttons
   expect(row).toEqual({
     type: 1,
     components: [
-      { type: 2, style: 5, label: "SkyCrypt", url: "https://sky.shiiyu.moe/stats/tiltedhoney/Kiwi" },
-      { type: 2, style: 5, label: "Plancke", url: "https://plancke.io/hypixel/player/stats/tiltedhoney" },
-      { type: 2, style: 5, label: "Elite", url: "https://eliteskyblock.com/@tiltedhoney/Kiwi" }
+      {
+        type: 2,
+        style: 5,
+        label: "SkyCrypt",
+        url: "https://sky.shiiyu.moe/stats/tiltedhoney/Kiwi?utm_source=SkyCrypt&utm_campaign=DiscordEmbed"
+      },
+      {
+        type: 2,
+        style: 5,
+        label: "Plancke",
+        url: "https://plancke.io/hypixel/player/stats/tiltedhoney?utm_source=SkyCrypt&utm_campaign=DiscordEmbed"
+      },
+      {
+        type: 2,
+        style: 5,
+        label: "Elite",
+        url: "https://eliteskyblock.com/@tiltedhoney/Kiwi?utm_source=SkyCrypt&utm_campaign=DiscordEmbed"
+      }
     ]
   });
   expect(footer).toEqual({ type: 10, content: `-# SkyCrypt • v${__NPM_PACKAGE_VERSION__}` });

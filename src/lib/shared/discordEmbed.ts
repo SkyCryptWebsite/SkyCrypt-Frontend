@@ -6,6 +6,7 @@ export function createDiscordEmbed(data: ModelsEmbedData) {
   const username = encodeURIComponent(data.username || "");
   const profile = encodeURIComponent(data.profile_cute_name || "");
   const profileUrl = `https://sky.shiiyu.moe/stats/${username}/${profile}`;
+  const trackingParams = "?utm_source=SkyCrypt&utm_campaign=DiscordEmbed";
   const title = `${data.displayName || data.username || "SkyCrypt"} (${data.profile_cute_name || "Selected profile"})`
     .replace(/[\\[\]*_`<>]/g, "\\$&")
     .replace(/[\r\n]/g, " ");
@@ -33,9 +34,19 @@ export function createDiscordEmbed(data: ModelsEmbedData) {
         {
           type: 1,
           components: [
-            { type: 2, style: 5, label: "SkyCrypt", url: profileUrl },
-            { type: 2, style: 5, label: "Plancke", url: `https://plancke.io/hypixel/player/stats/${username}` },
-            { type: 2, style: 5, label: "Elite", url: `https://eliteskyblock.com/@${username}/${profile}` }
+            { type: 2, style: 5, label: "SkyCrypt", url: `${profileUrl}${trackingParams}` },
+            {
+              type: 2,
+              style: 5,
+              label: "Plancke",
+              url: `https://plancke.io/hypixel/player/stats/${username}${trackingParams}`
+            },
+            {
+              type: 2,
+              style: 5,
+              label: "Elite",
+              url: `https://eliteskyblock.com/@${username}/${profile}${trackingParams}`
+            }
           ]
         },
         { type: 10, content: `-# SkyCrypt • v${__NPM_PACKAGE_VERSION__}` }
