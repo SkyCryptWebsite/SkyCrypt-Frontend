@@ -3,6 +3,8 @@ import { getLongDescription } from "$lib/shared/embedGenerator";
 import type { APIContainerComponent } from "discord-api-types/v10";
 
 export function createDiscordEmbed(data: ModelsEmbedData) {
+  const color =
+    [data.rank?.plusColor, data.rank?.rankColor].find((value) => /^#[\da-f]{6}$/i.test(value ?? "")) || "#282828";
   const username = encodeURIComponent(data.username || "");
   const profile = encodeURIComponent(data.profile_cute_name || "");
   const profileUrl = `https://sky.shiiyu.moe/stats/${username}/${profile}`;
@@ -18,7 +20,7 @@ export function createDiscordEmbed(data: ModelsEmbedData) {
   return {
     component: {
       type: 17,
-      accent_color: 1957930,
+      accent_color: Number.parseInt(color.slice(1), 16),
       components: [
         data.uuid
           ? {
