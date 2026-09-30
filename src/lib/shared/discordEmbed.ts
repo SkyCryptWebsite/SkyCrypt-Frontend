@@ -1,6 +1,9 @@
+import { env } from "$env/dynamic/public";
 import type { ModelsEmbedData } from "$lib/shared/api/orval-generated";
 import { getLongDescription } from "$lib/shared/embedGenerator";
 import type { APIContainerComponent } from "discord-api-types/v10";
+
+const { PUBLIC_DISCORD_INVITE } = env;
 
 export function createDiscordEmbed(data: ModelsEmbedData) {
   const color =
@@ -37,6 +40,7 @@ export function createDiscordEmbed(data: ModelsEmbedData) {
           type: 1,
           components: [
             { type: 2, style: 5, label: "SkyCrypt", url: `${profileUrl}${trackingParams}` },
+            { type: 2, style: 5, label: "SkyCrypt Discord", url: PUBLIC_DISCORD_INVITE },
             {
               type: 2,
               style: 5,
