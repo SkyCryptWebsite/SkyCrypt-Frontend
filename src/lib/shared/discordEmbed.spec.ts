@@ -1,5 +1,8 @@
 import { expect, it } from "vitest";
 import { createDiscordEmbed, serializeDiscordEmbed } from "./discordEmbed";
+import { env } from "$env/dynamic/public";
+
+const { PUBLIC_DISCORD_INVITE } = env;
 
 it.each([
   { rank: { plusColor: "#FF5555", rankColor: "#55FFFF" }, expected: 0xff5555 },
@@ -46,6 +49,7 @@ it("uses the profile data and puts a separator directly above valid link buttons
         label: "SkyCrypt",
         url: "https://sky.shiiyu.moe/stats/tiltedhoney/Kiwi?utm_source=SkyCrypt&utm_campaign=DiscordEmbed"
       },
+      { type: 2, style: 5, label: "SkyCrypt Discord", url: PUBLIC_DISCORD_INVITE },
       {
         type: 2,
         style: 5,
