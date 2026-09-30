@@ -1,6 +1,6 @@
+import { env } from "$env/dynamic/public";
 import { expect, it } from "vitest";
 import { createDiscordEmbed, serializeDiscordEmbed } from "./discordEmbed";
-import { env } from "$env/dynamic/public";
 
 const { PUBLIC_DISCORD_INVITE } = env;
 

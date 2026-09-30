@@ -1,7 +1,7 @@
+import { env } from "$env/dynamic/public";
 import type { ModelsEmbedData } from "$lib/shared/api/orval-generated";
 import { getLongDescription } from "$lib/shared/embedGenerator";
 import type { APIContainerComponent } from "discord-api-types/v10";
-import { env } from "$env/dynamic/public";
 
 const { PUBLIC_DISCORD_INVITE } = env;
 
