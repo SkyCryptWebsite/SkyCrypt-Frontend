@@ -3,17 +3,7 @@ import { SERVER_API_TOKEN } from "$app/env/private";
 import { PUBLIC_SERVER_API_URL } from "$app/env/public";
 import { getRequestEvent } from "$app/server";
 import { toBackendPath } from "./backend-path";
-
-// NOTE: Supports cases where `content-type` is other than `json`
-const getBody = <T>(c: Response | Request): Promise<T> => {
-  const contentType = c.headers.get("content-type");
-
-  if (contentType && contentType.includes("application/json")) {
-    return c.json();
-  }
-
-  return c.text() as Promise<T>;
-};
+import { getBody } from "./response-body";
 
 // NOTE: Update just base url
 const getUrl = (contextUrl: string): string => {

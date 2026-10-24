@@ -1,6 +1,6 @@
 {
   "name": "skycrypt-frontend",
-  "version": "4.4.0",
+  "version": "4.4.1-beta.0",
   "private": true,
   "license": "AGPL-3.0-only",
   "repository": {
@@ -138,7 +138,7 @@
     "postgres": "^3.4.9",
     "pretty-ms": "^10.0.0",
     "runed": "^0.38.0",
-    "shadcn-svelte": "^1.7.0",
+    "shadcn-svelte": "^1.7.1",
     "skinview3d": "^3.4.2",
     "super-sitemap": "^2.0.6",
     "svelte": "^5.57.2",

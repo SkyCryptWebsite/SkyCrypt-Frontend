@@ -3,7 +3,7 @@
   import CollapsibleCustomTrigger from "$src/lib/components/CollapsibleCustomTrigger.svelte";
   import EmptyStat from "$src/lib/components/EmptyStat.svelte";
   import ScrollAreaItems from "$src/lib/components/ScrollAreaItems.svelte";
-  import { type ModelsKill } from "$src/lib/shared/api/orval-generated";
+  import { type Kill } from "$src/lib/shared/api/orval-generated";
   import * as Collapsible from "$ui/collapsible";
   import { Separator } from "$ui/separator";
   import FishIcon from "@lucide/svelte/icons/fish";
@@ -162,7 +162,7 @@
     class="mt-2" />
 {/if}
 
-{#snippet creaturesDisplay(title: string, creaturesList: ModelsKill[])}
+{#snippet creaturesDisplay(title: string, creaturesList: Kill[])}
   <Collapsible.Root open={openSections} class="rounded-xl border p-2">
     <CollapsibleCustomTrigger>{title}</CollapsibleCustomTrigger>
 

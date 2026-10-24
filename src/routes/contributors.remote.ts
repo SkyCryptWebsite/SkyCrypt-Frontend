@@ -1,12 +1,12 @@
 import { prerender } from "$app/server";
 import { log } from "evlog";
 import { z } from "zod";
-import type { ModelsPlayerResolve } from "#lib/shared/api/orval-generated";
+import type { PlayerResolve } from "#lib/shared/api/orval-generated";
 import { resolveUsernameByUuid } from "#lib/shared/api/skycrypt-api.remote";
 import { fetchSkinTextures } from "#lib/shared/skin";
 import { Role } from "./enums";
 
-export interface Contributor extends ModelsPlayerResolve {
+export interface Contributor extends PlayerResolve {
   id: string;
   quote?: string;
   role?: Role;
@@ -34,7 +34,7 @@ const contributorIds = [
 export const getContributors = prerender(
   z.string(),
   async (version) => {
-    const getUsernames = async (uuid: string): Promise<ModelsPlayerResolve> => {
+    const getUsernames = async (uuid: string): Promise<PlayerResolve> => {
       try {
         return await resolveUsernameByUuid({ uuid, version });
       } catch (error) {

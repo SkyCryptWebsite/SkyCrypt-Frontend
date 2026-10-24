@@ -7,7 +7,7 @@
   import { format } from "numerable";
   import { Chip, SearchTabs } from "#lib/components/misc";
   import { AdditionStat } from "#lib/components/stats";
-  import type { ModelsAttributeShard } from "#lib/shared/api/orval-generated";
+  import type { AttributeShard } from "#lib/shared/api/orval-generated";
   import { RARITIES } from "#lib/shared/constants/rarities";
   import { getRarityClass, renderLore, titleCase } from "#lib/shared/helper";
   import { cn } from "#lib/shared/utils";
@@ -17,13 +17,13 @@
   const allShards = $derived(hunting?.shards ?? []);
 
   const normalize = (value?: string | null) => value?.trim().toLocaleLowerCase() ?? "";
-  const getFamilyText = (shard?: ModelsAttributeShard) => shard?.family?.filter(Boolean).join(", ") ?? "";
-  const getShardRarity = (shard?: ModelsAttributeShard) => normalize(shard?.rarity) || "common";
-  const isMaxed = (shard?: ModelsAttributeShard) =>
+  const getFamilyText = (shard?: AttributeShard) => shard?.family?.filter(Boolean).join(", ") ?? "";
+  const getShardRarity = (shard?: AttributeShard) => normalize(shard?.rarity) || "common";
+  const isMaxed = (shard?: AttributeShard) =>
     (shard?.maxSyphon ?? 0) > 0 && (shard?.syphoned ?? 0) >= (shard?.maxSyphon ?? 0);
-  const hasProgress = (shard?: ModelsAttributeShard) =>
+  const hasProgress = (shard?: AttributeShard) =>
     (shard?.owned ?? 0) > 0 || (shard?.syphoned ?? 0) > 0 || shard?.capturedTimestamp != null;
-  const getBucket = (shard?: ModelsAttributeShard) => {
+  const getBucket = (shard?: AttributeShard) => {
     if (isMaxed(shard)) return 0;
     if (hasProgress(shard)) return 1;
     return 2;

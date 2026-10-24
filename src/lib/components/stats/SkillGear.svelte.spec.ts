@@ -1,10 +1,10 @@
 import { describe, it } from "vitest";
 import { render } from "vitest-browser-svelte";
-import type { ModelsStrippedItem } from "#lib/shared/api/orval-generated";
+import type { StrippedItem } from "#lib/shared/api/orval-generated";
 import WithContext from "../../../test-utils/WithContext.svelte";
 import SkillGear from "./SkillGear.svelte";
 
-const item = (name: string): ModelsStrippedItem => ({ display_name: name, texture_path: "" });
+const item = (name: string): StrippedItem => ({ display_name: name, texture_path: "" });
 
 describe.concurrent("SkillGear", () => {
   it("renders the fixed 4/4/4/2 column capacity and truncates sorted arrays", async ({ expect }) => {

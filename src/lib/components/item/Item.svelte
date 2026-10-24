@@ -3,7 +3,7 @@
   import { itemTooltipTether } from "$ctx/tooltips.svelte";
   import ImageOff from "@lucide/svelte/icons/image-off";
   import { Avatar, Tooltip, type AvatarImageLoadingStatus } from "bits-ui";
-  import type { ModelsStrippedItem } from "#lib/shared/api/orval-generated";
+  import type { StrippedItem } from "#lib/shared/api/orval-generated";
   import { RARITIES, RARITY_COLORS } from "#lib/shared/constants/rarities";
   import { formatNumber, getRarityClass } from "#lib/shared/helper";
   import { onceInView } from "#lib/shared/in-view";
@@ -11,7 +11,7 @@
   import ResolvedItemImage from "./ResolvedItemImage.svelte";
 
   type Props = {
-    piece: ModelsStrippedItem;
+    piece: StrippedItem;
     isInventory?: boolean;
     showCount?: boolean;
     showRecombobulated?: boolean;

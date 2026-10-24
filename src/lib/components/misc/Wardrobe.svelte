@@ -1,10 +1,10 @@
 <script lang="ts">
   import type { EmptyItemSlotType } from "#lib/components/item/EmptyItemSlot.svelte";
   import GearSlotColumn from "#lib/components/item/GearSlotColumn.svelte";
-  import type { ModelsStrippedItem } from "#lib/shared/api/orval-generated";
+  import type { StrippedItem } from "#lib/shared/api/orval-generated";
 
   type Props = {
-    wardrobeItems: ModelsStrippedItem[];
+    wardrobeItems: StrippedItem[];
     kind?: "armor" | "equipment";
   };
 

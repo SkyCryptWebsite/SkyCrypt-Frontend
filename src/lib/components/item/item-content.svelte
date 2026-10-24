@@ -4,7 +4,7 @@
   import Info from "@lucide/svelte/icons/info";
   import TriangleAlert from "@lucide/svelte/icons/triangle-alert";
   import { Avatar, Button } from "bits-ui";
-  import type { ModelsStrippedItem } from "#lib/shared/api/orval-generated";
+  import type { StrippedItem } from "#lib/shared/api/orval-generated";
   import { getRarityClass, removeFormatting, renderLore } from "#lib/shared/helper";
   import { animateObfuscatedText } from "#lib/shared/mc-text/obfuscated";
   import { cn } from "#lib/shared/utils";
@@ -12,7 +12,7 @@
   import ResolvedItemImage from "./ResolvedItemImage.svelte";
 
   type Props = {
-    piece: ModelsStrippedItem;
+    piece: StrippedItem;
     isDrawer?: boolean;
   };
 

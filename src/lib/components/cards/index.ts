@@ -1,10 +1,10 @@
-import type { ModelsStatsOutput } from "$src/lib/shared/api/orval-generated";
+import type { StatsOutput } from "$src/lib/shared/api/orval-generated";
 import { createContext } from "svelte";
 import type { OptionGroup } from "./default/schema";
 import { cardConfigSchema } from "./default/schema";
 
 export type CardData = {
-  profile?: ModelsStatsOutput;
+  profile?: StatsOutput;
 };
 
 export type CardPreset = {

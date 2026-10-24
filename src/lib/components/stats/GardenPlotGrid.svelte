@@ -6,11 +6,11 @@
   import * as Tooltip from "$ui/tooltip";
   import Image from "@lucide/svelte/icons/image";
   import { AdditionStat } from "#lib/components/stats";
-  import { type ModelsPlotLayout } from "#lib/shared/api/orval-generated";
+  import { type PlotLayout } from "#lib/shared/api/orval-generated";
   import { renderLore } from "#lib/shared/helper";
   import { animateObfuscatedText } from "#lib/shared/mc-text/obfuscated";
 
-  let { plot }: { plot: ModelsPlotLayout | undefined } = $props();
+  let { plot }: { plot: PlotLayout | undefined } = $props();
 
   const isHover = getHoverContext();
   const internalState = getInternalState();

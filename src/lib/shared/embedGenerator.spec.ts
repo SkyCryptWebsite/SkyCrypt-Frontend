@@ -1,5 +1,5 @@
 import { afterEach, describe, it, vi } from "vitest";
-import type { ModelsEmbedData } from "#lib/shared/api/orval-generated";
+import type { EmbedData } from "#lib/shared/api/orval-generated";
 import {
   getGenericDescription,
   getGenericTitle,
@@ -19,7 +19,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should return empty string when username is missing", ({ expect }) => {
       expect.assertions(1);
-      const embedData: ModelsEmbedData = {};
+      const embedData: EmbedData = {};
 
       const result = getMetaTitle(embedData);
       expect(result).toBe("");
@@ -27,7 +27,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should return title without profile name when missing", ({ expect }) => {
       expect.assertions(1);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "TestPlayer"
       };
 
@@ -37,7 +37,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should return title with profile name and no icon for default game mode", ({ expect }) => {
       expect.assertions(1);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "TestPlayer",
         profile_cute_name: "Banana"
       };
@@ -48,7 +48,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should return title with ironman icon for ironman game mode", ({ expect }) => {
       expect.assertions(1);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "IronPlayer",
         profile_cute_name: "Iron Profile",
         game_mode: "ironman"
@@ -60,7 +60,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should return title with bingo icon for bingo game mode", ({ expect }) => {
       expect.assertions(1);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "BingoPlayer",
         profile_cute_name: "Bingo Profile",
         game_mode: "bingo"
@@ -72,7 +72,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should return title with island icon for island game mode", ({ expect }) => {
       expect.assertions(1);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "IslandPlayer",
         profile_cute_name: "Island Profile",
         game_mode: "island"
@@ -84,7 +84,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should handle unknown game mode as default", ({ expect }) => {
       expect.assertions(1);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "UnknownPlayer",
         profile_cute_name: "Custom Profile",
         game_mode: "unknown_mode"
@@ -105,7 +105,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should return empty string when username is missing", ({ expect }) => {
       expect.assertions(1);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         skyblock_level: 250.5
       };
 
@@ -115,7 +115,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should format skyblock level with emoji", ({ expect }) => {
       expect.assertions(2);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "TestPlayer",
         skyblock_level: 250.5
       };
@@ -127,7 +127,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should format networth with emoji when normal value exists", ({ expect }) => {
       expect.assertions(2);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "TestPlayer",
         networth: {
           normal: 1500000000
@@ -141,7 +141,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should not include networth when normal value is null", ({ expect }) => {
       expect.assertions(1);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "TestPlayer",
         networth: {
           normal: undefined
@@ -154,7 +154,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should format purse with emoji", ({ expect }) => {
       expect.assertions(2);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "TestPlayer",
         purse: 50000000
       };
@@ -166,7 +166,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should format bank with emoji", ({ expect }) => {
       expect.assertions(2);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "TestPlayer",
         bank: 100000000
       };
@@ -178,7 +178,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should format skills with emojis and skill average", ({ expect }) => {
       expect.assertions(5);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "TestPlayer",
         skills: {
           skillAverage: 45.5,
@@ -201,7 +201,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should order skills correctly across groups", ({ expect }) => {
       expect.assertions(2);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "TestPlayer",
         skills: {
           skillAverage: 50,
@@ -226,7 +226,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should not include skills when skills object is empty", ({ expect }) => {
       expect.assertions(1);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "TestPlayer",
         skills: {
           skillAverage: 0,
@@ -240,7 +240,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should format dungeons with class average and dungeoneering level", ({ expect }) => {
       expect.assertions(3);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "TestPlayer",
         dungeons: {
           classAverage: 40.5,
@@ -263,7 +263,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should default dungeoneering to 0 when undefined", ({ expect }) => {
       expect.assertions(1);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "TestPlayer",
         dungeons: {
           classAverage: 20
@@ -276,7 +276,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should not include dungeons when classAverage is undefined", ({ expect }) => {
       expect.assertions(1);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "TestPlayer",
         dungeons: {
           dungeoneering: 30,
@@ -292,7 +292,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should order dungeon classes correctly according to healer, mage, berserk, archer, tank", ({ expect }) => {
       expect.assertions(1);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "TestPlayer",
         dungeons: {
           classAverage: 40,
@@ -315,7 +315,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should format slayers with total xp and individual slayer levels", ({ expect }) => {
       expect.assertions(4);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "TestPlayer",
         slayers: {
           xp: 5000000,
@@ -337,7 +337,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should order slayers correctly", ({ expect }) => {
       expect.assertions(1);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "TestPlayer",
         slayers: {
           xp: 1000000,
@@ -358,7 +358,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should not include slayers section when xp is 0", ({ expect }) => {
       expect.assertions(1);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "TestPlayer",
         slayers: {
           xp: 0,
@@ -374,7 +374,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should not include slayers section when xp is undefined", ({ expect }) => {
       expect.assertions(1);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "TestPlayer",
         slayers: {
           slayers: {
@@ -389,7 +389,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should handle embedData with all fields missing gracefully", ({ expect }) => {
       expect.assertions(1);
-      const embedData: ModelsEmbedData = {};
+      const embedData: EmbedData = {};
 
       const result = getLongDescription(embedData);
       expect(result).toBe("");
@@ -397,7 +397,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should handle embedData with only username gracefully", ({ expect }) => {
       expect.assertions(1);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "TestPlayer"
       };
 
@@ -413,7 +413,7 @@ describe.concurrent("embedGenerator", () => {
 
     it("should return empty string when joined is undefined", ({ expect }) => {
       expect.assertions(1);
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "TestPlayer"
       };
 
@@ -426,7 +426,7 @@ describe.concurrent("embedGenerator", () => {
       vi.useFakeTimers();
       vi.setSystemTime(new Date("2025-06-15T00:00:00.000Z"));
 
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "TestPlayer",
         joined: new Date("2023-01-01T00:00:00.000Z").getTime()
       };
@@ -440,7 +440,7 @@ describe.concurrent("embedGenerator", () => {
       vi.useFakeTimers();
       vi.setSystemTime(new Date("2025-06-15T00:00:00.000Z"));
 
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "NewPlayer",
         joined: new Date("2025-01-15T00:00:00.000Z").getTime()
       };
@@ -454,7 +454,7 @@ describe.concurrent("embedGenerator", () => {
       vi.useFakeTimers();
       vi.setSystemTime(new Date("2025-06-15T00:00:00.000Z"));
 
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "VeryNewPlayer",
         joined: new Date("2025-06-01T00:00:00.000Z").getTime()
       };
@@ -468,7 +468,7 @@ describe.concurrent("embedGenerator", () => {
       vi.useFakeTimers();
       vi.setSystemTime(new Date("2025-06-15T12:00:00.000Z"));
 
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "BrandNewPlayer",
         joined: new Date("2025-06-15T06:00:00.000Z").getTime()
       };
@@ -482,7 +482,7 @@ describe.concurrent("embedGenerator", () => {
       vi.useFakeTimers();
       vi.setSystemTime(new Date("2025-01-01T00:00:00.000Z"));
 
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "AnniversaryPlayer",
         joined: new Date("2024-01-01T00:00:00.000Z").getTime()
       };
@@ -496,7 +496,7 @@ describe.concurrent("embedGenerator", () => {
       vi.useFakeTimers();
       vi.setSystemTime(new Date("2025-02-28T00:00:00.000Z"));
 
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "LeapPlayer",
         joined: new Date("2024-02-29T00:00:00.000Z").getTime()
       };
@@ -514,7 +514,7 @@ describe.concurrent("embedGenerator", () => {
     });
 
     it("returns formatted title with player and profile name", ({ expect }) => {
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "tiltedhoney",
         profile_cute_name: "Kiwi"
       };
@@ -522,7 +522,7 @@ describe.concurrent("embedGenerator", () => {
     });
 
     it("includes gamemode when not normal", ({ expect }) => {
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "ironman_steve",
         profile_cute_name: "Apple",
         game_mode: "ironman"
@@ -531,7 +531,7 @@ describe.concurrent("embedGenerator", () => {
     });
 
     it("returns title without profile when profile is missing", ({ expect }) => {
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "tiltedhoney"
       };
       expect(getGenericTitle(embedData)).toBe("tiltedhoney | SkyBlock Stats");
@@ -546,7 +546,7 @@ describe.concurrent("embedGenerator", () => {
     });
 
     it("creates a clean, human-readable SEO summary with stats", ({ expect }) => {
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "tiltedhoney",
         profile_cute_name: "Kiwi",
         skyblock_level: 420.5,
@@ -570,7 +570,7 @@ describe.concurrent("embedGenerator", () => {
       vi.useFakeTimers();
       vi.setSystemTime(new Date("2025-06-15T00:00:00.000Z"));
 
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "tiltedhoney",
         joined: new Date("2023-01-01T00:00:00.000Z").getTime()
       };
@@ -580,7 +580,7 @@ describe.concurrent("embedGenerator", () => {
     });
 
     it("falls back to generic profile overview if joined and stats are absent", ({ expect }) => {
-      const embedData: ModelsEmbedData = {
+      const embedData: EmbedData = {
         username: "tiltedhoney"
       };
 

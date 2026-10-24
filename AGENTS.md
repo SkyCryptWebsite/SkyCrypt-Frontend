@@ -69,7 +69,7 @@ Follow these instructions when working on SkyCrypt Frontend. Nested `AGENTS.md` 
 ## Generated code and database changes
 
 - Do not manually edit Orval-generated API clients or schemas in `src/lib/shared/api/`. Change `orval.config.ts`, custom mutators, or the upstream API definition, then regenerate the relevant target.
-- Run `pnpm exec orval --project <target>` for `skycrypt`, `skycryptZod`, or `patreon`. SkyCrypt targets read `http://localhost:8080/api/openapi/doc.json`; Patreon reads its configured upstream spec. Required services must be available.
+- Run `pnpm exec orval --project <target>` for `skycrypt`, `skycryptZod`, or `patreon`. SkyCrypt targets read `http://localhost:8080/openapi.json`; Patreon reads its configured upstream spec. Required services must be available.
 - Edit database schemas in `src/lib/server/db/schema/`, then run `pnpm db:generate` and review the SQL and metadata in `drizzle/`. Do not rewrite applied migrations.
 - `pnpm auth:schema` regenerates the Better Auth schema from `src/lib/server/auth.ts`. Review the generated changes and generate any required database migration separately.
 - `pnpm db:push` directly changes the configured database; use it only for local schema work. Commit migrations for schema changes. Drizzle CLI commands require `DATABASE_URL` in the process environment.

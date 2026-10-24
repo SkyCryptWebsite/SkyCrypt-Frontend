@@ -3,10 +3,10 @@
   import { mode } from "mode-watcher";
   import SvelteSeo from "svelte-seo";
   import { JsonLd } from "#lib/components/misc";
-  import type { ModelsEmbedData } from "#lib/shared/api/orval-generated";
+  import type { EmbedData } from "#lib/shared/api/orval-generated";
   import { getGenericDescription, getGenericTitle } from "#lib/shared/embedGenerator";
 
-  const { embedData }: { embedData: ModelsEmbedData } = $props();
+  const { embedData }: { embedData: EmbedData } = $props();
   const isStatsPage = $derived(page.url.pathname.includes("/stats/"));
   const routeIgn = $derived(page.params.ign);
   const routeProfile = $derived(page.params.profile || embedData.profile_cute_name);

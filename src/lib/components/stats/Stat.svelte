@@ -5,11 +5,11 @@
   import { Separator } from "$ui/separator";
   import * as Tooltip from "$ui/tooltip";
   import { format } from "numerable";
-  import type { ModelsPlayerStat } from "#lib/shared/api/orval-generated";
+  import type { PlayerStat } from "#lib/shared/api/orval-generated";
   import { cn } from "#lib/shared/utils";
 
   type Props = {
-    data: ModelsPlayerStat;
+    data: PlayerStat;
     class?: string | null | undefined;
   };
 

@@ -1,12 +1,12 @@
 <script lang="ts">
   import type { EmptyItemSlotType } from "#lib/components/item/EmptyItemSlot.svelte";
   import GearSlotColumn from "#lib/components/item/GearSlotColumn.svelte";
-  import type { ModelsSkillGear } from "#lib/shared/api/orval-generated";
+  import type { SkillGear } from "#lib/shared/api/orval-generated";
 
   type Skill = "farming" | "fishing" | "foraging" | "mining";
 
   type Props = {
-    gear?: ModelsSkillGear;
+    gear?: SkillGear;
     skill: Skill;
   };
 
