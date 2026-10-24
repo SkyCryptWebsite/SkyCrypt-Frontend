@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.5.1-beta.0
+
+### Patch Changes
+
+- Fix every page returning a 500 error when server tracing is enabled _[`#377`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/377) [`dfc474c`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/dfc474c59cd705eb80766a979359330dcba6c1a9) [@DarthGigi](https://github.com/DarthGigi)_
+
 ## 4.5.0
 
 ### Minor Changes
