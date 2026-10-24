@@ -2,6 +2,7 @@ import { building, dev } from "$app/env";
 import { HYPERDX_API_KEY, HYPERDX_OTLP_ENDPOINT } from "$app/env/private";
 import { PUBLIC_RELEASE_CHANNEL } from "$app/env/public";
 import { runMigrations } from "$src/lib/server/db/migrate";
+import { isSpanContextValid } from "@opentelemetry/api";
 import { sequence, type Handle, type HandleServerError, type ServerInit } from "@sveltejs/kit/hooks";
 import { svelteKitHandler } from "better-auth/svelte-kit";
 import { initLogger, log, toLoggerConfig, toMiddlewareOptions, type DrainContext } from "evlog";
@@ -108,6 +109,13 @@ const headersHandler = (async ({ event, resolve }) => {
   return response;
 }) satisfies Handle;
 
+// Links the request's wide event to its trace in HyperDX. Without the OTel SDK the spans are no-ops with invalid ids.
+const traceHandler: Handle = ({ event, resolve }) => {
+  const context = event.tracing.root.spanContext();
+  if (isSpanContextValid(context)) event.locals.log.set({ traceId: context.traceId, spanId: context.spanId });
+  return resolve(event);
+};
+
 const betterAuthHandler: Handle = async ({ event, resolve }) => {
   const startedAt = performance.now();
   const session = await auth.api.getSession({ headers: event.request.headers });
@@ -150,4 +158,10 @@ const protectedHandler = (async ({ event, resolve }) => {
   return resolve(event);
 }) satisfies Handle;
 
-export const handle = sequence(evlogHandle, betterAuthHandler, protectedHandler, headersHandler) satisfies Handle;
+export const handle = sequence(
+  evlogHandle,
+  traceHandler,
+  betterAuthHandler,
+  protectedHandler,
+  headersHandler
+) satisfies Handle;

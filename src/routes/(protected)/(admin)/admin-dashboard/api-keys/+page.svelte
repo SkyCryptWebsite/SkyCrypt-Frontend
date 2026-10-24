@@ -46,15 +46,23 @@
     if (!action || busy) return;
     const { kind, row } = action;
     busy = true;
+    const patch = (changes: Partial<Row>) =>
+      listApiKeys(args).withOverride((data) => ({
+        ...data,
+        rows: data.rows.map((current) => (current.id === row.id ? { ...current, ...changes } : current))
+      }));
     try {
       if (kind === "toggle") {
-        await setApiKeyEnabled({ id: row.id, enabled: !row.enabled, note }).updates(listApiKeys(args));
-        toast.success(row.enabled ? "Key disabled." : "Key enabled.");
+        const enabled = !row.enabled;
+        action = null;
+        await setApiKeyEnabled({ id: row.id, enabled, note }).updates(patch({ enabled }));
+        toast.success(enabled ? "Key enabled." : "Key disabled.");
       } else {
-        await setApiKeyRateLimit({ id: row.id, max: limit, note }).updates(listApiKeys(args));
+        const max = limit;
+        action = null;
+        await setApiKeyRateLimit({ id: row.id, max, note }).updates(patch({ rateLimitMax: max }));
         toast.success("Rate limit updated.");
       }
-      action = null;
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Unable to update the key.");
     } finally {

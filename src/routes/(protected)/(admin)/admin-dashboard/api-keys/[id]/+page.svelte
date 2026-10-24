@@ -70,14 +70,19 @@
         await goto(resolve("/(protected)/(admin)/admin-dashboard/api-keys"));
         return;
       }
+      const patch = (changes: Partial<typeof key>) =>
+        getApiKeyDetail(id).withOverride((current) => ({ ...current, key: { ...current.key, ...changes } }));
       if (action === "toggle") {
-        await setApiKeyEnabled({ id, enabled: !key.enabled, note }).updates(getApiKeyDetail(id));
-        toast.success(key.enabled ? "Key disabled." : "Key enabled.");
+        const enabled = !key.enabled;
+        action = null;
+        await setApiKeyEnabled({ id, enabled, note }).updates(patch({ enabled }));
+        toast.success(enabled ? "Key enabled." : "Key disabled.");
       } else {
-        await setApiKeyRateLimit({ id, max: limit, note }).updates(getApiKeyDetail(id));
+        const max = limit;
+        action = null;
+        await setApiKeyRateLimit({ id, max, note }).updates(patch({ rateLimitMax: max }));
         toast.success("Rate limit updated.");
       }
-      action = null;
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Unable to update the key.");
     } finally {

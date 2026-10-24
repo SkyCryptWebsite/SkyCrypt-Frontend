@@ -40,6 +40,9 @@
 
   async function signOutSession(id?: string) {
     revoking = id ?? "all";
+    const release = getSessions().withOverride((current) =>
+      current.filter((session) => (id ? session.id !== id : session.current))
+    );
     try {
       if (id) {
         await revokeSession(id);
@@ -52,11 +55,16 @@
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Unable to sign out. Please try again.");
     } finally {
+      release();
       revoking = null;
     }
   }
 
   async function toggleDeveloperMode(enabled: boolean) {
+    const release = getDashboard().withOverride((current) => ({
+      ...current,
+      user: { ...current.user, developerMode: enabled }
+    }));
     try {
       await setDeveloperMode(enabled);
       // A fresh request reads the session cookie Better Auth just updated.
@@ -64,6 +72,8 @@
       toast.success(enabled ? "Developer mode turned on." : "Developer mode turned off.");
     } catch {
       toast.error("Unable to update developer mode. Please try again.");
+    } finally {
+      release();
     }
   }
 

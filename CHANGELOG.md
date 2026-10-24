@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.5.0-beta.0
+
+### Minor Changes
+
+- Show API key, banner, session and developer mode changes immediately while they save, fix the API key page breaking after enabling, disabling or changing a key's rate limit, and send server traces to HyperDX _[`5d4653d`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/5d4653d9705caa7bdc00562409c233e91ab44a24) [@DarthGigi](https://github.com/DarthGigi)_
+
 ## 4.4.1
 
 ### Patch Changes

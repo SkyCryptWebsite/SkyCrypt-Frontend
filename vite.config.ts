@@ -30,6 +30,8 @@ export default defineConfig({
         remoteFunctions: true,
         sendWarningsToBrowser: process.env.NODE_ENV === "development"
       },
+      tracing: { server: true },
+      output: { linkHeaderPreload: true },
       inspector: process.env.NODE_ENV === "development",
       adapter: adapter(),
       paths: {
