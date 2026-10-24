@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.4.1-beta.0
+
+### Patch Changes
+
+- Error messages now say what went wrong, such as an unknown player or a missing profile, instead of showing the backend's raw error. The frontend uses the client generated from the backend's new Huma spec. _[`d2e81d3`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/d2e81d377c6cdbda5ee92b2beb925ce216a0f9a7) [@DarthGigi](https://github.com/DarthGigi)_
+
 ## 4.4.0
 
 ### Minor Changes
