@@ -1,6 +1,6 @@
 import { flushSync, untrack } from "svelte";
 import { afterEach, beforeEach, describe, it } from "vitest";
-import type { ModelsResourcePackConfig } from "#lib/shared/api/orval-generated";
+import type { ResourcePackConfig } from "#lib/shared/api/orval-generated";
 import { readEnabledPacksCookie } from "#lib/shared/resource-packs";
 import { EnabledPacksContext, reconcileEnabledPacks } from "./packs.svelte";
 
@@ -8,7 +8,7 @@ const packs = [
   { id: "HYPIXEL_PLUS", name: "Hypixel Plus" },
   { id: "FSR", name: "FurSky Reborn" },
   { id: "HYPIXEL_PACK", name: "Hypixel SkyBlock" }
-] satisfies ModelsResourcePackConfig[];
+] satisfies ResourcePackConfig[];
 
 function clearCookie(name: string) {
   document.cookie = `${name}=; Max-Age=0; path=/`;

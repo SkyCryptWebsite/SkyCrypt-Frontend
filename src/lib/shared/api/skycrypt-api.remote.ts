@@ -3,6 +3,7 @@ import { APIEndpointName } from "$types";
 import { error, isHttpError } from "@sveltejs/kit";
 import { log } from "evlog";
 import { z } from "zod";
+import { apiErrorMessage } from "#lib/shared/api/error-message";
 import {
   getCombinedProfileStats as getCombinedProfileStatsRequest,
   getGardenStats as getGardenStatsRequest,
@@ -20,8 +21,8 @@ import {
   resolveUuidByUsername as resolveUuidByUsernameRequest,
   searchProfileInventory as searchProfileInventoryRequest,
   getStatsConstants as getStatsConstantsRequest,
-  type ModelsProcessingError,
-  type ModelsSourceInfo
+  type APIError,
+  type SourceInfo
 } from "#lib/shared/api/orval-generated";
 import {
   GetCombinedProfileStatsParams,
@@ -38,10 +39,8 @@ import {
   SearchProfileInventoryParams
 } from "#lib/shared/api/orval-generated-zod";
 
-/** Type helper to extract the success data type from an API response Excludes ModelsProcessingError from the union type */
-type ExtractSuccessData<TResponse> = TResponse extends { data: infer TData }
-  ? Exclude<TData, ModelsProcessingError>
-  : never;
+/** The body of a response's successful (200) case. */
+type ExtractSuccessData<TResponse> = Extract<TResponse, { status: 200 }> extends { data: infer TData } ? TData : never;
 
 /**
  * Generic helper function to handle API fetching with consistent error handling Reduces boilerplate for API section
@@ -49,7 +48,7 @@ type ExtractSuccessData<TResponse> = TResponse extends { data: infer TData }
  *
  * @param sectionName - Name of the section being fetched (used for logging)
  * @param apiFetcher - Function that calls the API endpoint
- * @returns The success data type, excluding ModelsProcessingError
+ * @returns The body of the successful response
  * @throws SvelteKit error if the API returns an error or the request fails
  */
 async function fetchSection<TResponse extends { data: unknown; status: number }>(
@@ -59,21 +58,20 @@ async function fetchSection<TResponse extends { data: unknown; status: number }>
   try {
     const { data, status } = await apiFetcher();
     if (status >= 400) {
-      const message = typeof data === "object" && data !== null && "error" in data ? String(data.error) : String(data);
-      log.error({ action: "skycrypt_api.fetch_section", section: sectionName, status, message });
-      error(status, message);
-    }
-    // Check if the API returned a processing error
-    if (typeof data === "object" && data !== null && "error" in data && data.error) {
-      log.error({ action: "skycrypt_api.fetch_section", section: sectionName, status, response: data });
-      error(status, data.error as string);
+      // Errors are RFC 9457 problem details; code (NOT_CACHED, PLAYER_NOT_FOUND, ...) says which.
+      const problem = typeof data === "object" && data !== null ? (data as APIError) : undefined;
+      log.error({
+        action: "skycrypt_api.fetch_section",
+        section: sectionName,
+        status,
+        code: problem?.code,
+        detail: problem?.detail ?? data
+      });
+      error(status, apiErrorMessage(problem));
     }
     return data as ExtractSuccessData<TResponse>;
   } catch (err) {
-    if (isHttpError(err)) {
-      log.error({ action: "skycrypt_api.http_error", section: sectionName, error: err });
-      error(err.status, err.body.message);
-    }
+    if (isHttpError(err)) throw err;
     log.error({ action: "skycrypt_api.fetch_section_failed", section: sectionName, error: err });
     error(500, `Failed to fetch ${sectionName} section data`);
   }
@@ -106,17 +104,27 @@ export const getProfileNetworth = query(GetProfileNetworthParams, async ({ uuid,
 
 /** Fetch all inventory tabs for a specific profile */
 export const getProfileInventory = query(GetProfileInventoryParams, async ({ uuid, profileId }) => {
-  return fetchSection(APIEndpointName.INVENTORY, () => getProfileInventoryRequest(uuid, profileId));
+  return (await fetchSection(APIEndpointName.INVENTORY, () => getProfileInventoryRequest(uuid, profileId))) ?? [];
 });
 
 /** Search all inventories for matching items */
 export const searchProfileInventory = query(SearchProfileInventoryParams, async ({ uuid, profileId, searchParam }) => {
-  return fetchSection(APIEndpointName.INVENTORY, () => searchProfileInventoryRequest(uuid, profileId, searchParam));
+  return (
+    (await fetchSection(APIEndpointName.INVENTORY, () =>
+      searchProfileInventoryRequest(uuid, profileId, searchParam)
+    )) ?? []
+  );
 });
 
 /** Fetch garden data for a specific profile */
 export const getGardenStats = query(GetGardenStatsParams, async ({ uuid, profileId }) => {
-  return fetchSection(APIEndpointName.GARDEN, () => getGardenStatsRequest(uuid, profileId));
+  return fetchSection(APIEndpointName.GARDEN, async () => {
+    const response = await getGardenStatsRequest(uuid, profileId);
+    // A profile without a garden isn't an error; the section shows it as locked.
+    if (response.status === 404 && response.data.code === "GARDEN_NOT_FOUND")
+      return { data: null, status: 200 as const };
+    return response;
+  });
 });
 
 /** Fetch embed data for a specific profile */
@@ -151,22 +159,22 @@ export const listResourcePacks = prerender(
 /** Fetch stats list */
 export const getAllStats = prerender(
   z.string(),
-  async (_version) => fetchSection(APIEndpointName.STATS, () => getStatsConstantsRequest()),
+  async (_version) => (await fetchSection(APIEndpointName.STATS, () => getStatsConstantsRequest())) ?? [],
   { dynamic: true, inputs: () => [__PRERENDER_VERSION__] }
 );
 
 /** Fetch max-level enchantment lore strings */
 export const listEnchantments = prerender(
   z.string(),
-  async (_version) => fetchSection(APIEndpointName.ENCHANTMENTS, () => listEnchantmentsRequest()),
+  async (_version) => (await fetchSection(APIEndpointName.ENCHANTMENTS, () => listEnchantmentsRequest())) ?? [],
   { dynamic: true, inputs: () => [__PRERENDER_VERSION__] }
 );
 
 /** Fetch the source information for the currently running backend service. */
-export const getSourceInfo = query(async (): Promise<ModelsSourceInfo | null> => {
+export const getSourceInfo = query(async (): Promise<SourceInfo | null> => {
   try {
-    const { data } = await getSourceInfoRequest({ cache: "no-store" });
-    return data;
+    const response = await getSourceInfoRequest({ cache: "no-store" });
+    return response.status === 200 ? response.data : null;
   } catch (error) {
     log.warn({ action: "skycrypt_api.get_source_info", error });
     return null;

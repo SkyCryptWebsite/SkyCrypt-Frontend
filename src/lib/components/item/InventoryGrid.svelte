@@ -3,7 +3,7 @@
   import PackageSearchIcon from "@lucide/svelte/icons/package-search";
   import type { Snippet } from "svelte";
   import EmptyStat from "#lib/components/EmptyStat.svelte";
-  import { type ModelsStrippedItem } from "#lib/shared/api/orval-generated";
+  import { type StrippedItem } from "#lib/shared/api/orval-generated";
 
   let {
     inventoryId,
@@ -13,12 +13,12 @@
   }: {
     inventoryId: string;
     gap: number;
-    itemSnippet: Snippet<[ModelsStrippedItem]>;
-    items?: ModelsStrippedItem[];
+    itemSnippet: Snippet<[StrippedItem]>;
+    items?: StrippedItem[];
   } = $props();
 </script>
 
-{#snippet content(items: ModelsStrippedItem[] | undefined)}
+{#snippet content(items: StrippedItem[] | undefined)}
   {#if items?.length ?? 0 > 0}
     <div class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 @md:gap-1.5 @xl:gap-2">
       {#each items as item, index (index)}
@@ -31,9 +31,7 @@
           <div
             class="relative flex aspect-square size-full items-center justify-center overflow-clip rounded-xl border bg-foreground/5">
             {@render itemSnippet(
-              inventoryId === "inventory"
-                ? ({ ...item, rarity: item.rarity ?? "uncommon" } as ModelsStrippedItem)
-                : item
+              inventoryId === "inventory" ? ({ ...item, rarity: item.rarity ?? "uncommon" } as StrippedItem) : item
             )}
           </div>
         {:else}

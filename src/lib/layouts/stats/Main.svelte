@@ -27,7 +27,7 @@
   import Skills from "#lib/layouts/stats/Skills.svelte";
   import Stats from "#lib/layouts/stats/Stats.svelte";
   import Sections from "#lib/sections/Sections.svelte";
-  import type { ModelsCombinedOutput, ModelsStatData, ModelsStatsOutput } from "#lib/shared/api/orval-generated";
+  import type { CombinedOutput, StatData, StatsOutput } from "#lib/shared/api/orval-generated";
 
   const {
     data: ctx,
@@ -35,9 +35,9 @@
     combined,
     enchantments
   }: {
-    data: ModelsStatsOutput;
-    allStats: ModelsStatData[];
-    combined: ModelsCombinedOutput | null;
+    data: StatsOutput;
+    allStats: StatData[];
+    combined: CombinedOutput | null;
     enchantments: Enchantments;
   } = $props();
 
@@ -98,11 +98,11 @@
   });
 
   $effect.pre(() => {
-    allStatsClass.current = allStats ?? [];
+    allStatsClass.current = allStats;
   });
 
   $effect.pre(() => {
-    enchantmentsClass.current = enchantments ?? [];
+    enchantmentsClass.current = enchantments;
   });
 </script>
 

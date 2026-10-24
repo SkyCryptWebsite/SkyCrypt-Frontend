@@ -13,9 +13,9 @@
   import PackageOpen from "@lucide/svelte/icons/package-open";
   import { Avatar } from "bits-ui";
   import { SettingsTab } from "#lib/components/header/types";
-  import type { ModelsResourcePackConfig } from "#lib/shared/api/orval-generated";
+  import type { ResourcePackConfig } from "#lib/shared/api/orval-generated";
 
-  type ResourcePack = ModelsResourcePackConfig & { id: string };
+  type ResourcePack = ResourcePackConfig & { id: string };
   type SortableItem = ReturnType<typeof createSortable>;
   type DragStartEvent = Parameters<NonNullable<DragDropEventHandlers["onDragStart"]>>[0];
   type DragOverEvent = Parameters<NonNullable<DragDropEventHandlers["onDragOver"]>>[0];

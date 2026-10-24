@@ -16,10 +16,10 @@
     intervalToDuration
   } from "date-fns";
   import { AdditionStat } from "#lib/components/stats";
-  import { type ModelsFormattedDungeonFloor } from "#lib/shared/api/orval-generated";
+  import { type FormattedDungeonFloor } from "#lib/shared/api/orval-generated";
   import { formatNumber } from "#lib/shared/helper";
 
-  let { catacombs, master = false }: { catacombs: ModelsFormattedDungeonFloor[] | undefined; master?: boolean } =
+  let { catacombs, master = false }: { catacombs: FormattedDungeonFloor[] | null | undefined; master?: boolean } =
     $props();
 
   function formatDuration(end: number) {

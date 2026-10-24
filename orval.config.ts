@@ -2,7 +2,7 @@ import { defineConfig } from "orval";
 
 export default defineConfig({
   skycrypt: {
-    input: "http://localhost:8080/api/openapi/doc.json",
+    input: "http://localhost:8080/openapi.json",
     output: {
       target: "./src/lib/shared/api/orval-generated.ts",
       client: "fetch",
@@ -19,7 +19,7 @@ export default defineConfig({
     }
   },
   skycryptZod: {
-    input: "http://localhost:8080/api/openapi/doc.json",
+    input: "http://localhost:8080/openapi.json",
     output: {
       target: "./src/lib/shared/api/orval-generated-zod.ts",
       client: "zod",

@@ -1,6 +1,6 @@
 import { gameModeIcons } from "$src/lib/shared/constants/game-modes";
 import { formatDistanceToNowStrict } from "date-fns";
-import type { ModelsEmbedData } from "#lib/shared/api/orval-generated";
+import type { EmbedData } from "#lib/shared/api/orval-generated";
 import { formatNumber } from "#lib/shared/helper";
 
 const skillEmojis = {
@@ -46,7 +46,7 @@ const miscEmojis = {
   level: "<:level:1558225225768767530>"
 } as const;
 
-function getLongDescription(embedData: ModelsEmbedData): string {
+function getLongDescription(embedData: EmbedData): string {
   if (!embedData || !embedData.username) {
     return "";
   }
@@ -149,7 +149,7 @@ function getLongDescription(embedData: ModelsEmbedData): string {
   return lines.join("\n").trim() + "\n";
 }
 
-function getMetaTitle(embedData: ModelsEmbedData): string {
+function getMetaTitle(embedData: EmbedData): string {
   if (!embedData || !embedData.username) {
     return "";
   }
@@ -158,7 +158,7 @@ function getMetaTitle(embedData: ModelsEmbedData): string {
   return `${embedData.username} (${embedData.profile_cute_name} ${gameModeIcon})`.trim();
 }
 
-function getShortDescription(embedData: ModelsEmbedData): string {
+function getShortDescription(embedData: EmbedData): string {
   if (!embedData.joined) {
     return "";
   }
@@ -166,7 +166,7 @@ function getShortDescription(embedData: ModelsEmbedData): string {
   return `${embedData.username} has been playing SkyBlock for ${formatDistanceToNowStrict(new Date(embedData.joined))}`;
 }
 
-function getGenericDescription(embedData: ModelsEmbedData): string {
+function getGenericDescription(embedData: EmbedData): string {
   if (!embedData || !embedData.username) {
     return "A beautiful site for sharing your SkyBlock profile 🍣";
   }
@@ -206,7 +206,7 @@ function getGenericDescription(embedData: ModelsEmbedData): string {
   return `View ${name}'s Hypixel SkyBlock stats, skills, networth, dungeons, and gear on SkyCrypt.`;
 }
 
-function getGenericTitle(embedData: ModelsEmbedData): string {
+function getGenericTitle(embedData: EmbedData): string {
   if (!embedData || !embedData.username) {
     return "SkyBlock Stats | SkyCrypt";
   }

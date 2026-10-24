@@ -3,11 +3,11 @@
   import * as Tabs from "$ui/tabs";
   import { cubicOut } from "svelte/easing";
   import { crossfade } from "svelte/transition";
-  import type { ModelsResolvedLoadout } from "#lib/shared/api/orval-generated";
+  import type { ResolvedLoadout } from "#lib/shared/api/orval-generated";
   import LoadoutCard from "./LoadoutCard.svelte";
 
   type Props = {
-    loadouts: ModelsResolvedLoadout[];
+    loadouts: ResolvedLoadout[];
   };
 
   let { loadouts }: Props = $props();
@@ -18,7 +18,7 @@
     easing: cubicOut
   });
 
-  function loadoutKey(loadout: ModelsResolvedLoadout | undefined, index: number): string {
+  function loadoutKey(loadout: ResolvedLoadout | undefined, index: number): string {
     return `${loadout?.id ?? "loadout"}-${index}`;
   }
 </script>

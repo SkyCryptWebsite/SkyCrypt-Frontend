@@ -2,7 +2,7 @@ import { browser } from "$app/env";
 import { PersistedState } from "runed";
 import { createContext } from "svelte";
 import { SvelteSet } from "svelte/reactivity";
-import type { ModelsResourcePackConfig } from "#lib/shared/api/orval-generated";
+import type { ResourcePackConfig } from "#lib/shared/api/orval-generated";
 import {
   readEnabledPacksCookie,
   readLegacyDisabledPacksCookie,
@@ -64,7 +64,7 @@ export class EnabledPacksContext {
     return this.#initial !== null && JSON.stringify(this.current) !== JSON.stringify(this.#initial);
   }
 
-  configure(resourcePacks: ModelsResourcePackConfig[]) {
+  configure(resourcePacks: ResourcePackConfig[]) {
     if (!browser || this.#initialized) return;
 
     const defaultPackIds = resourcePacks.flatMap((pack) => (pack.id ? [pack.id] : []));

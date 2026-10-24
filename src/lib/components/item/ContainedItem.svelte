@@ -1,11 +1,11 @@
 <script lang="ts">
   import Image from "@lucide/svelte/icons/image";
   import { Avatar } from "bits-ui";
-  import type { ModelsStrippedItem } from "#lib/shared/api/orval-generated";
+  import type { StrippedItem } from "#lib/shared/api/orval-generated";
   import { cn } from "#lib/shared/utils";
   import ResolvedItemImage from "./ResolvedItemImage.svelte";
 
-  let { piece, isInventory }: { piece: ModelsStrippedItem; isInventory?: boolean } = $props();
+  let { piece, isInventory }: { piece: StrippedItem; isInventory?: boolean } = $props();
 </script>
 
 <div class="relative flex aspect-square items-center justify-center overflow-clip p-0">

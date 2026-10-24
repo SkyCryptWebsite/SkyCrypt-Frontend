@@ -1,11 +1,11 @@
 <script lang="ts">
-  import type { ModelsStrippedItem } from "#lib/shared/api/orval-generated";
+  import type { StrippedItem } from "#lib/shared/api/orval-generated";
   import { cn } from "#lib/shared/utils";
   import EmptyItemSlot, { type EmptyItemSlotType } from "./EmptyItemSlot.svelte";
   import Item from "./Item.svelte";
 
   type Props = {
-    items?: (ModelsStrippedItem | undefined)[];
+    items?: (StrippedItem | undefined)[];
     emptySlots: EmptyItemSlotType[];
     label?: string;
     class?: string;

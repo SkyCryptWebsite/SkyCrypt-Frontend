@@ -3,7 +3,7 @@
   import { initInternalState } from "$ctx/internal.svelte";
   import { Tooltip } from "bits-ui";
   import type { Component, Snippet } from "svelte";
-  import type { ModelsStatData } from "#lib/shared/api/orval-generated";
+  import type { StatData } from "#lib/shared/api/orval-generated";
   import { MockIsHover } from "./test-wrapper.svelte";
 
   interface Props {
@@ -13,7 +13,7 @@
     componentProps?: Record<string, any>;
     hoverEnabled?: boolean;
     withTooltipProvider?: boolean;
-    allStats?: ModelsStatData[];
+    allStats?: StatData[];
     children?: Snippet;
   }
 

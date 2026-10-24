@@ -6,7 +6,7 @@
   import { Debounced } from "runed";
   import type { Snippet } from "svelte";
   import { SectionBoundary } from "#lib/components/sections";
-  import { type ModelsStrippedItem } from "#lib/shared/api/orval-generated";
+  import { type StrippedItem } from "#lib/shared/api/orval-generated";
   import { searchProfileInventory } from "#lib/shared/api/skycrypt-api.remote";
 
   let {
@@ -14,7 +14,7 @@
     uuid,
     profileId,
     itemSnippet
-  }: { search?: string; uuid: string; profileId: string; itemSnippet: Snippet<[ModelsStrippedItem]> } = $props();
+  }: { search?: string; uuid: string; profileId: string; itemSnippet: Snippet<[StrippedItem]> } = $props();
 
   const debouncedSearch = $state(new Debounced(() => search, 300));
 </script>
@@ -36,8 +36,8 @@
 {:else}
   {#key debouncedSearch.current}
     <SectionBoundary query={() => searchProfileInventory({ uuid, profileId, searchParam: debouncedSearch.current! })}>
-      {#snippet children(items: ModelsStrippedItem[])}
-        {#if !items || items.length === 0}
+      {#snippet children(items: StrippedItem[])}
+        {#if items.length === 0}
           <EmptyStat
             title="No items found"
             description="Hmm... couldn't find anything for your query"

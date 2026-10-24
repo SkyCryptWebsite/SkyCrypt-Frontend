@@ -24,14 +24,6 @@
   const weapons = $derived(gear?.weapons);
   const loadouts = $derived(getCombinedContext().current?.loadouts ?? []);
   const armorSlots = ["helmet", "chestplate", "leggings", "boots"] as const;
-  const firstWardrobeItems = $derived.by(() => {
-    if (wardrobe?.length === 0) return [];
-    return wardrobe?.map((wardrobeItems) => wardrobeItems.find((piece) => piece));
-  });
-  const firstEquipmentWardrobeItems = $derived.by(() => {
-    if (equipmentWardrobe?.length === 0) return [];
-    return equipmentWardrobe?.map((wardrobeItems) => wardrobeItems.find((piece) => piece));
-  });
 </script>
 
 <Section id="Gear" {order} class="contents space-y-4">
@@ -104,9 +96,9 @@
       <div class="max-w-full">
         <ScrollAreaItems class="relative w-full" viewportClasses="min-h-86 scroll-fade-x" orientation="horizontal">
           <div class="relative flex flex-row gap-6 md:gap-3">
-            {#each firstWardrobeItems as _, i (i)}
+            {#each wardrobe as wardrobeItems, i (i)}
               <div class="min-h-18 min-w-18">
-                <Wardrobe wardrobeItems={wardrobe[i]} />
+                <Wardrobe wardrobeItems={wardrobeItems ?? []} />
               </div>
             {/each}
           </div>
@@ -121,9 +113,9 @@
       <div class="max-w-full">
         <ScrollAreaItems class="relative w-full" viewportClasses="min-h-86 scroll-fade-x" orientation="horizontal">
           <div class="relative flex flex-row gap-6 md:gap-3">
-            {#each firstEquipmentWardrobeItems as _, i (i)}
+            {#each equipmentWardrobe as wardrobeItems, i (i)}
               <div class="min-h-18 min-w-18">
-                <Wardrobe wardrobeItems={equipmentWardrobe[i]} kind="equipment" />
+                <Wardrobe wardrobeItems={wardrobeItems ?? []} kind="equipment" />
               </div>
             {/each}
           </div>

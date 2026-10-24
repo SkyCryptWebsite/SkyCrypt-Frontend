@@ -12,7 +12,7 @@
   import { Chip } from "#lib/components/misc";
   import { SectionBoundary, SectionSubtitle } from "#lib/components/sections";
   import { AdditionStat, GardenPlotGrid } from "#lib/components/stats";
-  import { type ModelsGarden } from "#lib/shared/api/orval-generated";
+  import { type Garden } from "#lib/shared/api/orval-generated";
   import { getGardenStats } from "#lib/shared/api/skycrypt-api.remote";
   import { formatNumber, getRarityClass } from "#lib/shared/helper";
   import { cn } from "#lib/shared/utils";
@@ -196,6 +196,12 @@
             <div class="px-5">
               <GardenPlotGrid plot={garden.plot} />
             </div>
+          {:else}
+            <EmptyStat
+              title="Locked"
+              description="This player does not have the Garden unlocked"
+              icon={LockIcon}
+              class="mb-2" />
           {/if}
         {/snippet}
       </SectionBoundary>
@@ -203,7 +209,7 @@
   </Collapsible.Content>
 </Collapsible.Root>
 
-{#snippet upgrades(garden: ModelsGarden)}
+{#snippet upgrades(garden: Garden)}
   {#if garden.cropUpgrades}
     {const allMaxed = Object.values(garden.cropUpgrades).every((upgrade) => upgrade.level?.maxed)}
     <div class="mb-3 flex items-center gap-1 text-base font-semibold">
@@ -234,7 +240,7 @@
   {/if}
 {/snippet}
 
-{#snippet milestones(garden: ModelsGarden)}
+{#snippet milestones(garden: Garden)}
   {#if garden.cropMilestones}
     {const allMaxed = Object.values(garden.cropMilestones).every((upgrade) => upgrade.level?.maxed)}
     <div class="flex items-center gap-1 text-base font-semibold">

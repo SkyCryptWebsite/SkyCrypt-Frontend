@@ -12,7 +12,7 @@
   import { InventoryGrid, InventorySearch, Item } from "#lib/components/item";
   import { ScrollItems } from "#lib/components/misc";
   import { Section } from "#lib/components/sections";
-  import { type ModelsInventory, type ModelsStrippedItem } from "#lib/shared/api/orval-generated";
+  import { type Inventory, type StrippedItem } from "#lib/shared/api/orval-generated";
   import { getProfileInventory } from "#lib/shared/api/skycrypt-api.remote";
   import { renderLore } from "#lib/shared/helper";
   import { animateObfuscatedText } from "#lib/shared/mc-text/obfuscated";
@@ -50,9 +50,7 @@
 
 <Section id="Inventory" {order} class="min-h-150">
   <svelte:boundary>
-    {const inventories = $derived<ModelsInventory[]>(
-      uuid && profileId ? await getProfileInventory({ uuid, profileId }) : []
-    )}
+    {const inventories = $derived<Inventory[]>(uuid && profileId ? await getProfileInventory({ uuid, profileId }) : [])}
     {const selectedInventory = $derived(
       openTab ? inventories.find((inventory) => inventory.name === openTab) : undefined
     )}
@@ -125,7 +123,7 @@
   </svelte:boundary>
 </Section>
 
-{#snippet inventoryTabItems(inventories: ModelsInventory[], selectedTabName: string)}
+{#snippet inventoryTabItems(inventories: Inventory[], selectedTabName: string)}
   {#each inventories as tabItem (tabItem.name)}
     <Tabs.Trigger
       value={tabItem.name || ""}
@@ -152,7 +150,7 @@
   {/each}
 {/snippet}
 
-{#snippet itemSnippet(item: ModelsStrippedItem)}
+{#snippet itemSnippet(item: StrippedItem)}
   <Item piece={item} isInventory={true} showRecombobulated={false} showCount={true} />
 {/snippet}
 
@@ -164,7 +162,7 @@
   <Separator class="col-span-full my-4" />
 {/snippet}
 
-{#snippet multipleInventorySection(items: ModelsStrippedItem[], currentInventory: ModelsInventory)}
+{#snippet multipleInventorySection(items: StrippedItem[], currentInventory: Inventory)}
   <Tabs.Root value={currentInventory?.name}>
     <Tabs.List
       class="grid grid-cols-[repeat(9,minmax(1.875rem,4.875rem))] place-content-center gap-1 @md:gap-1.5 @xl:gap-2">

@@ -3,13 +3,13 @@ import { createContext } from "svelte";
 import { SettingsTab } from "#lib/components/header/types";
 import { sections } from "#lib/sections/constants";
 import type { SectionName } from "#lib/sections/types";
-import type { ModelsStrippedItem } from "#lib/shared/api/orval-generated";
+import type { StrippedItem } from "#lib/shared/api/orval-generated";
 
 interface InternalStateData {
   tabValue: SectionName;
   showItem: boolean;
-  itemContent: ModelsStrippedItem | undefined;
-  itemContentSpecial: ModelsStrippedItem | undefined;
+  itemContent: StrippedItem | undefined;
+  itemContentSpecial: StrippedItem | undefined;
   content: Snippet | undefined;
   openCommand: boolean;
   themeEditorOpen: boolean;
@@ -54,7 +54,7 @@ export class InternalStateContext {
     return this.#data.itemContent;
   }
 
-  set itemContent(value: ModelsStrippedItem | undefined) {
+  set itemContent(value: StrippedItem | undefined) {
     this.#data.itemContent = value;
   }
 
@@ -62,7 +62,7 @@ export class InternalStateContext {
     return this.#data.itemContentSpecial;
   }
 
-  set itemContentSpecial(value: ModelsStrippedItem | undefined) {
+  set itemContentSpecial(value: StrippedItem | undefined) {
     this.#data.itemContentSpecial = value;
   }
 

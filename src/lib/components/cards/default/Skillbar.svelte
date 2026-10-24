@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ModelsSkill } from "$src/lib/shared/api/orval-generated";
+  import type { Skill } from "$src/lib/shared/api/orval-generated";
   import { calculatePercentage } from "$src/lib/shared/helper";
   import { cn } from "$src/lib/shared/utils";
   import { Progress } from "bits-ui";
@@ -8,7 +8,7 @@
 
   type SkillProps = {
     skill: string;
-    skillData: ModelsSkill;
+    skillData: Skill;
     apiEnabled?: boolean;
     class?: string | null | undefined;
   };

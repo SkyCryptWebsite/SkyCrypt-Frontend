@@ -6,7 +6,7 @@
   import { getCombinedContext } from "$ctx";
   import CollapsibleCustomTrigger from "$src/lib/components/CollapsibleCustomTrigger.svelte";
   import EmptyStat from "$src/lib/components/EmptyStat.svelte";
-  import { type ModelsStrippedPet } from "$src/lib/shared/api/orval-generated";
+  import { type StrippedPet } from "$src/lib/shared/api/orval-generated";
   import * as Collapsible from "$ui/collapsible";
   import { Label } from "$ui/label";
   import PawPrintIcon from "@lucide/svelte/icons/paw-print";
@@ -24,7 +24,7 @@
   const hasInactiveUniquePets = $derived(uniquePets.some((pet) => !pet.active));
 </script>
 
-{#snippet petCard(pet: ModelsStrippedPet)}
+{#snippet petCard(pet: StrippedPet)}
   <div>
     <Item piece={pet} />
     <p class="mt-2 text-center font-semibold data-[maxed=true]:text-accent-2" data-maxed={pet.level === pet.maxLevel}>
