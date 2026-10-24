@@ -89,7 +89,11 @@ export const setApiKeyEnabled = command(
         note
       });
     });
-    await Promise.all([requested(listApiKeys, 1).refreshAll(), getOverview().refresh()]);
+    await Promise.all([
+      requested(listApiKeys, 1).refreshAll(),
+      requested(getApiKeyDetail, 1).refreshAll(),
+      getOverview().refresh()
+    ]);
   }
 );
 
@@ -122,7 +126,7 @@ export const setApiKeyRateLimit = command(
         details: { max }
       });
     });
-    await requested(listApiKeys, 1).refreshAll();
+    await Promise.all([requested(listApiKeys, 1).refreshAll(), requested(getApiKeyDetail, 1).refreshAll()]);
   }
 );
 

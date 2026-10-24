@@ -38,7 +38,8 @@ export const variables = defineEnvVars({
   TURNSTILE_SECRET_KEY: { schema },
   HYPERDX_OTLP_ENDPOINT: {
     schema,
-    description: "Base URL of the HyperDX OTLP HTTP intake (without `/v1/logs`). Logs only go to stdout when empty."
+    description:
+      "Base URL of the HyperDX OTLP HTTP intake (without `/v1/logs`). Receives logs and traces; logs only go to stdout and tracing stays off when empty."
   },
   HYPERDX_API_KEY: { schema, description: "HyperDX ingestion API key (Team Settings → API Keys)." },
   PUBLIC_TURNSTILE_SITE_KEY: { public: true, schema },

@@ -44,10 +44,16 @@
     "update:shadcn": "pnpm dlx shadcn-svelte@latest update -a && oxfmt --write ./src/lib/components/ui && oxfmt --write ./src/lib/shared/utils.ts"
   },
   "dependencies": {
+    "@opentelemetry/api": "^1.10.0",
+    "@opentelemetry/exporter-trace-otlp-proto": "^0.300.0",
+    "@opentelemetry/instrumentation-http": "^0.300.0",
+    "@opentelemetry/instrumentation-undici": "^0.34.0",
+    "@opentelemetry/sdk-node": "^0.300.0",
     "@takumi-rs/core-linux-x64-gnu": "^2.17.1",
     "@tanstack/svelte-table": "^9.3.1",
     "culori": "^4.0.2",
     "evlog": "^2.33.1",
+    "import-in-the-middle": "^3.5.2",
     "simple-git-hooks": "^2.14.0",
     "takumi-js": "^2.17.1"
   },

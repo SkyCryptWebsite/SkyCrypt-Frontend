@@ -64,7 +64,9 @@
   async function remove(row: Row) {
     deleting = null;
     try {
-      await deleteBanner(row.id);
+      await deleteBanner(row.id).updates(
+        listBanners().withOverride((current) => current.filter((banner) => banner.id !== row.id))
+      );
       toast.success("Banner deleted.");
     } catch (error) {
       toast.error(message(error));
