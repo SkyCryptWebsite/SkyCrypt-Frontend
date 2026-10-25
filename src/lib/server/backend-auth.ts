@@ -8,9 +8,11 @@ import { error } from "@sveltejs/kit";
  */
 export function requireBackendToken(request: Request) {
   const provided = request.headers.get("x-api-token") ?? "";
+  // The Go backend trims the token before sending it.
+  const expected = SERVER_API_TOKEN?.trim();
   // Hashing both sides gives equal lengths, which timingSafeEqual requires.
   const digest = (value: string) => createHash("sha256").update(value).digest();
-  if (!SERVER_API_TOKEN || !timingSafeEqual(digest(provided), digest(SERVER_API_TOKEN))) {
+  if (!expected || !timingSafeEqual(digest(provided), digest(expected))) {
     error(401, "Unauthorized");
   }
 }

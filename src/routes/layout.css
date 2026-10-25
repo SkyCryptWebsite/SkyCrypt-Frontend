@@ -674,3 +674,13 @@
     }
   }
 }
+
+/* Without scroll-driven animations (e.g., Firefox), shadcn-svelte fades every edge even when nothing overflows: huntabyte/shadcn-svelte#2910 */
+@supports not (animation-timeline: scroll()) {
+  [class*="scroll-fade"] {
+    --scroll-fade-t: 0px;
+    --scroll-fade-b: 0px;
+    --scroll-fade-s: 0px;
+    --scroll-fade-e: 0px;
+  }
+}
