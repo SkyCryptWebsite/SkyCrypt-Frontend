@@ -102,6 +102,7 @@ Follow these instructions when working on SkyCrypt Frontend. Nested `AGENTS.md` 
 ## Commits, pull requests, and releases
 
 - Use Conventional Commits, for example `fix(theme): preserve contrast`. The commit-message hook runs commitlint.
+- Before committing or pushing, ask which branch to use. Direct commits to `dev` are normal here; never create or push a new branch without asking.
 - Follow `.github/PULL_REQUEST_TEMPLATE.md`: explain the problem and resulting behavior, link relevant issues, list verification, and include before/after screenshots for visible UI changes. Note migration or environment requirements.
 - Add a changeset with `pnpm changeset` when the change belongs in the release changelog. Documentation-only agent guidance does not need one.
 - Changesets target `dev`. Automation creates beta releases on `dev` and stable releases on `prod`. Follow `CONTRIBUTING.md` for promotion and changeset cleanup. Run release scripts only for an explicit release task.
