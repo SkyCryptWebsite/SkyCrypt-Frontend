@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.5.2-beta.0
+
+### Patch Changes
+
+- Stop scroll areas from fading their edges in Firefox when there is nothing to scroll _[`a6ab980`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/a6ab9802f9b810a7a76f478fc292e148966b7465) [@DarthGigi](https://github.com/DarthGigi)_
+
 ## 4.5.1
 
 ### Patch Changes
