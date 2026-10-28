@@ -1,16 +1,27 @@
-Brand Assets - MIT License
+SkyCrypt Brand Assets - All Rights Reserved
 
-This notice applies only to the following SkyCrypt brand/logo assets:
+Copyright (c) 2026-present SkyCrypt LLC. All rights reserved.
 
-- static/apple-touch-icon-precomposed.png
+This notice applies to the following SkyCrypt brand/logo assets:
+
+- static/apple-touch-icon.png
+- static/favicon-96x96.png
 - static/favicon.ico
 - static/favicon.png
+- static/favicon.svg
+- static/web-app-manifest-192x192.png
+- static/web-app-manifest-512x512.png
+- static/img/skycrypt-logo.avif
+- static/img/skycrypt-logo.png
 - static/img/logo.avif
 - static/img/logo_black.avif
 - static/img/newsroom.avif
-- static/img/app-icons/**
 
-These files remain under the MIT License and are not offered under the
-repository's GNU AGPLv3 default.
+These files are not licensed under the GNU AGPLv3 or the MIT License. You may
+use them, unmodified, only to refer or link to SkyCrypt, for example in a
+"View on SkyCrypt" button. You may not use them as your own branding, in a way
+that suggests endorsement by or affiliation with SkyCrypt, or in a deployed
+copy of SkyCrypt. Any other use requires written permission from SkyCrypt LLC.
 
-See ../LICENSES/MIT.txt for the MIT License text.
+The full terms are in LICENSES/LicenseRef-SkyCrypt-Brand.txt in the SkyCrypt
+Frontend source repository.

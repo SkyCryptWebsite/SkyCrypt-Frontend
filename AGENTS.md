@@ -103,7 +103,8 @@ Follow these instructions when working on SkyCrypt Frontend. Nested `AGENTS.md` 
 
 - Use Conventional Commits, for example `fix(theme): preserve contrast`. The commit-message hook runs commitlint.
 - Before committing or pushing, ask whether the change goes directly on `dev` or on a new branch. The answer depends on the change, so never choose on your own.
+- Never stage changes (`git add`, `git mv`, `git rm`) unless asked. The user stages after reviewing; rename or delete files with plain `mv`/`rm`.
 - Follow `.github/PULL_REQUEST_TEMPLATE.md`: explain the problem and resulting behavior, link relevant issues, list verification, and include before/after screenshots for visible UI changes. Note migration or environment requirements.
 - Add a changeset with `pnpm changeset` when the change belongs in the release changelog. Documentation-only agent guidance does not need one.
 - Changesets target `dev`. Automation creates beta releases on `dev` and stable releases on `prod`. Follow `CONTRIBUTING.md` for promotion and changeset cleanup. Run release scripts only for an explicit release task.
-- Preserve applicable license notices. New contributions default to AGPLv3; brand assets explicitly listed in `NOTICE` and `static/BRAND_ASSETS_LICENSE` retain their MIT exception.
+- Preserve applicable license notices. New contributions default to AGPLv3; brand assets listed in `NOTICE`, `static/BRAND_ASSETS_LICENSE` and `REUSE.toml` are proprietary (`LICENSES/LicenseRef-SkyCrypt-Brand.txt`); keep those three lists in sync.

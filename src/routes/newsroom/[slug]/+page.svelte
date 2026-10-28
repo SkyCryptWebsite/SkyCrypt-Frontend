@@ -75,7 +75,7 @@
       url: "https://sky.shiiyu.moe",
       logo: {
         "@type": "ImageObject",
-        url: "https://sky.shiiyu.moe/img/app-icons/512.png"
+        url: "https://sky.shiiyu.moe/img/skycrypt-logo.avif"
       }
     },
     mainEntityOfPage: {

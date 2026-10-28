@@ -78,7 +78,7 @@
       "@id": "https://sky.shiiyu.moe/#organization",
       name: "SkyCrypt",
       url: "https://sky.shiiyu.moe",
-      logo: "https://sky.shiiyu.moe/img/app-icons/512.png"
+      logo: "https://sky.shiiyu.moe/img/skycrypt-logo.avif"
     },
     potentialAction: {
       "@type": "SearchAction",
@@ -309,9 +309,9 @@
       type: "website",
       images: [
         {
-          url: "https://sky.shiiyu.moe/img/app-icons/512.png",
-          width: 512,
-          height: 512,
+          url: "https://sky.shiiyu.moe/img/skycrypt-logo.avif",
+          width: 500,
+          height: 500,
           alt: "SkyCrypt Logo"
         }
       ]
@@ -320,10 +320,9 @@
       card: "summary",
       title: "SkyBlock Stats",
       description: "A beautiful site for sharing your SkyBlock profile 🍣",
-      image: "https://sky.shiiyu.moe/img/app-icons/512.png",
+      image: "https://sky.shiiyu.moe/img/skycrypt-logo.avif",
       imageAlt: "SkyCrypt Logo"
-    }}
-    manifest="/manifest.webmanifest" />
+    }} />
   <JsonLd data={websiteJsonLd} />
 {/if}
 
