@@ -13,7 +13,8 @@ export type SectionName =
   | "Collections"
   | "Crimson_Isle"
   | "Rift"
-  | "Misc";
+  | "Misc"
+  | "Leaderboards";
 
 export type SectionComponents = Record<SectionName, Promise<{ default: Component }> | null>;
 export type SectionComponentsEager = Record<SectionName, Component | null>;

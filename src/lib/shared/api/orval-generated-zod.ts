@@ -3238,6 +3238,198 @@ export const ResolveItemImageResponse = zod.object({
 });
 
 /**
+ * Ranks the best profile members (or profiles, for coop collections and the garden) SkyCrypt has seen. A player appears
+ * once per profile. Values hidden from the API since are kept and marked outdated.
+ *
+ * @summary Get a leaderboard page
+ */
+export const getLeaderboardPathLeaderboardMax = 128;
+
+export const GetLeaderboardParams = zod.object({
+  leaderboard: zod.string().max(getLeaderboardPathLeaderboardMax).describe("Leaderboard id from /api/leaderboards")
+});
+
+export const getLeaderboardQueryModeDefault = `all`;
+export const getLeaderboardQueryPageDefault = 1;
+export const getLeaderboardQueryPageMax = 1000;
+
+export const getLeaderboardQueryLimitDefault = 50;
+export const getLeaderboardQueryLimitMax = 100;
+
+export const GetLeaderboardQueryParams = zod.object({
+  mode: zod
+    .enum(["all", "normal", "ironman", "stranded", "bingo"])
+    .default(getLeaderboardQueryModeDefault)
+    .describe("Game mode filter; all mixes them."),
+  page: zod.int().min(1).max(getLeaderboardQueryPageMax).default(getLeaderboardQueryPageDefault),
+  limit: zod.int().min(1).max(getLeaderboardQueryLimitMax).default(getLeaderboardQueryLimitDefault)
+});
+
+export const GetLeaderboardResponse = zod.object({
+  entries: zod
+    .array(
+      zod.object({
+        cute_name: zod.string().optional(),
+        game_mode: zod.string().optional().describe("normal, ironman, stranded, or bingo."),
+        last_seen: zod.iso.datetime({ offset: true }).optional().describe("When the profile was last fetched."),
+        members: zod
+          .array(
+            zod.object({
+              username: zod.string().optional(),
+              uuid: zod.string().optional()
+            })
+          )
+          .nullish()
+          .describe("Players on the profile, for profile boards."),
+        outdated: zod
+          .boolean()
+          .optional()
+          .describe("The value was hidden from the API on the last fetch, so it is the last one known."),
+        profile_id: zod.string().optional(),
+        rank: zod.int().optional().describe("Position on the board that was asked for, starting at 1."),
+        raw: zod.int().optional(),
+        updated_at: zod.iso
+          .datetime({ offset: true })
+          .optional()
+          .describe("When the value was last visible in the Hypixel API."),
+        username: zod.string().optional(),
+        uuid: zod.string().optional(),
+        value: zod.number().optional().describe("The shown value: a level for level units, otherwise the raw amount.")
+      })
+    )
+    .nullish(),
+  leaderboard: zod
+    .object({
+      ascending: zod.boolean().optional().describe("Lower ranks higher, as for dungeon run times."),
+      group: zod.string().optional().describe("Splits big categories, such as collection categories or dungeon modes."),
+      id: zod.string().optional(),
+      name: zod.string().optional(),
+      profile: zod
+        .boolean()
+        .optional()
+        .describe("Ranks whole profiles (coop collections, garden) instead of a player on a profile."),
+      unit: zod
+        .enum(["level", "xp", "amount", "coins", "time"])
+        .optional()
+        .describe("level: value is a level and raw the XP. time: milliseconds. Otherwise value is the raw amount.")
+    })
+    .optional(),
+  limit: zod.int().optional(),
+  mode: zod.string().optional(),
+  page: zod.int().optional(),
+  ready: zod.boolean().optional().describe("False while the boards are being rebuilt; they may be incomplete."),
+  total: zod.int().optional().describe("Entries on this board, at most size.")
+});
+
+/**
+ * Lists every leaderboard by category, with the game modes each can be filtered by and how many entries each keeps.
+ *
+ * @summary List leaderboards
+ */
+export const ListLeaderboardsResponse = zod.object({
+  categories: zod
+    .array(
+      zod.object({
+        id: zod.string().optional(),
+        leaderboards: zod
+          .array(
+            zod.object({
+              ascending: zod.boolean().optional().describe("Lower ranks higher, as for dungeon run times."),
+              group: zod
+                .string()
+                .optional()
+                .describe("Splits big categories, such as collection categories or dungeon modes."),
+              id: zod.string().optional(),
+              name: zod.string().optional(),
+              profile: zod
+                .boolean()
+                .optional()
+                .describe("Ranks whole profiles (coop collections, garden) instead of a player on a profile."),
+              unit: zod
+                .enum(["level", "xp", "amount", "coins", "time"])
+                .optional()
+                .describe(
+                  "level: value is a level and raw the XP. time: milliseconds. Otherwise value is the raw amount."
+                )
+            })
+          )
+          .nullish(),
+        name: zod.string().optional()
+      })
+    )
+    .nullish(),
+  modes: zod.array(zod.string()).nullish(),
+  size: zod.int().optional().describe("How many entries each leaderboard keeps.")
+});
+
+/**
+ * Returns each active profile of the player with every leaderboard it is on, as the player and as the whole profile.
+ * Only the top entries of each board are kept, so a player outside them isn't listed.
+ *
+ * @summary Get a player's ranks on every leaderboard
+ */
+export const getPlayerLeaderboardRanksPathPlayerMin = 3;
+export const getPlayerLeaderboardRanksPathPlayerMax = 36;
+
+export const GetPlayerLeaderboardRanksParams = zod.object({
+  player: zod
+    .string()
+    .min(getPlayerLeaderboardRanksPathPlayerMin)
+    .max(getPlayerLeaderboardRanksPathPlayerMax)
+    .describe("Username or UUID")
+});
+
+export const GetPlayerLeaderboardRanksResponse = zod.object({
+  profiles: zod
+    .array(
+      zod.object({
+        cute_name: zod.string().optional(),
+        game_mode: zod.string().optional(),
+        last_seen: zod.iso.datetime({ offset: true }).optional().describe("When the profile was last fetched."),
+        profile_id: zod.string().optional(),
+        ranks: zod
+          .array(
+            zod.object({
+              category: zod.string().optional(),
+              leaderboard: zod
+                .object({
+                  ascending: zod.boolean().optional().describe("Lower ranks higher, as for dungeon run times."),
+                  group: zod
+                    .string()
+                    .optional()
+                    .describe("Splits big categories, such as collection categories or dungeon modes."),
+                  id: zod.string().optional(),
+                  name: zod.string().optional(),
+                  profile: zod
+                    .boolean()
+                    .optional()
+                    .describe("Ranks whole profiles (coop collections, garden) instead of a player on a profile."),
+                  unit: zod
+                    .enum(["level", "xp", "amount", "coins", "time"])
+                    .optional()
+                    .describe(
+                      "level: value is a level and raw the XP. time: milliseconds. Otherwise value is the raw amount."
+                    )
+                })
+                .optional(),
+              mode_rank: zod.int().optional().describe("Position among profiles of the same game mode."),
+              outdated: zod.boolean().optional(),
+              rank: zod.int().optional().describe("Position among all game modes."),
+              raw: zod.int().optional(),
+              updated_at: zod.iso.datetime({ offset: true }).optional(),
+              value: zod.number().optional()
+            })
+          )
+          .nullish()
+          .describe("Every board the profile is on, best rank first.")
+      })
+    )
+    .nullish(),
+  size: zod.int().optional().describe("How many entries each leaderboard keeps."),
+  uuid: zod.string().optional()
+});
+
+/**
  * Renders a dyed leather armor piece as PNG bytes for the requested armor piece and color.
  *
  * @summary Render leather armor

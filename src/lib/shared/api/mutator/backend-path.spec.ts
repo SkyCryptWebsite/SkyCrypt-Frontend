@@ -30,4 +30,16 @@ describe("toBackendPath", () => {
       "/api/stats/a%5C..%5C..%5Cx"
     );
   });
+
+  it("keeps the query string Orval appends", () => {
+    const params = new URLSearchParams({ mode: "all", page: "2", limit: "50", q: "a b/c?d#e" });
+    expect(toBackendPath(`/api/leaderboard/skyblock_level?${params}`)).toBe(
+      `/api/leaderboard/skyblock_level?${params}`
+    );
+  });
+
+  it("still escapes a query-like param that would change the route", () => {
+    expect(toBackendPath("/api/stats/a?b=1/x")).toBe("/api/stats/a%3Fb%3D1/x");
+    expect(toBackendPath("/api/stats/a?b=1&c=../x")).toBe("/api/stats/a%3Fb%3D1%26c%3D../x");
+  });
 });

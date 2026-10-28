@@ -13,5 +13,6 @@ export const sections: SectionID[] = [
   { id: 9, name: "Collections" },
   { id: 10, name: "Crimson_Isle" },
   { id: 11, name: "Rift" },
-  { id: 12, name: "Misc" }
+  { id: 12, name: "Misc" },
+  { id: 13, name: "Leaderboards" }
 ];

@@ -42,7 +42,8 @@
     Collections: () => import("#lib/sections/stats/Collections.svelte"),
     Crimson_Isle: () => import("#lib/sections/stats/CrimsonIsle.svelte"),
     Rift: () => import("#lib/sections/stats/Rift.svelte"),
-    Misc: () => import("#lib/sections/stats/MiscSection.svelte")
+    Misc: () => import("#lib/sections/stats/MiscSection.svelte"),
+    Leaderboards: () => import("#lib/sections/stats/Leaderboards.svelte")
   } satisfies Record<SectionName, () => Promise<{ default: unknown }>>;
   const componentPromise = $derived(loadSection(internalState.tabValue, COMPONENTS[internalState.tabValue]));
 

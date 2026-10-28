@@ -7,6 +7,8 @@ import { apiErrorMessage } from "#lib/shared/api/error-message";
 import {
   getCombinedProfileStats as getCombinedProfileStatsRequest,
   getGardenStats as getGardenStatsRequest,
+  getLeaderboard as getLeaderboardRequest,
+  getPlayerLeaderboardRanks as getPlayerLeaderboardRanksRequest,
   getPlayerStats as getPlayerStatsRequest,
   getProfileEmbed as getProfileEmbedRequest,
   getProfileInventory as getProfileInventoryRequest,
@@ -16,6 +18,7 @@ import {
   getSelectedProfileStats as getSelectedProfileStatsRequest,
   getSourceInfo as getSourceInfoRequest,
   listEnchantments as listEnchantmentsRequest,
+  listLeaderboards as listLeaderboardsRequest,
   listResourcePacks as listResourcePacksRequest,
   resolveUsernameByUuid as resolveUsernameByUuidRequest,
   resolveUuidByUsername as resolveUuidByUsernameRequest,
@@ -27,6 +30,9 @@ import {
 import {
   GetCombinedProfileStatsParams,
   GetGardenStatsParams,
+  GetLeaderboardParams,
+  GetLeaderboardQueryParams,
+  GetPlayerLeaderboardRanksParams,
   GetPlayerStatsParams,
   GetProfileEmbedParams,
   GetProfileInventoryParams,
@@ -169,6 +175,24 @@ export const listEnchantments = prerender(
   async (_version) => (await fetchSection(APIEndpointName.ENCHANTMENTS, () => listEnchantmentsRequest())) ?? [],
   { dynamic: true, inputs: () => [__PRERENDER_VERSION__] }
 );
+
+/** List every leaderboard by category, with the modes and how many entries each keeps */
+export const listLeaderboards = query(async () => {
+  return fetchSection(APIEndpointName.LEADERBOARDS, () => listLeaderboardsRequest());
+});
+
+/** Fetch one page of a leaderboard, best first */
+export const getLeaderboard = query(
+  GetLeaderboardParams.extend(GetLeaderboardQueryParams.shape),
+  async ({ leaderboard, mode, page, limit }) => {
+    return fetchSection(APIEndpointName.LEADERBOARDS, () => getLeaderboardRequest(leaderboard, { mode, page, limit }));
+  }
+);
+
+/** Fetch a player's ranks on every leaderboard, per profile */
+export const getPlayerLeaderboardRanks = query(GetPlayerLeaderboardRanksParams, async ({ player }) => {
+  return fetchSection(APIEndpointName.LEADERBOARDS, () => getPlayerLeaderboardRanksRequest(player));
+});
 
 /** Fetch the source information for the currently running backend service. */
 export const getSourceInfo = query(async (): Promise<SourceInfo | null> => {

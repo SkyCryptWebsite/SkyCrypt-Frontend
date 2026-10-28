@@ -20,12 +20,14 @@
   import SearchIcon from "@lucide/svelte/icons/search";
   import Server from "@lucide/svelte/icons/server";
   import Star from "@lucide/svelte/icons/star";
+  import TrophyIcon from "@lucide/svelte/icons/trophy";
   import { isHttpError } from "@sveltejs/kit";
   import { onMount } from "svelte";
+  import { findLeaderboard, LeaderboardPreview } from "#lib/components/leaderboards";
   import { ContributorCard, ContributorCardSkeleton, CtaCard } from "#lib/components/misc";
   import PostCard from "#lib/components/newsroom/PostCard.svelte";
   import { Notice } from "#lib/components/notices";
-  import { resolveUuidByUsername } from "#lib/shared/api/skycrypt-api.remote";
+  import { listLeaderboards, resolveUuidByUsername } from "#lib/shared/api/skycrypt-api.remote";
   import { listPosts } from "#lib/shared/newsroom.remote";
   import { Role } from "./enums";
   import { schema } from "./schema";
@@ -39,6 +41,8 @@
   let submittedSearchError = $state<string>();
 
   let newsroomOpen = $state(false);
+
+  const featuredLeaderboards = ["skyblock_level", "networth", "dungeons:catacombs"];
 
   function getErrorMessage(err: unknown) {
     const httpError = err as { body?: unknown };
@@ -222,6 +226,41 @@
             {/each}
           </Collapsible.Content>
         </Collapsible.Root>
+      </section>
+    {/if}
+  </svelte:boundary>
+
+  <svelte:boundary>
+    {#snippet failed()}{/snippet}
+
+    {const leaderboards = await listLeaderboards()}
+    {const featured = featuredLeaderboards
+      .map((id) => findLeaderboard(leaderboards, id)?.board)
+      .filter((board) => board !== undefined)}
+    {#if featured.length > 0}
+      <section
+        class="flex flex-col gap-4 rounded-xl border glass px-4 py-3.5 glass-brightness-150 glass-contrast-60 dark:glass-brightness-50 dark:glass-contrast-100">
+        <Item.Root class="p-0">
+          <Item.Media variant="icon">
+            <TrophyIcon class="size-6" />
+          </Item.Media>
+          <Item.Content>
+            <Item.Title>Leaderboards</Item.Title>
+            <Item.Description>Top players and profiles on SkyCrypt</Item.Description>
+          </Item.Content>
+          <Item.Actions>
+            <Button href="/leaderboards" data-sveltekit-preload-data="hover" variant="outline">
+              View all
+              <ArrowRight class="size-4" />
+            </Button>
+          </Item.Actions>
+        </Item.Root>
+
+        <div class="grid grid-cols-1 gap-4 @md:grid-cols-2 @xl:grid-cols-3">
+          {#each featured as leaderboard (leaderboard.id)}
+            <LeaderboardPreview board={leaderboard} />
+          {/each}
+        </div>
       </section>
     {/if}
   </svelte:boundary>

@@ -22,7 +22,8 @@ export enum APIEndpointName {
   RESOURCEPACK = "Resource Pack",
   ENCHANTMENTS = "Enchantments",
   SEARCH = "Search",
-  USERNAME = "Username"
+  USERNAME = "Username",
+  LEADERBOARDS = "Leaderboards"
 }
 
 export * from "./types.d";

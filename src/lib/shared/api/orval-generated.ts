@@ -1305,6 +1305,125 @@ export interface ItemTextureResolution {
   texture_pack?: string;
 }
 
+/** Level: value is a level and raw the XP. time: milliseconds. Otherwise value is the raw amount. */
+export type LeaderboardInfoUnit = (typeof LeaderboardInfoUnit)[keyof typeof LeaderboardInfoUnit];
+
+export const LeaderboardInfoUnit = {
+  level: "level",
+  xp: "xp",
+  amount: "amount",
+  coins: "coins",
+  time: "time"
+} as const;
+
+export interface LeaderboardInfo {
+  /** Lower ranks higher, as for dungeon run times. */
+  ascending?: boolean;
+  /** Splits big categories, such as collection categories or dungeon modes. */
+  group?: string;
+  id?: string;
+  name?: string;
+  /** Ranks whole profiles (coop collections, garden) instead of a player on a profile. */
+  profile?: boolean;
+  /** Level: value is a level and raw the XP. time: milliseconds. Otherwise value is the raw amount. */
+  unit?: LeaderboardInfoUnit;
+}
+
+export interface LeaderboardCategory {
+  id?: string;
+  /** @nullable */
+  leaderboards?: LeaderboardInfo[] | null;
+  name?: string;
+}
+
+export interface LeaderboardPlayer {
+  username?: string;
+  uuid?: string;
+}
+
+export interface LeaderboardEntry {
+  cute_name?: string;
+  /** Normal, ironman, stranded, or bingo. */
+  game_mode?: string;
+  /** When the profile was last fetched. */
+  last_seen?: string;
+  /**
+   * Players on the profile, for profile boards.
+   *
+   * @nullable
+   */
+  members?: LeaderboardPlayer[] | null;
+  /** The value was hidden from the API on the last fetch, so it is the last one known. */
+  outdated?: boolean;
+  profile_id?: string;
+  /** Position on the board that was asked for, starting at 1. */
+  rank?: number;
+  raw?: number;
+  /** When the value was last visible in the Hypixel API. */
+  updated_at?: string;
+  username?: string;
+  uuid?: string;
+  /** The shown value: a level for level units, otherwise the raw amount. */
+  value?: number;
+}
+
+export interface LeaderboardList {
+  /** @nullable */
+  categories?: LeaderboardCategory[] | null;
+  /** @nullable */
+  modes?: string[] | null;
+  /** How many entries each leaderboard keeps. */
+  size?: number;
+}
+
+export interface LeaderboardPage {
+  /** @nullable */
+  entries?: LeaderboardEntry[] | null;
+  leaderboard?: LeaderboardInfo;
+  limit?: number;
+  mode?: string;
+  page?: number;
+  /** False while the boards are being rebuilt; they may be incomplete. */
+  ready?: boolean;
+  /** Entries on this board, at most size. */
+  total?: number;
+}
+
+export interface LeaderboardRank {
+  category?: string;
+  leaderboard?: LeaderboardInfo;
+  /** Position among profiles of the same game mode. */
+  mode_rank?: number;
+  outdated?: boolean;
+  /** Position among all game modes. */
+  rank?: number;
+  raw?: number;
+  updated_at?: string;
+  value?: number;
+}
+
+export interface LeaderboardProfileRanks {
+  cute_name?: string;
+  game_mode?: string;
+  /** When the profile was last fetched. */
+  last_seen?: string;
+  profile_id?: string;
+  /**
+   * Every board the profile is on, best rank first.
+   *
+   * @nullable
+   */
+  ranks?: LeaderboardRank[] | null;
+}
+
+export interface LeaderboardPlayerRanks {
+  /** @nullable */
+  profiles?: LeaderboardProfileRanks[] | null;
+  /** How many entries each leaderboard keeps. */
+  size?: number;
+  uuid?: string;
+}
+
 export interface MemberStats {
   cute_name?: string;
   profile_id?: string;
@@ -1454,6 +1573,31 @@ export type ResolveItemImageParams = {
   /** Resource packs to resolve with, in place of the enabledPacks cookie. */
   enabledPacks?: string;
 };
+
+export type GetLeaderboardParams = {
+  /** Game mode filter; all mixes them. */
+  mode?: GetLeaderboardMode;
+  /**
+   * @minimum 1
+   * @maximum 1000
+   */
+  page?: number;
+  /**
+   * @minimum 1
+   * @maximum 100
+   */
+  limit?: number;
+};
+
+export type GetLeaderboardMode = (typeof GetLeaderboardMode)[keyof typeof GetLeaderboardMode];
+
+export const GetLeaderboardMode = {
+  all: "all",
+  normal: "normal",
+  ironman: "ironman",
+  stranded: "stranded",
+  bingo: "bingo"
+} as const;
 
 export type HTTPStatusCode1xx = 100 | 101 | 102 | 103;
 export type HTTPStatusCode2xx = 200 | 201 | 202 | 203 | 204 | 205 | 206 | 207;
@@ -2212,6 +2356,220 @@ export const resolveItemImage = async (
   options?: Parameters<typeof customFetch>[1]
 ): Promise<resolveItemImageResponse> => {
   return customFetch<resolveItemImageResponse>(getResolveItemImageUrl(itemId, params), {
+    ...options,
+    method: "GET"
+  });
+};
+
+export type getLeaderboardResponse200 = {
+  data: LeaderboardPage;
+  status: 200;
+};
+
+export type getLeaderboardResponse401 = {
+  data: APIError;
+  status: 401;
+};
+
+export type getLeaderboardResponse404 = {
+  data: APIError;
+  status: 404;
+};
+
+export type getLeaderboardResponse422 = {
+  data: APIError;
+  status: 422;
+};
+
+export type getLeaderboardResponse429 = {
+  data: APIError;
+  status: 429;
+};
+
+export type getLeaderboardResponse500 = {
+  data: APIError;
+  status: 500;
+};
+
+export type getLeaderboardResponse503 = {
+  data: APIError;
+  status: 503;
+};
+
+export type getLeaderboardResponseSuccess = getLeaderboardResponse200 & {
+  headers: Headers;
+};
+export type getLeaderboardResponseError = (
+  | getLeaderboardResponse401
+  | getLeaderboardResponse404
+  | getLeaderboardResponse422
+  | getLeaderboardResponse429
+  | getLeaderboardResponse500
+  | getLeaderboardResponse503
+) & {
+  headers: Headers;
+};
+
+export type getLeaderboardResponse = getLeaderboardResponseSuccess | getLeaderboardResponseError;
+
+export const getGetLeaderboardUrl = (leaderboard: string, params?: GetLeaderboardParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/leaderboard/${leaderboard}?${stringifiedParams}`
+    : `/api/leaderboard/${leaderboard}`;
+};
+
+/**
+ * Ranks the best profile members (or profiles, for coop collections and the garden) SkyCrypt has seen. A player appears
+ * once per profile. Values hidden from the API since are kept and marked outdated.
+ *
+ * @summary Get a leaderboard page
+ */
+export const getLeaderboard = async (
+  leaderboard: string,
+  params?: GetLeaderboardParams,
+  options?: Parameters<typeof customFetch>[1]
+): Promise<getLeaderboardResponse> => {
+  return customFetch<getLeaderboardResponse>(getGetLeaderboardUrl(leaderboard, params), {
+    ...options,
+    method: "GET"
+  });
+};
+
+export type listLeaderboardsResponse200 = {
+  data: LeaderboardList;
+  status: 200;
+};
+
+export type listLeaderboardsResponse401 = {
+  data: APIError;
+  status: 401;
+};
+
+export type listLeaderboardsResponse429 = {
+  data: APIError;
+  status: 429;
+};
+
+export type listLeaderboardsResponse500 = {
+  data: APIError;
+  status: 500;
+};
+
+export type listLeaderboardsResponse503 = {
+  data: APIError;
+  status: 503;
+};
+
+export type listLeaderboardsResponseSuccess = listLeaderboardsResponse200 & {
+  headers: Headers;
+};
+export type listLeaderboardsResponseError = (
+  | listLeaderboardsResponse401
+  | listLeaderboardsResponse429
+  | listLeaderboardsResponse500
+  | listLeaderboardsResponse503
+) & {
+  headers: Headers;
+};
+
+export type listLeaderboardsResponse = listLeaderboardsResponseSuccess | listLeaderboardsResponseError;
+
+export const getListLeaderboardsUrl = () => {
+  return `/api/leaderboards`;
+};
+
+/**
+ * Lists every leaderboard by category, with the game modes each can be filtered by and how many entries each keeps.
+ *
+ * @summary List leaderboards
+ */
+export const listLeaderboards = async (
+  options?: Parameters<typeof customFetch>[1]
+): Promise<listLeaderboardsResponse> => {
+  return customFetch<listLeaderboardsResponse>(getListLeaderboardsUrl(), {
+    ...options,
+    method: "GET"
+  });
+};
+
+export type getPlayerLeaderboardRanksResponse200 = {
+  data: LeaderboardPlayerRanks;
+  status: 200;
+};
+
+export type getPlayerLeaderboardRanksResponse401 = {
+  data: APIError;
+  status: 401;
+};
+
+export type getPlayerLeaderboardRanksResponse404 = {
+  data: APIError;
+  status: 404;
+};
+
+export type getPlayerLeaderboardRanksResponse422 = {
+  data: APIError;
+  status: 422;
+};
+
+export type getPlayerLeaderboardRanksResponse429 = {
+  data: APIError;
+  status: 429;
+};
+
+export type getPlayerLeaderboardRanksResponse500 = {
+  data: APIError;
+  status: 500;
+};
+
+export type getPlayerLeaderboardRanksResponse503 = {
+  data: APIError;
+  status: 503;
+};
+
+export type getPlayerLeaderboardRanksResponseSuccess = getPlayerLeaderboardRanksResponse200 & {
+  headers: Headers;
+};
+export type getPlayerLeaderboardRanksResponseError = (
+  | getPlayerLeaderboardRanksResponse401
+  | getPlayerLeaderboardRanksResponse404
+  | getPlayerLeaderboardRanksResponse422
+  | getPlayerLeaderboardRanksResponse429
+  | getPlayerLeaderboardRanksResponse500
+  | getPlayerLeaderboardRanksResponse503
+) & {
+  headers: Headers;
+};
+
+export type getPlayerLeaderboardRanksResponse =
+  | getPlayerLeaderboardRanksResponseSuccess
+  | getPlayerLeaderboardRanksResponseError;
+
+export const getGetPlayerLeaderboardRanksUrl = (player: string) => {
+  return `/api/leaderboards/player/${player}`;
+};
+
+/**
+ * Returns each active profile of the player with every leaderboard it is on, as the player and as the whole profile.
+ * Only the top entries of each board are kept, so a player outside them isn't listed.
+ *
+ * @summary Get a player's ranks on every leaderboard
+ */
+export const getPlayerLeaderboardRanks = async (
+  player: string,
+  options?: Parameters<typeof customFetch>[1]
+): Promise<getPlayerLeaderboardRanksResponse> => {
+  return customFetch<getPlayerLeaderboardRanksResponse>(getGetPlayerLeaderboardRanksUrl(player), {
     ...options,
     method: "GET"
   });
