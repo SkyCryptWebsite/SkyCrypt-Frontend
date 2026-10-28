@@ -273,7 +273,7 @@
 
 <svelte:head>
   {#if !noEmbedUrls.some((url) => page.url.pathname.startsWith(url))}
-    <link rel="icon" href="/favicon.png" sizes="32x32" type="image/png" />
+    <link rel="icon" href="/favicon.png?v=20261028" sizes="32x32" type="image/png" />
   {/if}
   {#if PUBLIC_UMAMI_SCRIPT_URL && PUBLIC_UMAMI_WEBSITE_ID && !building}
     <script
