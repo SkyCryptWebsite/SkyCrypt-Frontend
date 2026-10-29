@@ -2,7 +2,9 @@ SkyCrypt Brand Assets - All Rights Reserved
 
 Copyright (c) 2026-present SkyCrypt LLC. All rights reserved.
 
-This notice applies to the following SkyCrypt brand/logo assets:
+This notice summarizes the license for the following SkyCrypt brand/logo
+assets. The authoritative list is in the NOTICE file of the SkyCrypt Frontend
+source repository.
 
 - static/apple-touch-icon.png
 - static/favicon-96x96.png
@@ -18,8 +20,8 @@ This notice applies to the following SkyCrypt brand/logo assets:
 - static/img/newsroom.avif
 
 These files are not licensed under the GNU AGPLv3 or the MIT License. You may
-use them, unmodified, only to refer or link to SkyCrypt, for example in a
-"View on SkyCrypt" button. You may not use them as your own branding, in a way
+use them only to refer or link to SkyCrypt, for example in a "View on
+SkyCrypt" button. You may not use them as your own branding, in a way
 that suggests endorsement by or affiliation with SkyCrypt, or in a deployed
 copy of SkyCrypt. Any other use requires written permission from SkyCrypt LLC.
 
