@@ -1,5 +1,15 @@
 # Changelog
 
+## 4.6.0
+
+### Minor Changes
+
+- Feat(brand): replace logo and relicense brand assets _[`#382`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/382) [`045a365`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/045a365b03cfc59fcfb54a19e8a72c13c5ffead7) [@DarthGigi](https://github.com/DarthGigi)_
+
+### Patch Changes
+
+- Feat(newsroom): add a refresh cache option to post images _[`#382`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/382) [`ce08456`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/ce084568770cef680a116bbaf243a2b244aeaab1) [@DarthGigi](https://github.com/DarthGigi)_
+
 ## 4.6.0-beta.1
 
 ### Patch Changes
