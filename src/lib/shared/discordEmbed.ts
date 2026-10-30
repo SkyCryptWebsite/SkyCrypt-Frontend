@@ -47,7 +47,7 @@ export function createDiscordEmbed(data: EmbedData) {
               style: 5,
               label: "SkyCrypt",
               url: `${profileUrl}${trackingParams}`,
-              emoji: { id: "1558259246070505512", name: "skycrypt" }
+              emoji: { id: "1565779361947324697", name: "skycrypt" }
             },
             {
               type: 2,
