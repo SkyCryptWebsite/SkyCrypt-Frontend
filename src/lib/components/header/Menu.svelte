@@ -72,7 +72,7 @@
         class="row-span-3 flex h-full flex-col items-stretch gap-3 rounded-3xl p-3 text-sm transition-all interact:scale-95 interact:bg-background/50"
         onclick={() => (popoverOpen = false)}>
         <img
-          src="/img/newsroom.avif"
+          src="/img/newsroom.avif?v=20261028"
           alt="Newsroom"
           class="pointer-events-none min-h-0 w-full flex-1 rounded-2xl object-cover select-none" />
         <p class="text-sm leading-snug text-muted-foreground">

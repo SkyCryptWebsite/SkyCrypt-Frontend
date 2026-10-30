@@ -1,0 +1,95 @@
+SkyCrypt Brand Assets License
+
+Copyright (c) 2026-present SkyCrypt LLC. All rights reserved.
+
+This license applies only to the files expressly identified as subject to the
+SkyCrypt Brand Assets License in the NOTICE file accompanying the applicable
+version of the SkyCrypt source repository ("Brand Assets"). That NOTICE file is
+the authoritative list of Brand Assets. A file becomes a Brand Asset only when
+it is expressly added to that list; including a file in a SkyCrypt repository
+does not, by itself, make it subject to this license.
+
+Other materials, including source code and third-party assets, remain subject
+to their respective licenses. The Brand Assets are not licensed under the GNU
+AGPLv3 or the MIT License, and no license to them is granted except as written
+below.
+
+1. Referring to SkyCrypt
+
+   You may display the Brand Assets only to refer or link to SkyCrypt or its
+   services. For example: a "View on SkyCrypt" button, a link to a SkyCrypt
+   profile page, or an article, video, or listing that discusses SkyCrypt.
+
+   You may resize the Brand Assets proportionally or convert their file format
+   solely as reasonably necessary for technical compatibility, provided that
+   their visual appearance, proportions, colors, and identifying features are
+   not materially altered. All other modifications require prior written
+   permission.
+
+   This permission does not allow you to:
+
+   - use the Brand Assets as, or as part of, the logo, icon, name, or branding
+     of any other project, product, service, website, server, or account;
+   - use the Brand Assets in a way that suggests SkyCrypt endorses, sponsors,
+     operates, or is affiliated with you or your work;
+   - use the Brand Assets in a manner that is materially misleading regarding
+     the identity, origin, sponsorship, endorsement, or affiliation of any
+     project, product, service, or communication, or that otherwise violates
+     applicable law; or
+   - sell the Brand Assets or merchandise that shows them.
+
+2. Copies of the source repository
+
+   You may keep the Brand Assets in clones and forks of the SkyCrypt source
+   repository for the sole purpose of developing, testing, and contributing
+   changes to SkyCrypt.
+
+   If you publicly deploy, host, or distribute a modified or unmodified copy
+   of SkyCrypt, you must remove the Brand Assets from it and replace them with
+   your own. The GNU AGPLv3 that covers SkyCrypt's source code does not grant
+   any rights to the Brand Assets.
+
+3. Other uses
+
+   Any other use requires prior written permission from SkyCrypt LLC.
+
+4. Termination
+
+   Your permissions under this license end automatically if you break its
+   terms. However, if SkyCrypt LLC notifies you of a breach and you stop the
+   breaching use within 7 days after receiving that notice, your permissions
+   are reinstated and treated as never having ended. This cure is available
+   only once; after a second breach, your permissions end without a chance to
+   cure.
+
+   SkyCrypt LLC may give notice by email, Discord direct message, a GitHub
+   issue or comment, or any other written message sent to contact details
+   that you, or the project, website, or account using the Brand Assets, make
+   public or have used to communicate with SkyCrypt LLC. Notice is treated as
+   received 1 day after it is sent.
+
+5. Trademarks
+
+   SkyCrypt LLC reserves all trademark, service mark, trade name, and related
+   rights it holds in the SkyCrypt name, logos, and branding. The permissions
+   granted under this license are limited to the uses expressly authorized
+   herein. They do not authorize you to use SkyCrypt's marks to identify,
+   brand, promote, or imply endorsement of your own products or services. All
+   rights not expressly granted are reserved, subject to applicable law.
+
+6. Rights under applicable law
+
+   This license does not restrict any rights you have independently under
+   applicable law, including copyright fair use, nominative trademark fair
+   use, or other applicable exceptions and limitations.
+
+7. No warranty
+
+   THE BRAND ASSETS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR
+   ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM THE USE OF THE BRAND
+   ASSETS.
+
+Earlier SkyCrypt logo files that were released under the MIT License remain
+available under the MIT License in the versions where they were published.
+That grant does not extend to the current Brand Assets.

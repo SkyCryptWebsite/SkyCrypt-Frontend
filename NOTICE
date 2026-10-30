@@ -13,24 +13,36 @@ previously granted under the MIT License for earlier versions, files, or
 contributions. Pre-change contributions remain available under the MIT License
 to the extent they were originally licensed that way.
 
-The following SkyCrypt brand/logo assets remain under the MIT License
-and are not offered under the repository's AGPL default:
+The following files are expressly designated as subject to the SkyCrypt
+Brand Assets License (LICENSES/LicenseRef-SkyCrypt-Brand.txt). This list is
+authoritative; other files are Brand Assets only if they are added to it. They
+are not offered under the GNU AGPLv3 or the MIT License, and all rights are
+reserved by SkyCrypt LLC except as granted in that license:
 
-- static/apple-touch-icon-precomposed.png
+- static/apple-touch-icon.png
+- static/favicon-96x96.png
 - static/favicon.ico
 - static/favicon.png
+- static/favicon.svg
+- static/web-app-manifest-192x192.png
+- static/web-app-manifest-512x512.png
+- static/img/skycrypt-logo.avif
+- static/img/skycrypt-logo.png
 - static/img/logo.avif
 - static/img/logo_black.avif
 - static/img/newsroom.avif
-- static/img/app-icons/**
 
-The MIT brand asset exception does not grant trademark rights, service
-mark rights, impersonation rights, or permission to use SkyCrypt branding in a
-way that is confusing, misleading, or suggests endorsement by the SkyCrypt
-project.
+That license only allows use of these assets to refer or link to SkyCrypt.
+Public deployments of SkyCrypt, modified or not, must replace them with their
+own branding. No trademark, service mark, or impersonation rights
+are granted.
+
+Earlier SkyCrypt logo files published under the MIT License remain available
+under the MIT License in the versions where they were published. That grant
+does not extend to the current brand assets.
 
 Third-party libraries, resources, fonts, textures, APIs, and other dependencies
 remain under their own licenses. Built output generated from SkyCrypt-owned
 AGPL-covered source is covered by GNU AGPLv3, except for third-party
-components and explicitly listed MIT brand assets, which retain their own
+components and the brand assets listed above, which retain their own
 license notices.
