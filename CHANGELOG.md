@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.6.0-beta.0
+
+### Minor Changes
+
+- Feat(brand): replace logo and relicense brand assets _[`045a365`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/045a365b03cfc59fcfb54a19e8a72c13c5ffead7) [@DarthGigi](https://github.com/DarthGigi)_
+
 ## 4.5.2
 
 ### Patch Changes
