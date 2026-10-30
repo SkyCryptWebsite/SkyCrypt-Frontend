@@ -107,6 +107,8 @@ jobs:
         with:
           context: .
           push: true
+          cache-from: type=gha,scope=skycrypt-frontend-${{ github.ref_name }}
+          cache-to: type=gha,mode=max,scope=skycrypt-frontend-${{ github.ref_name }}
           build-args: |
             PUBLIC_COMMIT_HASH=${{ env.SHORT_SHA }}
             PUBLIC_RELEASE_CHANNEL=${{ github.ref_name == 'prod' && 'stable' || 'beta' }}
