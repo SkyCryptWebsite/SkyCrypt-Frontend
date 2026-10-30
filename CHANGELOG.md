@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.6.0-beta.1
+
+### Patch Changes
+
+- Feat(newsroom): add a refresh cache option to post images _[`ce08456`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/ce084568770cef680a116bbaf243a2b244aeaab1) [@DarthGigi](https://github.com/DarthGigi)_
+
 ## 4.6.0-beta.0
 
 ### Minor Changes
