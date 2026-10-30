@@ -11,7 +11,7 @@ Follow these instructions when working on SkyCrypt Frontend. Nested `AGENTS.md` 
 ## Stack and setup
 
 - SkyCrypt is a Hypixel SkyBlock profile viewer built with SvelteKit 2, Svelte 5, strict TypeScript, and Tailwind CSS 4. Production uses the Node adapter.
-- Use Node 24 and pnpm 12, as required by `package.json` and CI. Other runtimes and package managers are unsupported. Keep `pnpm-lock.yaml` in sync with dependency changes.
+- Use Node 26 and pnpm 12, as required by `package.json` and CI. Other runtimes and package managers are unsupported. Keep `pnpm-lock.yaml` in sync with dependency changes.
 - Install with `pnpm install`. Copy `.env.example` to `.env` without overwriting an existing file. Never commit secrets or local environment files.
 - Profile data and end-to-end tests require the Go backend from the separate SkyCrypt-Backend repository. Newsroom uploads go to Cloudflare R2. See `.env.example` for service URLs.
 - Database and authentication code use PostgreSQL, Drizzle, and Better Auth. `pnpm db:start` starts local PostgreSQL. Server startup applies migrations from `drizzle/` through `src/hooks.server.ts`; builds skip migration execution.
@@ -48,7 +48,7 @@ Follow these instructions when working on SkyCrypt Frontend. Nested `AGENTS.md` 
 - Use Svelte 5 runes (`$state`, `$derived`, `$props`) and snippets. Avoid legacy reactive declarations, `export let`, and slots in new code.
 - Use the Svelte MCP to get the latest svelte documentation and conventions. Use the async flag to get the latest SvelteKit documentation and conventions for async svelte and remote functions, as that is the default for this project (instead of +page.server.ts way of loading data).
 - The project enables async Svelte compilation and SvelteKit remote functions. Use `--async` when validating with Svelte MCP/CLI tooling.
-- Check official documentation before implementing: the Svelte MCP for Svelte and SvelteKit, the library's own docs (for example takumi, Better Auth, Cloudflare) and the Node 24 docs for server code. Prefer SvelteKit features, then Node 24 built-ins, then library features, then hand-written code. Context7 can lag behind official docs. Say which docs you checked when reporting.
+- Check official documentation before implementing: the Svelte MCP for Svelte and SvelteKit, the library's own docs (for example takumi, Better Auth, Cloudflare) and the Node 26 docs for server code. Prefer SvelteKit features, then Node 26 built-ins, then library features, then hand-written code. Context7 can lag behind official docs. Say which docs you checked when reporting.
 - Use SvelteKit remote functions in `*.remote.ts` for new data loading and mutations instead of adding `+page.server.ts`. Migrate existing server route files only when the task calls for it.
 - Validate remote-function inputs and check authentication and authorization on the server. Follow nearby implementations, and check permissions in each protected mutation even when route guards or hidden controls restrict access.
 - Use Tailwind utilities, the shared `cn()` helper, and existing theme tokens and UI primitives. UI changes must work with a keyboard, show focus, adapt to screen size, and support existing themes.

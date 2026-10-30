@@ -4,7 +4,7 @@ Before contributing to SkyCrypt, make sure you install the development environme
 
 ## Prerequisite Software
 
-- [Node.js](https://nodejs.org) (at least v24, as of February 2026)
+- [Node.js](https://nodejs.org) (at least v26, as of October 2026)
 - [pnpm](https://pnpm.io/) (Package manager)
 
 ## Backend

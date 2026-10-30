@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM node:24-alpine AS builder
+FROM node:26-alpine AS builder
 
 RUN apk add git
 ENV PNPM_HOME="/pnpm"
@@ -34,7 +34,7 @@ RUN pnpm run prepare
 RUN --mount=type=secret,id=maintenance_bypass,env=MAINTENANCE_BYPASS_TOKEN pnpm run build
 RUN pnpm prune --production
 
-FROM node:24-alpine
+FROM node:26-alpine
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
