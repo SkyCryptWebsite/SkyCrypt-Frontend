@@ -1,4 +1,11 @@
 export { cn } from "cn";
+
+/** Sets `?v=` to the current time, so browsers and CDNs fetch the file again when it changed under the same URL. */
+export const bustCache = (url: string) => {
+  const busted = new URL(url);
+  busted.searchParams.set("v", String(Date.now()));
+  return busted.href;
+};
 import { cubicOut } from "svelte/easing";
 import type { TransitionConfig } from "svelte/transition";
 

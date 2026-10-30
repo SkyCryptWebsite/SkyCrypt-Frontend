@@ -107,6 +107,7 @@ const strings = {
       captionPlaceholder: "Your Media Caption",
       duplicate: "Duplicate",
       fullscreen: "Full Screen",
+      refreshCache: "Refresh Cache",
       delete: "Delete"
     },
     table: {

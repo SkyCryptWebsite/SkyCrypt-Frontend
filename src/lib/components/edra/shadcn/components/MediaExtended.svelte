@@ -1,11 +1,12 @@
 <script lang="ts">
   import { Button, buttonVariants } from "$ui/button";
   import * as DropdownMenu from "$ui/dropdown-menu";
-  import { cn } from "$utils";
+  import { bustCache, cn } from "$utils";
   import Captions from "@lucide/svelte/icons/captions";
   import CopyIcon from "@lucide/svelte/icons/copy";
   import EllipsisVertical from "@lucide/svelte/icons/ellipsis-vertical";
   import Fullscreen from "@lucide/svelte/icons/fullscreen";
+  import RefreshCw from "@lucide/svelte/icons/refresh-cw";
   import AlignCenter from "@lucide/svelte/icons/text-align-center";
   import AlignRight from "@lucide/svelte/icons/text-align-end";
   import AlignLeft from "@lucide/svelte/icons/text-align-start";
@@ -248,6 +249,12 @@
               <Fullscreen />
               {strings.extension.media.fullscreen}
             </DropdownMenu.Item>
+            {#if node.type.name === "image"}
+              <DropdownMenu.Item onclick={() => updateAttributes({ src: bustCache(node.attrs.src) })}>
+                <RefreshCw />
+                {strings.extension.media.refreshCache}
+              </DropdownMenu.Item>
+            {/if}
             <DropdownMenu.Item
               onclick={() => {
                 deleteNode();

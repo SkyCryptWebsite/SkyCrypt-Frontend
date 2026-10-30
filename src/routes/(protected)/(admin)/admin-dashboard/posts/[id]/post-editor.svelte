@@ -12,9 +12,11 @@
   import { Spinner } from "$ui/spinner";
   import { Switch } from "$ui/switch";
   import { Textarea } from "$ui/textarea";
+  import { bustCache } from "$utils";
   import ExternalLinkIcon from "@lucide/svelte/icons/external-link";
   import HistoryIcon from "@lucide/svelte/icons/history";
   import ImagePlusIcon from "@lucide/svelte/icons/image-plus";
+  import RefreshCwIcon from "@lucide/svelte/icons/refresh-cw";
   import Trash2Icon from "@lucide/svelte/icons/trash-2";
   import { toast } from "svelte-sonner";
   import { stripTransientNodes } from "#lib/components/edra/extensions";
@@ -385,6 +387,16 @@
               onchange={onHeroFile} />
           </Button>
           {#if fields.heroImage}
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Refresh hero image cache"
+              title="Refresh cache"
+              onclick={() => {
+                if (fields.heroImage) fields.heroImage.url = bustCache(fields.heroImage.url);
+              }}>
+              <RefreshCwIcon />
+            </Button>
             <Button variant="ghost" onclick={() => (fields.heroImage = null)}>Remove</Button>
           {/if}
         </div>
