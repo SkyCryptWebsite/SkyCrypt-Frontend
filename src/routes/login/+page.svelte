@@ -33,13 +33,13 @@
   class="@container mx-auto flex min-h-[calc(100dvh-3rem)] w-full max-w-md flex-col items-center-safe justify-center-safe pr-[max(1.25rem,env(safe-area-inset-right))] pb-[max(2.5rem,env(safe-area-inset-bottom))] pl-[max(1.25rem,env(safe-area-inset-left))]">
   <Card.Root
     class="w-full max-w-md glass glass-brightness-150 glass-contrast-60 dark:glass-brightness-50 dark:glass-contrast-100 standard:bg-transparent">
-    <Card.Header class="flex flex-col items-center gap-2">
-      <Avatar.Root class="size-16 select-none">
+    <Card.Header class="flex flex-col items-center gap-1">
+      <Avatar.Root class="-my-4 size-24 select-none after:rounded-none after:border-none">
         <Avatar.Image
           loading="eager"
-          src="/img/app-icons/svg.svg"
+          src="/img/skycrypt-logo.avif"
           alt="SkyCrypt"
-          class="pointer-events-none size-16 rounded-xl" />
+          class="pointer-events-none size-24 rounded-none" />
         <Avatar.Fallback>SC</Avatar.Fallback>
       </Avatar.Root>
       <Card.Title>Sign in to <span class="text-primary">SkyCrypt</span></Card.Title>

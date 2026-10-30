@@ -110,7 +110,6 @@
     title: ogTitle,
     description: seoDescription
   }}
-  {themeColor}
-  manifest="/manifest.webmanifest" />
+  {themeColor} />
 
 <JsonLd data={profileJsonLd} />

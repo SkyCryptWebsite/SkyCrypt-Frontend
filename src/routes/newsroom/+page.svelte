@@ -59,13 +59,15 @@
     description: "Latest announcements and updates from the SkyCrypt team",
     url: "https://sky.shiiyu.moe/newsroom",
     site_name: "SkyCrypt",
-    images: [{ url: "https://sky.shiiyu.moe/img/newsroom.avif", width: 1200, height: 630, alt: "SkyCrypt Newsroom" }]
+    images: [
+      { url: "https://sky.shiiyu.moe/img/newsroom.avif?v=20261028", width: 1200, height: 630, alt: "SkyCrypt Newsroom" }
+    ]
   }}
   twitter={{
     card: "summary_large_image",
     title: "Newsroom | SkyCrypt",
     description: "Latest announcements and updates from the SkyCrypt team",
-    image: "https://sky.shiiyu.moe/img/newsroom.avif",
+    image: "https://sky.shiiyu.moe/img/newsroom.avif?v=20261028",
     imageAlt: "SkyCrypt Newsroom"
   }} />
 

@@ -2,7 +2,7 @@
   import { dev } from "$app/env";
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
-  import { getInternalState, getThemeContext } from "$ctx";
+  import { getInternalState } from "$ctx";
   import Menu from "$src/lib/components/header/Menu.svelte";
   import * as AvatarUI from "$ui/avatar";
   import { buttonVariants } from "$ui/button";
@@ -12,31 +12,12 @@
   import SunIcon from "@lucide/svelte/icons/sun";
   import SunMoonIcon from "@lucide/svelte/icons/sun-moon";
   import { Avatar, Button } from "bits-ui";
-  import { mode, resetMode, setMode, userPrefersMode } from "mode-watcher";
+  import { resetMode, setMode, userPrefersMode } from "mode-watcher";
   import Settings from "#lib/components/header/settings";
-  import { getThemeIcons } from "#lib/shared/api/themes.remote";
   import { isBeta } from "#lib/shared/release-channel";
   import { getHeaderUser } from "#lib/shared/session.remote";
-  import { readComputedThemeCssVars } from "#lib/shared/themes/computed-css-vars";
-  import type { ThemeModeName } from "#lib/shared/themes/schema";
 
   const internalState = getInternalState();
-  const theme = getThemeContext();
-  const themeIconColor = $derived.by(() => {
-    const computedCssVars = readComputedThemeCssVars();
-    const modeName: ThemeModeName = mode.current === "light" ? "light" : "dark";
-    const themeCssVars = theme.activeTheme?.modes[modeName].cssVars;
-
-    return (
-      themeCssVars?.sidebarPrimary ??
-      themeCssVars?.chart2 ??
-      themeCssVars?.primary ??
-      computedCssVars.sidebarPrimary ??
-      computedCssVars.chart2 ??
-      computedCssVars.primary
-    );
-  });
-  const themeIconQuery = $derived(getThemeIcons({ color: themeIconColor, invert: mode.current === "light" }));
 
   const packageVersion = __NPM_PACKAGE_VERSION__;
 
@@ -91,25 +72,17 @@
 <header
   class="@container fixed top-0 left-0 isolate z-35 h-12 w-full border-b px-2.5 pt-[env(safe-area-inset-top,0)] pr-[max(0.625rem,env(safe-area-inset-right))] pl-[max(0.625rem,env(safe-area-inset-left))] leading-12">
   <div class="flex h-full w-full items-center-safe justify-between">
-    <div class="flex gap-2">
+    <div class="flex gap-1">
       <Button.Root
         href="/"
         class="flex items-center-safe justify-center-safe gap-2 font-bold"
         data-sveltekit-preload-data="hover">
-        <Avatar.Root class="size-6 shrink-0 rounded-xl select-none">
-          {#if themeIconQuery.current}
-            <Avatar.Image
-              loading="lazy"
-              src="data:image/svg+xml;base64,{btoa(themeIconQuery.current)}"
-              alt="SkyCrypt"
-              class="pointer-events-none h-6 select-none" />
-          {:else}
-            <Avatar.Image
-              loading="lazy"
-              src="/img/app-icons/svg.svg"
-              alt="SkyCrypt"
-              class="pointer-events-none h-6 select-none" />
-          {/if}
+        <Avatar.Root class="size-10 shrink-0 rounded-xl select-none">
+          <Avatar.Image
+            loading="lazy"
+            src="/img/skycrypt-logo.avif"
+            alt="SkyCrypt"
+            class="pointer-events-none h-10 select-none" />
 
           <Avatar.Fallback
             class="flex h-full items-center justify-center text-lg font-semibold text-muted-foreground uppercase"

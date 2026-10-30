@@ -56,7 +56,7 @@ describe("discordEmbed", () => {
           style: 5,
           label: "SkyCrypt",
           url: "https://sky.shiiyu.moe/stats/tiltedhoney/Kiwi?utm_source=SkyCrypt&utm_campaign=DiscordEmbed",
-          emoji: { id: "1558259246070505512", name: "skycrypt" }
+          emoji: { id: "1565779361947324697", name: "skycrypt" }
         },
         {
           type: 2,

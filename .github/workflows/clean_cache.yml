@@ -1,35 +1,49 @@
 # https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows#force-deleting-cache-entries
-name: Cleanup caches for closed branches
+name: Cleanup caches for closed pull requests
 
 on:
   pull_request:
     types:
       - closed
+  schedule:
+    - cron: "0 0 */3 * *"
   workflow_dispatch:
 
 jobs:
   cleanup:
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      pull-requests: read
+
     steps:
-      - name: Check out code
-        uses: actions/checkout@v7
-
       - name: Cleanup
+        shell: bash
         run: |
+          set -euo pipefail
 
-          REPO=${{ github.repository }}
-          BRANCH="refs/pull/${{ github.event.pull_request.number }}/merge"
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            ref="refs/pull/$PR_NUMBER/merge"
+            echo "Deleting caches for closed pull request $PR_NUMBER"
+            gh cache delete --all --succeed-on-no-caches --repo "$REPO" --ref "$ref"
+            exit 0
+          fi
 
-          echo "Fetching list of cache key"
-          cacheKeysForPR=$(gh cache list -R $REPO -B $BRANCH | cut -f 1 )
+          echo "Finding caches for closed pull requests"
+          refs=$(gh cache list --repo "$REPO" --limit 1000 --json ref --jq '.[].ref' | sort -u)
 
-          ## Setting this to not fail the workflow while deleting cache keys. 
-          set +e
-          echo "Deleting caches..."
-          for cacheKey in $cacheKeysForPR
-          do
-              gh cache delete $cacheKey -R $REPO -B $BRANCH --confirm
-          done
-          echo "Done"
+          while IFS= read -r ref; do
+            [[ "$ref" =~ ^refs/pull/([0-9]+)/merge$ ]] || continue
+            pr_number="${BASH_REMATCH[1]}"
+            state=$(gh pr view "$pr_number" --repo "$REPO" --json state --jq '.state')
+
+            if [[ "$state" == "CLOSED" ]]; then
+              echo "Deleting caches for closed pull request $pr_number"
+              gh cache delete --all --succeed-on-no-caches --repo "$REPO" --ref "$ref"
+            fi
+          done <<< "$refs"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_NAME: ${{ github.event_name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}

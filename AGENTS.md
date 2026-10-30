@@ -11,7 +11,7 @@ Follow these instructions when working on SkyCrypt Frontend. Nested `AGENTS.md` 
 ## Stack and setup
 
 - SkyCrypt is a Hypixel SkyBlock profile viewer built with SvelteKit 2, Svelte 5, strict TypeScript, and Tailwind CSS 4. Production uses the Node adapter.
-- Use Node 24 and pnpm 12, as required by `package.json` and CI. Other runtimes and package managers are unsupported. Keep `pnpm-lock.yaml` in sync with dependency changes.
+- Use Node 26 and pnpm 12, as required by `package.json` and CI. Other runtimes and package managers are unsupported. Keep `pnpm-lock.yaml` in sync with dependency changes.
 - Install with `pnpm install`. Copy `.env.example` to `.env` without overwriting an existing file. Never commit secrets or local environment files.
 - Profile data and end-to-end tests require the Go backend from the separate SkyCrypt-Backend repository. Newsroom uploads go to Cloudflare R2. See `.env.example` for service URLs.
 - Database and authentication code use PostgreSQL, Drizzle, and Better Auth. `pnpm db:start` starts local PostgreSQL. Server startup applies migrations from `drizzle/` through `src/hooks.server.ts`; builds skip migration execution.
@@ -48,7 +48,7 @@ Follow these instructions when working on SkyCrypt Frontend. Nested `AGENTS.md` 
 - Use Svelte 5 runes (`$state`, `$derived`, `$props`) and snippets. Avoid legacy reactive declarations, `export let`, and slots in new code.
 - Use the Svelte MCP to get the latest svelte documentation and conventions. Use the async flag to get the latest SvelteKit documentation and conventions for async svelte and remote functions, as that is the default for this project (instead of +page.server.ts way of loading data).
 - The project enables async Svelte compilation and SvelteKit remote functions. Use `--async` when validating with Svelte MCP/CLI tooling.
-- Check official documentation before implementing: the Svelte MCP for Svelte and SvelteKit, the library's own docs (for example takumi, Better Auth, Cloudflare) and the Node 24 docs for server code. Prefer SvelteKit features, then Node 24 built-ins, then library features, then hand-written code. Context7 can lag behind official docs. Say which docs you checked when reporting.
+- Check official documentation before implementing: the Svelte MCP for Svelte and SvelteKit, the library's own docs (for example takumi, Better Auth, Cloudflare) and the Node 26 docs for server code. Prefer SvelteKit features, then Node 26 built-ins, then library features, then hand-written code. Context7 can lag behind official docs. Say which docs you checked when reporting.
 - Use SvelteKit remote functions in `*.remote.ts` for new data loading and mutations instead of adding `+page.server.ts`. Migrate existing server route files only when the task calls for it.
 - Validate remote-function inputs and check authentication and authorization on the server. Follow nearby implementations, and check permissions in each protected mutation even when route guards or hidden controls restrict access.
 - Use Tailwind utilities, the shared `cn()` helper, and existing theme tokens and UI primitives. UI changes must work with a keyboard, show focus, adapt to screen size, and support existing themes.
@@ -103,7 +103,8 @@ Follow these instructions when working on SkyCrypt Frontend. Nested `AGENTS.md` 
 
 - Use Conventional Commits, for example `fix(theme): preserve contrast`. The commit-message hook runs commitlint.
 - Before committing or pushing, ask whether the change goes directly on `dev` or on a new branch. The answer depends on the change, so never choose on your own.
+- Never stage changes (`git add`, `git mv`, `git rm`) unless asked. The user stages after reviewing; rename or delete files with plain `mv`/`rm`.
 - Follow `.github/PULL_REQUEST_TEMPLATE.md`: explain the problem and resulting behavior, link relevant issues, list verification, and include before/after screenshots for visible UI changes. Note migration or environment requirements.
 - Add a changeset with `pnpm changeset` when the change belongs in the release changelog. Documentation-only agent guidance does not need one.
 - Changesets target `dev`. Automation creates beta releases on `dev` and stable releases on `prod`. Follow `CONTRIBUTING.md` for promotion and changeset cleanup. Run release scripts only for an explicit release task.
-- Preserve applicable license notices. New contributions default to AGPLv3; brand assets explicitly listed in `NOTICE` and `static/BRAND_ASSETS_LICENSE` retain their MIT exception.
+- Preserve applicable license notices. New contributions default to AGPLv3; brand assets listed in `NOTICE` are proprietary (`LICENSES/LicenseRef-SkyCrypt-Brand.txt`). `NOTICE` is the authoritative list; mirror changes in `static/BRAND_ASSETS_LICENSE`, `REUSE.toml` and the README list.

@@ -48,9 +48,9 @@
   <div
     class="mx-auto flex w-full flex-col border border-b-0 glass px-6 pb-[max(1rem,env(safe-area-inset-bottom))] glass-bg-popover md:px-8 standard:bg-transparent">
     <div class="grid w-full gap-8 py-6 md:grid-cols-3 md:py-8">
-      <div class="space-y-3">
-        <a href={resolve("/")} class="inline-flex items-center gap-2 rounded-md font-bold">
-          <img src="/img/app-icons/svg.svg" alt="" class="pointer-events-none size-6 select-none" />
+      <div>
+        <a href={resolve("/")} class="inline-flex items-center gap-1 rounded-md font-bold">
+          <img src="/img/skycrypt-logo.avif" alt="" class="pointer-events-none size-10 select-none" />
           SkyCrypt
         </a>
         <p class="text-sm text-pretty text-muted-foreground">A free, open-source stats viewer for Hypixel SkyBlock.</p>
