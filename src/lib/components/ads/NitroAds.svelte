@@ -69,11 +69,31 @@
       showBlockNotice();
     });
 
+    document.addEventListener("nitroAds.rendered", trackImpression);
+
     return () => {
       destroyed = true;
+      document.removeEventListener("nitroAds.rendered", trackImpression);
       removeAds(active);
     };
   });
+
+  // `adInfo` isn't in NitroPay's API docs; these fields come from their ads script.
+  type RenderedEvent = CustomEvent<{
+    adInfo?: { adUnitCode?: string; bidder?: string; cpm?: number; width?: number; height?: number };
+  }>;
+
+  function trackImpression(event: Event) {
+    const info = (event as RenderedEvent).detail?.adInfo;
+    if (!info?.cpm || info.bidder === "blank" || typeof umami === "undefined") return;
+    umami.track("ad-impression", {
+      revenue: info.cpm / 1000,
+      currency: "USD",
+      placement: info.adUnitCode ?? "unknown",
+      bidder: info.bidder ?? "unknown",
+      size: `${info.width}x${info.height}`
+    });
+  }
 
   // NitroPay frees a placement's resources once its element leaves the DOM.
   function removeAds(active: typeof placements) {
@@ -95,7 +115,10 @@
       duration: 15000,
       action: {
         label: "Patreon",
-        onClick: () => window.open(PUBLIC_PATREON, "_blank", "noopener")
+        onClick: () => {
+          if (typeof umami !== "undefined") umami.track("adblock-patreon-click", { source: "toast" });
+          window.open(PUBLIC_PATREON, "_blank", "noopener");
+        }
       }
     });
   }

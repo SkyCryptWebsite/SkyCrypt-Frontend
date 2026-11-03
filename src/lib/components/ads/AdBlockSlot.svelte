@@ -15,6 +15,8 @@
         href={PUBLIC_PATREON}
         target="_blank"
         rel="noopener"
+        data-umami-event="adblock-patreon-click"
+        data-umami-event-source="slot"
         class="underline underline-offset-2 focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-ring"
         >support us on Patreon</a> to go ad-free.
     </p>
