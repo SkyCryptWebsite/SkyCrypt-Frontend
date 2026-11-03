@@ -8,7 +8,7 @@ import { getContentExtensions } from "#lib/components/edra/extensions";
 const extensions = getContentExtensions();
 const schema = getSchema(extensions);
 
-/** Hosts whose players may be embedded in posts. Keep `frame-src` in vite.config.ts in sync. */
+/** Hosts whose players may be embedded in posts. */
 const EMBED_HOSTS = new Set([
   "www.youtube.com",
   "youtube.com",

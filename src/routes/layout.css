@@ -684,3 +684,8 @@
     --scroll-fade-e: 0px;
   }
 }
+
+/* An ad iframe whose color-scheme differs from its document gets an opaque white canvas, showing white boxes when nothing fills on the dark theme. */
+[id^="skycrypt-"] iframe {
+  color-scheme: light;
+}

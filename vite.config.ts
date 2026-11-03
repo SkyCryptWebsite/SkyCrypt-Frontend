@@ -49,45 +49,17 @@ export default defineConfig({
       csp: {
         mode: "auto",
         directives: {
-          "script-src": ["self", "unsafe-inline", "https://challenges.cloudflare.com"],
+          "upgrade-insecure-requests": true,
+          // Ad bidders and ID vendors loaded by NitroPay rotate constantly, so ad-related directives allow any https source.
+          // apstag.js (Amazon bidder) evaluates strings, so it needs unsafe-eval.
+          "script-src": ["self", "unsafe-inline", "unsafe-eval", "blob:", "https:"],
           "worker-src": ["self", "blob:"],
-          "style-src": ["self", "unsafe-inline", "https://fonts.googleapis.com"],
-          "img-src": [
-            "self",
-            "data:",
-            "https://textures.minecraft.net",
-            "http://localhost:8080",
-            "https://sky.shiiyu.moe",
-            "https://api.shiiyu.moe",
-            "https://beta-api.shiiyu.moe",
-            "https://nmsr.nickac.dev",
-            "https://media.shiiyu.moe",
-            "https://eliteskyblock.com",
-            "https://cdn.discordapp.com"
-          ],
-          "connect-src": [
-            "self",
-            "https://mowojang.matdoes.dev",
-            "https://mowojang.seraph.si",
-            "http://localhost:8080",
-            "https://sky.shiiyu.moe",
-            "https://api.shiiyu.moe",
-            "https://beta-api.shiiyu.moe",
-            "https://*.r2.cloudflarestorage.com"
-          ],
-          "media-src": ["self", "https://media.shiiyu.moe", "https://api.shiiyu.moe", "https://beta-api.shiiyu.moe"],
-          "font-src": ["self", "https://fonts.gstatic.com"],
-          // Keep the embed hosts in sync with EMBED_HOSTS in src/lib/server/rich-text.ts.
-          "frame-src": [
-            "self",
-            "https://challenges.cloudflare.com",
-            "https://www.youtube.com",
-            "https://youtube.com",
-            "https://www.youtube-nocookie.com",
-            "https://player.vimeo.com",
-            "https://streamable.com",
-            "https://open.spotify.com"
-          ]
+          "style-src": ["self", "unsafe-inline", "https:"],
+          "img-src": ["self", "data:", "blob:", "http://localhost:8080", "https:"],
+          "connect-src": ["self", "http://localhost:8080", "https:"],
+          "media-src": ["self", "data:", "blob:", "https:"],
+          "font-src": ["self", "data:", "https:"],
+          "frame-src": ["self", "https:"]
         }
       },
       version: {

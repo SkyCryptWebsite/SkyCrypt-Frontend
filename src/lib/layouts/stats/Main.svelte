@@ -19,6 +19,7 @@
   import * as Drawer from "$ui/drawer";
   import { Pane } from "paneforge";
   import { untrack } from "svelte";
+  import AdBlockSlot from "#lib/components/ads/AdBlockSlot.svelte";
   import { ContainedItemsGrid, ItemContent } from "#lib/components/item";
   import { Navbar } from "#lib/components/misc";
   import TooltipSetup from "#lib/components/tooltip/TooltipSetup.svelte";
@@ -196,6 +197,7 @@
         <Skills />
         <Stats />
         <AdditionalStats />
+        <AdBlockSlot />
       </div>
 
       <Navbar>
