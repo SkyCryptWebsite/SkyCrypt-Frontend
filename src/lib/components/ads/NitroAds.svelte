@@ -1,9 +1,12 @@
+<script lang="ts" module>
+  // The layout remounts this on every navigation; report a blocker once per page load.
+  let blockReported = false;
+</script>
+
 <script lang="ts">
   import { dev } from "$app/env";
-  import { PUBLIC_PATREON } from "$app/env/public";
   import { onMount } from "svelte";
-  import { toast } from "svelte-sonner";
-  import { AD_REPORT as report, adBlock, detectNitroBlock } from "#lib/shared/ads.svelte";
+  import { AD_REPORT as report, detectNitroBlock } from "#lib/shared/ads";
 
   // Rails would cover the full-width stats layout; NitroPay's collision check doesn't catch it.
   let { rails = true }: { rails?: boolean } = $props();
@@ -45,13 +48,15 @@
         report
       }
     ],
-    ["skycrypt-video", { format: "floating", className: AD_CLASS }]
+    // Bottom-right is the default, where it covers toasts. `floating` isn't in NitroPay's docs; it comes from their ads script, which only applies its default 178x100 mobile size when `floating` is omitted.
+    [
+      "skycrypt-video",
+      { format: "floating", className: AD_CLASS, floating: { position: "bottom-left", reduceMobileSize: true } }
+    ]
   ];
   const railPlacements: [string, Record<string, unknown>][] = [
-    ["skycrypt-rail-left", { ...railOptions, rail: "left" }],
     ["skycrypt-rail-right", { ...railOptions, rail: "right" }]
   ];
-  const BLOCK_NOTICE_KEY = "skycryptAdBlockNoticeShown";
 
   onMount(() => {
     let destroyed = false;
@@ -61,11 +66,9 @@
     });
 
     detectNitroBlock().then((blocked) => {
-      // The layout remounts this on every navigation; report a blocker once per page load.
-      if (!blocked || destroyed || adBlock.detected) return;
-      adBlock.detected = true;
+      if (!blocked || destroyed || blockReported) return;
+      blockReported = true;
       if (typeof umami !== "undefined") umami.track("adblock-detected");
-      showBlockNotice();
     });
 
     document.addEventListener("nitroAds.rendered", trackImpression);
@@ -111,27 +114,5 @@
   function removeAds(active: typeof placements) {
     const selector = [`.${AD_CLASS}`, ...active.map(([id]) => `#${id}`)].join(",");
     for (const el of document.querySelectorAll(selector)) el.remove();
-  }
-
-  function showBlockNotice() {
-    try {
-      if (sessionStorage.getItem(BLOCK_NOTICE_KEY)) return;
-      sessionStorage.setItem(BLOCK_NOTICE_KEY, "1");
-    } catch {
-      // Storage can be unavailable; showing the notice again is harmless.
-    }
-    toast.info("Ads keep SkyCrypt free", {
-      id: "adblock-notice",
-      description:
-        "SkyCrypt is free and has no paywalls. Please allow ads on sky.shiiyu.moe, or support us on Patreon to remove them.",
-      duration: 15000,
-      action: {
-        label: "Patreon",
-        onClick: () => {
-          if (typeof umami !== "undefined") umami.track("adblock-patreon-click", { source: "toast" });
-          window.open(PUBLIC_PATREON, "_blank", "noopener");
-        }
-      }
-    });
   }
 </script>
