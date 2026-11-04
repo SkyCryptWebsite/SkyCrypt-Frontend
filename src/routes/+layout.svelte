@@ -393,7 +393,8 @@
 <div class="min-h-[calc(100dvh-3rem)]">
   <Tooltip.Provider delayDuration={0}>{@render children()}</Tooltip.Provider>
 </div>
-{#if browser && showAds}
+<!-- Awaited during SSR so the entitlement ships with the page instead of gating ads behind a client request. -->
+{#if showAds}
   <svelte:boundary>
     {#snippet failed()}{/snippet}
     {#if !(await getAdFree())}

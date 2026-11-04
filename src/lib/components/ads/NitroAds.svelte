@@ -3,14 +3,13 @@
   import { PUBLIC_PATREON } from "$app/env/public";
   import { onMount } from "svelte";
   import { toast } from "svelte-sonner";
-  import { adBlock, detectNitroBlock } from "#lib/shared/ads.svelte";
+  import { AD_REPORT as report, adBlock, detectNitroBlock } from "#lib/shared/ads.svelte";
 
   // Rails would cover the full-width stats layout; NitroPay's collision check doesn't catch it.
   let { rails = true }: { rails?: boolean } = $props();
 
   // These formats render without a holder div. NitroPay puts the placement id on the ad and `className` on rail wrappers; both are removed when leaving ad pages.
   const AD_CLASS = "skycrypt-ad";
-  const report = { enabled: true, icon: true, wording: "Report Ad", position: "top-right" };
   const railOptions = {
     format: "rail",
     className: AD_CLASS,

@@ -1,3 +1,5 @@
+export const AD_REPORT = { enabled: true, icon: true, wording: "Report Ad", position: "top-right" };
+
 // Only written in the browser, after NitroPay's ad-block check.
 export const adBlock = $state({ detected: false });
 
