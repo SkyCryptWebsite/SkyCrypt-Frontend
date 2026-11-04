@@ -18,6 +18,8 @@ declare global {
   }
 
   interface Window {
+    __uspapi?: (command: string, version: number) => void;
+    __cmp?: (command: string) => void;
     nitroAds: {
       createAd(id: string, options: Record<string, unknown>): NitroAd | Promise<NitroAd | NitroAd[]> | null;
     };

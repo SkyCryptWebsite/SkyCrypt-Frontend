@@ -69,10 +69,13 @@
     });
 
     document.addEventListener("nitroAds.rendered", trackImpression);
+    document.addEventListener("nitroAds.anchorVisibility", reserveAnchorSpace);
 
     return () => {
       destroyed = true;
       document.removeEventListener("nitroAds.rendered", trackImpression);
+      document.removeEventListener("nitroAds.anchorVisibility", reserveAnchorSpace);
+      document.documentElement.style.removeProperty("--anchor-height");
       removeAds(active);
     };
   });
@@ -92,6 +95,16 @@
       bidder: info.bidder ?? "unknown",
       size: `${info.width}x${info.height}`
     });
+  }
+
+  // NitroPay makes room for top anchors but lets bottom ones cover the footer. The event fires as the anchor
+  // slides in or out (0.15s) and a closed anchor is removed 150ms later, so measure once that has settled.
+  function reserveAnchorSpace() {
+    setTimeout(() => {
+      const anchor = document.getElementById("skycrypt-anchor");
+      const covered = anchor?.isConnected ? Math.max(0, window.innerHeight - anchor.getBoundingClientRect().top) : 0;
+      document.documentElement.style.setProperty("--anchor-height", `${covered}px`);
+    }, 200);
   }
 
   // NitroPay frees a placement's resources once its element leaves the DOM.
