@@ -38,7 +38,7 @@
     Contribute to the code on <a href="https://github.com/SkyCryptWebsite" target="_blank" rel="noreferrer">GitHub</a>.
   </li>
   <li>
-    Help keep SkyCrypt ad free by donating on <a href={PUBLIC_PATREON} target="_blank" rel="noreferrer">Patreon</a>.
+    Support SkyCrypt by donating on <a href={PUBLIC_PATREON} target="_blank" rel="noreferrer">Patreon</a>.
   </li>
 </ul>
 <!-- eslint-enable svelte/no-navigation-without-resolve -->

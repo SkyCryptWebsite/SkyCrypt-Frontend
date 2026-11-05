@@ -89,7 +89,7 @@
       {@render ListItem({
         href: PUBLIC_PATREON,
         title: "Patreon",
-        content: "Help keep SkyCrypt ad free by donating",
+        content: "Support SkyCrypt by donating",
         icon: SvglPatreonLogo
       })}
 

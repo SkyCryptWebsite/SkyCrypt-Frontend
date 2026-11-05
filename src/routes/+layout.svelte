@@ -35,6 +35,7 @@
   import { toast, Toaster, type ToasterProps } from "svelte-sonner";
   import { SvelteURLSearchParams } from "svelte/reactivity";
   import { writable } from "svelte/store";
+  import NitroAds from "#lib/components/ads/NitroAds.svelte";
   import Footer from "#lib/components/footer/Footer.svelte";
   import Header from "#lib/components/header/Header.svelte";
   import { CommandPalette, JsonLd, PerformanceMode } from "#lib/components/misc";
@@ -43,6 +44,7 @@
   import { IsHover } from "#lib/hooks/is-hover.svelte.js";
   import { IsMobile } from "#lib/hooks/is-mobile.svelte.js";
   import "./layout.css";
+  import { getAdFree } from "#lib/shared/ads.remote";
   import { listResourcePacks } from "#lib/shared/api/skycrypt-api.remote";
   import { getActiveBanners, listLatestPostsForNotifications } from "#lib/shared/newsroom.remote";
   import { isBeta } from "#lib/shared/release-channel";
@@ -64,6 +66,10 @@
   const theme = writable<ToasterProps["theme"]>("dark");
   // The dashboards' fixed sidebars span the full viewport height and would cover the footer.
   const showFooter = $derived(!/^\/(admin-)?dashboard(\/|$)/.test(page.url.pathname));
+  const isStatsPage = $derived(page.url.pathname.startsWith("/stats/"));
+  // NitroPay asks SPAs to tear down and recreate placements on every navigation. Params, not the pathname, so shallow URL rewrites don't count.
+  const adPageKey = $derived(`${page.route.id}${JSON.stringify(page.params)}`);
+  const showAds = $derived(!/^\/((admin-)?dashboard|login|logout)(\/|$)/.test(page.url.pathname));
   const noEmbedUrls = ["/stats/", "/newsroom", "/login", "/dashboard"];
   const packs = new PacksContext();
   const websiteJsonLd = {
@@ -387,6 +393,17 @@
 <div class="min-h-[calc(100dvh-3rem)]">
   <Tooltip.Provider delayDuration={0}>{@render children()}</Tooltip.Provider>
 </div>
+<!-- Awaited during SSR so the entitlement ships with the page instead of gating ads behind a client request. -->
+{#if showAds}
+  <svelte:boundary>
+    {#snippet failed()}{/snippet}
+    {#if !(await getAdFree())}
+      {#key adPageKey}
+        <NitroAds rails={!isStatsPage} />
+      {/key}
+    {/if}
+  </svelte:boundary>
+{/if}
 {#if showFooter}
   <Footer />
 {/if}

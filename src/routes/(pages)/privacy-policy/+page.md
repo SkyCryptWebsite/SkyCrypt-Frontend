@@ -9,7 +9,7 @@
 
 # Privacy Policy
 
-Last updated: 20 October 2026
+Last updated: 4 November 2026
 
 This policy explains what data SkyCrypt collects when you use [sky.shiiyu.moe](https://sky.shiiyu.moe), why we collect it, who else receives it, and what you can do about it. You can use most of SkyCrypt without an account, and in that case we collect very little.
 
@@ -41,11 +41,13 @@ We use [Umami](https://umami.is) to count visits. It records the page you viewed
 
 On a sample of visits, Umami also records where on the page people click and how far they scroll, so we can see which parts of a page get used. We do not record sessions or what you type.
 
+Umami also counts the ads shown on a page, with the ad's position, size, the ad company that filled it and an estimate of what it earned. It records when a page detects an ad blocker. None of this adds information about you beyond what Umami already records.
+
 ### Storage in your browser
 
 SkyCrypt saves some of your choices in your browser so the site remembers them. This data stays on your device and is not sent to us. It includes your favorite players, recent searches, settings, themes, enabled resource packs, light or dark mode, which newsroom posts and banners you have already seen or dismissed, and which tabs you had open.
 
-If you sign in, we set a cookie that keeps you signed in. We also set a cookie for your enabled resource packs and one that remembers whether a sidebar is open. We use no advertising or tracking cookies.
+If you sign in, we set a cookie that keeps you signed in. We also set a cookie for your enabled resource packs and one that remembers whether a sidebar is open. Our advertising partner and the ad companies it works with set their own cookies, described under Advertising below.
 
 ### Content loaded from other sites
 
@@ -55,6 +57,20 @@ Some images and features load directly from other services, which then receive y
 - Discord avatars load from Discord's image servers.
 - Newsroom images and videos load from media.shiiyu.moe, which is stored on Cloudflare.
 - A newsroom post can embed a video or audio player from YouTube, Vimeo, Streamable or Spotify. That service only receives your data on posts that contain such an embed.
+
+### Advertising
+
+SkyCrypt is free because it shows ads. The ads are run by [NitroPay](https://nitropay.com), which is operated by Overwolf Ltd.
+
+NitroPay and the ad companies receive your IP address, browser and device type, language, approximate location, the page you are viewing and how you interact with the ads. They set cookies and similar identifiers in your browser so they can recognise your browser across websites, limit how often you see the same ad, measure ads and, where allowed, show ads based on your interests. NitroPay lists the ad companies it works with and explains how it handles this data in its [privacy policy](https://nitropay.com/privacy/).
+
+If you are in the European Economic Area, the United Kingdom or Switzerland, NitroPay asks for your consent before ads are personalised or cookies that are not strictly necessary are used. You can change your choice at any time with **Update consent preferences** in the footer.
+
+If you are in California, you can opt out of the sale or sharing of your personal information with **Do Not Sell My Personal Information** in the footer. Under US state privacy laws, letting ad companies use cookies for interest-based ads can count as a "sale" or "sharing" of personal information, even though no one pays us for your data.
+
+You can also opt out of interest-based ads from many ad companies through the [NAI](https://optout.networkadvertising.org/?c=1), the [Digital Advertising Alliance](https://optout.aboutads.info) or, in Europe, [Your Online Choices](https://www.youronlinechoices.com).
+
+Patreon supporters with a perk tier do not see ads.
 
 ## When you sign in
 
@@ -100,8 +116,9 @@ We use your data for these reasons, which are our legal bases under the GDPR:
 - To keep SkyCrypt secure and working, to stop abuse and to fix errors. This is our legitimate interest in running a safe and reliable site.
 - To understand how the site is used, through Umami. This is our legitimate interest in improving SkyCrypt, and we chose a tool that does not track you across sites.
 - To show public SkyBlock stats from the Hypixel API. This is our legitimate interest in providing a stats viewer, using data players have made public through Hypixel.
+- To show ads that pay for SkyCrypt. Personalised ads and advertising cookies rely on your consent, which you give or refuse in NitroPay's consent prompt. Delivering ads, preventing ad fraud and recording consent rely on our legitimate interest in funding a free site.
 
-We do not sell your data and we do not use it for advertising.
+We never sell your data for money. Your account data, linked accounts and API details are not given to advertisers.
 
 ## Who else receives your data
 
@@ -110,10 +127,13 @@ We use these services to run SkyCrypt. Each one only receives the data it needs 
 - Hetzner hosts our servers and databases in the EU.
 - Cloudflare protects and speeds up the site, runs Turnstile, and stores newsroom images and our database backups.
 - Hypixel and Minecraft username services receive the names and UUIDs of players people look up, but no information about you.
+- NitroPay and the ad companies it works with receive the data described under Advertising above. They handle it under their own privacy policies.
 
 Discord, MC-ID and Patreon are separate services that you choose to sign in with or connect. They send us the data described above, and they handle your data under their own privacy policies.
 
 Cloudflare is based in the United States. Our agreement with Cloudflare covers data it handles for us, and Cloudflare is certified under the EU-US Data Privacy Framework, which lets EU data be transferred to it. If that certification stops being valid, the European Commission's Standard Contractual Clauses apply instead.
+
+NitroPay and some of the ad companies it works with are based outside the European Union. These transfers rely on an adequacy decision by the European Commission or on its Standard Contractual Clauses.
 
 ## How long we keep your data
 
@@ -124,12 +144,15 @@ Cloudflare is based in the United States. Our agreement with Cloudflare covers d
 - Player data from Hypixel is kept for at most 24 hours.
 - We back up our database once a day and keep the 10 most recent backups, so each backup is deleted after about 10 days.
 - The staff action log is kept after you delete your account so we can deal with abuse, but it is no longer linked to your account.
+- Advertising cookies stay in your browser until they expire or you clear them. NitroPay keeps advertising data for at most five years, and each ad company sets its own retention period.
 
 ## Your rights
 
 You can download a copy of your data, including your linked accounts and sessions, in Dashboard, Settings. You can delete your account there too. Deleting it removes your account, your linked accounts, sessions, API keys, API requests and profile emojis right away. It can take up to 10 days before your data is also gone from our backups.
 
 Under the GDPR you also have the right to correct your data, to restrict or object to how we use it, and to receive it in a portable format. To use any of these rights, email us at [privacy@shiiyu.moe](mailto:privacy@shiiyu.moe). We answer within one month.
+
+To change how ads use your data, use **Update consent preferences** or **Do Not Sell My Personal Information** in the footer. Which one you see depends on where you are. You can also contact NitroPay at [privacy.nitro@overwolf.com](mailto:privacy.nitro@overwolf.com) about data it holds.
 
 If you are unhappy with how we handle your data, you can complain to your local data protection authority.
 

@@ -9,6 +9,20 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=20261028" />
     <link rel="manifest" href="/site.webmanifest?v=20261028" />
+    <script data-cfasync="false">
+      window.nitroAds = window.nitroAds || {
+        createAd: function () {
+          return new Promise((e) => {
+            window.nitroAds.queue.push(["createAd", arguments, e]);
+          });
+        },
+        addUserToken: function () {
+          window.nitroAds.queue.push(["addUserToken", arguments]);
+        },
+        queue: []
+      };
+    </script>
+    <script data-cfasync="false" async src="https://s.nitropay.com/ads-2761.js"></script>
     %sveltekit.head%
   </head>
   <body data-sveltekit-preload-data="hover" class="h-full overflow-x-clip bg-black">

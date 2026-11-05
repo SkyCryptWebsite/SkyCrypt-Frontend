@@ -11,6 +11,20 @@ declare global {
   const __NPM_PACKAGE_VERSION__: string;
   const __PRERENDER_VERSION__: string;
 
+  // https://api-docs.nitropay.com/module/nitroads
+  interface NitroAd {
+    id: string;
+    onNavigate(href?: string): void;
+  }
+
+  interface Window {
+    __uspapi?: (command: string, version: number) => void;
+    __cmp?: (command: string) => void;
+    nitroAds: {
+      createAd(id: string, options: Record<string, unknown>): NitroAd | Promise<NitroAd | NitroAd[]> | null;
+    };
+  }
+
   namespace App {
     // interface Error {}
     // interface PageData {}
