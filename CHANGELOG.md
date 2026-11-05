@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.7.0-beta.0
+
+### Minor Changes
+
+- Feat: add nitropay ads (tragic ik) _[`736a46a`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/736a46a82253e5f9c65c19d4e1b81d32ee14dafc) [@DarthGigi](https://github.com/DarthGigi)_
+
 ## 4.6.0
 
 ### Minor Changes
