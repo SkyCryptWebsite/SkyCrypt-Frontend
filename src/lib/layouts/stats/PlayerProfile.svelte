@@ -99,7 +99,7 @@
     </Popover.Trigger>
 
     <Popover.Content
-      class="w-full min-w-64 overflow-hidden glass bg-inherit p-2 ring-0 glass-bg-popover"
+      class="w-full min-w-64 overflow-hidden glass p-2 ring-0 glass-bg-popover standard:bg-inherit"
       sideOffset={8}
       side="bottom"
       align="start"
@@ -178,7 +178,7 @@
       </Popover.Trigger>
 
       <Popover.Content
-        class="w-full min-w-64 overflow-hidden glass bg-inherit font-semibold ring-0 glass-bg-popover"
+        class="w-full min-w-64 overflow-hidden glass font-semibold ring-0 glass-bg-popover standard:bg-inherit"
         sideOffset={8}
         side="bottom"
         align="start"
@@ -226,7 +226,7 @@
         </Popover.Trigger>
 
         <Popover.Content
-          class="w-full max-w-sm overflow-hidden glass bg-inherit p-0 ring-0 glass-bg-popover"
+          class="w-full max-w-sm overflow-hidden glass p-0 ring-0 glass-bg-popover standard:bg-inherit"
           sideOffset={8}
           side="bottom"
           align="start"
