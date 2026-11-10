@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.7.1-beta.1
+
+### Patch Changes
+
+- Chore: update dependencies to latest, including postgres v4 and tailwind-variants v4, with database query timeouts and query spans in traces _[`802de39`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/802de39e16997fd3e7181a6f9bd4afecdb808083) [@DarthGigi](https://github.com/DarthGigi)_
+
 ## 4.7.1-beta.0
 
 ### Patch Changes
