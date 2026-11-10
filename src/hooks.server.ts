@@ -20,8 +20,10 @@ const hyperdxDrain = HYPERDX_OTLP_ENDPOINT
   ? createDrainPipeline<DrainContext>({
       batch: { size: 100, intervalMs: 5000 },
       retry: { maxAttempts: 3 },
+      // Not evlog's `log`: a warning that reaches this drain while its buffer is full drops one event and adds another,
+      // so the buffer would grow past its cap with every event.
       onDropped: (events, error) =>
-        log.warn("evlog", `Dropped ${events.length} events: ${error?.message ?? "buffer full"}`)
+        process.stderr.write(`[evlog] Dropped ${events.length} events: ${error?.message ?? "buffer full"}\n`)
     })(createHyperDXDrain({ endpoint: HYPERDX_OTLP_ENDPOINT, apiKey: HYPERDX_API_KEY }))
   : undefined;
 const drain = hyperdxDrain ?? (dev ? createFsDrain({ maxFiles: 7 }) : undefined);
