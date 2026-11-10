@@ -30,11 +30,17 @@ export function publish(event: LiveEvent) {
 }
 
 /**
- * Yields `load()` now and again after every matching `publish`. For `query.live`; SvelteKit stops the generator, and
- * with it the listener, when the client disconnects. `key` must distinguish calls whose `load` returns different data.
+ * Yields `load()` now and again after every matching `publish`. For `query.live`. `key` must distinguish calls whose
+ * `load` returns different data. Pass the request's `signal`: SvelteKit's `return()` on disconnect is queued behind the
+ * pending `await` below until the next publish, so without it every disconnected client (listener, request, socket)
+ * stays in memory.
  */
-export async function* watch<T>(event: LiveEvent, load: () => Promise<T>, key = "") {
+export async function* watch<T>(event: LiveEvent, load: () => Promise<T>, key = "", signal?: AbortSignal) {
   const memoKey = `${event}:${key}`;
   yield await memoized(memoKey, load);
-  for await (const _ of on(events, event)) yield await memoized(memoKey, load);
+  try {
+    for await (const _ of on(events, event, { signal })) yield await memoized(memoKey, load);
+  } catch (error) {
+    if (!signal?.aborted) throw error;
+  }
 }
