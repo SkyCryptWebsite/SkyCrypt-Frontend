@@ -64,21 +64,22 @@
     });
   }
 
-  setInterval(() => {
-    let newHeartEmoji;
-    do {
-      newHeartEmoji = coloredHearts[Math.floor(Math.random() * coloredHearts.length)];
-    } while (newHeartEmoji === randomHeartEmoji);
-    randomHeartEmoji = newHeartEmoji;
-  }, 1000);
+  $effect(() => {
+    const timer = setInterval(() => {
+      let newHeartEmoji;
+      do {
+        newHeartEmoji = coloredHearts[Math.floor(Math.random() * coloredHearts.length)];
+      } while (newHeartEmoji === randomHeartEmoji);
+      randomHeartEmoji = newHeartEmoji;
 
-  setInterval(() => {
-    let newEmoji;
-    do {
-      newEmoji = randomEmojis[Math.floor(Math.random() * randomEmojis.length)];
-    } while (newEmoji === randomEmoji);
-    randomEmoji = newEmoji;
-  }, 1000);
+      let newEmoji;
+      do {
+        newEmoji = randomEmojis[Math.floor(Math.random() * randomEmojis.length)];
+      } while (newEmoji === randomEmoji);
+      randomEmoji = newEmoji;
+    }, 1000);
+    return () => clearInterval(timer);
+  });
 
   onMount(() => {
     if (page.url.searchParams.has("linked")) {

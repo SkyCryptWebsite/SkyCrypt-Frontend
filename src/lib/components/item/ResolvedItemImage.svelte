@@ -14,18 +14,15 @@
   };
 
   let { src, alt = "", class: className, loading = "lazy", enchanted, texturePack, onresolved }: Props = $props();
-  let resolvedSrc = $state<string | undefined>(undefined);
 
   $effect(() => {
     const textureUrl = src;
-    resolvedSrc = textureUrl;
-    if (!textureUrl) return;
+    if (!textureUrl || !onresolved) return;
 
     const signal = getAbortSignal();
     resolveItemTexture(textureUrl, texturePack).then((resolution) => {
       if (signal.aborted) return;
-      resolvedSrc = resolution.texture;
-      onresolved?.(resolution);
+      onresolved(resolution);
     });
   });
 </script>
@@ -35,7 +32,7 @@
   decoding="async"
   width={16}
   height={16}
-  src={resolvedSrc}
+  {src}
   {alt}
   class={className}
   data-enchanted={enchanted} />

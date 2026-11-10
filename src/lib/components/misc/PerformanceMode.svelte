@@ -78,7 +78,7 @@
       }
     }
 
-    rafId = requestAnimationFrame(measure);
+    if (!shownToast) rafId = requestAnimationFrame(measure);
   }
 
   function checkPerformance() {

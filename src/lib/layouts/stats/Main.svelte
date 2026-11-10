@@ -17,7 +17,6 @@
   } from "$ctx";
   import * as Dialog from "$ui/dialog";
   import * as Drawer from "$ui/drawer";
-  import { Pane } from "paneforge";
   import { untrack } from "svelte";
   import ContentAd from "#lib/components/ads/ContentAd.svelte";
   import { ContainedItemsGrid, ItemContent } from "#lib/components/item";
@@ -29,6 +28,8 @@
   import Stats from "#lib/layouts/stats/Stats.svelte";
   import Sections from "#lib/sections/Sections.svelte";
   import type { CombinedOutput, StatData, StatsOutput } from "#lib/shared/api/orval-generated";
+  // Re-enable with the paneforge layout below (see its TODO).
+  // import { Pane } from "paneforge";
 
   const {
     data: ctx,
@@ -49,13 +50,13 @@
 
   const profile = $derived(ctx);
 
-  let _rightSize = $state(0);
-  let _leftSize = $state(0);
-  let _skinCollapsed = $state(false);
-  let _leftPane = $state<Pane>(null!);
-  let innerWidth = $state(window.innerWidth);
-  let _defaultLeftPanel = $derived(Math.ceil((300 / innerWidth) * 100));
-  let _defaultRightPanel = $derived(Math.ceil((700 / innerWidth) * 100));
+  // let _rightSize = $state(0);
+  // let _leftSize = $state(0);
+  // let _skinCollapsed = $state(false);
+  // let _leftPane = $state<Pane>(null!);
+  // let innerWidth = $state(window.innerWidth);
+  // let _defaultLeftPanel = $derived(Math.ceil((300 / innerWidth) * 100));
+  // let _defaultRightPanel = $derived(Math.ceil((700 / innerWidth) * 100));
 
   // Initialize the profile context
   const profileClass = new ProfileContext();
@@ -107,7 +108,7 @@
   });
 </script>
 
-<svelte:window bind:innerWidth />
+<!-- <svelte:window bind:innerWidth /> -->
 
 <div class="@container/parent relative">
   <!-- TODO: Re-enable paneforge once this is fixed: https://github.com/svecosystem/paneforge/issues/89 -->

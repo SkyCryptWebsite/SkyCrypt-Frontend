@@ -1,4 +1,4 @@
-import { query } from "$app/server";
+import { getRequestEvent, query } from "$app/server";
 import { POST_TYPES } from "$types";
 import { z } from "zod";
 import { watch } from "#lib/server/live";
@@ -17,8 +17,10 @@ export const listPosts = query(
 /** The latest published posts for the unread toast; updates while the page is open. */
 export const listLatestPostsForNotifications = query.live(
   z.object({ limit: z.number().int().min(1).max(10).default(5) }),
-  ({ limit }) => watch("posts", () => listLatestPosts(limit), String(limit))
+  ({ limit }) => watch("posts", () => listLatestPosts(limit), String(limit), getRequestEvent().request.signal)
 );
 
 /** Site-wide banners; updates while the page is open. */
-export const getActiveBanners = query.live(() => watch("banners", listActiveBanners));
+export const getActiveBanners = query.live(() =>
+  watch("banners", listActiveBanners, "", getRequestEvent().request.signal)
+);

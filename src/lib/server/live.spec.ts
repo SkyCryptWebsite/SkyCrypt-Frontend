@@ -32,6 +32,16 @@ describe("watch", () => {
     expect(load).toHaveBeenCalledTimes(3);
   });
 
+  // Regression: a watcher waiting for the next publish ignored return(), leaking every disconnected client.
+  it("stops a watcher waiting for a publish when its signal aborts", async () => {
+    const controller = new AbortController();
+    const generator = watch("banners", async () => "ok", "abort", controller.signal);
+    await generator.next();
+    const waiting = generator.next();
+    controller.abort();
+    await expect(waiting).resolves.toEqual({ done: true, value: undefined });
+  });
+
   it("does not cache a failed load", async () => {
     const load = vi.fn().mockRejectedValueOnce(new Error("db down")).mockResolvedValue("ok");
     await expect(first(watch("banners", load))).rejects.toThrow("db down");

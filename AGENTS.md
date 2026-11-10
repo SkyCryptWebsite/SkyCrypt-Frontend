@@ -54,7 +54,7 @@ Follow these instructions when working on SkyCrypt Frontend. Nested `AGENTS.md` 
 - Use Tailwind utilities, the shared `cn()` helper, and existing theme tokens and UI primitives. UI changes must work with a keyboard, show focus, adapt to screen size, and support existing themes.
 - Name reusable Svelte components in PascalCase and utilities in camelCase; follow SvelteKit route naming and nearby feature-file conventions.
 - Follow `.oxfmtrc.json`: two spaces, double quotes, no trailing commas, sorted imports, and ordered Tailwind classes. Format only changed files.
-- Comment only what the code cannot say: a non-obvious reason, a gotcha, a security constraint. Don't restate what the code does.
+- Comment only what the code cannot say (a non-obvious reason, a gotcha, a security constraint) and keep comments to a minimum, only add a comment when its absolutely necessary. Don't restate what the code does. Also do not add comments for any changes, unless it adheres to the above rule.
 - Never nest ternaries (ESLint enforces `no-nested-ternary`). Use `if`/`else`, an early-returning helper, or a lookup object instead.
 - Use braces on `if`/`else` blocks. Skip them only for a short single-statement guard such as `if (!user) return;`.
 

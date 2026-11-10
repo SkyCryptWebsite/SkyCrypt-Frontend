@@ -1,7 +1,7 @@
 <script lang="ts">
   import { cn, type WithoutChild } from "$utils.js";
   import { ScrollArea as ScrollAreaPrimitive } from "bits-ui";
-  import { Scrollbar } from "./index.js";
+  import Scrollbar from "./scroll-area-scrollbar.svelte";
 
   let {
     ref = $bindable(null),

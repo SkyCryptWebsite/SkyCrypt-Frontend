@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { browser } from "$app/env";
   import { afterNavigate, goto } from "$app/navigation";
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
@@ -27,7 +28,10 @@
   const ign = $derived(page.params.ign || "");
   const profileId = $derived(page.params.profile);
   const routeKey = $derived(`${ign}/${profileId || ""}`);
-  const profileViewPromise = $derived(loadProfileView(ign, profileId));
+  // Browser only: during SSR the boundary below renders its pending snippet and ignores the content, so server-side
+  // fetches were thrown away (and the prerendered queries fetched this site's own public URL). The head still gets the
+  // embed from +page.server.ts.
+  const profileViewPromise = $derived(browser ? loadProfileView(ign, profileId) : new Promise<never>(() => {}));
 
   async function loadProfileView(uuid: string, requestedProfileId: string | undefined) {
     const allStatsPromise = getAllStats(__PRERENDER_VERSION__);
@@ -89,9 +93,13 @@
     }
 
     const navigationKey = routeKey;
-    const { profile } = await profileViewPromise;
-    if (navigationKey === routeKey) {
-      rewriteURL(profile);
+    try {
+      const { profile } = await profileViewPromise;
+      if (navigationKey === routeKey) {
+        rewriteURL(profile);
+      }
+    } catch {
+      // The stats boundary shows the error; SvelteKit doesn't handle this callback's promise.
     }
   });
 </script>

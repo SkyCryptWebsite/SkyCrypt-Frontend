@@ -145,7 +145,8 @@
             bind:value={searchQuery}
             onchange={() => void submitSearch()}
             onkeydown={(e) => {
-              if (e.key.toLowerCase() === "enter" || e.key.toLowerCase() === "search") {
+              // Autofill dispatches keydown events without a `key`.
+              if (e.key === "Enter" || e.key?.toLowerCase() === "search") {
                 e.preventDefault();
                 void submitSearch();
               }

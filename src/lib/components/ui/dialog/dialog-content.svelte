@@ -5,8 +5,8 @@
   import { Dialog as DialogPrimitive } from "bits-ui";
   import type { Snippet } from "svelte";
   import type { ComponentProps } from "svelte";
+  import DialogOverlay from "./dialog-overlay.svelte";
   import DialogPortal from "./dialog-portal.svelte";
-  import * as Dialog from "./index.js";
 
   let {
     ref = $bindable(null),
@@ -23,7 +23,7 @@
 </script>
 
 <DialogPortal {...portalProps}>
-  <Dialog.Overlay />
+  <DialogOverlay />
   <DialogPrimitive.Content
     bind:ref
     data-slot="dialog-content"

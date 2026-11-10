@@ -12,9 +12,12 @@
 
   let currentTime = $state(new Date());
 
-  setInterval(() => {
-    currentTime = new Date();
-  }, 1000);
+  $effect(() => {
+    const timer = setInterval(() => {
+      currentTime = new Date();
+    }, 1000);
+    return () => clearInterval(timer);
+  });
 </script>
 
 <Tooltip.Provider>

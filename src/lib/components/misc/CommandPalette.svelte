@@ -86,7 +86,7 @@
   function handleKeydown(e: KeyboardEvent) {
     submittedSearchError = undefined;
     if (commandValue && commandValue !== "search") return;
-    const k = e.key.toLowerCase();
+    const k = e.key?.toLowerCase();
     if (k === "enter" || k === "search") {
       e.preventDefault();
       void submitSearch();

@@ -19,8 +19,8 @@ import appStyles from "$routes/layout.css?inline";
 
 // Create shared renderer with 64MB cache budget
 const renderer = new Renderer({ cacheMaxBytes: 64 * 1024 * 1024 });
-// Only the few Twemoji glyphs in card text are fetched remotely, so this stays tiny.
-const fetchCache = new Map<string, Promise<ArrayBuffer>>();
+// No `fetchCache` on ImageResponse: takumi would store every remote image URL in it forever. Without one, Twemoji
+// glyphs go through takumi's own capped emoji cache.
 
 let assetsPromise: Promise<{ images: ImageSource[] }> | undefined;
 const loadAssets = () => (assetsPromise ??= setupAssetsAndRenderer());
@@ -89,7 +89,7 @@ async function renderCard({ params, request, url, locals }: Parameters<RequestHa
       css: appStyles,
       emoji: "twemoji",
       signal: request.signal,
-      images: { sources: [...images, { src: "player", data: playerImage, cache: "none" }], fetchCache },
+      images: { sources: [...images, { src: "player", data: playerImage, cache: "none" }] },
       renderer,
       onError: () => {}
     });
@@ -137,7 +137,7 @@ async function renderCard({ params, request, url, locals }: Parameters<RequestHa
         },
         css: appStyles,
         emoji: "twemoji",
-        images: { sources: images, fetchCache },
+        images: { sources: images },
         renderer,
         onError: () => {}
       });
@@ -203,12 +203,15 @@ async function fetchSelectedProfileCardData(ign: string, fetchPlayerImage: Playe
 /** Validates external asset buffers, checks HTTP status, and verifies that responses aren't HTML error/redirect pages. */
 async function fetchAssetBuffer(url: string, assetName: string, signal?: AbortSignal): Promise<ArrayBuffer> {
   const res = await fetch(url, { signal });
+  // Unread bodies keep their socket until garbage collection, so cancel them before throwing.
   if (!res.ok) {
+    await res.body?.cancel();
     throw new Error(`[Asset Fetch Failed] ${assetName} (${url}) returned HTTP ${res.status}: ${res.statusText}`);
   }
 
   const contentLength = res.headers.get("content-length");
   if (contentLength && Number(contentLength) > 8 * 1024 * 1024) {
+    await res.body?.cancel();
     throw new Error(`[Asset Fetch Too Large] ${assetName} (${url}) exceeded the 8 MiB limit.`);
   }
 

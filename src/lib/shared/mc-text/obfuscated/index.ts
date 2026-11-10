@@ -20,8 +20,14 @@ export const animateObfuscatedText: Attachment = (element) => {
   let obfuscatedAnimationRequestID: number = 0;
 
   function animateFrame() {
-    // Find all elements with the "obfuscated" class and animate their text content
-    element.querySelectorAll(".obfuscated").forEach((text) => {
+    const obfuscated = element.querySelectorAll(".obfuscated");
+
+    if (!obfuscated.length) {
+      obfuscatedAnimationRequestID = 0;
+      return;
+    }
+
+    obfuscated.forEach((text) => {
       // Create a TreeWalker to traverse only text nodes within the obfuscated element
       // This allows us to modify text content while preserving HTML structure
       const walker = document.createTreeWalker(text, NodeFilter.SHOW_TEXT, null);
@@ -53,12 +59,19 @@ export const animateObfuscatedText: Attachment = (element) => {
     }
   }
 
+  function start() {
+    if (!obfuscatedAnimationRequestID && !prefersReducedMotion.current) animateFrame();
+  }
+
+  const observer = new MutationObserver(start);
+  observer.observe(element, { childList: true, subtree: true });
+
   // Start the animation loop
-  animateFrame();
+  start();
 
   // Return cleanup function - Svelte will call this when the element is removed
-  // This prevents memory leaks and unnecessary animation frames
   return () => {
+    observer.disconnect();
     if (obfuscatedAnimationRequestID) window.cancelAnimationFrame(obfuscatedAnimationRequestID);
     obfuscatedAnimationRequestID = 0;
   };
