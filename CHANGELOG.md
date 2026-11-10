@@ -1,5 +1,17 @@
 # Changelog
 
+## 4.7.1
+
+### Patch Changes
+
+- Fix(live): release live query listeners when the client disconnects, fixing a server memory leak _[`#386`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/386) [`38bd881`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/38bd88133535c2acd6baf1581f2caff8813ccd64) [@DarthGigi](https://github.com/DarthGigi)_
+- Perf(stats): skip server-side stats fetches whose results were thrown away during SSR _[`#386`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/386) [`8b6a30f`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/8b6a30f4e74f2ffc0650f5750a0a28af96d6911b) [@DarthGigi](https://github.com/DarthGigi)_
+- Perf: download item images once and stop idle animation loops _[`#386`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/386) [`65f4207`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/65f4207db3783f43bee74e6f04829884169a11cb) [@DarthGigi](https://github.com/DarthGigi)_
+- Chore: update dependencies to latest, including postgres v4 and tailwind-variants v4, with database query timeouts and query spans in traces _[`#386`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/386) [`802de39`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/802de39e16997fd3e7181a6f9bd4afecdb808083) [@DarthGigi](https://github.com/DarthGigi)_
+- Perf: drop paneforge from the stats bundle and load only common code highlighting languages _[`#386`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/386) [`f7596fc`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/f7596fc19606d67dff480b0a2a321523e14741a2) [@DarthGigi](https://github.com/DarthGigi)_
+- Fix: handle autofill keydown events and register the service worker from the root _[`#386`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/386) [`4dc2951`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/4dc295171098430c9f0e1be070c7d0d2e460e061) [@DarthGigi](https://github.com/DarthGigi)_
+- Fix: stop dashboard timers and the card image cache from leaking server memory _[`#386`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/386) [`692b346`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/692b3467ee85bf59b3c5184430e65a4403d1edbe) [@DarthGigi](https://github.com/DarthGigi)_
+
 ## 4.7.1-beta.1
 
 ### Patch Changes
