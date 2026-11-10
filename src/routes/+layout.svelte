@@ -122,21 +122,23 @@
   }
 
   function handleKeydown(e: KeyboardEvent) {
+    // Autofill dispatches keydown events without a `key`.
+    if (typeof e.key !== "string") return;
     // Single-key shortcuts must not steal characters typed into fields.
     if (e.target instanceof HTMLElement && e.target.closest("input, textarea, select, [contenteditable]")) return;
     if (e.key === preferences.keybind) {
       e.preventDefault();
       internalState.openCommand = true;
     }
-    if (e.key.toLowerCase() === "p" && dev) {
+    if (dev && e.key.toLowerCase() === "p") {
       // toggle performance mode for testing
       preferences.performanceMode = !preferences.performanceMode;
     }
-    if (e.key.toLowerCase() === "m" && dev) {
+    if (dev && e.key.toLowerCase() === "m") {
       // toggle minecraft styled tooltips for testing
       preferences.mctooltip = !preferences.mctooltip;
     }
-    if (e.key.toLowerCase() === "t" && dev) {
+    if (dev && e.key.toLowerCase() === "t") {
       // toggle minecraft styled tooltips for testing
       setMode(mode.current === "light" ? "dark" : "light");
     }

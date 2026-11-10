@@ -35,6 +35,9 @@ export default defineConfig({
       inspector: process.env.NODE_ENV === "development",
       adapter: adapter(),
       paths: {
+        // Root-relative build paths. With relative paths the service worker registered as `../service-worker.js` from
+        // the URL at window load, which the stats page may already have rewritten (it then resolved under /stats/).
+        relative: false,
         origin: env.PUBLIC_ORIGIN || env.ORIGIN || process.env.PUBLIC_ORIGIN || process.env.ORIGIN
       },
       csrf: {
