@@ -42,12 +42,12 @@
   };
 
   $effect(() => {
-    if (viewportRef && orientation === "horizontal") {
-      viewportRef.addEventListener("wheel", handleWheel, { passive: false });
+    const viewport = viewportRef;
+    if (viewport && orientation === "horizontal") {
+      viewport.addEventListener("wheel", handleWheel, { passive: false });
 
-      // Svelte 5 automatically runs the returned function when the effect destroys/re-runs
       return () => {
-        viewportRef?.removeEventListener("wheel", handleWheel);
+        viewport.removeEventListener("wheel", handleWheel);
       };
     }
   });

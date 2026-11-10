@@ -65,11 +65,14 @@
       if (destroyed) removeAds(active);
     });
 
-    detectNitroBlock().then((blocked) => {
-      if (!blocked || destroyed || blockReported) return;
-      blockReported = true;
-      if (typeof umami !== "undefined") umami.track("adblock-detected");
-    });
+    // Skipped once reported: the check costs up to three pixel requests on every navigation.
+    if (!blockReported) {
+      detectNitroBlock().then((blocked) => {
+        if (!blocked || destroyed || blockReported) return;
+        blockReported = true;
+        if (typeof umami !== "undefined") umami.track("adblock-detected");
+      });
+    }
 
     document.addEventListener("nitroAds.rendered", trackImpression);
     document.addEventListener("nitroAds.anchorVisibility", reserveAnchorSpace);

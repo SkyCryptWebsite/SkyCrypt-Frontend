@@ -8,8 +8,6 @@ import type { StrippedItem } from "#lib/shared/api/orval-generated";
 interface InternalStateData {
   tabValue: SectionName;
   showItem: boolean;
-  itemContent: StrippedItem | undefined;
-  itemContentSpecial: StrippedItem | undefined;
   content: Snippet | undefined;
   openCommand: boolean;
   themeEditorOpen: boolean;
@@ -23,8 +21,6 @@ export class InternalStateContext {
   #data = $state<InternalStateData>({
     tabValue: sections[0].name,
     showItem: false,
-    itemContent: undefined,
-    itemContentSpecial: undefined,
     content: undefined,
     openCommand: false,
     themeEditorOpen: false,
@@ -33,6 +29,9 @@ export class InternalStateContext {
     settingsTab: SettingsTab.Packs,
     navbarPinned: false
   });
+  // Raw: items are only ever replaced, and deep state would proxy every item inside a backpack.
+  #itemContent = $state.raw<StrippedItem | undefined>();
+  #itemContentSpecial = $state.raw<StrippedItem | undefined>();
 
   get tabValue() {
     return this.#data.tabValue;
@@ -51,19 +50,19 @@ export class InternalStateContext {
   }
 
   get itemContent() {
-    return this.#data.itemContent;
+    return this.#itemContent;
   }
 
   set itemContent(value: StrippedItem | undefined) {
-    this.#data.itemContent = value;
+    this.#itemContent = value;
   }
 
   get itemContentSpecial() {
-    return this.#data.itemContentSpecial;
+    return this.#itemContentSpecial;
   }
 
   set itemContentSpecial(value: StrippedItem | undefined) {
-    this.#data.itemContentSpecial = value;
+    this.#itemContentSpecial = value;
   }
 
   get content() {

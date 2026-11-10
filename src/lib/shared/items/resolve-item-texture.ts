@@ -33,7 +33,11 @@ export function resolveItemTexture(textureUrl: string, texturePack?: string): Pr
           if (!response.ok) throw new Error(`Failed to resolve item texture: ${response.status}`);
           return (await response.json()) as ResolvedItemTexture;
         })
-        .catch(() => fallback)
+        .catch(() => {
+          // Don't keep a network blip's fallback for the whole session.
+          resolutionCache.delete(cacheKey);
+          return fallback;
+        })
     : Promise.resolve(fallback);
 
   resolutionCache.set(cacheKey, resolution);
