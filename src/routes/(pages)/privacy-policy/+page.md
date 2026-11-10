@@ -9,7 +9,7 @@
 
 # Privacy Policy
 
-Last updated: 4 November 2026
+Last updated: 10 November 2026
 
 This policy explains what data SkyCrypt collects when you use [sky.shiiyu.moe](https://sky.shiiyu.moe), why we collect it, who else receives it, and what you can do about it. You can use most of SkyCrypt without an account, and in that case we collect very little.
 
@@ -53,7 +53,7 @@ If you sign in, we set a cookie that keeps you signed in. We also set a cookie f
 
 Some images and features load directly from other services, which then receive your IP address:
 
-- Player skins and heads come from nmsr.nickac.dev, and the 3D skin viewer looks up skins through mowojang.seraph.si.
+- Player skins and heads come from nmsr.nickac.dev, and the 3D skin viewer looks up skins through mowojang.matdoes.dev.
 - Discord avatars load from Discord's image servers.
 - Newsroom images and videos load from media.shiiyu.moe, which is stored on Cloudflare.
 - A newsroom post can embed a video or audio player from YouTube, Vimeo, Streamable or Spotify. That service only receives your data on posts that contain such an embed.
