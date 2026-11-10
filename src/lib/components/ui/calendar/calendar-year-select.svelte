@@ -25,7 +25,7 @@
         {#each yearItems as yearItem (yearItem.value)}
           <option
             value={yearItem.value}
-            selected={value !== undefined ? yearItem.value === value : yearItem.value === selectedYearItem.value}>
+            selected={value !== undefined ? yearItem.value === value : yearItem.value === selectedYearItem?.value}>
             {yearItem.label}
           </option>
         {/each}
@@ -33,7 +33,7 @@
       <span
         class="flex h-(--cell-size) items-center gap-1 rounded-md ps-2 pe-1 text-sm font-medium select-none [&>svg]:size-3.5 [&>svg]:text-muted-foreground"
         aria-hidden="true">
-        {yearItems.find((item) => item.value === value)?.label || selectedYearItem.label}
+        {yearItems.find((item) => item.value === value)?.label || selectedYearItem?.label || value}
         <ChevronDownIcon class={cn("size-4", className)} />
       </span>
     {/snippet}
