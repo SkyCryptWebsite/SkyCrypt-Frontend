@@ -1,7 +1,7 @@
 import type { Content, EditorOptions, Extensions } from "@tiptap/core";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import TableOfContents, { getHierarchicalIndexes } from "@tiptap/extension-table-of-contents";
-import { all, createLowlight } from "lowlight";
+import { common, createLowlight } from "lowlight";
 import { getDefaultExtensions } from "../extensions";
 import {
   Callout,
@@ -22,7 +22,7 @@ import SlashCommandComp from "./components/SlashCommand.svelte";
 import VideoExtendedComp from "./components/VideoExtended.svelte";
 import { setTocItems } from "./toc.svelte";
 
-const lowlight = createLowlight(all);
+const lowlight = createLowlight(common);
 
 export interface EdraEditorProps {
   /** Initial document, usually stored `editor.getJSON()` output. */
