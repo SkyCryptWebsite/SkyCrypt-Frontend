@@ -96,6 +96,7 @@ Follow these instructions when working on SkyCrypt Frontend. Nested `AGENTS.md` 
 - Only write tests that would catch a real bug: logic, parsing, edge cases, security checks, persistence and migrations, and user flows that broke before. Don't test that something renders, that a prop or class is applied, that a constant or lookup table has its current values, or how a library behaves. A test that has to change whenever the UI changes on purpose, without ever catching a regression, costs more than it saves. Delete such tests when you find them.
 - Vitest has `server` and `client` projects in `vite.config.ts`. The client project uses headless Chromium and requires `pnpm exec playwright install chromium`. Tests must make assertions; `expect.requireAssertions` is enabled.
 - Run `pnpm lint`, relevant tests, and `pnpm build` for code changes before submitting. For documentation-only changes, check formatting and the accuracy of referenced paths and commands.
+- Use the player `tiltedhoney` or `Refraction` when checking profile pages (in the browser); these profiles have populated data.
 - End-to-end tests run locally with the backend and its required API credentials; they are currently disabled in CI. A production build can also require backend access for prerendered data.
 - Report which checks you ran, their results, and anything you could not run. Never report a skipped check as passing.
 
