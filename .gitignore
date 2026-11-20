@@ -117,3 +117,4 @@ test-results/
 
 # Eslint cache
 .eslintcache
+.devtools-oxc

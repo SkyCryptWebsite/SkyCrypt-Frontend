@@ -26,6 +26,23 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
 
+  changesets:
+    if: github.event.pull_request.head.repo.fork == false && github.event.pull_request.base.ref == 'prod'
+    name: Changesets
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: PNPM Install
+        uses: ./.github/actions/pnpm-install
+
+      - name: Require a changeset for the release
+        run: pnpm exec changeset status --since=${{ github.event.pull_request.base.sha }}
+
   checks:
     if: github.event.pull_request.head.repo.fork == true
     uses: ./.github/workflows/checks.yml

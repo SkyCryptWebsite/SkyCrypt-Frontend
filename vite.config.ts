@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import adapter from "@sveltejs/adapter-node";
 import { sveltekit } from "@sveltejs/kit/vite";
+import { svelteDevtools } from "@sveltejs/vite-devtools-svelte";
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 import tailwindcss from "@tailwindcss/vite";
 import { playwright } from "@vitest/browser-playwright";
@@ -19,12 +20,14 @@ const prerenderVersion = (process.env.SKYCRYPT_PRERENDER_VERSION ??= randomUUID(
 
 export default defineConfig({
   plugins: [
+    svelteDevtools(),
     // Strips log.debug() from production builds and tags dev logs with file:line. Logger config lives in evlog.config.ts.
     evlog({ strip: ["debug"], sourceLocation: "dev" }),
+    mdsvex({ extensions: [".svx", ".md"], smart_punctuation: true }),
     sveltekit({
       // Consult https://svelte.dev/docs/kit/integrations
       // for more information about preprocessors
-      preprocess: [vitePreprocess(), mdsvex({ extensions: [".svx", ".md"] })],
+      preprocess: [vitePreprocess()],
       compilerOptions: { experimental: { async: true }, runes: true },
       experimental: {
         remoteFunctions: true,
@@ -32,7 +35,6 @@ export default defineConfig({
       },
       tracing: { server: true },
       output: { linkHeaderPreload: true },
-      inspector: process.env.NODE_ENV === "development",
       adapter: adapter(),
       paths: {
         // Root-relative build paths. With relative paths the service worker registered as `../service-worker.js` from
@@ -129,5 +131,6 @@ export default defineConfig({
   define: {
     __PRERENDER_VERSION__: JSON.stringify(prerenderVersion),
     __NPM_PACKAGE_VERSION__: JSON.stringify(process.env.npm_package_version || "")
-  }
+  },
+  devtools: { apply: "serve", clientAuth: true }
 });

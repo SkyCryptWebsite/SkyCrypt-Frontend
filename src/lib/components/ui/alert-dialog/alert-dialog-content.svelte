@@ -9,6 +9,7 @@
     ref = $bindable(null),
     class: className,
     size = "default",
+    preventBodyPointerEvents = false,
     portalProps,
     ...restProps
   }: WithoutChild<AlertDialogPrimitive.ContentProps> & {
@@ -21,6 +22,7 @@
   <AlertDialogOverlay />
   <AlertDialogPrimitive.Content
     bind:ref
+    {preventBodyPointerEvents}
     data-slot="alert-dialog-content"
     data-size={size}
     class={cn(
