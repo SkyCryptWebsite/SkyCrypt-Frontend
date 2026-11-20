@@ -35,6 +35,7 @@
     "release:beta": "node scripts/release-beta.mjs",
     "release:stable": "node scripts/release-stable.mjs",
     "test:e2e": "playwright test",
+    "check:pages": "node scripts/check-pages.mjs",
     "db:start": "docker compose up",
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
