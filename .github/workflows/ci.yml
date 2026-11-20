@@ -41,7 +41,7 @@ jobs:
         uses: ./.github/actions/pnpm-install
 
       - name: Require a changeset for the release
-        run: pnpm exec changeset status --since=origin/prod
+        run: pnpm exec changeset status --since=${{ github.event.pull_request.base.sha }}
 
   checks:
     if: github.event.pull_request.head.repo.fork == true
