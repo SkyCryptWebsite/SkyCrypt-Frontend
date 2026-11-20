@@ -21,10 +21,11 @@ export default defineConfig({
   plugins: [
     // Strips log.debug() from production builds and tags dev logs with file:line. Logger config lives in evlog.config.ts.
     evlog({ strip: ["debug"], sourceLocation: "dev" }),
+    mdsvex({ extensions: [".svx", ".md"], smart_punctuation: true }),
     sveltekit({
       // Consult https://svelte.dev/docs/kit/integrations
       // for more information about preprocessors
-      preprocess: [vitePreprocess(), mdsvex({ extensions: [".svx", ".md"] })],
+      preprocess: [vitePreprocess()],
       compilerOptions: { experimental: { async: true }, runes: true },
       experimental: {
         remoteFunctions: true,
