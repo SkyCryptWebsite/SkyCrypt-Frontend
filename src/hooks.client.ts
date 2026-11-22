@@ -1,6 +1,6 @@
-import { dev } from "$app/env";
+import { dev, version } from "$app/env";
 import type { HandleClientError } from "@sveltejs/kit/hooks";
-import { initLog, log } from "evlog/client";
+import { initLog, log, setIdentity } from "evlog/client";
 
 // Warnings and errors go to /api/client-logs, which forwards them to the same drains as server logs.
 initLog({
@@ -8,6 +8,8 @@ initLog({
   minLevel: dev ? "debug" : "warn",
   transport: { enabled: !dev, endpoint: "/api/client-logs" }
 });
+// An open tab can run an older release than the server it reports to.
+setIdentity({ version: __NPM_PACKAGE_VERSION__, release: version });
 
 export const handleError: HandleClientError = ({ kind, error, event }) => {
   if (kind !== "unknown") return;

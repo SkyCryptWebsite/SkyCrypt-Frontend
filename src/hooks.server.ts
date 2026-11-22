@@ -1,4 +1,4 @@
-import { building, dev } from "$app/env";
+import { building, dev, version } from "$app/env";
 import { HYPERDX_API_KEY, HYPERDX_OTLP_ENDPOINT } from "$app/env/private";
 import { PUBLIC_RELEASE_CHANNEL } from "$app/env/public";
 import { runMigrations } from "$src/lib/server/db/migrate";
@@ -31,7 +31,15 @@ const drain = hyperdxDrain ?? (dev ? createFsDrain({ maxFiles: 7 }) : undefined)
 // Stable keeps NODE_ENV ("production") so existing HyperDX searches still match it.
 const environment = !dev && PUBLIC_RELEASE_CHANNEL === "beta" ? "beta" : undefined;
 
-initLogger({ ...toLoggerConfig({ ...evlogConfig, environment }), drain });
+initLogger({
+  ...toLoggerConfig({ ...evlogConfig, environment, env: { version: __NPM_PACKAGE_VERSION__, commitHash: version } }),
+  drain
+});
+
+// Buffered events are lost on a redeploy otherwise.
+// TODO: remove when upgrading to evlog 2.37+, which flushes drain pipelines on SIGTERM itself. 2.37.0 is still newer
+// than pnpm's minimumReleaseAge.
+process.on("SIGTERM", () => void hyperdxDrain?.flush());
 
 const { handle: evlogHandle } = createEvlogHooks({ ...toMiddlewareOptions(evlogConfig), drain });
 
@@ -43,9 +51,6 @@ export const handleError: HandleServerError = ({ kind, error, event }) => {
   if (error instanceof Error) event.locals.log?.error(error);
   else log.error({ action: "request.unhandled_error", path: event.url.pathname, error });
 };
-
-// Buffered events are lost on a redeploy otherwise.
-process.on("SIGTERM", () => void hyperdxDrain?.flush());
 
 // Returned instead of thrown via `redirect()`: evlog's handle would log a thrown Redirect as a 500 error.
 const redirectTo = (location: string) => new Response(null, { status: 307, headers: { location } });
@@ -115,7 +120,19 @@ const headersHandler = (async ({ event, resolve }) => {
 const traceHandler: Handle = ({ event, resolve }) => {
   const context = event.tracing.root.spanContext();
   if (isSpanContextValid(context)) event.locals.log.set({ traceId: context.traceId, spanId: context.spanId });
+  // Cloudflare sets X-Verified-Bot on every request; clients can't spoof it, unlike X-Known-Bot.
+  event.locals.log.set({ verifiedBot: event.request.headers.get("x-verified-bot") === "true" });
   return resolve(event);
+};
+
+// evlog times a streamed response until it closes, so a live query's durationMs is how long the tab stayed open.
+const streamHandler: Handle = async ({ event, resolve }) => {
+  const startedAt = performance.now();
+  const response = await resolve(event);
+  if (response.headers.get("content-type")?.includes("text/event-stream")) {
+    event.locals.log.set({ stream: { firstByteMs: Math.round(performance.now() - startedAt) } });
+  }
+  return response;
 };
 
 const betterAuthHandler: Handle = async ({ event, resolve }) => {
@@ -162,6 +179,7 @@ const protectedHandler = (async ({ event, resolve }) => {
 
 export const handle = sequence(
   evlogHandle,
+  streamHandler,
   traceHandler,
   betterAuthHandler,
   protectedHandler,

@@ -35,6 +35,25 @@ describe("sanitizeClientLog", () => {
     expect(Object.keys(client).filter((k) => /^k\d+$/.test(k))).toHaveLength(19);
   });
 
+  it("drops errors thrown by extensions and ad scripts, keeps our own", () => {
+    const fromStack = (stack: string) => sanitizeClientLog({ level: "error", error: { name: "TypeError", stack } });
+    expect(fromStack("at h (chrome-extension://abc/executors/200.js:1:761)")).toBeNull();
+    expect(fromStack("at f (moz-extension://abc/content.js:1:1)")).toBeNull();
+    expect(
+      fromStack(
+        "at window.fetch (https://sky.shiiyu.moe/_app/immutable/chunks/a.js:2:1)\n    at https://p.cpx.to/p/20023/px.js:1:7927"
+      )
+    ).toBeNull();
+    expect(sanitizeClientLog({ level: "error", error: { name: "GVLError", message: "error" } })).toBeNull();
+    expect(
+      sanitizeClientLog({
+        level: "error",
+        error: { message: "undefined is not an object (evaluating 'window.googletag.cmd')" }
+      })
+    ).toBeNull();
+    expect(fromStack("at window.fetch (https://sky.shiiyu.moe/_app/immutable/chunks/a.js:2:1)")).not.toBeNull();
+  });
+
   it("ignores an invalid timestamp", () => {
     expect(sanitizeClientLog({ level: "info", timestamp: "not a date" })!.client).not.toHaveProperty("timestamp");
   });

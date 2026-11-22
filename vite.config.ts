@@ -13,124 +13,129 @@ import { defineConfig } from "vitest/config";
 
 const root = fileURLToPath(new URL(".", import.meta.url));
 
-const env = loadEnv(process.env.NODE_ENV ?? "production", root, "");
-
 // SvelteKit reloads this config for the client build; both bundles need the same prerender ID.
 const prerenderVersion = (process.env.SKYCRYPT_PRERENDER_VERSION ??= randomUUID());
 
-export default defineConfig({
-  plugins: [
-    svelteDevtools(),
-    // Strips log.debug() from production builds and tags dev logs with file:line. Logger config lives in evlog.config.ts.
-    evlog({ strip: ["debug"], sourceLocation: "dev" }),
-    mdsvex({ extensions: [".svx", ".md"], smart_punctuation: true }),
-    sveltekit({
-      // Consult https://svelte.dev/docs/kit/integrations
-      // for more information about preprocessors
-      preprocess: [vitePreprocess()],
-      compilerOptions: { experimental: { async: true }, runes: true },
-      experimental: {
-        remoteFunctions: true,
-        sendWarningsToBrowser: process.env.NODE_ENV === "development"
-      },
-      tracing: { server: true },
-      output: { linkHeaderPreload: true },
-      adapter: adapter(),
-      paths: {
-        // Root-relative build paths. With relative paths the service worker registered as `../service-worker.js` from
-        // the URL at window load, which the stats page may already have rewritten (it then resolved under /stats/).
-        relative: false,
-        origin: env.PUBLIC_ORIGIN || env.ORIGIN || process.env.PUBLIC_ORIGIN || process.env.ORIGIN
-      },
-      csrf: {
-        trustedOrigins: [
-          "https://sky.shiiyu.moe",
-          "http://localhost:5173",
-          "http://localhost:4173",
-          "http://localhost:3000",
-          "http://localhost:8080"
-        ]
-      },
-      csp: {
-        mode: "auto",
-        directives: {
-          "upgrade-insecure-requests": true,
-          // Ad bidders and ID vendors loaded by NitroPay rotate constantly, so ad-related directives allow any https source.
-          // apstag.js (Amazon bidder) evaluates strings, so it needs unsafe-eval.
-          "script-src": ["self", "unsafe-inline", "unsafe-eval", "blob:", "https:"],
-          "worker-src": ["self", "blob:"],
-          "style-src": ["self", "unsafe-inline", "https:"],
-          "img-src": ["self", "data:", "blob:", "http://localhost:8080", "https:"],
-          "connect-src": ["self", "http://localhost:8080", "https:"],
-          "media-src": ["self", "data:", "blob:", "https:"],
-          "font-src": ["self", "data:", "https:"],
-          "frame-src": ["self", "https:"]
-        }
-      },
-      version: {
-        name: process.env.PUBLIC_COMMIT_HASH,
-        // in ms
-        pollInterval: 1000 * 60 // 1 minute
-      },
-      extensions: [".svelte", ".svx", ".md"]
-    }),
-    tailwindcss()
-  ],
-  resolve: {
-    alias: {
-      // Mirrors the `#lib` import map in package.json, but lets Vite resolve imports without file extensions.
-      "#lib": `${root}/src/lib`,
-      $params: `${root}/src/params`,
-      $types: `${root}/src/lib/types`,
-      $db: `${root}/src/db`,
-      $constants: `${root}/src/lib/server/constants`,
-      $ctx: `${root}/src/context`,
-      $routes: `${root}/src/routes`,
-      $src: `${root}/src`,
-      $ui: `${root}/src/lib/components/ui`,
-      $utils: `${root}/src/lib/shared/utils.ts`,
-      $hooks: `${root}/src/lib/hooks`,
-      $components: `${root}/src/lib/components`,
-      "$utils.js": `${root}/src/lib/shared/utils.ts`
-    }
-  },
-  build: { sourcemap: true },
-  test: {
-    expect: { requireAssertions: true },
-    coverage: {
-      provider: "v8",
-      reporter: ["text", "html"],
-      reportsDirectory: "./coverage"
-    },
-    projects: [
-      {
-        extends: "./vite.config.ts",
-        test: {
-          name: "client",
-          browser: {
-            enabled: true,
-            provider: playwright(),
-            instances: [{ browser: "chromium", headless: true }]
-          },
-          include: ["src/**/*.svelte.{test,spec}.{js,ts}"],
-          exclude: ["src/lib/server/**"]
-        }
-      },
+export default defineConfig(({ command, mode }) => {
+  const env = loadEnv(mode, root, "");
+  // In dev the browser loads item images and data straight from the local backend over plain http, which "https:" in
+  // the CSP doesn't cover. Vite loads .env only after this file runs, so NODE_ENV can't tell dev apart here.
+  const localBackend = command === "serve" ? (["http://localhost:8080"] as const) : [];
 
-      {
-        extends: "./vite.config.ts",
-        test: {
-          name: "server",
-          environment: "node",
-          include: ["src/**/*.{test,spec}.{js,ts}", "scripts/**/*.{test,spec}.{js,ts}"],
-          exclude: ["src/**/*.svelte.{test,spec}.{js,ts}"]
-        }
+  return {
+    plugins: [
+      svelteDevtools(),
+      // Strips log.debug() from production builds and tags dev logs with file:line. Logger config lives in evlog.config.ts.
+      evlog({ strip: ["debug"], sourceLocation: "dev" }),
+      mdsvex({ extensions: [".svx", ".md"], smart_punctuation: true }),
+      sveltekit({
+        // Consult https://svelte.dev/docs/kit/integrations
+        // for more information about preprocessors
+        preprocess: [vitePreprocess()],
+        compilerOptions: { experimental: { async: true }, runes: true },
+        experimental: {
+          remoteFunctions: true,
+          sendWarningsToBrowser: command === "serve"
+        },
+        tracing: { server: true },
+        output: { linkHeaderPreload: true },
+        adapter: adapter(),
+        paths: {
+          // Root-relative build paths. With relative paths the service worker registered as `../service-worker.js` from
+          // the URL at window load, which the stats page may already have rewritten (it then resolved under /stats/).
+          relative: false,
+          origin: env.PUBLIC_ORIGIN || env.ORIGIN || process.env.PUBLIC_ORIGIN || process.env.ORIGIN
+        },
+        csrf: {
+          trustedOrigins: [
+            "https://sky.shiiyu.moe",
+            "http://localhost:5173",
+            "http://localhost:4173",
+            "http://localhost:3000",
+            "http://localhost:8080"
+          ]
+        },
+        csp: {
+          mode: "auto",
+          directives: {
+            "upgrade-insecure-requests": true,
+            // Ad bidders and ID vendors loaded by NitroPay rotate constantly, so ad-related directives allow any https source.
+            // apstag.js (Amazon bidder) evaluates strings, so it needs unsafe-eval.
+            "script-src": ["self", "unsafe-inline", "unsafe-eval", "blob:", "https:"],
+            "worker-src": ["self", "blob:"],
+            "style-src": ["self", "unsafe-inline", "https:"],
+            "img-src": ["self", "data:", "blob:", ...localBackend, "https:"],
+            "connect-src": ["self", ...localBackend, "https:"],
+            "media-src": ["self", "data:", "blob:", "https:"],
+            "font-src": ["self", "data:", "https:"],
+            "frame-src": ["self", "https:"]
+          }
+        },
+        version: {
+          name: process.env.PUBLIC_COMMIT_HASH,
+          // in ms
+          pollInterval: 1000 * 60 // 1 minute
+        },
+        extensions: [".svelte", ".svx", ".md"]
+      }),
+      tailwindcss()
+    ],
+    resolve: {
+      alias: {
+        // Mirrors the `#lib` import map in package.json, but lets Vite resolve imports without file extensions.
+        "#lib": `${root}/src/lib`,
+        $params: `${root}/src/params`,
+        $types: `${root}/src/lib/types`,
+        $db: `${root}/src/db`,
+        $constants: `${root}/src/lib/server/constants`,
+        $ctx: `${root}/src/context`,
+        $routes: `${root}/src/routes`,
+        $src: `${root}/src`,
+        $ui: `${root}/src/lib/components/ui`,
+        $utils: `${root}/src/lib/shared/utils.ts`,
+        $hooks: `${root}/src/lib/hooks`,
+        $components: `${root}/src/lib/components`,
+        "$utils.js": `${root}/src/lib/shared/utils.ts`
       }
-    ]
-  },
-  define: {
-    __PRERENDER_VERSION__: JSON.stringify(prerenderVersion),
-    __NPM_PACKAGE_VERSION__: JSON.stringify(process.env.npm_package_version || "")
-  },
-  devtools: { apply: "serve", clientAuth: true }
+    },
+    build: { sourcemap: true },
+    test: {
+      expect: { requireAssertions: true },
+      coverage: {
+        provider: "v8",
+        reporter: ["text", "html"],
+        reportsDirectory: "./coverage"
+      },
+      projects: [
+        {
+          extends: "./vite.config.ts",
+          test: {
+            name: "client",
+            browser: {
+              enabled: true,
+              provider: playwright(),
+              instances: [{ browser: "chromium", headless: true }]
+            },
+            include: ["src/**/*.svelte.{test,spec}.{js,ts}"],
+            exclude: ["src/lib/server/**"]
+          }
+        },
+
+        {
+          extends: "./vite.config.ts",
+          test: {
+            name: "server",
+            environment: "node",
+            include: ["src/**/*.{test,spec}.{js,ts}", "scripts/**/*.{test,spec}.{js,ts}"],
+            exclude: ["src/**/*.svelte.{test,spec}.{js,ts}"]
+          }
+        }
+      ]
+    },
+    define: {
+      __PRERENDER_VERSION__: JSON.stringify(prerenderVersion),
+      __NPM_PACKAGE_VERSION__: JSON.stringify(process.env.npm_package_version || "")
+    },
+    devtools: { apply: "serve", clientAuth: true }
+  };
 });

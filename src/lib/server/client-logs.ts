@@ -7,6 +7,8 @@ const MAX_EXTRA_KEYS = 20;
 const KEY_PATTERN = /^[A-Za-z][A-Za-z0-9_]{0,39}$/;
 // Keys evlog's client adds itself, or that we handle explicitly below.
 const RESERVED = new Set(["timestamp", "level", "service", "tag", "message", "error"]);
+// Browser extensions and the ad/consent scripts throw into our page; we can't fix those.
+const THIRD_PARTY = /-extension:\/\/|p\.cpx\.to|nitropay\.com|googletag|GVLError/;
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
@@ -32,11 +34,13 @@ export function sanitizeClientLog(body: unknown): ClientLogEntry | null {
   }
 
   if (isRecord(body.error)) {
-    client.error = {
+    const error = {
       name: clip(body.error.name, 100),
       message: clip(body.error.message, MAX_STRING),
       stack: clip(body.error.stack, MAX_STACK)
     };
+    if (THIRD_PARTY.test(`${error.name} ${error.message} ${error.stack}`)) return null;
+    client.error = error;
   }
 
   let extras = 0;

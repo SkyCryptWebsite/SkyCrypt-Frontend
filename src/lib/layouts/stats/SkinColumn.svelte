@@ -16,7 +16,13 @@
   const isWide = new MediaQuery("(min-width: 1210px)");
   let skinFailed = $state(false);
   const showStaticSkin = $derived(preferences.performanceMode || skinFailed);
-  const player = $derived(profileView.then(({ profile }) => profile));
+  // Only Skin3D awaits this, and it isn't rendered on narrow screens or in performance mode. The page's boundary shows
+  // the error.
+  const player = $derived.by(() => {
+    const promise = profileView.then(({ profile }) => profile);
+    promise.catch(() => {});
+    return promise;
+  });
 </script>
 
 <div class="@container fixed top-1/2 left-0 z-10 hidden h-dvh w-[30vw] -translate-y-1/2 @[75rem]/parent:block">

@@ -7,7 +7,7 @@ Follow these instructions when working on SkyCrypt Frontend. Nested `AGENTS.md` 
 - Read the code, configuration, and tests relevant to the task before editing. Preserve unrelated staged and unstaged work.
 - Ask clarifying questions before starting non-trivial work when the request leaves a real choice open.
 - Reuse existing helpers and components before introducing dependencies or abstractions.
-- Update this file when project practices change, or when the user states a preference or corrects your approach in a way that should apply to future work. Add or update the rule without being asked and mention it in your report. Check instructions against the repository and link to existing documentation instead of repeating it. Keep machine-specific paths out of this file.
+- Update this file when project practices change, or when the user states a preference or corrects your approach in a way that should apply to future work. Add or update the rule without being asked and mention it in your report. Project rules go here, not in an agent's private memory, so every session and contributor sees them. Check instructions against the repository and link to existing documentation instead of repeating it. Keep machine-specific paths out of this file.
 
 ## Stack and setup
 
@@ -40,9 +40,23 @@ Follow these instructions when working on SkyCrypt Frontend. Nested `AGENTS.md` 
 - Initialize global contexts in `src/routes/+layout.svelte`. Keep request-specific user and session state out of shared server globals.
 - Use configured aliases such as `#lib`, `$ctx`, `$types`, `$ui`, and `$utils`. Alias and SvelteKit configuration live in `vite.config.ts`.
 - Write local and alias imports without `.js`/`.ts` extensions or a trailing `/index` (`#lib/server/db`, `./format`). Keep the extension on `.svelte.ts` modules so they aren't read as components. shadcn-managed files in `src/lib/components/ui/` and Orval output keep their generated style. `#lib` resolves through the Vite alias and the `#lib/*` TypeScript path, not only the `package.json` import map, which needs exact file names.
+- `getHeaders` in `src/lib/shared/api/mutator/custom-instance.ts` forwards every incoming request header to the backend. That is intended; don't strip headers or flag it in reviews.
 - Keep credentials and database access in server-only code. Treat every `PUBLIC_*` environment variable as exposed to the browser.
 - `src/routes/api/internal/` holds routes only the Go backend calls (API key verification and usage reporting), guarded by `SERVER_API_TOKEN` through `requireBackendToken`. nginx must never route `/api/internal` publicly. The backend enforces API key rate limits, so Better Auth's own API key rate limiter stays disabled.
 - Log with evlog, never `console.*` in server code (ESLint enforces this). Configure it in `evlog.config.ts`; `src/hooks.server.ts` wires the hooks, Better Auth identity and drains. In a request, add context to the single wide event with `locals.log.set({ ... })` instead of extra log lines. Outside a request use `log` from `evlog`: `log.info("tag", "message")`, or `log.error({ action: "domain.event", error })` so HyperDX can filter on `action`. Output is plain text in the Dokploy Logs tab and ships to HyperDX when `HYPERDX_OTLP_ENDPOINT` is set (dev writes NDJSON to `.evlog/logs`, readable with `pnpm exec evlog logs`). Server traces (SvelteKit spans plus outgoing `fetch`) go to the same HyperDX endpoint through `src/instrumentation.server.ts`, which reads `process.env` because it loads before the app; `traceHandler` in `src/hooks.server.ts` puts the trace id on each request's wide event so HyperDX links logs to traces. Browser code logs with `log` from `evlog/client` (set up in `src/hooks.client.ts`); warnings and errors post to `/api/client-logs`, an unauthenticated endpoint that sanitizes and rate limits input, so never trust or extend its payload without updating `src/lib/server/client-logs.ts`.
+
+## Cloudflare
+
+The `shiiyu.moe` zone sits in front of everything. Its custom, transform and configuration rules live in Cloudflare, not in this repo. Confirm with the user before changing them.
+
+- Clients may send `X-Known-Bot: true` on purpose: the backend then serves stored data instead of spending a Hypixel API key request. Don't strip or restrict it. Bot counts use `X-Verified-Bot`, which Cloudflare sets on every request, so clients can't spoof it.
+- Never block HTTP/1.x or allow only HTTP/3. Doing that once locked Googlebot out and hurt search rankings.
+- Every page calls `/_app/remote/*`, so a challenge or rate limit there breaks the site for real users. Change those rules with care.
+- Requests to `api.shiiyu.moe` with an `x-api-key` header skip the bot rules; the backend checks keys and enforces rate limits. Bot Fight Mode is off for all of `api.shiiyu.moe`, because it challenged third-party integrations.
+- Our own tools must stay reachable without a browser: `logs`, `dokploy`, `u`, `arcane`, `drizzle` and `tinyauth` (each has its own login, and MCP clients send no Referer), and the Umami endpoints that sky proxies (`/api/send`, `/api/script.js`, `/api/recorder.js`, `/api/websites/*/recorder`). Check them after any rule change.
+- Allow AI crawlers and AI search bots. Only block scrapers and SEO crawlers such as AhrefsBot.
+- Don't add Cloudflare cache rules for `/_app/*`, including `/_app/remote/*`. Caching them broke the site; nginx handles caching.
+- Do routing, redirects and caching in nginx (the GitOpsConfig repo, `nginx/conf.d`), not in Traefik or Dokploy domain settings.
 
 ## Implementation conventions
 
@@ -53,6 +67,7 @@ Follow these instructions when working on SkyCrypt Frontend. Nested `AGENTS.md` 
 - Use SvelteKit remote functions in `*.remote.ts` for new data loading and mutations instead of adding `+page.server.ts`. Migrate existing server route files only when the task calls for it.
 - Validate remote-function inputs and check authentication and authorization on the server. Follow nearby implementations, and check permissions in each protected mutation even when route guards or hidden controls restrict access.
 - Use Tailwind utilities, the shared `cn()` helper, and existing theme tokens and UI primitives. UI changes must work with a keyboard, show focus, adapt to screen size, and support existing themes.
+- Encode static images, animated ones included, as AVIF, not WebP or GIF.
 - Name reusable Svelte components in PascalCase and utilities in camelCase; follow SvelteKit route naming and nearby feature-file conventions.
 - Follow `.oxfmtrc.json`: two spaces, double quotes, no trailing commas, sorted imports, and ordered Tailwind classes. Format only changed files.
 - Comment only what the code cannot say (a non-obvious reason, a gotcha, a security constraint) and keep comments to a minimum, only add a comment when its absolutely necessary. Don't restate what the code does. Also do not add comments for any changes, unless it adheres to the above rule.
@@ -99,11 +114,13 @@ Follow these instructions when working on SkyCrypt Frontend. Nested `AGENTS.md` 
 - Vitest has `server` and `client` projects in `vite.config.ts`. The client project uses headless Chromium and requires `pnpm exec playwright install chromium`. Tests must make assertions; `expect.requireAssertions` is enabled.
 - Run `pnpm lint`, relevant tests, and `pnpm build` for code changes before submitting. For documentation-only changes, check formatting and the accuracy of referenced paths and commands.
 - Use the player `tiltedhoney` or `Refraction` when checking profile pages (in the browser); these profiles have populated data.
+- If a check needs the backend or the dev server and they aren't running, start them yourself instead of skipping the check: `go run main.go` in the SkyCrypt-Backend checkout (it uses the Redis and Postgres containers) and `pnpm dev` here. Stop what you started when you're done.
 - After changing UI, routes, CSP, headers or third-party scripts, run `pnpm check:pages` against the running dev server (add paths for the pages you touched) and fix what it reports before calling the work done. Cloudflare blocks headless browsers on the public sites, so check those in the browser preview instead.
 - Gather evidence yourself instead of asking the user to paste it: CI logs with `gh run view <id> --log-failed`, production logs and containers through the Dokploy MCP, errors and traces through the HyperDX (clickstack) MCP, and browser console output through the preview tools. Use the `gh` CLI for GitHub; the GitHub MCP may be signed in to a different account.
 - For dependency upgrades, follow the `upgrade-deps` skill in `.github/skills/`.
 - End-to-end tests run locally with the backend and its required API credentials; they are currently disabled in CI. A production build can also require backend access for prerendered data.
 - Report which checks you ran, their results, and anything you could not run. Never report a skipped check as passing.
+- Claude Code hooks in `.claude/settings.json` enforce part of this: before a turn ends, `pnpm lint` runs on uncommitted changes and changes to UI, routes or headers prompt for `pnpm check:pages`. Every `git add`, `git commit` and `git push` needs the user's confirmation.
 
 ## Commits, pull requests, and releases
 

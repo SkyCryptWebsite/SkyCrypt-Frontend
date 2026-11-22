@@ -107,7 +107,7 @@
 <!-- A plain value on the server render; a streamed promise on client-side navigation (see +page.server.ts). -->
 <svelte:head>
   {#await data.embed then embed}
-    {#if embed.username}
+    {#if embed?.username}
       <svelte:element this={"script"} id="discord:component-embed" type="application/json">
         {serializeDiscordEmbed(createDiscordEmbed(embed))}</svelte:element>
     {/if}
@@ -115,7 +115,9 @@
 </svelte:head>
 
 {#await data.embed then embed}
-  <SEO embedData={embed} />
+  {#if embed}
+    <SEO embedData={embed} />
+  {/if}
 {/await}
 
 <div class="@container/parent relative">
