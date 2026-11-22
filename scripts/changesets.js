@@ -9,12 +9,23 @@ export function readPreState(changesetDir) {
   }
 }
 
+function changesetIds(dir) {
+  return fs
+    .readdirSync(dir)
+    .filter((file) => file.endsWith(".md") && file !== "README.md")
+    .map((file) => file.slice(0, -3));
+}
+
 export function pendingChangesets(changesetDir, preState = readPreState(changesetDir)) {
   const consumed = new Set(preState?.mode === "pre" ? (preState.changesets ?? []) : []);
 
-  return fs
-    .readdirSync(changesetDir)
-    .filter((file) => file.endsWith(".md") && file !== "README.md")
-    .map((file) => file.slice(0, -3))
-    .filter((id) => !consumed.has(id));
+  return changesetIds(changesetDir).filter((id) => !consumed.has(id));
+}
+
+// A stable release also ships what the beta line already versioned, which changesets v3 moves into .changeset/pre/.
+export function releasableChangesets(changesetDir) {
+  const preDir = path.join(changesetDir, "pre");
+  const versioned = fs.existsSync(preDir) ? changesetIds(preDir) : [];
+
+  return [...pendingChangesets(changesetDir, null), ...versioned];
 }
