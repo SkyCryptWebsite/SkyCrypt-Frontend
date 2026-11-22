@@ -12,7 +12,7 @@ export const load = (async ({ params, isDataRequest }) => {
   // Crawlers and Discord only read the server-rendered head, so await it there. Client-side navigations stream it
   // instead of waiting on the embed before the page can start loading.
   if (!isDataRequest) return { embed: await embed };
-  // Marks a streamed rejection as handled; the page reports load errors from its own stats boundary.
-  embed.catch(() => {});
-  return { embed };
+  // A streamed rejection reaches the browser as an unhandled rejection when nothing awaits it (a hover preload) or an
+  // {#await} without a catch rethrows it. The page reports load errors from its own stats boundary.
+  return { embed: embed.catch(() => null) };
 }) satisfies PageServerLoad;
