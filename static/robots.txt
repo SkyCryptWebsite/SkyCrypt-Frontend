@@ -1,3 +1,7 @@
+User-agent: AhrefsBot
+User-agent: DotBot
+Disallow: /
+
 User-agent: *
 Disallow: /api/
 
