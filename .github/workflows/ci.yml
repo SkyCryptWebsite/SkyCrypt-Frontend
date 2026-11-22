@@ -34,14 +34,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
 
-      - name: PNPM Install
-        uses: ./.github/actions/pnpm-install
-
+      # Not `changeset status`: the beta release moves versioned changesets into .changeset/pre/, which it
+      # doesn't count as pending, so it fails every release PR.
       - name: Require a changeset for the release
-        run: pnpm exec changeset status --since=${{ github.event.pull_request.base.sha }}
+        run: |
+          if ! find .changeset -maxdepth 2 -name '*.md' ! -name README.md | grep -q .; then
+            echo "::error::Nothing to release: no changeset in .changeset/ or .changeset/pre/. Add one with pnpm changeset."
+            exit 1
+          fi
 
   checks:
     if: github.event.pull_request.head.repo.fork == true
