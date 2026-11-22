@@ -1,7 +1,6 @@
-import { query } from "$app/server";
-import { error } from "@sveltejs/kit";
+import { getRequestEvent, query } from "$app/server";
 import { z } from "zod";
-import { cachedSkinTextures } from "#lib/server/skin";
+import { cachedSkinTextures, fallbackSkinTextures } from "#lib/server/skin";
 
 // The Mojang session server sends no CORS headers, so browsers can't ask it directly.
 export const getSkinTextures = query(
@@ -9,8 +8,9 @@ export const getSkinTextures = query(
   async (uuid) => {
     try {
       return await cachedSkinTextures(uuid);
-    } catch {
-      error(502, "Couldn't load this player's skin.");
+    } catch (error) {
+      getRequestEvent().locals.log.set({ skin: { fallback: true, reason: String(error) } });
+      return fallbackSkinTextures(uuid);
     }
   }
 );
