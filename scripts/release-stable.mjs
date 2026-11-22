@@ -1,7 +1,7 @@
 import { execFileSync, execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
-import { pendingChangesets } from "./changesets.js";
+import { releasableChangesets } from "./changesets.js";
 import { buildReleaseBody, extractReleaseSection, selectPreviousRelease } from "./release-notes.js";
 
 const changesetDir = path.join(process.cwd(), ".changeset");
@@ -54,7 +54,7 @@ run('git config user.name "github-actions[bot]"');
 run('git config user.email "github-actions[bot]@users.noreply.github.com"');
 run("git checkout -B changeset-release/prod origin/prod");
 
-if (pendingChangesets(changesetDir, null).length === 0) {
+if (releasableChangesets(changesetDir).length === 0) {
   console.info("No changesets to release, skipping stable release");
   process.exit(0);
 }

@@ -2,7 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { pendingChangesets } from "./changesets.js";
+import { pendingChangesets, releasableChangesets } from "./changesets.js";
 
 let dir;
 
@@ -31,5 +31,27 @@ describe("pendingChangesets", () => {
     fs.writeFileSync(path.join(dir, "old-fix.md"), "");
 
     expect(pendingChangesets(dir, { mode: "exit", changesets: ["old-fix"] })).toEqual(["old-fix"]);
+  });
+});
+
+describe("releasableChangesets", () => {
+  it("counts changesets the beta line already versioned into pre/", () => {
+    fs.mkdirSync(path.join(dir, "pre"));
+    fs.writeFileSync(path.join(dir, "pre", "skin-viewer.md"), "");
+    fs.writeFileSync(path.join(dir, "pre.json"), JSON.stringify({ mode: "pre", tag: "beta" }));
+
+    expect(releasableChangesets(dir)).toEqual(["skin-viewer"]);
+  });
+
+  it("adds changesets not yet versioned by a beta release", () => {
+    fs.mkdirSync(path.join(dir, "pre"));
+    fs.writeFileSync(path.join(dir, "pre", "old-fix.md"), "");
+    fs.writeFileSync(path.join(dir, "new-feat.md"), "");
+
+    expect(releasableChangesets(dir).toSorted()).toEqual(["new-feat", "old-fix"]);
+  });
+
+  it("finds nothing to release without a pre/ directory or changesets", () => {
+    expect(releasableChangesets(dir)).toEqual([]);
   });
 });
