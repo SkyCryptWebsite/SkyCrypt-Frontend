@@ -33,6 +33,11 @@ const environment = !dev && PUBLIC_RELEASE_CHANNEL === "beta" ? "beta" : undefin
 
 initLogger({ ...toLoggerConfig({ ...evlogConfig, environment }), drain });
 
+// Buffered events are lost on a redeploy otherwise.
+// TODO: remove when upgrading to evlog 2.37+, which flushes drain pipelines on SIGTERM itself. 2.37.0 is still newer
+// than pnpm's minimumReleaseAge.
+process.on("SIGTERM", () => void hyperdxDrain?.flush());
+
 const { handle: evlogHandle } = createEvlogHooks({ ...toMiddlewareOptions(evlogConfig), drain });
 
 // Not evlog's own handleError: since 2.33.1 it returns the right status (evloghq/evlog#911), but it still logs every Error as
@@ -43,9 +48,6 @@ export const handleError: HandleServerError = ({ kind, error, event }) => {
   if (error instanceof Error) event.locals.log?.error(error);
   else log.error({ action: "request.unhandled_error", path: event.url.pathname, error });
 };
-
-// Buffered events are lost on a redeploy otherwise.
-process.on("SIGTERM", () => void hyperdxDrain?.flush());
 
 // Returned instead of thrown via `redirect()`: evlog's handle would log a thrown Redirect as a 500 error.
 const redirectTo = (location: string) => new Response(null, { status: 307, headers: { location } });
@@ -118,6 +120,16 @@ const traceHandler: Handle = ({ event, resolve }) => {
   return resolve(event);
 };
 
+// evlog times a streamed response until it closes, so a live query's durationMs is how long the tab stayed open.
+const streamHandler: Handle = async ({ event, resolve }) => {
+  const startedAt = performance.now();
+  const response = await resolve(event);
+  if (response.headers.get("content-type")?.includes("text/event-stream")) {
+    event.locals.log.set({ stream: { firstByteMs: Math.round(performance.now() - startedAt) } });
+  }
+  return response;
+};
+
 const betterAuthHandler: Handle = async ({ event, resolve }) => {
   const startedAt = performance.now();
   const session = await auth.api.getSession({ headers: event.request.headers });
@@ -162,6 +174,7 @@ const protectedHandler = (async ({ event, resolve }) => {
 
 export const handle = sequence(
   evlogHandle,
+  streamHandler,
   traceHandler,
   betterAuthHandler,
   protectedHandler,
