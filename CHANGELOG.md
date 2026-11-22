@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.7.3-beta.0
+
+### Patch Changes
+
+- Fix: the 3D skin viewer falls back to another skin source when Mojang rate limits a lookup, tabs opened before a deploy reload instead of failing to load parts of the page, and `/stats/<player>/null` links redirect to the player's page _[`542416b`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/542416baf199c2cb224dd39d8e187e62aa174b0a) [@DarthGigi](https://github.com/DarthGigi)_
+
 ## 4.7.2
 
 ### Patch Changes
