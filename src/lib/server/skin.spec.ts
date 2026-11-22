@@ -6,7 +6,7 @@ const textures = (uuid: string): SkinTextures => ({ skinUrl: `https://textures/$
 describe("createSkinTexturesCache", () => {
   it("shares one request per UUID, whatever its dashes and case", async () => {
     const fetchTextures = vi.fn(async (uuid: string) => textures(uuid));
-    const cached = createSkinTexturesCache(fetchTextures, 1000, 10);
+    const cached = createSkinTexturesCache(fetchTextures, 1000, 100, 10);
 
     const [a, b] = await Promise.all([
       cached("069A79F4-44E9-4726-A5BE-FCA90E38AAF5"),
@@ -21,7 +21,7 @@ describe("createSkinTexturesCache", () => {
   it("fetches again once the entry expires", async () => {
     let time = 0;
     const fetchTextures = vi.fn(async (uuid: string) => textures(uuid));
-    const cached = createSkinTexturesCache(fetchTextures, 1000, 10, () => time);
+    const cached = createSkinTexturesCache(fetchTextures, 1000, 100, 10, () => time);
 
     await cached("a");
     time = 999;
@@ -32,18 +32,22 @@ describe("createSkinTexturesCache", () => {
     expect(fetchTextures).toHaveBeenCalledTimes(2);
   });
 
-  it("doesn't keep a failure, so the next call retries", async () => {
+  it("keeps a failure only for the failure TTL, then retries", async () => {
+    let time = 0;
     const fetchTextures = vi.fn().mockRejectedValueOnce(new Error("429")).mockResolvedValue(textures("a"));
-    const cached = createSkinTexturesCache(fetchTextures, 1000, 10);
+    const cached = createSkinTexturesCache(fetchTextures, 1000, 100, 10, () => time);
 
     await expect(cached("a")).rejects.toThrow("429");
+    time = 99;
+    await expect(cached("a")).rejects.toThrow("429");
+    time = 100;
     await expect(cached("a")).resolves.toEqual(textures("a"));
     expect(fetchTextures).toHaveBeenCalledTimes(2);
   });
 
   it("drops the oldest entry when full", async () => {
     const fetchTextures = vi.fn(async (uuid: string) => textures(uuid));
-    const cached = createSkinTexturesCache(fetchTextures, 1000, 2);
+    const cached = createSkinTexturesCache(fetchTextures, 1000, 100, 2);
 
     await cached("a");
     await cached("b");

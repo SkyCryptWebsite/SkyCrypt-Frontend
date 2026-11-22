@@ -1,8 +1,11 @@
+import { redirect } from "@sveltejs/kit";
 import { getProfileEmbed, getSelectedProfileEmbed } from "#lib/shared/api/skycrypt-api.remote";
 import type { PageServerLoad } from "./$types";
 
 export const load = (async ({ params, isDataRequest }) => {
   const { ign: paramPlayer, profile: paramProfile = null } = params;
+  // Crawlers still follow old links that put a missing profile in the URL as "null".
+  if (paramProfile?.toLowerCase() === "null") redirect(301, `/stats/${encodeURIComponent(paramPlayer)}`);
   const embed = Promise.resolve(
     paramProfile
       ? getProfileEmbed({ uuid: paramPlayer, profileId: paramProfile })

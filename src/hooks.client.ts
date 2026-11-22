@@ -16,6 +16,18 @@ export const handleError: HandleClientError = ({ kind, error, event }) => {
   log.error({ action: "client.unhandled_error", path: event.url.pathname, error });
 };
 
+// Tabs opened before a deploy ask for chunks it removed. Reload once per release, so a broken build can't loop.
+window.addEventListener("vite:preloadError", (e) => {
+  try {
+    if (sessionStorage.getItem("preload-reload") === version) return;
+    sessionStorage.setItem("preload-reload", version);
+  } catch {
+    return;
+  }
+  e.preventDefault();
+  location.reload();
+});
+
 window.addEventListener("unhandledrejection", (e) => {
   log.error({ action: "client.unhandled_rejection", path: location.pathname, error: e.reason });
 });
