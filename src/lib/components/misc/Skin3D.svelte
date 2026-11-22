@@ -3,7 +3,7 @@
   import * as skinview3d from "skinview3d";
   import { onDestroy } from "svelte";
   import { MediaQuery } from "svelte/reactivity";
-  import { fetchSkinTextures } from "#lib/shared/skin";
+  import { getSkinTextures } from "#lib/shared/skin.remote";
   import { cn } from "#lib/shared/utils";
 
   interface Props {
@@ -103,7 +103,7 @@
     if (loadedUuid === targetUuid) return;
 
     try {
-      const { skinUrl, capeUrl } = await fetchSkinTextures(targetUuid);
+      const { skinUrl, capeUrl } = await getSkinTextures(targetUuid);
       if (isStale()) return;
 
       // Download the skin during the slowdown; crossOrigin matches skinview3d so its load hits the cache
