@@ -45,6 +45,13 @@ describe("sanitizeClientLog", () => {
       )
     ).toBeNull();
     expect(sanitizeClientLog({ level: "error", error: { name: "GVLError", message: "error" } })).toBeNull();
+    expect(fromStack("@https://ats-wrapper.privacymanager.io/ats-modules/438cb908/ats.js:1:108467")).toBeNull();
+    expect(
+      sanitizeClientLog({
+        level: "error",
+        error: { message: "undefined is not an object (evaluating 'window.ethereum.selectedAddress = undefined')" }
+      })
+    ).toBeNull();
     expect(
       sanitizeClientLog({
         level: "error",
