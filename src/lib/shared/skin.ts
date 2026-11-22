@@ -8,9 +8,11 @@ function sanitizeUrl(url?: string): string | undefined {
   return url ? url.replace(/^http:/, "https:") : undefined;
 }
 
-/** Looks up a player's skin and cape texture URLs through the mowojang session proxy. */
+/** Looks up a player's skin and cape texture URLs through the Mojang session server. */
 export async function fetchSkinTextures(uuid: string) {
-  const profile = await ky(`https://mowojang.matdoes.dev/session/minecraft/profile/${uuid}`).json<ProfileResponse>();
+  const profile = await ky(
+    `https://sessionserver.mojang.com/session/minecraft/profile/${uuid}`
+  ).json<ProfileResponse>();
 
   const texturesProperty = profile.properties.find((prop) => prop.name === "textures");
 
