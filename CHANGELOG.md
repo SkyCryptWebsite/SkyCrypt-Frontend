@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.7.2
+
+### Patch Changes
+
+- Fix: the 3D skin viewer loads skins through SkyCrypt again (Mojang's session server blocks browser requests), skins are cached on the server, and stats pages no longer report missing profiles as unhandled errors _[`#390`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/390) [`6bf8e63`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/6bf8e630704f8a5c18e928dc120d0088df8c4ae7) [@DarthGigi](https://github.com/DarthGigi)_
+
 ## 4.7.2-beta.0
 
 ### Patch Changes
