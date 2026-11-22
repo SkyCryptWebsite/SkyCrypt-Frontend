@@ -18,6 +18,10 @@ const env = loadEnv(process.env.NODE_ENV ?? "production", root, "");
 // SvelteKit reloads this config for the client build; both bundles need the same prerender ID.
 const prerenderVersion = (process.env.SKYCRYPT_PRERENDER_VERSION ??= randomUUID());
 
+// In dev the browser loads item images and data straight from the local backend over plain http, which "https:" in
+// the CSP doesn't cover. Production has no reason to allow it.
+const localBackend = process.env.NODE_ENV === "development" ? (["http://localhost:8080"] as const) : [];
+
 export default defineConfig({
   plugins: [
     svelteDevtools(),
@@ -60,8 +64,8 @@ export default defineConfig({
           "script-src": ["self", "unsafe-inline", "unsafe-eval", "blob:", "https:"],
           "worker-src": ["self", "blob:"],
           "style-src": ["self", "unsafe-inline", "https:"],
-          "img-src": ["self", "data:", "blob:", "http://localhost:8080", "https:"],
-          "connect-src": ["self", "http://localhost:8080", "https:"],
+          "img-src": ["self", "data:", "blob:", ...localBackend, "https:"],
+          "connect-src": ["self", ...localBackend, "https:"],
           "media-src": ["self", "data:", "blob:", "https:"],
           "font-src": ["self", "data:", "https:"],
           "frame-src": ["self", "https:"]
