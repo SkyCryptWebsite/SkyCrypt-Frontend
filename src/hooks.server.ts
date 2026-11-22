@@ -31,7 +31,10 @@ const drain = hyperdxDrain ?? (dev ? createFsDrain({ maxFiles: 7 }) : undefined)
 // Stable keeps NODE_ENV ("production") so existing HyperDX searches still match it.
 const environment = !dev && PUBLIC_RELEASE_CHANNEL === "beta" ? "beta" : undefined;
 
-initLogger({ ...toLoggerConfig({ ...evlogConfig, environment, env: { commitHash: version } }), drain });
+initLogger({
+  ...toLoggerConfig({ ...evlogConfig, environment, env: { version: __NPM_PACKAGE_VERSION__, commitHash: version } }),
+  drain
+});
 
 // Buffered events are lost on a redeploy otherwise.
 // TODO: remove when upgrading to evlog 2.37+, which flushes drain pipelines on SIGTERM itself. 2.37.0 is still newer

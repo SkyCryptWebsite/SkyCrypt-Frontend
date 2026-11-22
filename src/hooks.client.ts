@@ -9,7 +9,7 @@ initLog({
   transport: { enabled: !dev, endpoint: "/api/client-logs" }
 });
 // An open tab can run an older release than the server it reports to.
-setIdentity({ release: version });
+setIdentity({ version: __NPM_PACKAGE_VERSION__, release: version });
 
 export const handleError: HandleClientError = ({ kind, error, event }) => {
   if (kind !== "unknown") return;
