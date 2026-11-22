@@ -52,7 +52,9 @@ The `shiiyu.moe` zone sits in front of everything. Its custom, transform and con
 - Clients may send `X-Known-Bot: true` on purpose: the backend then serves stored data instead of spending a Hypixel API key request. Don't strip or restrict it. Bot counts use `X-Verified-Bot`, which Cloudflare sets on every request, so clients can't spoof it.
 - Never block HTTP/1.x or allow only HTTP/3. Doing that once locked Googlebot out and hurt search rankings.
 - Every page calls `/_app/remote/*`, so a challenge or rate limit there breaks the site for real users. Change those rules with care.
-- Requests to `api.shiiyu.moe` with an `x-api-key` header skip the bot rules; the backend checks keys and enforces rate limits.
+- Requests to `api.shiiyu.moe` with an `x-api-key` header skip the bot rules; the backend checks keys and enforces rate limits. Bot Fight Mode is off for all of `api.shiiyu.moe`, because it challenged third-party integrations.
+- Our own tools must stay reachable without a browser: `logs`, `dokploy`, `u`, `arcane`, `drizzle` and `tinyauth` (each has its own login, and MCP clients send no Referer), and the Umami endpoints that sky proxies (`/api/send`, `/api/script.js`, `/api/recorder.js`, `/api/websites/*/recorder`). Check them after any rule change.
+- Allow AI crawlers and AI search bots. Only block scrapers and SEO crawlers such as AhrefsBot.
 - Don't add Cloudflare cache rules for `/_app/*`, including `/_app/remote/*`. Caching them broke the site; nginx handles caching.
 - Do routing, redirects and caching in nginx (the GitOpsConfig repo, `nginx/conf.d`), not in Traefik or Dokploy domain settings.
 
@@ -112,6 +114,7 @@ The `shiiyu.moe` zone sits in front of everything. Its custom, transform and con
 - Vitest has `server` and `client` projects in `vite.config.ts`. The client project uses headless Chromium and requires `pnpm exec playwright install chromium`. Tests must make assertions; `expect.requireAssertions` is enabled.
 - Run `pnpm lint`, relevant tests, and `pnpm build` for code changes before submitting. For documentation-only changes, check formatting and the accuracy of referenced paths and commands.
 - Use the player `tiltedhoney` or `Refraction` when checking profile pages (in the browser); these profiles have populated data.
+- If a check needs the backend or the dev server and they aren't running, start them yourself instead of skipping the check: `go run main.go` in the SkyCrypt-Backend checkout (it uses the Redis and Postgres containers) and `pnpm dev` here. Stop what you started when you're done.
 - After changing UI, routes, CSP, headers or third-party scripts, run `pnpm check:pages` against the running dev server (add paths for the pages you touched) and fix what it reports before calling the work done. Cloudflare blocks headless browsers on the public sites, so check those in the browser preview instead.
 - Gather evidence yourself instead of asking the user to paste it: CI logs with `gh run view <id> --log-failed`, production logs and containers through the Dokploy MCP, errors and traces through the HyperDX (clickstack) MCP, and browser console output through the preview tools. Use the `gh` CLI for GitHub; the GitHub MCP may be signed in to a different account.
 - For dependency upgrades, follow the `upgrade-deps` skill in `.github/skills/`.
