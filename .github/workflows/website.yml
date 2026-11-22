@@ -16,6 +16,9 @@ on:
       - "vite.config.ts"
       - ".changeset/**"
       - ".github/workflows/website.yml"
+  # Only the analyze job runs for PRs: code scanning compares a PR with prod by workflow and job.
+  pull_request:
+    branches: [prod]
   workflow_dispatch:
 
 env:
@@ -62,10 +65,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: prepare
     if: |
-      needs.prepare.outputs.should_deploy == 'true'
+      always()
+      && ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false)
+        || needs.prepare.outputs.should_deploy == 'true')
 
     permissions:
       security-events: write
+      contents: read
 
     steps:
       - name: Checkout repository
