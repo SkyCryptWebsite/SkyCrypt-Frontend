@@ -17,10 +17,7 @@ import { createSemaphore } from "#lib/server/semaphore";
 import type { RequestHandler } from "./$types";
 import appStyles from "$routes/layout.css?inline";
 
-// Create shared renderer with 64MB cache budget
-const renderer = new Renderer({ cacheMaxBytes: 64 * 1024 * 1024 });
-// No `fetchCache` on ImageResponse: takumi would store every remote image URL in it forever. Without one, Twemoji
-// glyphs go through takumi's own capped emoji cache.
+const renderer = new Renderer({ cache: { maxBytes: 64 * 1024 * 1024 } });
 
 let assetsPromise: Promise<{ images: ImageSource[] }> | undefined;
 const loadAssets = () => (assetsPromise ??= setupAssetsAndRenderer());
@@ -103,7 +100,8 @@ async function renderCard({ params, request, url, locals }: Parameters<RequestHa
         totalMs: Math.round(totalDuration),
         fetchMs: Math.round(fetchDuration),
         componentMs: Math.round(componentRenderDuration),
-        rasterizeMs: Math.round(renderDuration)
+        rasterizeMs: Math.round(renderDuration),
+        cache: renderer.cacheStats()
       }
     });
 
