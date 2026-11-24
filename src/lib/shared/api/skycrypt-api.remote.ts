@@ -60,7 +60,7 @@ async function fetchSection<TResponse extends { data: unknown; status: number }>
     if (status >= 400) {
       // Errors are RFC 9457 problem details; code (NOT_CACHED, PLAYER_NOT_FOUND, ...) says which.
       const problem = typeof data === "object" && data !== null ? (data as APIError) : undefined;
-      log.error({
+      log[status >= 500 ? "error" : "warn"]({
         action: "skycrypt_api.fetch_section",
         section: sectionName,
         status,

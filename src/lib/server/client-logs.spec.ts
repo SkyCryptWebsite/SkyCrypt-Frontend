@@ -64,6 +64,15 @@ describe("sanitizeClientLog", () => {
   it("ignores an invalid timestamp", () => {
     expect(sanitizeClientLog({ level: "info", timestamp: "not a date" })!.client).not.toHaveProperty("timestamp");
   });
+
+  it("downgrades dropped connections and stale chunks to warnings, keeps real errors", () => {
+    const levelOf = (message: string) =>
+      sanitizeClientLog({ level: "error", error: { name: "TypeError", message } })?.level;
+    expect(levelOf("Load failed")).toBe("warn");
+    expect(levelOf("Failed to fetch dynamically imported module: https://sky.shiiyu.moe/_app/x.js")).toBe("warn");
+    expect(levelOf("Failed to fetch something else")).toBe("error");
+    expect(levelOf("Cannot read properties of undefined")).toBe("error");
+  });
 });
 
 describe("createRateLimiter", () => {
