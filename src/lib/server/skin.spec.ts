@@ -1,5 +1,5 @@
-import { describe, expect, it, vi } from "vitest";
-import { createSkinTexturesCache, type SkinTextures } from "./skin";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { createSkinTexturesCache, fetchSkinTextures, type SkinTextures } from "./skin";
 
 const textures = (uuid: string): SkinTextures => ({ skinUrl: `https://textures/${uuid}`, capeUrl: undefined });
 
@@ -56,5 +56,26 @@ describe("createSkinTexturesCache", () => {
     await cached("a");
 
     expect(fetchTextures.mock.calls.map(([uuid]) => uuid)).toEqual(["a", "b", "c", "a"]);
+  });
+});
+
+describe("fetchSkinTextures", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("asks Mojang once per 429 and backs off for a minute", async () => {
+    let time = 0;
+    const fetchMock = vi.fn(async () => new Response(null, { status: 429, headers: { "Retry-After": "1" } }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(fetchSkinTextures("a", () => time)).rejects.toThrow("429");
+    time = 59_999;
+    await expect(fetchSkinTextures("b", () => time)).rejects.toThrow("rate limiting");
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    time = 60_000;
+    await expect(fetchSkinTextures("c", () => time)).rejects.toThrow("429");
+    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 });
