@@ -16,8 +16,8 @@ export const GET: RequestHandler = async ({ request }) => {
     return new Response("Forbidden: Access allowed only from safe origin", { status: 403 });
   }
 
-  if (!imageUrl) {
-    return new Response("Missing 'url' query parameter", { status: 400 });
+  if (!imageUrl || !URL.canParse(imageUrl)) {
+    return new Response("Missing or invalid 'url' query parameter", { status: 400 });
   }
 
   try {
@@ -55,7 +55,8 @@ export const GET: RequestHandler = async ({ request }) => {
     if (error instanceof BlockedImageError) {
       return new Response("Forbidden: Invalid image host", { status: 403 });
     }
-    log.error({ action: "image_proxy.failed", error });
-    return new Response("Error fetching image", { status: 500 });
+    const upstream = error instanceof Error && ("code" in error || error.name === "TimeoutError");
+    log[upstream ? "warn" : "error"]({ action: "image_proxy.failed", error });
+    return new Response("Error fetching image", { status: upstream ? 502 : 500 });
   }
 };
