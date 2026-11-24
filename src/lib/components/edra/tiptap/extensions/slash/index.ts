@@ -245,7 +245,7 @@ export default (menuList: Component<any, any, "">): Extension =>
                 if (storage.popupElement) {
                   storage.popupElement.style.visibility = "hidden";
                   storage.popupElement.style.pointerEvents = "none";
-                  storage.popupElement.innerHTML = "";
+                  storage.popupElement.replaceChildren();
                 }
 
                 if (storage.popupCleanup) {

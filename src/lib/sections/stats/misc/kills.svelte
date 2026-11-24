@@ -9,12 +9,8 @@
 
   const misc = $derived(getMiscContext().misc);
 
-  const sortedKills = $derived(
-    misc?.kills?.kills ? [...misc.kills.kills].sort((a, b) => (b.amount ?? 0) - (a.amount ?? 0)) : []
-  );
-  const sortedDeaths = $derived(
-    misc?.kills?.deaths ? [...misc.kills.deaths].sort((a, b) => (b.amount ?? 0) - (a.amount ?? 0)) : []
-  );
+  const sortedKills = $derived(misc?.kills?.kills?.toSorted((a, b) => (b.amount ?? 0) - (a.amount ?? 0)) ?? []);
+  const sortedDeaths = $derived(misc?.kills?.deaths?.toSorted((a, b) => (b.amount ?? 0) - (a.amount ?? 0)) ?? []);
 </script>
 
 {#if misc && misc.kills != null}
