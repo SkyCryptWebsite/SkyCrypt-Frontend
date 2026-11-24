@@ -1,6 +1,7 @@
 services:
   postgres:
     image: postgres:18-alpine
+    pull_policy: always
     container_name: skycrypt-postgres
     restart: unless-stopped
     ports:
