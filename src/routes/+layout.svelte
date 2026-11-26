@@ -251,8 +251,6 @@
       enabledPacks.configure(query.current);
     }
   });
-
-  let innerWidth = $state(0);
 </script>
 
 <ModeWatcher
@@ -265,7 +263,7 @@
 
 <svelte:document onkeydown={handleKeydown} onclick={handleOutboundClick}></svelte:document>
 
-<svelte:window bind:innerWidth ononline={updateOnlineStatus} onoffline={updateOnlineStatus} />
+<svelte:window ononline={updateOnlineStatus} onoffline={updateOnlineStatus} />
 
 <svelte:head>
   {#if !noEmbedUrls.some((url) => page.url.pathname.startsWith(url))}
@@ -350,18 +348,17 @@
 
 <div
   class="group pointer-events-none fixed inset-0 isolate z-[-1] h-dvh"
-  data-isSkinHidden={innerWidth < 1210}
   data-isStatsPage={page.url.pathname.startsWith("/stats") && !page.error}>
   <div
-    class="relative z-10 size-full bg-background [background-image:var(--bg-url)] bg-cover bg-scroll bg-center bg-no-repeat group-data-[isSkinHidden=true]:group-data-[isStatsPage=true]:blur-lg">
+    class="relative z-10 size-full bg-background [background-image:var(--bg-url)] bg-cover bg-scroll bg-center bg-no-repeat max-[1210px]:group-data-[isStatsPage=true]:blur-lg">
   </div>
 
   <div
-    class="absolute inset-0 z-20 size-full [background-image:var(--bg-url)] bg-cover bg-scroll bg-center bg-no-repeat blur-lg group-data-[isStatsPage=false]:hidden group-data-[skinHidden=true]:hidden"
+    class="absolute inset-0 z-20 size-full [background-image:var(--bg-url)] bg-cover bg-scroll bg-center bg-no-repeat blur-lg group-data-[isStatsPage=false]:hidden max-[1210px]:hidden"
     style="--percent: 30%; clip-path: polygon(var(--percent) 0%, 100% 0%, 100% 100%, var(--percent) 100%);">
   </div>
   <Separator
-    class="absolute inset-0 top-12 left-[calc(30%-1px)] z-50 h-full group-data-[isSkinHidden=true]:hidden group-data-[isStatsPage=false]:hidden"
+    class="absolute inset-0 top-12 left-[calc(30%-1px)] z-50 h-full group-data-[isStatsPage=false]:hidden max-[1210px]:hidden"
     orientation="vertical" />
 </div>
 
