@@ -16,8 +16,15 @@
   } = $props();
 
   let scrollContainer = $state<HTMLElement | null>(null);
-  let selectedGroupIndex = $state<number>(0);
-  let selectedCommandIndex = $state<number>(0);
+  // Reset the selection whenever the command list changes.
+  let selectedGroupIndex = $derived.by(() => {
+    void items;
+    return 0;
+  });
+  let selectedCommandIndex = $derived.by(() => {
+    void items;
+    return 0;
+  });
 
   // Flatten all commands into a linear list for easy index math
   const flatCommands = $derived.by(() => {
@@ -36,14 +43,6 @@
     return flatCommands.findIndex(
       (fc) => fc.groupIndex === selectedGroupIndex && fc.commandIndex === selectedCommandIndex
     );
-  });
-
-  // Reset selection when items change
-  $effect(() => {
-    if (items) {
-      selectedGroupIndex = 0;
-      selectedCommandIndex = 0;
-    }
   });
 
   // Scroll active item into view

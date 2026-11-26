@@ -7,8 +7,10 @@
   import ArrowBigLeft from "@lucide/svelte/icons/arrow-big-left";
   import ArrowBigRight from "@lucide/svelte/icons/arrow-big-right";
   import { ScrollArea } from "bits-ui";
+  import { log } from "evlog/client";
   import { flushSync, onDestroy, tick, type Snippet } from "svelte";
   import { cubicOut } from "svelte/easing";
+  import { prefersReducedMotion } from "svelte/motion";
   import { crossfade } from "svelte/transition";
   import ScrollAreaPrimitive from "#lib/components/ScrollAreaPrimitive.svelte";
   import type { SectionName } from "#lib/sections/types";
@@ -47,7 +49,7 @@
   let observer: IntersectionObserver;
 
   const [send, receive] = crossfade({
-    duration: 300,
+    duration: () => (prefersReducedMotion.current ? 0 : 300),
     easing: cubicOut
   });
 
@@ -73,7 +75,7 @@
     retries?: number;
   }) {
     const scrollOptions = options ?? {
-      behavior: smooth ? "smooth" : "auto",
+      behavior: smooth && !matchMedia("(prefers-reduced-motion: reduce)").matches ? "smooth" : "auto",
       block: "center",
       inline: "center"
     };
@@ -94,7 +96,7 @@
 
   function observerInit() {
     if (!navbarElement) {
-      console.warn("Navbar element is not defined");
+      log.debug("navbar", "navbar element is not mounted yet");
       return;
     }
 

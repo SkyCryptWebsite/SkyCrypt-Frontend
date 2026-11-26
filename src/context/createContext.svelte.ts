@@ -15,86 +15,86 @@ import type { ListEnchantmentsResponse } from "#lib/shared/api/orval-generated-z
 export type Enchantments = z.infer<typeof ListEnchantmentsResponse>;
 
 export class ProfileContext {
-  #current: StatsOutput | null = $state.raw(null);
+  #source: () => StatsOutput | null;
 
-  get current() {
-    return this.#current;
+  constructor(source: () => StatsOutput | null = () => null) {
+    this.#source = source;
   }
 
-  set current(value: StatsOutput | null) {
-    this.#current = value;
+  get current() {
+    return this.#source();
   }
 }
 
 export class AllStatsContext {
-  #current: StatData[] = $state.raw([]);
+  #source: () => StatData[];
 
-  get current() {
-    return this.#current;
+  constructor(source: () => StatData[] = () => []) {
+    this.#source = source;
   }
 
-  set current(value: StatData[]) {
-    this.#current = value;
+  get current() {
+    return this.#source();
   }
 }
 
 export class EnchantmentsContext {
-  #current: Enchantments = $state.raw([]);
+  #source: () => Enchantments;
 
-  get current() {
-    return this.#current;
+  constructor(source: () => Enchantments = () => []) {
+    this.#source = source;
   }
 
-  set current(value: Enchantments) {
-    this.#current = value;
+  get current() {
+    return this.#source();
   }
 }
 
 export class CombinedContext {
-  #current: CombinedOutput | null = $state.raw(null);
+  #source: () => CombinedOutput | null;
 
-  get current() {
-    return this.#current;
+  constructor(source: () => CombinedOutput | null = () => null) {
+    this.#source = source;
   }
 
-  set current(value: CombinedOutput | null) {
-    this.#current = value;
+  get current() {
+    return this.#source();
   }
 }
 
 export class PacksContext {
-  #packs: ResourcePackConfig[] = $state.raw([]);
+  #source: () => ResourcePackConfig[];
 
-  get packs() {
-    return this.#packs;
+  constructor(source: () => ResourcePackConfig[] = () => []) {
+    this.#source = source;
   }
 
-  set packs(value: ResourcePackConfig[]) {
-    this.#packs = value;
+  get packs() {
+    return this.#source();
   }
 }
 
 export class MiscContext {
-  #misc: MiscOutput | null = $state.raw(null);
+  #source: () => MiscOutput | null;
 
-  get misc() {
-    return this.#misc;
+  constructor(source: () => MiscOutput | null = () => null) {
+    this.#source = source;
   }
 
-  set misc(value: MiscOutput | null) {
-    this.#misc = value;
+  get misc() {
+    return this.#source();
   }
 }
 
 export class SkillsContext {
-  #skills: SkillsOutput | null = $state.raw(null);
+  #source: () => SkillsOutput | null;
 
-  get skills() {
-    return this.#skills;
+  constructor(source: () => SkillsOutput | null = () => null) {
+    this.#source = source;
   }
 
-  set skills(value: SkillsOutput | null) {
-    this.#skills = value;
+  get skills() {
+    return this.#source();
   }
 }
 

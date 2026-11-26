@@ -59,14 +59,10 @@
   // let _defaultRightPanel = $derived(Math.ceil((700 / innerWidth) * 100));
 
   // Initialize the profile context
-  const profileClass = new ProfileContext();
-  const allStatsClass = new AllStatsContext();
-  const enchantmentsClass = new EnchantmentsContext();
-  const combinedClass = new CombinedContext();
-  setProfileContext(profileClass);
-  setAllStatsContext(allStatsClass);
-  setEnchantmentsContext(enchantmentsClass);
-  setCombinedContext(combinedClass);
+  setProfileContext(new ProfileContext(() => profile));
+  setAllStatsContext(new AllStatsContext(() => allStats));
+  setEnchantmentsContext(new EnchantmentsContext(() => enchantments));
+  setCombinedContext(new CombinedContext(() => combined ?? null));
   $effect.pre(() => {
     if (!ctx) return;
 
@@ -88,23 +84,6 @@
         };
       }
     });
-  });
-
-  // Update the profile context when the data changes
-  $effect.pre(() => {
-    profileClass.current = profile;
-  });
-
-  $effect.pre(() => {
-    combinedClass.current = combined ?? null;
-  });
-
-  $effect.pre(() => {
-    allStatsClass.current = allStats;
-  });
-
-  $effect.pre(() => {
-    enchantmentsClass.current = enchantments;
   });
 </script>
 
@@ -211,7 +190,7 @@
 {#if isHover.current}
   <Dialog.Root bind:open={internalState.showItem}>
     <Dialog.Content
-      class="flex max-h-[calc(96%-3rem)]! w-auto max-w-[calc(100vw-2.5rem)]! flex-col gap-0 overflow-hidden glass p-0 font-skyblock-icons select-text glass-bg-popover data-[mctooltip=true]:rounded-sm data-[mctooltip=true]:ring-0 *:data-[slot='dialog-close']:hidden standard:bg-transparent"
+      class="flex max-h-[calc(96%-3rem)]! w-auto max-w-[calc(100%-2.5rem)]! flex-col gap-0 overflow-hidden glass p-0 font-skyblock-icons select-text glass-bg-popover data-[mctooltip=true]:rounded-sm data-[mctooltip=true]:ring-0 *:data-[slot='dialog-close']:hidden standard:bg-transparent"
       data-mctooltip={preferences.mctooltip}>
       <ItemContent piece={internalState.itemContent!} />
     </Dialog.Content>
@@ -224,7 +203,7 @@
       }
     }}>
     <Dialog.Content
-      class="flex max-h-[calc(96%-3rem)]! w-auto max-w-[calc(100vw-2.5rem)]! flex-col overflow-hidden glass p-0 font-skyblock-icons select-text glass-bg-popover *:data-[slot='dialog-close']:hidden standard:bg-transparent">
+      class="flex max-h-[calc(96%-3rem)]! w-auto max-w-[calc(100%-2.5rem)]! flex-col overflow-hidden glass p-0 font-skyblock-icons select-text glass-bg-popover *:data-[slot='dialog-close']:hidden standard:bg-transparent">
       {#if internalState.itemContentSpecial?.containsItems}
         <ContainedItemsGrid
           items={internalState.itemContentSpecial.containsItems}

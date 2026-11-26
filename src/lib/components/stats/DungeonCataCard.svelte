@@ -9,44 +9,13 @@
   import CircleQuestionMarkIcon from "@lucide/svelte/icons/circle-question-mark";
   import Image from "@lucide/svelte/icons/image";
   import TrophyIcon from "@lucide/svelte/icons/trophy";
-  import {
-    formatDate,
-    formatDistanceToNowStrict,
-    formatDuration as formatDurationDateFns,
-    intervalToDuration
-  } from "date-fns";
+  import { formatDate, formatDistanceToNowStrict } from "date-fns";
   import { AdditionStat } from "#lib/components/stats";
   import { type FormattedDungeonFloor } from "#lib/shared/api/orval-generated";
-  import { formatNumber } from "#lib/shared/helper";
+  import { formatNumber, formatRunTime } from "#lib/shared/helper";
 
   let { catacombs, master = false }: { catacombs: FormattedDungeonFloor[] | null | undefined; master?: boolean } =
     $props();
-
-  function formatDuration(end: number) {
-    const interval = intervalToDuration(
-      { start: 0, end },
-      { in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone) }
-    );
-
-    // Always extract and format both minutes and seconds
-    const minutes = interval.minutes ?? 0;
-    const seconds = interval.seconds ?? 0;
-
-    const duration = formatDurationDateFns(
-      { minutes, seconds },
-      {
-        format: ["minutes", "seconds"],
-        delimiter: ":",
-        zero: true,
-        locale: {
-          formatDistance: (_token, count) => String(count).padStart(2, "0")
-        }
-      }
-    );
-
-    if (duration === "") return "-";
-    return duration;
-  }
 </script>
 
 {#if catacombs}
@@ -84,7 +53,7 @@
                       <AdditionStat
                         class="capitalize"
                         text={key.toLowerCase().replaceAll("_", " ")}
-                        data={formatDuration(value)} />
+                        data={formatRunTime(value)} />
                     {:else}
                       <AdditionStat
                         class="capitalize"
@@ -119,7 +88,7 @@
                           <AdditionStat
                             class="capitalize"
                             text={key.toLowerCase().replaceAll("_", " ")}
-                            data={formatDuration(value)} />
+                            data={formatRunTime(value)} />
                         {:else}
                           <AdditionStat
                             class="capitalize"

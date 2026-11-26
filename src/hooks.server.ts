@@ -36,11 +36,6 @@ initLogger({
   drain
 });
 
-// Buffered events are lost on a redeploy otherwise.
-// TODO: remove when upgrading to evlog 2.37+, which flushes drain pipelines on SIGTERM itself. 2.37.0 is still newer
-// than pnpm's minimumReleaseAge.
-process.on("SIGTERM", () => void hyperdxDrain?.flush());
-
 const { handle: evlogHandle } = createEvlogHooks({ ...toMiddlewareOptions(evlogConfig), drain });
 
 // Not evlog's own handleError: since 2.33.1 it returns the right status (evloghq/evlog#911), but it still logs every Error as

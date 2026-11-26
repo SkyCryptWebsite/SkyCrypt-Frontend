@@ -13,7 +13,7 @@
   import Sun from "@lucide/svelte/icons/sun";
   import * as devalue from "devalue";
   import { theme as activeModeWatcherTheme, mode, setMode, setTheme } from "mode-watcher";
-  import { untrack } from "svelte";
+  import { onMount, untrack } from "svelte";
   import { toast } from "svelte-sonner";
   import { DEFAULT_THEME } from "#lib/shared/themes/defaults";
   import { mergeThemeWithDefaults, PREVIEW_THEME_ID, ThemeEngine } from "#lib/shared/themes/engine";
@@ -210,15 +210,11 @@
     });
   });
 
-  $effect(() => {
-    return () => {
-      untrack(() => {
-        if (previewActive) {
-          previewActive = false;
-          restoreInitialTheme();
-        }
-      });
-    };
+  onMount(() => () => {
+    if (previewActive) {
+      previewActive = false;
+      restoreInitialTheme();
+    }
   });
 </script>
 

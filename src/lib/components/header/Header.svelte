@@ -21,24 +21,17 @@
 
   const packageVersion = __NPM_PACKAGE_VERSION__;
 
-  const pinnedClipPath = "polygon(0% 0%, 100% 0%, 100% 100%, 30% 100%, 30% 47.5%, 0% 47.5%);";
-  const normalClipPath = "polygon(0% 0%, 100% 0%, 100% 47.5%, 30% 47.5%, 30% 47.5%, 0% 47.5%);";
+  const pinnedClipPath = "polygon(0% 0%, 100% 0%, 100% 100%, 30% 100%, 30% 47.5%, 0% 47.5%)";
+  const normalClipPath = "polygon(0% 0%, 100% 0%, 100% 47.5%, 30% 47.5%, 30% 47.5%, 0% 47.5%)";
   const skinHiddenClipPath = $derived(
     internalState.navbarPinned
-      ? "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);"
-      : "polygon(0% 0%, 100% 0%, 100% 47.5%, 0% 47.5%);"
+      ? "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"
+      : "polygon(0% 0%, 100% 0%, 100% 47.5%, 0% 47.5%)"
   );
-
-  let innerWidth = $state(0);
-
-  const clipPath = $derived.by(() => {
-    if (innerWidth < 1210) return skinHiddenClipPath;
-    if (!page.url.pathname.startsWith("/stats")) return normalClipPath;
-    return internalState.navbarPinned ? pinnedClipPath : normalClipPath;
-  });
+  const wideClipPath = $derived(
+    page.url.pathname.startsWith("/stats") && internalState.navbarPinned ? pinnedClipPath : normalClipPath
+  );
 </script>
-
-<svelte:window bind:innerWidth />
 
 {#snippet loginButton()}
   <a href={resolve("/login")} class={buttonVariants({ variant: "outline" })} aria-label="Log in">
@@ -66,8 +59,9 @@
 
 <div class="invisible h-12 w-full"></div>
 <div
-  class="pointer-events-auto fixed top-0 left-0 z-30 h-25.25 w-full glass transition-[clip-path] duration-150 ease-out glass-bg-popover"
-  style="clip-path: {clipPath}">
+  class="pointer-events-auto fixed top-0 left-0 z-30 h-25.25 w-full glass transition-[clip-path] duration-150 ease-out [clip-path:var(--clip-wide)] glass-bg-popover max-[1210px]:[clip-path:var(--clip-narrow)]"
+  style:--clip-wide={wideClipPath}
+  style:--clip-narrow={skinHiddenClipPath}>
 </div>
 <header
   class="@container fixed top-0 left-0 isolate z-35 h-12 w-full border-b px-2.5 pt-[env(safe-area-inset-top,0)] pr-[max(0.625rem,env(safe-area-inset-right))] pl-[max(0.625rem,env(safe-area-inset-left))] leading-12">

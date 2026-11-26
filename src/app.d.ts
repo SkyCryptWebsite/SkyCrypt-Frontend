@@ -29,7 +29,9 @@ declare global {
     // interface Error {}
     // interface PageData {}
     // interface PageState {}
-    // interface Platform {}
+    interface Platform {
+      context?: { waitUntil?: (promise: Promise<unknown>) => void };
+    }
     namespace Superforms {
       type Message = { type: "error" | "success"; text: string };
     }

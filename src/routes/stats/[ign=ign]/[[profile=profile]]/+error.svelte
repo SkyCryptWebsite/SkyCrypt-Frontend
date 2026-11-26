@@ -7,7 +7,7 @@
   import CircleXIcon from "@lucide/svelte/icons/circle-x";
 </script>
 
-<main class="flex h-[calc(100vh-3rem)] w-full flex-col items-center justify-center">
+<main class="flex h-[calc(100dvh-3rem)] w-full flex-col items-center justify-center">
   <Empty.Root class="w-full max-w-md grow-0 border glass">
     <Empty.Header class="rounded">
       <Empty.Media variant="icon" class="border bg-inherit">

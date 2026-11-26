@@ -96,11 +96,10 @@ export default (menuList: Component<any, any, "">): Extension =>
     onCreate() {
       // Create popup container scoped to this editor instance
       const el = document.createElement("div");
-      el.style.position = "fixed";
-      el.style.zIndex = "9999";
-      el.style.maxWidth = "16rem";
-      el.style.visibility = "hidden";
-      el.style.pointerEvents = "none";
+      // The top layer keeps the menu above portaled overlays; z-index is the fallback without popover support.
+      if ("popover" in HTMLElement.prototype) el.setAttribute("popover", "manual");
+      el.style.cssText =
+        "position: fixed; inset: auto; margin: 0; padding: 0; border: 0; background: transparent; color: inherit; overflow: visible; z-index: 9999; max-width: 16rem; visibility: hidden; pointer-events: none";
       el.className = "slash-command-popup";
       document.body.appendChild(el);
       this.storage.popupElement = el;
@@ -144,6 +143,21 @@ export default (menuList: Component<any, any, "">): Extension =>
             })).filter((group) => group.commands.length > 0);
           },
           render: () => {
+            const showPopup = () => {
+              const el = storage.popupElement;
+              if (!el) return;
+              el.style.visibility = "visible";
+              el.style.pointerEvents = "auto";
+              if (el.hasAttribute("popover") && !el.matches(":popover-open")) el.showPopover();
+            };
+            const hidePopup = () => {
+              const el = storage.popupElement;
+              if (!el) return;
+              el.style.visibility = "hidden";
+              el.style.pointerEvents = "none";
+              if (el.hasAttribute("popover") && el.matches(":popover-open")) el.hidePopover();
+            };
+
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             let component: any;
             let currentClientRect: (() => DOMRect | null) | null = null;
@@ -186,8 +200,7 @@ export default (menuList: Component<any, any, "">): Extension =>
 
                 if (storage.popupElement) {
                   storage.popupElement.appendChild(component.element);
-                  storage.popupElement.style.visibility = "visible";
-                  storage.popupElement.style.pointerEvents = "auto";
+                  showPopup();
 
                   updatePosition();
 
@@ -212,10 +225,7 @@ export default (menuList: Component<any, any, "">): Extension =>
                 contextElement = props.editor.view.dom;
 
                 // Re-show popup if it was hidden (e.g., after Escape)
-                if (storage.popupElement) {
-                  storage.popupElement.style.visibility = "visible";
-                  storage.popupElement.style.pointerEvents = "auto";
-                }
+                showPopup();
 
                 updatePosition();
 
@@ -229,10 +239,7 @@ export default (menuList: Component<any, any, "">): Extension =>
 
               onKeyDown(props: SuggestionKeyDownProps) {
                 if (props.event.key === "Escape") {
-                  if (storage.popupElement) {
-                    storage.popupElement.style.visibility = "hidden";
-                    storage.popupElement.style.pointerEvents = "none";
-                  }
+                  hidePopup();
                   return true;
                 }
 
@@ -242,11 +249,8 @@ export default (menuList: Component<any, any, "">): Extension =>
               },
 
               onExit() {
-                if (storage.popupElement) {
-                  storage.popupElement.style.visibility = "hidden";
-                  storage.popupElement.style.pointerEvents = "none";
-                  storage.popupElement.innerHTML = "";
-                }
+                hidePopup();
+                storage.popupElement?.replaceChildren();
 
                 if (storage.popupCleanup) {
                   storage.popupCleanup();

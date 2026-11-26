@@ -6,6 +6,7 @@
   import RotateCcw from "@lucide/svelte/icons/rotate-ccw";
   import { isHttpError, type HttpError } from "@sveltejs/kit";
   import { Button } from "bits-ui";
+  import { log } from "evlog/client";
   import type { Snippet } from "svelte";
   import { cn } from "#lib/shared/utils";
 
@@ -22,22 +23,12 @@
   let { title, children, text, type, class: className, error: fullError, retry }: Props = $props();
 
   $effect(() => {
-    if (fullError) {
-      // 1. Group the error log so it stands out cleanly in DevTools
-      console.group(`[Notice Boundary Error]: ${title}`);
-
-      // 2. Log the raw error object (preserves interactive object inspection in DevTools)
-      console.error(fullError);
-
-      // 3. If an Error object with a stack exists, log the stack trace directly
-      if (fullError instanceof Error && fullError.stack) {
-        // eslint-disable-next-line no-console
-        console.log("%cOriginal Stack Trace:", "color: #ff5555; font-weight: bold;");
-        // eslint-disable-next-line no-console
-        console.log(fullError.stack);
-      }
-
-      console.groupEnd();
+    if (!fullError) return;
+    // Expected 4xx (unknown player or profile) stay in the dev console; the rest reach HyperDX.
+    if (isHttpError(fullError) && fullError.status < 500) {
+      log.debug({ action: "client.notice_error", title, error: fullError });
+    } else {
+      log.warn({ action: "client.notice_error", title, error: fullError });
     }
   });
 </script>

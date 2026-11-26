@@ -1,38 +1,22 @@
 <script lang="ts">
   import { untrack } from "svelte";
+  import type { Attachment } from "svelte/attachments";
   import type { Editor } from "../Editor";
 
   let { editor, class: className }: { editor: Editor | null; class: string } = $props();
 
-  let rootEl: HTMLDivElement | undefined = $state();
-
-  $effect(() => {
-    if (!editor || !rootEl) {
-      return;
-    }
-
-    if (!editor.view.dom?.parentNode) {
-      return;
-    }
-
+  const mountEditor: Attachment<HTMLDivElement> = (rootEl) => {
+    const current = editor;
+    if (!current?.view.dom?.parentNode) return;
     // Already mounted — avoid re-appending / re-creating on every transaction
-    if (rootEl.contains(editor.view.dom)) {
-      return;
-    }
-
-    const element = rootEl;
+    if (rootEl.contains(current.view.dom)) return;
 
     untrack(() => {
-      const parent = editor.view.dom.parentNode!;
-      rootEl!.append(...parent.childNodes);
-
-      editor.setOptions({
-        element
-      });
-
-      editor.createNodeViews();
+      rootEl.append(...current.view.dom.parentNode!.childNodes);
+      current.setOptions({ element: rootEl });
+      current.createNodeViews();
     });
-  });
+  };
 </script>
 
-<div bind:this={rootEl} class={className}></div>
+<div {@attach mountEditor} class={className}></div>

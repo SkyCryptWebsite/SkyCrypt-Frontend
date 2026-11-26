@@ -6,6 +6,8 @@
   import Copy from "@lucide/svelte/icons/copy";
   import Edit from "@lucide/svelte/icons/pen";
   import Trash2 from "@lucide/svelte/icons/trash-2";
+  import { toast } from "svelte-sonner";
+  import { prefersReducedMotion } from "svelte/motion";
   import { slide } from "svelte/transition";
   import strings from "../../../strings";
   import { BubbleMenu, getEditor, useEditorState } from "../../../tiptap";
@@ -22,7 +24,7 @@
 
   let isEditing = $state(false);
 
-  let linkInput = $derived($editorState.link);
+  let linkInput = $derived(editorState.current.link);
 
   function handleSubmit(e: Event) {
     e.preventDefault();
@@ -54,7 +56,12 @@
   class="flex h-fit w-fit items-center gap-1 rounded-lg border bg-popover p-0!">
   {#if !isEditing}
     <Tooltip tooltip={strings.menu.link.open}>
-      <Button variant="ghost" title={strings.menu.link.open} size="icon" href={$editorState.link} target="_blank">
+      <Button
+        variant="ghost"
+        title={strings.menu.link.open}
+        size="icon"
+        href={editorState.current.link}
+        target="_blank">
         <Link />
       </Button>
     </Tooltip>
@@ -75,8 +82,13 @@
         variant="ghost"
         title={strings.menu.link.copy}
         size="icon"
-        onclick={() => {
-          window.navigator.clipboard.writeText($editorState.link);
+        onclick={async () => {
+          try {
+            await navigator.clipboard.writeText(editorState.current.link);
+            toast.success("Link copied.");
+          } catch {
+            toast.error("Couldn't copy the link.");
+          }
         }}>
         <Copy />
       </Button>
@@ -91,7 +103,10 @@
       </Button>
     </Tooltip>
   {:else}
-    <form transition:slide={{ axis: "x" }} onsubmit={handleSubmit} class="flex w-96 items-center gap-0.5">
+    <form
+      transition:slide={{ axis: "x", duration: prefersReducedMotion.current ? 0 : 400 }}
+      onsubmit={handleSubmit}
+      class="flex w-96 items-center gap-0.5">
       <Input bind:value={linkInput} required type="url" placeholder={strings.menu.link.enterLinkPlaceholder} />
       <Tooltip tooltip={strings.menu.link.enterLinkButton}>
         <Button type="submit" size="icon">

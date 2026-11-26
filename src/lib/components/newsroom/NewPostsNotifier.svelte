@@ -1,6 +1,7 @@
 <script lang="ts">
   import { getNewsroomNotifications } from "$ctx";
   import type { Post } from "$types";
+  import { onMount } from "svelte";
   import { toast } from "svelte-sonner";
   import NewPostsToast from "./NewPostsToast.svelte";
 
@@ -49,7 +50,5 @@
     });
   });
 
-  $effect(() => {
-    return () => toast.dismiss("newsroom-new-posts");
-  });
+  onMount(() => () => toast.dismiss("newsroom-new-posts"));
 </script>

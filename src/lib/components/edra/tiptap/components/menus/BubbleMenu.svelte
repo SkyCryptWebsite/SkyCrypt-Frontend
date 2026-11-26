@@ -3,6 +3,7 @@
   import { BubbleMenuPlugin } from "@tiptap/extension-bubble-menu";
   import { untrack } from "svelte";
   import type { Snippet } from "svelte";
+  import type { Attachment } from "svelte/attachments";
   import type { Editor } from "../../Editor";
   interface Props {
     editor: Editor;
@@ -32,22 +33,9 @@
     ...rest
   }: Props = $props();
 
-  let rootEl: HTMLDivElement | undefined = $state();
-
-  let registered = false;
-
-  $effect(() => {
-    if (!rootEl || !editor) {
-      return;
-    }
-
-    // Guard against Hot re-runs driven by reactive reads (e.g. transaction version)
-    if (registered) {
-      return;
-    }
-    registered = true;
-
-    const el = rootEl;
+  const registerMenu: Attachment<HTMLDivElement> = (el) => {
+    const current = editor;
+    if (!current) return;
 
     untrack(() => {
       el.style.visibility = "hidden";
@@ -55,9 +43,9 @@
 
       el.remove();
 
-      editor.registerPlugin(
+      current.registerPlugin(
         BubbleMenuPlugin({
-          editor,
+          editor: current,
           element: el,
           options,
           pluginKey,
@@ -71,16 +59,15 @@
     });
 
     return () => {
-      registered = false;
       try {
-        editor.unregisterPlugin(pluginKey);
+        current.unregisterPlugin(pluginKey);
       } catch {
         // editor may already be destroyed during navigation
       }
     };
-  });
+  };
 </script>
 
-<div bind:this={rootEl} class={className} {...rest}>
+<div {@attach registerMenu} class={className} {...rest}>
   {@render children()}
 </div>

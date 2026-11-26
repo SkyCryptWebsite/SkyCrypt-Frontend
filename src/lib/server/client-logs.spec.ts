@@ -58,11 +58,27 @@ describe("sanitizeClientLog", () => {
         error: { message: "undefined is not an object (evaluating 'window.googletag.cmd')" }
       })
     ).toBeNull();
+    expect(
+      sanitizeClientLog({
+        level: "error",
+        message: "TypeError: undefined is not an object (evaluating 'window.ethereum.selectedAddress = undefined')"
+      })
+    ).toBeNull();
+    expect(fromStack("at e.sendBatchRequests (https://btloader.com/tag?o=1&upapi=true:8:85231)")).toBeNull();
     expect(fromStack("at window.fetch (https://sky.shiiyu.moe/_app/immutable/chunks/a.js:2:1)")).not.toBeNull();
   });
 
   it("ignores an invalid timestamp", () => {
     expect(sanitizeClientLog({ level: "info", timestamp: "not a date" })!.client).not.toHaveProperty("timestamp");
+  });
+
+  it("downgrades dropped connections and stale chunks to warnings, keeps real errors", () => {
+    const levelOf = (message: string) =>
+      sanitizeClientLog({ level: "error", error: { name: "TypeError", message } })?.level;
+    expect(levelOf("Load failed")).toBe("warn");
+    expect(levelOf("Failed to fetch dynamically imported module: https://sky.shiiyu.moe/_app/x.js")).toBe("warn");
+    expect(levelOf("Failed to fetch something else")).toBe("error");
+    expect(levelOf("Cannot read properties of undefined")).toBe("error");
   });
 });
 

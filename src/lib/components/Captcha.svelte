@@ -1,6 +1,7 @@
 <script lang="ts">
   import { PUBLIC_TURNSTILE_SITE_KEY } from "$app/env/public";
   import Turnstile from "@better-captcha/svelte/provider/turnstile";
+  import { log } from "evlog/client";
 
   type Props = {
     turnstileToken: string | undefined;
@@ -19,7 +20,7 @@
     turnstileReady = true;
   }}
   onerror={(error) => {
-    console.error("Captcha Error:", error);
+    log.warn({ action: "captcha.error", error });
     turnstileErrored = true;
   }}
   onSolve={(token) => {

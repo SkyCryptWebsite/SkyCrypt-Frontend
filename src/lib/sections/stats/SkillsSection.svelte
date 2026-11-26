@@ -12,6 +12,7 @@
   import { PersistedState } from "runed";
   import type { Component } from "svelte";
   import { cubicOut } from "svelte/easing";
+  import { prefersReducedMotion } from "svelte/motion";
   import { crossfade } from "svelte/transition";
   import { ScrollItems } from "#lib/components/misc";
   import { Section } from "#lib/components/sections";
@@ -33,12 +34,9 @@
 
   let { order }: { order: number } = $props();
 
-  const skillsContext = new SkillsContext();
-  setSkillsContext(skillsContext);
-  const currentTabContext = new CurrentTabContext();
-  setCurrentTabContext(currentTabContext);
-
   const skills = $derived(getCombinedContext().current?.skills);
+  setSkillsContext(new SkillsContext(() => skills ?? null));
+  setCurrentTabContext(new CurrentTabContext(() => tabValue));
   const skillTabs = $derived([
     { name: TabNamesEnum.Mining, component: Mining, available: !!skills?.mining, icon: PickaxeIcon },
     { name: TabNamesEnum.Foraging, component: Foraging, available: !!skills?.foraging, icon: TreesIcon },
@@ -62,21 +60,13 @@
   });
 
   const [send, receive] = crossfade({
-    duration: 300,
+    duration: () => (prefersReducedMotion.current ? 0 : 300),
     easing: cubicOut
   });
 
   beforeNavigate(({ willUnload, shallow, type }) => {
     if (shallow && type === "goto") return;
     if (willUnload) selectedTabState.current = null;
-  });
-
-  $effect(() => {
-    skillsContext.skills = skills ?? null;
-  });
-
-  $effect(() => {
-    currentTabContext.current = tabValue;
   });
 </script>
 

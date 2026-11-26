@@ -1,7 +1,8 @@
-import { describe, it, vi } from "vitest";
+import { describe, it } from "vitest";
 import {
   calculatePercentage,
   formatNumber,
+  formatRunTime,
   getRarityClass,
   removeFormatting,
   titleCase,
@@ -120,93 +121,62 @@ describe.concurrent("uniqBy", () => {
 
 describe.concurrent("validateURL", () => {
   it("validates simple username", ({ expect }) => {
-    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
     expect(validateURL("Player123")).toBe(true);
     expect(validateURL("test_user")).toBe(true);
     expect(validateURL("a")).toBe(true);
-    spy.mockRestore();
   });
 
   it("validates UUID without dashes", ({ expect }) => {
-    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
     expect(validateURL("12345678901234567890123456789012")).toBe(true);
     expect(validateURL("abcdef1234567890abcdef1234567890")).toBe(true);
-    spy.mockRestore();
   });
 
   it("validates UUID with dashes", ({ expect }) => {
-    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
     expect(validateURL("12345678-1234-1234-1234-123456789012")).toBe(true);
     expect(validateURL("abcdef12-3456-7890-abcd-ef1234567890")).toBe(true);
-    spy.mockRestore();
   });
 
   it("validates username with profile name", ({ expect }) => {
-    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
     expect(validateURL("Player123/Cucumber")).toBe(true);
     expect(validateURL("test/tomato")).toBe(true);
-    spy.mockRestore();
   });
 
   it("validates username with profile UUID", ({ expect }) => {
-    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
     expect(validateURL("Player123/12345678901234567890123456789012")).toBe(true);
-    spy.mockRestore();
   });
 
   it("rejects empty string", ({ expect }) => {
-    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
     expect(validateURL("")).toBe(false);
     expect(validateURL("   ")).toBe(false);
-    spy.mockRestore();
   });
 
   it("rejects too many segments", ({ expect }) => {
-    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
     expect(validateURL("player/profile/extra")).toBe(false);
-    expect(spy).toHaveBeenCalledWith(expect.stringContaining('too many "/"'));
-    spy.mockRestore();
   });
 
   it("rejects invalid username characters", ({ expect }) => {
-    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
     expect(validateURL("player@123")).toBe(false);
     expect(validateURL("player#test")).toBe(false);
-    expect(spy).toHaveBeenCalledWith(expect.stringContaining("not a valid username or UUID"));
-    spy.mockRestore();
   });
 
   it("rejects invalid profile name", ({ expect }) => {
-    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
     expect(validateURL("player/123abc")).toBe(false);
-    expect(spy).toHaveBeenCalledWith(expect.stringContaining("not a valid profile name or UUID"));
-    spy.mockRestore();
   });
 
   it("rejects empty profile segment", ({ expect }) => {
-    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
     expect(validateURL("player/")).toBe(false);
-    expect(spy).toHaveBeenCalledWith(expect.stringContaining('Please enter valid profile name or UUID after "/"'));
-    spy.mockRestore();
   });
 
   it("handles username with spaces (converts to underscore)", ({ expect }) => {
-    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
     expect(validateURL("Player Name")).toBe(true);
-    spy.mockRestore();
   });
 
   it("validates max length username (16 characters)", ({ expect }) => {
-    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
     expect(validateURL("1234567890123456")).toBe(true);
-    spy.mockRestore();
   });
 
   it("rejects username longer than 16 characters", ({ expect }) => {
-    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
     expect(validateURL("12345678901234567")).toBe(false);
-    expect(spy).toHaveBeenCalledWith(expect.stringContaining("not a valid username or UUID"));
-    spy.mockRestore();
   });
 });
 
@@ -237,5 +207,18 @@ describe.concurrent("calculatePercentage", () => {
     expect(calculatePercentage(2, 3, 0)).toBe("66");
     // 33.33% floors to 33%
     expect(calculatePercentage(1, 3, 0)).toBe("33");
+  });
+});
+
+describe.concurrent("formatRunTime", () => {
+  it("keeps hours instead of wrapping past 59 minutes", ({ expect }) => {
+    expect(formatRunTime(307_000)).toBe("05:07");
+    expect(formatRunTime(3_907_000)).toBe("1:05:07");
+  });
+
+  it("matches Intl.DurationFormat output in the fallback", ({ expect }) => {
+    expect(formatRunTime(307_000, null)).toBe("05:07");
+    expect(formatRunTime(3_907_000, null)).toBe("1:05:07");
+    expect(formatRunTime(0, null)).toBe("00:00");
   });
 });

@@ -7,6 +7,7 @@ export const bustCache = (url: string) => {
   return busted.href;
 };
 import { cubicOut } from "svelte/easing";
+import { prefersReducedMotion } from "svelte/motion";
 import type { TransitionConfig } from "svelte/transition";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -56,9 +57,11 @@ export const flyAndScale = (
     duration: params.duration ?? 200,
     delay: 0,
     css: (t) => {
-      const y = scaleConversion(t, [0, 1], [params.y ?? 5, 0]);
-      const x = scaleConversion(t, [0, 1], [params.x ?? 0, 0]);
-      const scale = scaleConversion(t, [0, 1], [params.start ?? 0.95, 1]);
+      // Reduced motion keeps the fade but drops the movement.
+      const still = prefersReducedMotion.current;
+      const y = still ? 0 : scaleConversion(t, [0, 1], [params.y ?? 5, 0]);
+      const x = still ? 0 : scaleConversion(t, [0, 1], [params.x ?? 0, 0]);
+      const scale = still ? 1 : scaleConversion(t, [0, 1], [params.start ?? 0.95, 1]);
 
       return styleToString({
         transform: transform + "translate3d(" + x + "px, " + y + "px, 0) scale(" + scale + ")",

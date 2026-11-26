@@ -22,7 +22,7 @@
 <Input
   type="search"
   placeholder="Search all inventories"
-  class=""
+  aria-label="Search all inventories"
   bind:value={search}
   onkeydown={(e) => {
     e.stopPropagation();

@@ -1,7 +1,7 @@
 import { prerender } from "$app/server";
 import { log } from "evlog";
 import { z } from "zod";
-import { cachedSkinTextures } from "#lib/server/skin";
+import { cachedSkinTextures, fallbackSkinTextures } from "#lib/server/skin";
 import type { PlayerResolve } from "#lib/shared/api/orval-generated";
 import { resolveUsernameByUuid } from "#lib/shared/api/skycrypt-api.remote";
 import { Role } from "./enums";
@@ -63,18 +63,16 @@ export const getContributors = prerender(
 export const getContributorSkins = prerender(
   z.string(),
   async () => {
-    const skins = await Promise.all(
+    return Promise.all(
       contributorIds.map(async ({ id }) => {
         try {
           return (await cachedSkinTextures(id)).skinUrl;
         } catch (error) {
-          log.error({ action: "contributors.resolve_skin", uuid: id, error });
-          return null;
+          log.warn({ action: "contributors.resolve_skin", uuid: id, error });
+          return fallbackSkinTextures(id).skinUrl;
         }
       })
     );
-
-    return skins.filter((skin) => skin !== null);
   },
   { dynamic: true, inputs: () => [__PRERENDER_VERSION__] }
 );

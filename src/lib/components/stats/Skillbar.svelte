@@ -4,10 +4,8 @@
   import { cn } from "$utils";
   import BarChartHorizontal from "@lucide/svelte/icons/bar-chart-horizontal";
   import { format } from "numerable";
-  import { cubicInOut } from "svelte/easing";
-  import { Tween } from "svelte/motion";
   import type { Skill } from "#lib/shared/api/orval-generated";
-  import { calculatePercentage, formatNumber } from "#lib/shared/helper";
+  import { formatNumber } from "#lib/shared/helper";
 
   type Props = {
     skill: string;
@@ -19,19 +17,7 @@
   let { skill, skillData, apiEnabled = true, class: className }: Props = $props();
 
   const isMaxed = $derived(skillData.maxed);
-  const tween = new Tween(100, { duration: 1000, easing: cubicInOut });
   let isHovered = $state(false);
-
-  const skillbarProgress = $derived(
-    100 -
-      parseFloat(
-        calculatePercentage(skillData.xpCurrent ?? 0, isMaxed ? (skillData.xpCurrent ?? 0) : (skillData.xpForNext ?? 0))
-      )
-  );
-
-  $effect(() => {
-    tween.set(skillbarProgress);
-  });
 </script>
 
 <div

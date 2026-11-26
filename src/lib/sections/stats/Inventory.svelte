@@ -7,7 +7,9 @@
   import { Spinner } from "$ui/spinner";
   import Image from "@lucide/svelte/icons/image";
   import { Tabs } from "bits-ui";
+  import { log } from "evlog/client";
   import { cubicOut } from "svelte/easing";
+  import { prefersReducedMotion } from "svelte/motion";
   import { crossfade } from "svelte/transition";
   import { InventoryGrid, InventorySearch, Item } from "#lib/components/item";
   import { ScrollItems } from "#lib/components/misc";
@@ -31,7 +33,7 @@
   const tabsOrientation = $derived(isMobile.current ? "horizontal" : "vertical");
 
   const [send, receive] = crossfade({
-    duration: 300,
+    duration: () => (prefersReducedMotion.current ? 0 : 300),
     easing: cubicOut
   });
 
@@ -42,7 +44,7 @@
       internalState.itemContentSpecial &&
       (value === "Search" || value === "Backpack" || value === "Museum" || value === "Sacks")
     ) {
-      console.warn("Item content special should not be set for search, backpack, sacks, or museum tabs.");
+      log.debug("inventory", "itemContentSpecial is not used on search, backpack, sacks or museum tabs");
       internalState.itemContentSpecial = undefined;
     }
   }

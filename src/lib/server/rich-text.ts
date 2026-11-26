@@ -110,8 +110,10 @@ export function renderContent(doc: JSONContent) {
             `<figure><img src="${escape(node.attrs.src)}" alt="${escape(node.attrs.alt)}" loading="lazy" />${
               node.attrs.title ? `<figcaption>${escape(node.attrs.title)}</figcaption>` : ""
             }</figure>`,
-          video: ({ node }) => `<video src="${escape(node.attrs.src)}" controls preload="metadata"></video>`,
-          audio: ({ node }) => `<audio src="${escape(node.attrs.src)}" controls preload="metadata"></audio>`,
+          video: ({ node }) =>
+            `<video src="${escape(node.attrs.src)}" controls preload="metadata" loading="lazy"></video>`,
+          audio: ({ node }) =>
+            `<audio src="${escape(node.attrs.src)}" controls preload="metadata" loading="lazy"></audio>`,
           iframe: ({ node }) =>
             `<div class="embed"><iframe src="${escape(node.attrs.src)}" title="${escape(node.attrs.title || "Embedded content")}" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-popups allow-presentation"></iframe></div>`,
           callout: ({ node, children }) =>

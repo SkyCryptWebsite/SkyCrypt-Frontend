@@ -17,6 +17,7 @@
   import type { Node } from "@tiptap/pm/model";
   import { NodeSelection } from "@tiptap/pm/state";
   import { onMount } from "svelte";
+  import { toast } from "svelte-sonner";
   import { commands, type EdraCommand } from "../commands";
   import { getEditor } from "../tiptap";
   import { quickcolors } from "../utils";
@@ -101,13 +102,30 @@
       .run();
   };
 
-  const handleCopyToClipboard = () => {
-    editor?.chain().setMeta("hideDragHandle", true).setNodeSelection(currentNodePos).run();
-    /** !FIXME: document.execCommand is deprecated, use navigator.clipboard.writeText instead */
-    document.execCommand("copy");
+  const handleCopyToClipboard = async () => {
+    if (!editor) return;
+    editor.chain().setMeta("hideDragHandle", true).setNodeSelection(currentNodePos).run();
+    // shortcut: execCommand stays for browsers without ClipboardItem (Firefox < 127); drop it once that's below our floor.
+    if (typeof ClipboardItem === "undefined") {
+      document.execCommand("copy");
+      return;
+    }
+    // ProseMirror's serializer adds data-pm-slice, so pasting back into the editor keeps the exact block.
+    const { dom, text } = editor.view.serializeForClipboard(editor.state.selection.content());
+    try {
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          "text/html": new Blob([dom.innerHTML], { type: "text/html" }),
+          "text/plain": new Blob([text], { type: "text/plain" })
+        })
+      ]);
+      toast.success("Block copied.");
+    } catch {
+      toast.error("Couldn't copy the block.");
+    }
   };
 
-  const handleCopyContentAs = (as: "markdown" | "json") => {
+  const handleCopyContentAs = async (as: "markdown" | "json") => {
     let data = "";
     let nodeData = currentNode?.toJSON();
     if (as === "markdown") {
@@ -115,8 +133,12 @@
     } else if (as === "json") {
       data = JSON.stringify(nodeData, null, 2) || "";
     }
-    if (data) {
-      navigator.clipboard.writeText(data);
+    if (!data) return;
+    try {
+      await navigator.clipboard.writeText(data);
+      toast.success(`Copied as ${as === "json" ? "JSON" : "Markdown"}.`);
+    } catch {
+      toast.error("Couldn't copy the block.");
     }
   };
 

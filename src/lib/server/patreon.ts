@@ -42,9 +42,10 @@ export class PatreonVerificationError extends Error {
       | "already_claimed"
       | "missing_scope"
       | "rate_limited"
-      | "unavailable"
+      | "unavailable",
+    options?: ErrorOptions
   ) {
-    super(message);
+    super(message, options);
     this.name = "PatreonVerificationError";
   }
 }
@@ -94,8 +95,8 @@ export async function refreshCreatorAccessToken(campaignId: string, staleAccessT
       }),
       signal: AbortSignal.timeout(PATREON_TIMEOUT_MS)
     });
-  } catch {
-    throw new PatreonVerificationError("Patreon creator token refresh failed.", "unavailable");
+  } catch (error) {
+    throw new PatreonVerificationError("Patreon creator token refresh failed.", "unavailable", { cause: error });
   }
 
   if (!response.ok) {
@@ -168,8 +169,10 @@ async function fetchCampaignMembership(campaignId: string, patreonUserId: string
         headers: { Accept: "application/vnd.api+json", Authorization: `Bearer ${creatorToken}` },
         signal
       });
-    } catch {
-      throw new PatreonVerificationError("Patreon verification is temporarily unavailable.", "unavailable");
+    } catch (error) {
+      throw new PatreonVerificationError("Patreon verification is temporarily unavailable.", "unavailable", {
+        cause: error
+      });
     }
 
     if (response.status === 401) {
@@ -179,8 +182,10 @@ async function fetchCampaignMembership(campaignId: string, patreonUserId: string
           headers: { Accept: "application/vnd.api+json", Authorization: `Bearer ${creatorToken}` },
           signal
         });
-      } catch {
-        throw new PatreonVerificationError("Patreon verification is temporarily unavailable.", "unavailable");
+      } catch (error) {
+        throw new PatreonVerificationError("Patreon verification is temporarily unavailable.", "unavailable", {
+          cause: error
+        });
       }
     }
 

@@ -137,7 +137,7 @@
       {/snippet}
 
       {#snippet failed(err, reset)}
-        <div class="flex h-screen items-center justify-center">
+        <div class="flex h-dvh items-center justify-center">
           <Notice title="An unexpected error has occurred" type="error" error={err} retry={reset} />
         </div>
       {/snippet}

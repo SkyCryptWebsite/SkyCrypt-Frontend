@@ -48,8 +48,8 @@
       await navigator.clipboard.writeText(url);
       // Toast notification
       toast.success("Theme URL copied to clipboard!");
-    } catch (error) {
-      console.error("Failed to copy to clipboard:", error);
+    } catch {
+      toast.error("Couldn't copy the theme URL.");
     }
   }
 

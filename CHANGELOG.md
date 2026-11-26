@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.7.4-beta.0
+
+### Patch Changes
+
+- Fix 3D skins stalling and Mojang rate limits by no longer retrying the session server after a 429, and keep contributors visible when their skin lookup fails. _[`76071c5`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/76071c59b2e9bfbdbf2970c0960251ce57bc3895) [@DarthGigi](https://github.com/DarthGigi)_
+
 ## 4.7.3
 
 ### Patch Changes

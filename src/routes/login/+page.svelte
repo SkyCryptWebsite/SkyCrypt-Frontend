@@ -11,10 +11,7 @@
   let turnstileToken: string | undefined = $state();
 
   const signIn = async () => {
-    if (!turnstileToken) {
-      console.error("Captcha token is missing. Please complete the captcha.");
-      return;
-    }
+    if (!turnstileToken) return;
     await authClient.signIn.social({
       provider: "discord",
       callbackURL: "/dashboard",

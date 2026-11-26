@@ -1,15 +1,17 @@
+import { createSubscriber } from "svelte/reactivity";
 import type { Editor } from "../Editor";
 
 /**
- * Svelte 5 rune-based hook that provides a reactive transaction counter. Reading `version` inside a template expression
- * creates a dependency that re-evaluates on every editor transaction.
+ * Reactive transaction counter. Reading `version` inside a template expression or effect creates a dependency that
+ * re-evaluates on every editor transaction.
  */
 export function useEditorTransaction(editor: Editor) {
-  let version = $state(0);
+  let version = 0;
 
-  $effect(() => {
+  const subscribe = createSubscriber((update) => {
     const handler = () => {
       version++;
+      update();
     };
     editor.on("transaction", handler);
     return () => {
@@ -19,6 +21,7 @@ export function useEditorTransaction(editor: Editor) {
 
   return {
     get version() {
+      subscribe();
       return version;
     }
   };

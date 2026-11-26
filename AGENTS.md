@@ -58,6 +58,17 @@ The `shiiyu.moe` zone sits in front of everything. Its custom, transform and con
 - Don't add Cloudflare cache rules for `/_app/*`, including `/_app/remote/*`. Caching them broke the site; nginx handles caching.
 - Do routing, redirects and caching in nginx (the GitOpsConfig repo, `nginx/conf.d`), not in Traefik or Dokploy domain settings.
 
+## Reading production logs and traces
+
+Check these before reporting a HyperDX finding as a bug:
+
+- Traces have no server-kind spans; the request root is the internal `sveltekit.handle.root` span, so `clickstack_service_health` comes back empty. Use the evlog wide events or the internal root spans instead.
+- `getActiveBanners` and `listLatestPostsForNotifications` are `query.live` streams: their duration is how long a tab stayed open. Leave them out of latency figures.
+- Browser reports with an empty `client.release` come from tabs loaded before release tagging (22 Nov 2026). Old tabs never reload on their own, so `/api/tunnel` (Sentry, removed 12 Oct 2026) and old app-icon and manifest paths still get hits. That is not current code.
+- Stale-chunk errors ("Failed to fetch dynamically imported module", "Importing a module script failed") mostly come from hover preloads: SvelteKit passes a failed preload to `handleError` before checking `version.json`, then reloads on the real navigation. Don't add reload logic to `handleError`; it would navigate to links the user only hovered.
+- Check `verifiedBot` before blaming a URL on our code; crawlers keep requesting old links such as `/stats/null`.
+- Cloudflare 504s on `/_app/*` with an "early hints" user agent are Cloudflare's own Early Hints requests, not origin failures.
+
 ## Implementation conventions
 
 - Use Svelte 5 runes (`$state`, `$derived`, `$props`) and snippets. Avoid legacy reactive declarations, `export let`, and slots in new code.

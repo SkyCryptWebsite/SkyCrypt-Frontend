@@ -2,14 +2,14 @@ import { createContext } from "svelte";
 import type { TabNames } from "../types";
 
 export class CurrentTabContext {
-  #current: TabNames | null = $state(null);
+  #source: () => TabNames | null;
 
-  get current() {
-    return this.#current;
+  constructor(source: () => TabNames | null = () => null) {
+    this.#source = source;
   }
 
-  set current(value: TabNames | null) {
-    this.#current = value;
+  get current() {
+    return this.#source();
   }
 }
 

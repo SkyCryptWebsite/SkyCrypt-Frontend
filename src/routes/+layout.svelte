@@ -29,12 +29,12 @@
   import Wifi from "@lucide/svelte/icons/wifi";
   import WifiOff from "@lucide/svelte/icons/wifi-off";
   import { Tooltip } from "bits-ui";
+  import { log } from "evlog/client";
   import { mode, ModeWatcher, setMode } from "mode-watcher";
   import { onMount, type Snippet } from "svelte";
   import SvelteSeo from "svelte-seo";
   import { toast, Toaster, type ToasterProps } from "svelte-sonner";
-  import { SvelteURLSearchParams } from "svelte/reactivity";
-  import { writable } from "svelte/store";
+  import { MediaQuery, SvelteURLSearchParams } from "svelte/reactivity";
   import NitroAds from "#lib/components/ads/NitroAds.svelte";
   import Footer from "#lib/components/footer/Footer.svelte";
   import Header from "#lib/components/header/Header.svelte";
@@ -45,6 +45,7 @@
   import { IsMobile } from "#lib/hooks/is-mobile.svelte.js";
   import "./layout.css";
   import { getAdFree } from "#lib/shared/ads.remote";
+  import type { ResourcePackConfig } from "#lib/shared/api/orval-generated";
   import { listResourcePacks } from "#lib/shared/api/skycrypt-api.remote";
   import { getActiveBanners, listLatestPostsForNotifications } from "#lib/shared/newsroom.remote";
   import { isBeta } from "#lib/shared/release-channel";
@@ -62,16 +63,17 @@
   const enabledPacks = initEnabledPacks();
   const themeContext = initTheme();
   const internalState = initInternalState();
-  const position = writable<ToasterProps["position"]>("bottom-right");
-  const theme = writable<ToasterProps["theme"]>("dark");
+  const isNarrow = new MediaQuery("(max-width: 600px)");
+  const toasterPosition = $derived<ToasterProps["position"]>(isNarrow.current ? "bottom-center" : "bottom-right");
   // The dashboards' fixed sidebars span the full viewport height and would cover the footer.
   const showFooter = $derived(!/^\/(admin-)?dashboard(\/|$)/.test(page.url.pathname));
   const isStatsPage = $derived(page.url.pathname.startsWith("/stats/"));
   // NitroPay asks SPAs to tear down and recreate placements on every navigation. Params, not the pathname, so shallow URL rewrites don't count.
   const adPageKey = $derived(`${page.route.id}${JSON.stringify(page.params)}`);
-  const showAds = $derived(!/^\/((admin-)?dashboard|login|logout)(\/|$)/.test(page.url.pathname));
+  const showAds = $derived(!/^\/((admin-)?dashboard|login)(\/|$)/.test(page.url.pathname));
   const noEmbedUrls = ["/stats/", "/newsroom", "/login", "/dashboard"];
-  const packs = new PacksContext();
+  let resourcePacks = $state.raw<ResourcePackConfig[]>([]);
+  const packs = new PacksContext(() => resourcePacks);
   const websiteJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -168,10 +170,6 @@
   setPacksContext(packs);
 
   onMount(() => {
-    if (window.innerWidth <= 600) {
-      position.set("bottom-center");
-    }
-
     if (preferences.performanceModeForced) {
       toast.warning("Performance Mode Locked", {
         id: "performance-mode-locked",
@@ -203,7 +201,7 @@
     }
   });
 
-  $effect.pre(() => {
+  onMount(() => {
     const urlParams = new SvelteURLSearchParams(window.location.search);
     const themeParam = urlParams.get("theme");
     if (themeParam) {
@@ -218,7 +216,7 @@
             }
           })
           .catch((err) => {
-            console.error("Failed to decode theme from URL:", err);
+            log.error({ action: "theme.import_from_url", error: err });
           })
           .finally(() => {
             // Clean up URL to prevent re-parsing on reload
@@ -249,12 +247,10 @@
   $effect(() => {
     const query = listResourcePacks(__PRERENDER_VERSION__);
     if (Array.isArray(query.current)) {
-      packs.packs = query.current;
+      resourcePacks = query.current;
       enabledPacks.configure(query.current);
     }
   });
-
-  let innerWidth = $state(0);
 </script>
 
 <ModeWatcher
@@ -267,17 +263,7 @@
 
 <svelte:document onkeydown={handleKeydown} onclick={handleOutboundClick}></svelte:document>
 
-<svelte:window
-  onresize={() => {
-    if (innerWidth <= 600) {
-      position.set("bottom-center");
-    } else {
-      position.set("bottom-right");
-    }
-  }}
-  bind:innerWidth
-  ononline={updateOnlineStatus}
-  onoffline={updateOnlineStatus} />
+<svelte:window ononline={updateOnlineStatus} onoffline={updateOnlineStatus} />
 
 <svelte:head>
   {#if !noEmbedUrls.some((url) => page.url.pathname.startsWith(url))}
@@ -335,9 +321,9 @@
 {/if}
 
 <Toaster
-  theme={$theme}
+  theme="dark"
   closeButton={isHover.current}
-  position={$position}
+  position={toasterPosition}
   class="sm:mr-8"
   pauseWhenPageIsHidden={true}
   toastOptions={{
@@ -361,19 +347,18 @@
 {/if}
 
 <div
-  class="group pointer-events-none fixed inset-0 isolate z-[-1] h-dvh w-screen"
-  data-isSkinHidden={innerWidth < 1210}
+  class="group pointer-events-none fixed inset-0 isolate z-[-1] h-dvh"
   data-isStatsPage={page.url.pathname.startsWith("/stats") && !page.error}>
   <div
-    class="relative z-10 size-full bg-background [background-image:var(--bg-url)] bg-cover bg-scroll bg-center bg-no-repeat group-data-[isSkinHidden=true]:group-data-[isStatsPage=true]:blur-lg">
+    class="relative z-10 size-full bg-background [background-image:var(--bg-url)] bg-cover bg-scroll bg-center bg-no-repeat max-[1210px]:group-data-[isStatsPage=true]:blur-lg">
   </div>
 
   <div
-    class="absolute inset-0 z-20 size-full [background-image:var(--bg-url)] bg-cover bg-scroll bg-center bg-no-repeat blur-lg group-data-[isStatsPage=false]:hidden group-data-[skinHidden=true]:hidden"
+    class="absolute inset-0 z-20 size-full [background-image:var(--bg-url)] bg-cover bg-scroll bg-center bg-no-repeat blur-lg group-data-[isStatsPage=false]:hidden max-[1210px]:hidden"
     style="--percent: 30%; clip-path: polygon(var(--percent) 0%, 100% 0%, 100% 100%, var(--percent) 100%);">
   </div>
   <Separator
-    class="absolute inset-0 top-12 left-[calc(30%-1px)] z-50 h-screen group-data-[isSkinHidden=true]:hidden group-data-[isStatsPage=false]:hidden"
+    class="absolute inset-0 top-12 left-[calc(30%-1px)] z-50 h-full group-data-[isStatsPage=false]:hidden max-[1210px]:hidden"
     orientation="vertical" />
 </div>
 
