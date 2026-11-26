@@ -34,6 +34,7 @@
 
   let searchQuery = $state<string>(null!);
   const searchQueryValidated = $derived(schema.safeParse({ query: searchQuery }));
+  const searchQueryInvalid = $derived(!searchQueryValidated.success && searchQuery != null && searchQuery.length > 0);
 
   let submittedSearchLoading = $state(false);
   let submittedSearchError = $state<string>();
@@ -98,7 +99,7 @@
   let selectedCta = $state<Cta>();
 
   async function submitSearch() {
-    if (!searchQueryValidated.success) return;
+    if (submittedSearchLoading || !searchQueryValidated.success) return;
 
     const username = searchQuery.trim();
     if (!username) return;
@@ -134,39 +135,43 @@
           </h2>
         </div>
 
-        <ButtonGroup.Root class="h-16 w-full">
-          <Input
-            id="search"
-            type="search"
-            required
-            autofocus
-            placeholder="Enter username"
-            class="h-full w-full grow font-medium md:text-lg"
-            bind:value={searchQuery}
-            onchange={() => void submitSearch()}
-            onkeydown={(e) => {
-              // Autofill dispatches keydown events without a `key`.
-              if (e.key === "Enter" || e.key?.toLowerCase() === "search") {
-                e.preventDefault();
-                void submitSearch();
-              }
-            }} />
+        <search class="w-full">
+          <form
+            onsubmit={(e) => {
+              e.preventDefault();
+              void submitSearch();
+            }}>
+            <ButtonGroup.Root class="h-16 w-full">
+              <Input
+                id="search"
+                type="search"
+                required
+                autofocus
+                autocapitalize="none"
+                autocorrect="off"
+                spellcheck={false}
+                enterkeyhint="search"
+                placeholder="Enter username"
+                aria-label="Minecraft username"
+                aria-invalid={searchQueryInvalid}
+                aria-describedby={searchQueryInvalid ? "search-error" : undefined}
+                class="h-full w-full grow font-medium md:text-lg"
+                bind:value={searchQuery}
+                onchange={() => void submitSearch()} />
 
-          <Button
-            variant="outline"
-            disabled={searchQuery != null && searchQuery.length > 0 && !searchQueryValidated.success}
-            onclick={() => void submitSearch()}
-            class="h-full">
-            {#if submittedSearchLoading}
-              <Spinner class="size-4" />
-            {:else}
-              <SearchIcon class="size-4" />
-            {/if}
-          </Button>
-        </ButtonGroup.Root>
+              <Button type="submit" variant="outline" aria-label="Search" class="h-full">
+                {#if submittedSearchLoading}
+                  <Spinner class="size-4" />
+                {:else}
+                  <SearchIcon class="size-4" />
+                {/if}
+              </Button>
+            </ButtonGroup.Root>
+          </form>
+        </search>
 
-        {#if !searchQueryValidated.success && searchQuery != null && searchQuery.length > 0}
-          <div class="text-center text-sm font-semibold text-destructive">
+        {#if searchQueryInvalid && !searchQueryValidated.success}
+          <div id="search-error" class="text-center text-sm font-semibold text-destructive">
             {searchQueryValidated.error.issues[0].message}
           </div>
         {/if}
