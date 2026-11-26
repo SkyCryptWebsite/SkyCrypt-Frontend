@@ -201,7 +201,7 @@
     }
   });
 
-  $effect.pre(() => {
+  onMount(() => {
     const urlParams = new SvelteURLSearchParams(window.location.search);
     const themeParam = urlParams.get("theme");
     if (themeParam) {
