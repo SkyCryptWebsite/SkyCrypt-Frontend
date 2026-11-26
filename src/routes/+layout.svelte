@@ -29,12 +29,12 @@
   import Wifi from "@lucide/svelte/icons/wifi";
   import WifiOff from "@lucide/svelte/icons/wifi-off";
   import { Tooltip } from "bits-ui";
+  import { log } from "evlog/client";
   import { mode, ModeWatcher, setMode } from "mode-watcher";
   import { onMount, type Snippet } from "svelte";
   import SvelteSeo from "svelte-seo";
   import { toast, Toaster, type ToasterProps } from "svelte-sonner";
-  import { SvelteURLSearchParams } from "svelte/reactivity";
-  import { writable } from "svelte/store";
+  import { MediaQuery, SvelteURLSearchParams } from "svelte/reactivity";
   import NitroAds from "#lib/components/ads/NitroAds.svelte";
   import Footer from "#lib/components/footer/Footer.svelte";
   import Header from "#lib/components/header/Header.svelte";
@@ -62,8 +62,8 @@
   const enabledPacks = initEnabledPacks();
   const themeContext = initTheme();
   const internalState = initInternalState();
-  const position = writable<ToasterProps["position"]>("bottom-right");
-  const theme = writable<ToasterProps["theme"]>("dark");
+  const isNarrow = new MediaQuery("(max-width: 600px)");
+  const toasterPosition = $derived<ToasterProps["position"]>(isNarrow.current ? "bottom-center" : "bottom-right");
   // The dashboards' fixed sidebars span the full viewport height and would cover the footer.
   const showFooter = $derived(!/^\/(admin-)?dashboard(\/|$)/.test(page.url.pathname));
   const isStatsPage = $derived(page.url.pathname.startsWith("/stats/"));
@@ -168,10 +168,6 @@
   setPacksContext(packs);
 
   onMount(() => {
-    if (window.innerWidth <= 600) {
-      position.set("bottom-center");
-    }
-
     if (preferences.performanceModeForced) {
       toast.warning("Performance Mode Locked", {
         id: "performance-mode-locked",
@@ -218,7 +214,7 @@
             }
           })
           .catch((err) => {
-            console.error("Failed to decode theme from URL:", err);
+            log.error({ action: "theme.import_from_url", error: err });
           })
           .finally(() => {
             // Clean up URL to prevent re-parsing on reload
@@ -267,17 +263,7 @@
 
 <svelte:document onkeydown={handleKeydown} onclick={handleOutboundClick}></svelte:document>
 
-<svelte:window
-  onresize={() => {
-    if (innerWidth <= 600) {
-      position.set("bottom-center");
-    } else {
-      position.set("bottom-right");
-    }
-  }}
-  bind:innerWidth
-  ononline={updateOnlineStatus}
-  onoffline={updateOnlineStatus} />
+<svelte:window bind:innerWidth ononline={updateOnlineStatus} onoffline={updateOnlineStatus} />
 
 <svelte:head>
   {#if !noEmbedUrls.some((url) => page.url.pathname.startsWith(url))}
@@ -335,9 +321,9 @@
 {/if}
 
 <Toaster
-  theme={$theme}
+  theme="dark"
   closeButton={isHover.current}
-  position={$position}
+  position={toasterPosition}
   class="sm:mr-8"
   pauseWhenPageIsHidden={true}
   toastOptions={{

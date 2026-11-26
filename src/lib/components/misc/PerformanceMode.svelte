@@ -143,4 +143,4 @@
   });
 </script>
 
-<svelte:document on:visibilitychange={handleVisibilityChange}></svelte:document>
+<svelte:document onvisibilitychange={handleVisibilityChange} />
