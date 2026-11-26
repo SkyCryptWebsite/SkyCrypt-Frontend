@@ -30,10 +30,7 @@
   const mockHover = new MockIsHover(hoverEnabled);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setHoverContext(mockHover as any);
-  const mockAllStats = new AllStatsContext();
-  // svelte-ignore state_referenced_locally
-  mockAllStats.current = allStats;
-  setAllStatsContext(mockAllStats);
+  setAllStatsContext(new AllStatsContext(() => allStats));
   initInternalState();
 </script>
 

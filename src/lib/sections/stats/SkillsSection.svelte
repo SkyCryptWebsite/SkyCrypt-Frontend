@@ -33,12 +33,9 @@
 
   let { order }: { order: number } = $props();
 
-  const skillsContext = new SkillsContext();
-  setSkillsContext(skillsContext);
-  const currentTabContext = new CurrentTabContext();
-  setCurrentTabContext(currentTabContext);
-
   const skills = $derived(getCombinedContext().current?.skills);
+  setSkillsContext(new SkillsContext(() => skills ?? null));
+  setCurrentTabContext(new CurrentTabContext(() => tabValue));
   const skillTabs = $derived([
     { name: TabNamesEnum.Mining, component: Mining, available: !!skills?.mining, icon: PickaxeIcon },
     { name: TabNamesEnum.Foraging, component: Foraging, available: !!skills?.foraging, icon: TreesIcon },
@@ -69,14 +66,6 @@
   beforeNavigate(({ willUnload, shallow, type }) => {
     if (shallow && type === "goto") return;
     if (willUnload) selectedTabState.current = null;
-  });
-
-  $effect(() => {
-    skillsContext.skills = skills ?? null;
-  });
-
-  $effect(() => {
-    currentTabContext.current = tabValue;
   });
 </script>
 

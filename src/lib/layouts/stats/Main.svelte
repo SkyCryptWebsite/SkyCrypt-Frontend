@@ -59,14 +59,10 @@
   // let _defaultRightPanel = $derived(Math.ceil((700 / innerWidth) * 100));
 
   // Initialize the profile context
-  const profileClass = new ProfileContext();
-  const allStatsClass = new AllStatsContext();
-  const enchantmentsClass = new EnchantmentsContext();
-  const combinedClass = new CombinedContext();
-  setProfileContext(profileClass);
-  setAllStatsContext(allStatsClass);
-  setEnchantmentsContext(enchantmentsClass);
-  setCombinedContext(combinedClass);
+  setProfileContext(new ProfileContext(() => profile));
+  setAllStatsContext(new AllStatsContext(() => allStats));
+  setEnchantmentsContext(new EnchantmentsContext(() => enchantments));
+  setCombinedContext(new CombinedContext(() => combined ?? null));
   $effect.pre(() => {
     if (!ctx) return;
 
@@ -88,23 +84,6 @@
         };
       }
     });
-  });
-
-  // Update the profile context when the data changes
-  $effect.pre(() => {
-    profileClass.current = profile;
-  });
-
-  $effect.pre(() => {
-    combinedClass.current = combined ?? null;
-  });
-
-  $effect.pre(() => {
-    allStatsClass.current = allStats;
-  });
-
-  $effect.pre(() => {
-    enchantmentsClass.current = enchantments;
   });
 </script>
 

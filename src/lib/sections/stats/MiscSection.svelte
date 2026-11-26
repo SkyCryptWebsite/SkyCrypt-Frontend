@@ -19,14 +19,8 @@
 
   let { order }: { order: number } = $props();
 
-  const miscClass = new MiscContext();
-  setMiscContext(miscClass);
-
   const misc = $derived(getCombinedContext().current?.misc);
-
-  $effect(() => {
-    miscClass.misc = misc ?? null;
-  });
+  setMiscContext(new MiscContext(() => misc ?? null));
 </script>
 
 <Section id="Misc" {order}>

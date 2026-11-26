@@ -45,6 +45,7 @@
   import { IsMobile } from "#lib/hooks/is-mobile.svelte.js";
   import "./layout.css";
   import { getAdFree } from "#lib/shared/ads.remote";
+  import type { ResourcePackConfig } from "#lib/shared/api/orval-generated";
   import { listResourcePacks } from "#lib/shared/api/skycrypt-api.remote";
   import { getActiveBanners, listLatestPostsForNotifications } from "#lib/shared/newsroom.remote";
   import { isBeta } from "#lib/shared/release-channel";
@@ -71,7 +72,8 @@
   const adPageKey = $derived(`${page.route.id}${JSON.stringify(page.params)}`);
   const showAds = $derived(!/^\/((admin-)?dashboard|login|logout)(\/|$)/.test(page.url.pathname));
   const noEmbedUrls = ["/stats/", "/newsroom", "/login", "/dashboard"];
-  const packs = new PacksContext();
+  let resourcePacks = $state.raw<ResourcePackConfig[]>([]);
+  const packs = new PacksContext(() => resourcePacks);
   const websiteJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -245,7 +247,7 @@
   $effect(() => {
     const query = listResourcePacks(__PRERENDER_VERSION__);
     if (Array.isArray(query.current)) {
-      packs.packs = query.current;
+      resourcePacks = query.current;
       enabledPacks.configure(query.current);
     }
   });
