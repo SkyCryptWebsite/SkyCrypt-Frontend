@@ -1,5 +1,6 @@
 import { Node } from "@tiptap/core";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
+import { log } from "evlog/client";
 
 export interface IframeOptions {
   allowFullscreen: boolean;
@@ -120,7 +121,7 @@ const IFrame = Node.create<IframeOptions>({
                   }
                 }
               } catch (e) {
-                console.error("Failed to parse pasted iframe HTML:", e);
+                log.debug({ action: "editor.iframe_paste_parse_failed", error: e });
               }
             }
             return false;

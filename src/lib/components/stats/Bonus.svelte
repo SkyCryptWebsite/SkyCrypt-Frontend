@@ -1,6 +1,7 @@
 <script lang="ts">
   import { getAllStatsContext } from "$ctx";
   import type { ItemStats } from "$types";
+  import { log } from "evlog/client";
   import { format } from "numerable";
   import { cn } from "#lib/shared/utils";
 
@@ -30,7 +31,7 @@
           // {" "}
         {/if}
       {:else}
-        {console.warn("Unknown stat:", key)}
+        {log.debug({ action: "bonus.unknown_stat", key })}
       {/if}
     {/each}
   </p>

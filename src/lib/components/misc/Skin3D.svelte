@@ -1,5 +1,6 @@
 <script lang="ts">
   import { getContributorSkins } from "$routes/contributors.remote";
+  import { log } from "evlog/client";
   import * as skinview3d from "skinview3d";
   import { onDestroy } from "svelte";
   import { MediaQuery } from "svelte/reactivity";
@@ -142,7 +143,7 @@
       requestAnimationFrame(updateViewerSize);
     } catch (e) {
       if (isStale()) return;
-      console.error("Error loading skin viewer:", e);
+      log.warn({ action: "skin3d.load_failed", error: e });
       spinId = 0;
       canvasIsLoading = false;
       showStaticSkin();

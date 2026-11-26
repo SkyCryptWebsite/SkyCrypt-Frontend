@@ -1,5 +1,6 @@
 import { mergeAttributes, Node } from "@tiptap/core";
 import { NodeSelection } from "@tiptap/pm/state";
+import { log } from "evlog/client";
 
 export interface MediaPlaceholderOptions {
   HTMLAttributes: Record<string, unknown>;
@@ -125,7 +126,8 @@ export const MediaPlaceholder = Node.create<MediaPlaceholderOptions>({
               }
             })
             .catch((error) => {
-              console.error("Failed to upload media:", error);
+              // The onUpload caller already shows the error; this only keeps the rejection handled.
+              log.debug({ action: "editor.media_upload_failed", error });
             });
 
           return true;

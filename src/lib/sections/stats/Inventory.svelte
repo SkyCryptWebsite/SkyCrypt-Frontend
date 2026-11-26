@@ -7,6 +7,7 @@
   import { Spinner } from "$ui/spinner";
   import Image from "@lucide/svelte/icons/image";
   import { Tabs } from "bits-ui";
+  import { log } from "evlog/client";
   import { cubicOut } from "svelte/easing";
   import { prefersReducedMotion } from "svelte/motion";
   import { crossfade } from "svelte/transition";
@@ -43,7 +44,7 @@
       internalState.itemContentSpecial &&
       (value === "Search" || value === "Backpack" || value === "Museum" || value === "Sacks")
     ) {
-      console.warn("Item content special should not be set for search, backpack, sacks, or museum tabs.");
+      log.debug("inventory", "itemContentSpecial is not used on search, backpack, sacks or museum tabs");
       internalState.itemContentSpecial = undefined;
     }
   }

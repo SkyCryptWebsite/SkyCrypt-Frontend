@@ -1,6 +1,7 @@
 import { browser } from "$app/env";
 import { loadOldStorageKey } from "$ctx/utils";
 import * as devalue from "devalue";
+import { log } from "evlog/client";
 import { setTheme, theme as activeModeWatcherTheme, themeStorageKey } from "mode-watcher";
 import { PersistedState } from "runed";
 import { createContext, untrack } from "svelte";
@@ -20,7 +21,7 @@ themeStorageKey.current = ACTIVE_THEME_STORAGE_KEY;
 
 function ignoreSkippedViewTransition(error: unknown): void {
   if (error instanceof DOMException && error.name === "AbortError") return;
-  console.warn("Theme transition failed", error);
+  log.warn({ action: "theme.transition_failed", error });
 }
 
 function runThemeTransition(callback: () => void): void {
@@ -100,12 +101,12 @@ export class ThemeContext {
   saveTheme(theme: ThemeV5): void {
     const result = themeV5Schema.safeParse(theme);
     if (!result.success) {
-      console.warn("Cannot save invalid theme", result.error);
+      log.warn({ action: "theme.save_invalid", error: result.error });
       return;
     }
 
     if (this.isFirstParty(theme.metadata.id)) {
-      console.warn(`Cannot save first-party theme: ${theme.metadata.id}`);
+      log.warn({ action: "theme.save_first_party", themeId: theme.metadata.id });
       return;
     }
 
@@ -141,7 +142,7 @@ export class ThemeContext {
 
   deleteTheme(id: string): void {
     if (this.isFirstParty(id)) {
-      console.warn(`Cannot delete first-party theme: ${id}`);
+      log.warn({ action: "theme.delete_first_party", themeId: id });
       return;
     }
 

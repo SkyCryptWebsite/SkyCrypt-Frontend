@@ -7,6 +7,7 @@
   import ArrowBigLeft from "@lucide/svelte/icons/arrow-big-left";
   import ArrowBigRight from "@lucide/svelte/icons/arrow-big-right";
   import { ScrollArea } from "bits-ui";
+  import { log } from "evlog/client";
   import { flushSync, onDestroy, tick, type Snippet } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { prefersReducedMotion } from "svelte/motion";
@@ -95,7 +96,7 @@
 
   function observerInit() {
     if (!navbarElement) {
-      console.warn("Navbar element is not defined");
+      log.debug("navbar", "navbar element is not mounted yet");
       return;
     }
 
