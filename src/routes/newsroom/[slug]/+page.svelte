@@ -158,7 +158,7 @@
         alt={heroAlt}
         width={heroWidth}
         height={heroHeight}
-        loading="lazy"
+        fetchpriority="high"
         class="size-full object-cover" />
     </div>
   {/if}
