@@ -91,6 +91,7 @@
   <Input
     type="search"
     {placeholder}
+    aria-label={placeholder}
     bind:value={search}
     onkeydown={(event) => {
       event.stopPropagation();
