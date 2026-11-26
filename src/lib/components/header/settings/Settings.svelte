@@ -11,6 +11,7 @@
   import PaintBucket from "@lucide/svelte/icons/paint-bucket";
   import Settings from "@lucide/svelte/icons/settings";
   import { cubicOut } from "svelte/easing";
+  import { prefersReducedMotion } from "svelte/motion";
   import { crossfade } from "svelte/transition";
   import { SettingsTab } from "#lib/components/header/types";
 
@@ -51,7 +52,7 @@
     ]);
 
   const [send, receive] = crossfade({
-    duration: 300,
+    duration: () => (prefersReducedMotion.current ? 0 : 300),
     easing: cubicOut
   });
 </script>

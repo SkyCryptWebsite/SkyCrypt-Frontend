@@ -12,6 +12,7 @@
   import { PersistedState } from "runed";
   import type { Component } from "svelte";
   import { cubicOut } from "svelte/easing";
+  import { prefersReducedMotion } from "svelte/motion";
   import { crossfade } from "svelte/transition";
   import { ScrollItems } from "#lib/components/misc";
   import { Section } from "#lib/components/sections";
@@ -59,7 +60,7 @@
   });
 
   const [send, receive] = crossfade({
-    duration: 300,
+    duration: () => (prefersReducedMotion.current ? 0 : 300),
     easing: cubicOut
   });
 

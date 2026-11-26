@@ -7,6 +7,7 @@
   import SearchXIcon from "@lucide/svelte/icons/search-x";
   import type { Snippet } from "svelte";
   import { cubicOut } from "svelte/easing";
+  import { prefersReducedMotion } from "svelte/motion";
   import { crossfade } from "svelte/transition";
   import EmptyStat from "#lib/components/EmptyStat.svelte";
   import ScrollAreaItems from "#lib/components/ScrollAreaItems.svelte";
@@ -82,7 +83,7 @@
   });
 
   const [send, receive] = crossfade({
-    duration: 300,
+    duration: () => (prefersReducedMotion.current ? 0 : 300),
     easing: cubicOut
   });
 </script>

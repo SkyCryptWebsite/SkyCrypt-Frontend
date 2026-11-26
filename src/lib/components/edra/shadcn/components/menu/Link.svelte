@@ -7,6 +7,7 @@
   import Edit from "@lucide/svelte/icons/pen";
   import Trash2 from "@lucide/svelte/icons/trash-2";
   import { toast } from "svelte-sonner";
+  import { prefersReducedMotion } from "svelte/motion";
   import { slide } from "svelte/transition";
   import strings from "../../../strings";
   import { BubbleMenu, getEditor, useEditorState } from "../../../tiptap";
@@ -102,7 +103,10 @@
       </Button>
     </Tooltip>
   {:else}
-    <form transition:slide={{ axis: "x" }} onsubmit={handleSubmit} class="flex w-96 items-center gap-0.5">
+    <form
+      transition:slide={{ axis: "x", duration: prefersReducedMotion.current ? 0 : 400 }}
+      onsubmit={handleSubmit}
+      class="flex w-96 items-center gap-0.5">
       <Input bind:value={linkInput} required type="url" placeholder={strings.menu.link.enterLinkPlaceholder} />
       <Tooltip tooltip={strings.menu.link.enterLinkButton}>
         <Button type="submit" size="icon">

@@ -8,6 +8,7 @@
   import Image from "@lucide/svelte/icons/image";
   import { Tabs } from "bits-ui";
   import { cubicOut } from "svelte/easing";
+  import { prefersReducedMotion } from "svelte/motion";
   import { crossfade } from "svelte/transition";
   import { InventoryGrid, InventorySearch, Item } from "#lib/components/item";
   import { ScrollItems } from "#lib/components/misc";
@@ -31,7 +32,7 @@
   const tabsOrientation = $derived(isMobile.current ? "horizontal" : "vertical");
 
   const [send, receive] = crossfade({
-    duration: 300,
+    duration: () => (prefersReducedMotion.current ? 0 : 300),
     easing: cubicOut
   });
 

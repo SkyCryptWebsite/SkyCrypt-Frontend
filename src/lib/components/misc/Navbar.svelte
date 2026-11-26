@@ -9,6 +9,7 @@
   import { ScrollArea } from "bits-ui";
   import { flushSync, onDestroy, tick, type Snippet } from "svelte";
   import { cubicOut } from "svelte/easing";
+  import { prefersReducedMotion } from "svelte/motion";
   import { crossfade } from "svelte/transition";
   import ScrollAreaPrimitive from "#lib/components/ScrollAreaPrimitive.svelte";
   import type { SectionName } from "#lib/sections/types";
@@ -47,7 +48,7 @@
   let observer: IntersectionObserver;
 
   const [send, receive] = crossfade({
-    duration: 300,
+    duration: () => (prefersReducedMotion.current ? 0 : 300),
     easing: cubicOut
   });
 
