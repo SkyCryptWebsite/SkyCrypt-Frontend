@@ -27,7 +27,7 @@
         size: "icon",
         class: cn("gap-0.5")
       })}
-      style={`color: ${$editorState.currentColor || ""}; background-color: ${$editorState.currentHighlight || ""};`}>
+      style={`color: ${editorState.current.currentColor || ""}; background-color: ${editorState.current.currentHighlight || ""};`}>
       <span>A</span>
       <ChevronDown class="size-2! text-muted-foreground" />
     </DropdownMenu.Trigger>
@@ -38,7 +38,8 @@
     <DropdownMenu.Group>
       <DropdownMenu.Label>Text Colors</DropdownMenu.Label>
       {#each quickcolors as color (color.label)}
-        {@const isActive = color.value === "" ? !$editorState.currentColor : $editorState.currentColor === color.value}
+        {@const isActive =
+          color.value === "" ? !editorState.current.currentColor : editorState.current.currentColor === color.value}
         <DropdownMenu.Item
           title={color.label}
           class="flex cursor-pointer items-center justify-between"
@@ -64,7 +65,9 @@
       <DropdownMenu.Label>Background Colors</DropdownMenu.Label>
       {#each quickcolors as color (color.label)}
         {@const isActive =
-          color.value === "" ? !$editorState.currentHighlight : $editorState.currentHighlight === `${color.value}50`}
+          color.value === ""
+            ? !editorState.current.currentHighlight
+            : editorState.current.currentHighlight === `${color.value}50`}
         <DropdownMenu.Item
           title={color.label}
           class="flex cursor-pointer items-center justify-between"

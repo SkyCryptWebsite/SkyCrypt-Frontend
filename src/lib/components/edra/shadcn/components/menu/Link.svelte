@@ -23,7 +23,7 @@
 
   let isEditing = $state(false);
 
-  let linkInput = $derived($editorState.link);
+  let linkInput = $derived(editorState.current.link);
 
   function handleSubmit(e: Event) {
     e.preventDefault();
@@ -55,7 +55,12 @@
   class="flex h-fit w-fit items-center gap-1 rounded-lg border bg-popover p-0!">
   {#if !isEditing}
     <Tooltip tooltip={strings.menu.link.open}>
-      <Button variant="ghost" title={strings.menu.link.open} size="icon" href={$editorState.link} target="_blank">
+      <Button
+        variant="ghost"
+        title={strings.menu.link.open}
+        size="icon"
+        href={editorState.current.link}
+        target="_blank">
         <Link />
       </Button>
     </Tooltip>
@@ -78,7 +83,7 @@
         size="icon"
         onclick={async () => {
           try {
-            await navigator.clipboard.writeText($editorState.link);
+            await navigator.clipboard.writeText(editorState.current.link);
             toast.success("Link copied.");
           } catch {
             toast.error("Couldn't copy the link.");

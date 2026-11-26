@@ -1,4 +1,4 @@
-import { type Readable, writable } from "svelte/store";
+import { createSubscriber } from "svelte/reactivity";
 import type { Editor } from "../Editor";
 
 export type EditorStateSnapshot = {
@@ -27,41 +27,26 @@ export const useEditorState = <T extends Record<string, unknown>>({
 }: {
   editor: Editor;
   selector: (ctx: EditorStateSnapshot) => T;
-}): Readable<T> => {
-  const store = writable<T>(selector({ editor }));
+}): { readonly current: T } => {
+  let current = selector({ editor });
 
-  let subscriberCount = 0;
-
-  const handleTransaction = () => {
-    const next = selector({ editor });
-
-    store.update((current) => {
-      if (shallowEqual(current, next)) {
-        return current;
-      }
-
-      return next;
-    });
-  };
+  const subscribe = createSubscriber((update) => {
+    const handleTransaction = () => {
+      if (!shallowEqual(current, selector({ editor }))) update();
+    };
+    editor.on("transaction", handleTransaction);
+    return () => {
+      editor.off("transaction", handleTransaction);
+    };
+  });
 
   return {
-    subscribe(run, invalidate) {
-      subscriberCount += 1;
-
-      if (subscriberCount === 1) {
-        editor.on("transaction", handleTransaction);
-      }
-
-      const unsubscribe = store.subscribe(run, invalidate);
-
-      return () => {
-        unsubscribe();
-        subscriberCount -= 1;
-
-        if (subscriberCount === 0) {
-          editor.off("transaction", handleTransaction);
-        }
-      };
+    get current() {
+      subscribe();
+      // Read fresh so callers outside an effect (event handlers) never see a stale snapshot.
+      const next = selector({ editor });
+      if (!shallowEqual(current, next)) current = next;
+      return current;
     }
   };
 };
