@@ -2,6 +2,7 @@ import { describe, it, vi } from "vitest";
 import {
   calculatePercentage,
   formatNumber,
+  formatRunTime,
   getRarityClass,
   removeFormatting,
   titleCase,
@@ -237,5 +238,18 @@ describe.concurrent("calculatePercentage", () => {
     expect(calculatePercentage(2, 3, 0)).toBe("66");
     // 33.33% floors to 33%
     expect(calculatePercentage(1, 3, 0)).toBe("33");
+  });
+});
+
+describe.concurrent("formatRunTime", () => {
+  it("keeps hours instead of wrapping past 59 minutes", ({ expect }) => {
+    expect(formatRunTime(307_000)).toBe("05:07");
+    expect(formatRunTime(3_907_000)).toBe("1:05:07");
+  });
+
+  it("matches Intl.DurationFormat output in the fallback", ({ expect }) => {
+    expect(formatRunTime(307_000, null)).toBe("05:07");
+    expect(formatRunTime(3_907_000, null)).toBe("1:05:07");
+    expect(formatRunTime(0, null)).toBe("00:00");
   });
 });

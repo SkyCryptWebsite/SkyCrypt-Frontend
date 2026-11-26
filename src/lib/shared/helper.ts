@@ -29,6 +29,24 @@ export function formatNumber(n: number, digits = 2) {
     .replace(/\.0+([A-Za-z])?$/, "$1");
 }
 
+// Intl.DurationFormat is Baseline 2025; the padded fallback covers older browsers.
+const runTimeFormat =
+  typeof Intl.DurationFormat === "function"
+    ? new Intl.DurationFormat("en", { style: "digital", hoursDisplay: "auto", minutes: "2-digit" })
+    : null;
+
+/** Formats a run time in milliseconds as `mm:ss`, or `h:mm:ss` once it passes an hour. */
+export function formatRunTime(ms: number, format = runTimeFormat) {
+  const totalSeconds = Math.floor(ms / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  if (format) return format.format({ hours, minutes, seconds });
+
+  const mmss = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  return hours > 0 ? `${hours}:${mmss}` : mmss;
+}
+
 /**
  * Converts a string to title case
  *
