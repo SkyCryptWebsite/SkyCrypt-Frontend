@@ -361,7 +361,7 @@
 {/if}
 
 <div
-  class="group pointer-events-none fixed inset-0 isolate z-[-1] h-dvh w-screen"
+  class="group pointer-events-none fixed inset-0 isolate z-[-1] h-dvh"
   data-isSkinHidden={innerWidth < 1210}
   data-isStatsPage={page.url.pathname.startsWith("/stats") && !page.error}>
   <div
@@ -373,7 +373,7 @@
     style="--percent: 30%; clip-path: polygon(var(--percent) 0%, 100% 0%, 100% 100%, var(--percent) 100%);">
   </div>
   <Separator
-    class="absolute inset-0 top-12 left-[calc(30%-1px)] z-50 h-screen group-data-[isSkinHidden=true]:hidden group-data-[isStatsPage=false]:hidden"
+    class="absolute inset-0 top-12 left-[calc(30%-1px)] z-50 h-full group-data-[isSkinHidden=true]:hidden group-data-[isStatsPage=false]:hidden"
     orientation="vertical" />
 </div>
 

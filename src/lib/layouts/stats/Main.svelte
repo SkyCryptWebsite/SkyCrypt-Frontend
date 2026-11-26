@@ -211,7 +211,7 @@
 {#if isHover.current}
   <Dialog.Root bind:open={internalState.showItem}>
     <Dialog.Content
-      class="flex max-h-[calc(96%-3rem)]! w-auto max-w-[calc(100vw-2.5rem)]! flex-col gap-0 overflow-hidden glass p-0 font-skyblock-icons select-text glass-bg-popover data-[mctooltip=true]:rounded-sm data-[mctooltip=true]:ring-0 *:data-[slot='dialog-close']:hidden standard:bg-transparent"
+      class="flex max-h-[calc(96%-3rem)]! w-auto max-w-[calc(100%-2.5rem)]! flex-col gap-0 overflow-hidden glass p-0 font-skyblock-icons select-text glass-bg-popover data-[mctooltip=true]:rounded-sm data-[mctooltip=true]:ring-0 *:data-[slot='dialog-close']:hidden standard:bg-transparent"
       data-mctooltip={preferences.mctooltip}>
       <ItemContent piece={internalState.itemContent!} />
     </Dialog.Content>
@@ -224,7 +224,7 @@
       }
     }}>
     <Dialog.Content
-      class="flex max-h-[calc(96%-3rem)]! w-auto max-w-[calc(100vw-2.5rem)]! flex-col overflow-hidden glass p-0 font-skyblock-icons select-text glass-bg-popover *:data-[slot='dialog-close']:hidden standard:bg-transparent">
+      class="flex max-h-[calc(96%-3rem)]! w-auto max-w-[calc(100%-2.5rem)]! flex-col overflow-hidden glass p-0 font-skyblock-icons select-text glass-bg-popover *:data-[slot='dialog-close']:hidden standard:bg-transparent">
       {#if internalState.itemContentSpecial?.containsItems}
         <ContainedItemsGrid
           items={internalState.itemContentSpecial.containsItems}
