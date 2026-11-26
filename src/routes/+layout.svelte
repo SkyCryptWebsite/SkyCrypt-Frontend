@@ -70,7 +70,7 @@
   const isStatsPage = $derived(page.url.pathname.startsWith("/stats/"));
   // NitroPay asks SPAs to tear down and recreate placements on every navigation. Params, not the pathname, so shallow URL rewrites don't count.
   const adPageKey = $derived(`${page.route.id}${JSON.stringify(page.params)}`);
-  const showAds = $derived(!/^\/((admin-)?dashboard|login|logout)(\/|$)/.test(page.url.pathname));
+  const showAds = $derived(!/^\/((admin-)?dashboard|login)(\/|$)/.test(page.url.pathname));
   const noEmbedUrls = ["/stats/", "/newsroom", "/login", "/dashboard"];
   let resourcePacks = $state.raw<ResourcePackConfig[]>([]);
   const packs = new PacksContext(() => resourcePacks);
