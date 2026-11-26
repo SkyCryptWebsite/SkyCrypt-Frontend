@@ -58,6 +58,13 @@ describe("sanitizeClientLog", () => {
         error: { message: "undefined is not an object (evaluating 'window.googletag.cmd')" }
       })
     ).toBeNull();
+    expect(
+      sanitizeClientLog({
+        level: "error",
+        message: "TypeError: undefined is not an object (evaluating 'window.ethereum.selectedAddress = undefined')"
+      })
+    ).toBeNull();
+    expect(fromStack("at e.sendBatchRequests (https://btloader.com/tag?o=1&upapi=true:8:85231)")).toBeNull();
     expect(fromStack("at window.fetch (https://sky.shiiyu.moe/_app/immutable/chunks/a.js:2:1)")).not.toBeNull();
   });
 

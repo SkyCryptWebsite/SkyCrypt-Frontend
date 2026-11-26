@@ -8,7 +8,8 @@ const KEY_PATTERN = /^[A-Za-z][A-Za-z0-9_]{0,39}$/;
 // Keys evlog's client adds itself, or that we handle explicitly below.
 const RESERVED = new Set(["timestamp", "level", "service", "tag", "message", "error"]);
 // Browser extensions and the ad/consent scripts throw into our page; we can't fix those.
-const THIRD_PARTY = /-extension:\/\/|p\.cpx\.to|nitropay\.com|googletag|GVLError|privacymanager\.io|window\.ethereum/;
+const THIRD_PARTY =
+  /-extension:\/\/|p\.cpx\.to|nitropay\.com|googletag|GVLError|privacymanager\.io|btloader\.com|window\.ethereum/;
 const TRANSIENT =
   /^(?:Load failed|Failed to fetch|NetworkError when attempting to fetch resource\.|Fetch is aborted)$|dynamically imported module|Importing a module script failed/;
 
@@ -28,6 +29,7 @@ export function sanitizeClientLog(body: unknown): ClientLogEntry | null {
   const client: Record<string, unknown> = {};
   const tag = clip(body.tag, 100);
   const message = clip(body.message, MAX_STRING);
+  if (message && THIRD_PARTY.test(message)) return null;
   if (tag) client.tag = tag;
   if (message) client.message = message;
 
