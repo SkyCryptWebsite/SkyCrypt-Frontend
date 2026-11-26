@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Button, buttonVariants } from "$ui/button";
+  import { toast } from "svelte-sonner";
   import { NodeViewContent, NodeViewWrapper, type NodeViewProps } from "../../tiptap";
 
   const { editor, node, updateAttributes, extension }: NodeViewProps = $props();
@@ -22,10 +23,15 @@
     defaultLanguage = language;
   };
 
-  function copyCode() {
+  async function copyCode() {
     if (!preRef) return;
+    try {
+      await navigator.clipboard.writeText(preRef.innerText);
+    } catch {
+      toast.error("Couldn't copy the code. Select it and copy it manually.");
+      return;
+    }
     isCopying = true;
-    navigator.clipboard.writeText(preRef.innerText);
     setTimeout(() => {
       isCopying = false;
     }, 1000);

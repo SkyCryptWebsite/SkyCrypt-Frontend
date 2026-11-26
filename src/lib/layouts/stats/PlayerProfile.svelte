@@ -51,10 +51,14 @@
     island: "🌴"
   };
 
-  function copyToClipboard(value: string) {
-    navigator.clipboard.writeText(value);
+  async function copyToClipboard(value: string) {
     toast.dismiss(toastId);
-    toastId = toast.success(`Copied ${value} to your clipboard!`);
+    try {
+      await navigator.clipboard.writeText(value);
+      toastId = toast.success(`Copied ${value} to your clipboard!`);
+    } catch {
+      toastId = toast.error(`Couldn't copy ${value}. Select it and copy it manually.`);
+    }
   }
 </script>
 

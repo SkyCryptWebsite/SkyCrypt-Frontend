@@ -6,6 +6,7 @@
   import Copy from "@lucide/svelte/icons/copy";
   import Edit from "@lucide/svelte/icons/pen";
   import Trash2 from "@lucide/svelte/icons/trash-2";
+  import { toast } from "svelte-sonner";
   import { slide } from "svelte/transition";
   import strings from "../../../strings";
   import { BubbleMenu, getEditor, useEditorState } from "../../../tiptap";
@@ -75,8 +76,13 @@
         variant="ghost"
         title={strings.menu.link.copy}
         size="icon"
-        onclick={() => {
-          window.navigator.clipboard.writeText($editorState.link);
+        onclick={async () => {
+          try {
+            await navigator.clipboard.writeText($editorState.link);
+            toast.success("Link copied.");
+          } catch {
+            toast.error("Couldn't copy the link.");
+          }
         }}>
         <Copy />
       </Button>
