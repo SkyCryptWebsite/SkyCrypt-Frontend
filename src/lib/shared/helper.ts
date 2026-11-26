@@ -176,10 +176,8 @@ export function validateURL(url: string): boolean {
   if (!url || url.trim() === "") return false;
   const urlSegments = url.trim().split("/");
   if (urlSegments.length < 1) {
-    console.error("Please enter a Minecraft username or UUID");
     return false;
   } else if (urlSegments.length > 2) {
-    console.error(`"${url}" has too many "/"`);
     return false;
   } else {
     if (urlSegments.length === 2) {
@@ -187,10 +185,8 @@ export function validateURL(url: string): boolean {
         urlSegments[1] = urlSegments[1].charAt(0).toUpperCase() + urlSegments[1].substring(1).toLowerCase();
       } else if (!urlSegments[1].match(/^([0-9a-fA-F]{32})$/)) {
         if (urlSegments[1] === "") {
-          console.error(`Please enter valid profile name or UUID after "/"`);
           return false;
         }
-        console.error(`"${urlSegments[1]}" is not a valid profile name or UUID`);
         return false;
       }
     }
@@ -203,7 +199,6 @@ export function validateURL(url: string): boolean {
     } else if (urlSegments[0].match(/^[\w ]{1,16}$/)) {
       urlSegments[0] = urlSegments[0].replace(" ", "_");
     } else {
-      console.error(`"${urlSegments[0]}" is not a valid username or UUID`);
       return false;
     }
     return true;
