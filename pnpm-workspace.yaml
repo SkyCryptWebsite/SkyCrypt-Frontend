@@ -15,6 +15,8 @@ publicHoistPattern:
   - "@takumi-rs/core-*"
 
 permissions:
+  '@sveltejs/vite-devtools-svelte':
+    skills: [vite-devtools-svelte-perf-audit, vite-devtools-svelte-perf-fix]
   "@tanstack/svelte-table":
     skills: true
 
