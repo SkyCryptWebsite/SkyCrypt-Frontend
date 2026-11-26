@@ -298,6 +298,14 @@
     z-index: -1;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(root),
+    ::view-transition-new(root),
+    ::view-transition-old(root) {
+      animation: none;
+    }
+  }
+
   @keyframes reveal {
     from {
       clip-path: polygon(50% -71%, -50% 71%, -50% 71%, 50% -71%);

@@ -73,7 +73,7 @@
     retries?: number;
   }) {
     const scrollOptions = options ?? {
-      behavior: smooth ? "smooth" : "auto",
+      behavior: smooth && !matchMedia("(prefers-reduced-motion: reduce)").matches ? "smooth" : "auto",
       block: "center",
       inline: "center"
     };
